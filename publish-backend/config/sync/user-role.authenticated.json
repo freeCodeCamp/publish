@@ -1,0 +1,46 @@
+{
+  "name": "Editor",
+  "description": "Editor",
+  "type": "authenticated",
+  "permissions": [
+    {
+      "action": "api::article.article.create"
+    },
+    {
+      "action": "api::article.article.createLocalization"
+    },
+    {
+      "action": "api::article.article.delete"
+    },
+    {
+      "action": "api::article.article.find"
+    },
+    {
+      "action": "api::article.article.findOne"
+    },
+    {
+      "action": "api::article.article.update"
+    },
+    {
+      "action": "api::tag.tag.create"
+    },
+    {
+      "action": "api::tag.tag.delete"
+    },
+    {
+      "action": "api::tag.tag.find"
+    },
+    {
+      "action": "api::tag.tag.findOne"
+    },
+    {
+      "action": "api::tag.tag.update"
+    },
+    {
+      "action": "plugin::users-permissions.auth.changePassword"
+    },
+    {
+      "action": "plugin::users-permissions.user.me"
+    }
+  ]
+}
