@@ -1,53 +1,33 @@
-import {$getRoot, $getSelection} from 'lexical';
 import { useSession } from "next-auth/react";
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import Link from 'next/link'
-// import Editor from "../../components/editor";
-import PlainTextEditor from "../../components/plain-text-editor";
+import Tiptap from "../../components/tiptap";
 
 export default function PageWithJSbasedForm() {
-  const { data: session, status } = useSession();
+  // Get auth data from the session
+  const { data: session } = useSession();
+  // declare state variable `content`
+  const [content, setContent] = useState('');
 
-  const editorRef = useRef();
-  if (editorRef.current !== undefined) {
-    if (editorRef.current !== null) {
-      const latestEditorState = editorRef.current.getEditorState();
-      // const textContent = latestEditorState.read(() =>
-      //   //You could change getTextContent() for your purpose
-      //   $getRoot().getTextContent()
-      // );
-      console.log(latestEditorState);
-    }
-  }
+  const handleContentChange = (updatedContent) => {
+    setContent(updatedContent);
+  };
 
   // Handles the submit event on form submit.
   const handleSubmit = async (event, session) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault()
 
-    let bodyToPost = null;
-
-    if (editorRef.current !== undefined) {
-      if (editorRef.current !== null) {
-        const latestEditorState = editorRef.current.getEditorState();
-        // const textContent = latestEditorState.read(() =>
-        //   //You could change getTextContent() for your purpose
-        //   $getRoot().getTextContent()
-        // );
-        bodyToPost = JSON.stringify(latestEditorState);
-        console.log(bodyToPost);
-      }
-    }
-
-    // Get data from the form.
+    // Construct the data to be sent to the server
     const data = {
+      // Need to nest in data object because Strapi expects so
       data: {
         title: event.target.title.value,
-        body: bodyToPost,
-      },
-    }
+        body: content, // Get the content from the state
+      }
+    };
 
-    // Send the data to the server in JSON format.
+    // Send the data to the Strapi server in JSON format.
     const JSONdata = JSON.stringify(data)
 
     // API endpoint where we send form data.
@@ -84,10 +64,7 @@ export default function PageWithJSbasedForm() {
         <label htmlFor="title">title</label>
         <input type="text" id="title" name="title" required />
         <br />
-        <label htmlFor="body">body</label>
-        {/* <input type="text" id="body" name="body" required /> */}
-        {/* <Editor /> */}
-        <PlainTextEditor ref={editorRef} />
+        <Tiptap onChange={handleContentChange} />
 
         <button type="submit">Submit</button>
       </form>
