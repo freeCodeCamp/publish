@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Link from 'next/link'
-import Tiptap from "../../components/tiptap";
+import ArticleForm from "@/components/article-form";
 
 export default function PageWithJSbasedForm() {
   // Get auth data from the session
@@ -60,14 +60,8 @@ export default function PageWithJSbasedForm() {
   return (
     <>
       {/* // We pass the event to the handleSubmit() function on submit. */}
-      <form onSubmit={(event) => handleSubmit(event, session)}>
-        <label htmlFor="title">title</label>
-        <input type="text" id="title" name="title" required />
-        <br />
-        <Tiptap onChange={handleContentChange} />
+      <ArticleForm onSubmit={(event) => handleSubmit(event, session)} initialValues={{title: '', body: '' }} onContentChange={handleContentChange} />
 
-        <button type="submit">Submit</button>
-      </form>
       <Link href="/">Home</Link>
     </>
   )
