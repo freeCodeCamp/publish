@@ -43,7 +43,7 @@ Note: This will be the Admin panel for developers/staff. Contributors will write
 ### Run publish-frontend (Next.js) app
 
 1. In another terminal, go to `publish-frontend` directory
-1. Create a copy of the `sample.env.local` file and name it `.env`. Add required values.
+1. Create a copy of the `sample.env.local` file and name it `.env.local`. Add required values.
 1. Run `npm install`
 1. Make sure the backend Strapi app is running in another terminal. Then start the frontend Next.js app by running `npm run dev`.
 1. Visit http://localhost:3000/ to access the authoring site
