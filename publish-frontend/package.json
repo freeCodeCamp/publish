@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@lexical/react": "^0.11.1",
+    "@tiptap/extension-color": "^2.0.3",
+    "@tiptap/extension-list-item": "^2.0.3",
+    "@tiptap/extension-text-style": "^2.0.3",
     "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
