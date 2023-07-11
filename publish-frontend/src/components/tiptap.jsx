@@ -178,7 +178,7 @@ const MenuBar = ({ editor }) => {
   )
 }
 
-const Tiptap = ({ onChange }) => {
+const Tiptap = ({ onChange, defaultValue }) => {
   // useEditor Hook
   const editor = useEditor({
     extensions: [
@@ -195,10 +195,7 @@ const Tiptap = ({ onChange }) => {
         },
       }),
     ],
-    content: `
-      <h1>Hello World!</h1>
-      <p>Let's write some nice content!</p>
-    `,
+    content: defaultValue ? defaultValue : ``,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML()); // This callback is triggered on every content change
     },

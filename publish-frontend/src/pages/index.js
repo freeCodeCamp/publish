@@ -35,7 +35,7 @@ export default function IndexPage({ allPostsData }) {
           {allPostsData.data.map((post) => {
             return (
               <li key={post.id}>
-                <Link href={`/posts/${post.attributes.slug}`}>
+                <Link href={`/posts/${post.id}`}>
                   <strong>{post.attributes.title}</strong><br/>
                   {post.attributes.body.slice(0, 150)}...
                 </Link>

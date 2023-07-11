@@ -1,13 +1,37 @@
 import { useSession } from "next-auth/react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from 'next/link'
 import ArticleForm from "@/components/article-form";
+import { useRouter } from 'next/router'
 
-export default function NewArticlePage() {
+export default function EditArticlePage() {
   // Get auth data from the session
   const { data: session } = useSession();
-  // declare state variable `content`
-  const [content, setContent] = useState('');
+  // declare state variables
+   const [article, setArticle] = useState(null);
+   const [content, setContent] = useState('');
+
+   // Get the articleId from the dynamic segment in the URL
+   const router = useRouter();
+   const { articleId } = router.query;
+
+   useEffect(() => {
+    // Fetch the article data from the server using the articleId
+    const fetchArticle = async () => {
+      try {
+        console.log("articleId:", articleId)
+        const response = await fetch(`http://localhost:1337/api/articles/${articleId}`);
+        const data = await response.json();
+        console.log("GET response: ", data)
+        setArticle(data.data);
+        setContent(data.data.attributes.body);
+      } catch (error) {
+        console.error("Error fetching article:", error);
+      }
+    };
+
+    fetchArticle();
+  }, [articleId]);
 
   const handleContentChange = (updatedContent) => {
     setContent(updatedContent);
@@ -39,7 +63,7 @@ export default function NewArticlePage() {
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
-      method: 'POST',
+      method: 'PUT',
       // Tell the server we're sending JSON.
       headers: {
         'Content-Type': 'application/json',
@@ -57,12 +81,19 @@ export default function NewArticlePage() {
     alert(`response: ${JSON.stringify(result)}`)
   }
 
+  // loading screen
+  if (!article) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <>
       {/* // We pass the event to the handleSubmit() function on submit. */}
-      <ArticleForm onSubmit={(event) => handleSubmit(event, session)} initialValues={{title: '', body: '' }} onContentChange={handleContentChange} />
+      <ArticleForm onSubmit={(event) => handleSubmit(event, session)} initialValues={article} onContentChange={handleContentChange} />
 
       <Link href="/">Home</Link>
     </>
   )
 }
+
+
