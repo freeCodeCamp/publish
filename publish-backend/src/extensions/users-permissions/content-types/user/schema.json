@@ -69,6 +69,54 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::article.article"
+    },
+    "slug": {
+      "type": "string",
+      "unique": true,
+      "required": false,
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "displayName": {
+      "type": "string",
+      "required": false,
+      "unique": false,
+      "maxLength": 100
+    },
+    "profileImage": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
+    },
+    "bio": {
+      "type": "text",
+      "maxLength": 300
+    },
+    "website": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "location": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "facebook": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "twitter": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "status": {
+      "type": "string",
+      "required": true,
+      "default": "active"
+    },
+    "last_seen": {
+      "type": "datetime"
     }
   }
 }

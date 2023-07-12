@@ -16,26 +16,15 @@
     }
   },
   "attributes": {
-    "body": {
-      "type": "customField",
-      "options": {
-        "output": "HTML",
-        "preset": "rich"
-      },
-      "customField": "plugin::ckeditor.CKEditor",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      }
-    },
     "title": {
       "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "maxLength": 200,
+      "required": true
     },
     "slug": {
       "type": "string",
@@ -43,7 +32,10 @@
         "i18n": {
           "localized": true
         }
-      }
+      },
+      "maxLength": 100,
+      "required": false,
+      "unique": true
     },
     "featureImage": {
       "type": "media",
@@ -54,15 +46,7 @@
       ],
       "pluginOptions": {
         "i18n": {
-          "localized": true
-        }
-      }
-    },
-    "publishedDate": {
-      "type": "datetime",
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
+          "localized": false
         }
       }
     },
@@ -72,10 +56,40 @@
       "target": "api::tag.tag",
       "inversedBy": "articles"
     },
-    "admin_user": {
+    "author": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "admin::user"
+      "target": "plugin::users-permissions.user"
+    },
+    "body": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "richtext"
+    },
+    "excerpt": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "text"
+    },
+    "language": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::language.language",
+      "inversedBy": "articles"
+    },
+    "translatorId": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string"
     }
   }
 }

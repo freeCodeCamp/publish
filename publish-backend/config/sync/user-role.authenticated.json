@@ -1,6 +1,6 @@
 {
   "name": "Editor",
-  "description": "Editor",
+  "description": "Editors",
   "type": "authenticated",
   "permissions": [
     {

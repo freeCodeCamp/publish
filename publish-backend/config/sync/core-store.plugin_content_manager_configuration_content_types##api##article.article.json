@@ -20,20 +20,6 @@
           "sortable": true
         }
       },
-      "body": {
-        "edit": {
-          "label": "body",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "body",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "title": {
         "edit": {
           "label": "title",
@@ -76,20 +62,6 @@
           "sortable": false
         }
       },
-      "publishedDate": {
-        "edit": {
-          "label": "publishedDate",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "publishedDate",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "tags": {
         "edit": {
           "label": "tags",
@@ -105,17 +77,74 @@
           "sortable": false
         }
       },
-      "admin_user": {
+      "author": {
         "edit": {
-          "label": "admin_user",
+          "label": "author",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "firstname"
+          "mainField": "username"
         },
         "list": {
-          "label": "admin_user",
+          "label": "author",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "body": {
+        "edit": {
+          "label": "body",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "body",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "excerpt": {
+        "edit": {
+          "label": "excerpt",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "excerpt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "language": {
+        "edit": {
+          "label": "language",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "isoLocales"
+        },
+        "list": {
+          "label": "language",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "translatorId": {
+        "edit": {
+          "label": "translatorId",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "translatorId",
           "searchable": true,
           "sortable": true
         }
@@ -171,10 +200,6 @@
           {
             "name": "tags",
             "size": 6
-          },
-          {
-            "name": "admin_user",
-            "size": 6
           }
         ],
         [
@@ -189,7 +214,23 @@
             "size": 6
           },
           {
-            "name": "publishedDate",
+            "name": "author",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "excerpt",
+            "size": 6
+          },
+          {
+            "name": "language",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "translatorId",
             "size": 6
           }
         ]
