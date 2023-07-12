@@ -71,6 +71,8 @@ Note: This will be the Admin panel for developers/staff. Contributors will write
 
 - If you change configurations from the Admin panel, make sure to export those config by running `npm run cs export`. This command will generate files under `config/sync` directory. Include those files in your Git commit. For more details see: https://market.strapi.io/plugins/strapi-plugin-config-sync
 
+- API docs is available at: http://localhost:1337/documentation/v1.0.0 . The Strapi app needs to be running to view the docs.
+
 ### publish-frontend (Next.js)
 
 - Currently, we use Google OAuth as a sign-in method. This is just a temporary solution for testing/development.
