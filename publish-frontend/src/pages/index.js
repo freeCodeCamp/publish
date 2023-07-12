@@ -1,18 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getPostsData } from '../lib/posts'
+import { getArticlesData } from '../lib/articles'
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export async function getServerSideProps() {
-  const allPostsData = await getPostsData();
+  const allArticlesData = await getArticlesData();
   return {
     props: {
-      allPostsData,
+      allArticlesData,
     },
   };
 }
 
-export default function IndexPage({ allPostsData }) {
+export default function IndexPage({ allArticlesData }) {
   const { data: session, status } = useSession();
 
   const isLoading = status === "loading";
@@ -27,17 +27,17 @@ export default function IndexPage({ allPostsData }) {
 
         <h1>Authoring Site (Next.js)</h1>
 
-        <Link href="/posts/new">
-          New Post
+        <Link href="/articles/new">
+          New Article
         </Link>
 
         <ul>
-          {allPostsData.data.map((post) => {
+          {allArticlesData.data.map((article) => {
             return (
-              <li key={post.id}>
-                <Link href={`/posts/${post.id}`}>
-                  <strong>{post.attributes.title}</strong><br/>
-                  {post.attributes.body.slice(0, 150)}...
+              <li key={article.id}>
+                <Link href={`/articles/${article.id}`}>
+                  <strong>{article.attributes.title}</strong><br/>
+                  {article.attributes.body.slice(0, 150)}...
                 </Link>
               </li>
             )

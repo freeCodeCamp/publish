@@ -1,4 +1,4 @@
-export async function getPostsData() {
+export async function getArticlesData() {
   const res = await fetch('http://localhost:1337/api/articles');
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
@@ -8,7 +8,7 @@ export async function getPostsData() {
   return res.json();
 }
 
-export async function createPost(JSONdata) {
+export async function createArticle(JSONdata) {
   // const endpoint = 'http://localhost:1337/api/articles';
 
   // // Bearer token for authentication
@@ -32,7 +32,7 @@ export async function createPost(JSONdata) {
 
   // if (!res.ok) {
   //   // This will activate the closest `error.js` Error Boundary
-  //   throw new Error('Failed to create post')
+  //   throw new Error('Failed to create article')
   // }
 
   // return res.json();
