@@ -8,13 +8,15 @@
       "subject": "api::article.article",
       "properties": {
         "fields": [
-          "body",
           "title",
           "slug",
           "featureImage",
-          "publishedDate",
           "tags",
-          "admin_user"
+          "author",
+          "body",
+          "excerpt",
+          "language",
+          "translatorId"
         ],
         "locales": [
           "en",
@@ -59,13 +61,15 @@
       "subject": "api::article.article",
       "properties": {
         "fields": [
-          "body",
           "title",
           "slug",
           "featureImage",
-          "publishedDate",
           "tags",
-          "admin_user"
+          "author",
+          "body",
+          "excerpt",
+          "language",
+          "translatorId"
         ],
         "locales": [
           "en",
@@ -82,13 +86,15 @@
       "subject": "api::article.article",
       "properties": {
         "fields": [
-          "body",
           "title",
           "slug",
           "featureImage",
-          "publishedDate",
           "tags",
-          "admin_user"
+          "author",
+          "body",
+          "excerpt",
+          "language",
+          "translatorId"
         ],
         "locales": [
           "en",
@@ -102,11 +108,61 @@
     },
     {
       "action": "plugin::content-manager.explorer.create",
+      "subject": "api::language.language",
+      "properties": {
+        "fields": [
+          "isoLocales",
+          "slug",
+          "name",
+          "rtl",
+          "articles"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.delete",
+      "subject": "api::language.language",
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.read",
+      "subject": "api::language.language",
+      "properties": {
+        "fields": [
+          "isoLocales",
+          "slug",
+          "name",
+          "rtl",
+          "articles"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.update",
+      "subject": "api::language.language",
+      "properties": {
+        "fields": [
+          "isoLocales",
+          "slug",
+          "name",
+          "rtl",
+          "articles"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.create",
       "subject": "api::tag.tag",
       "properties": {
         "fields": [
           "name",
-          "articles"
+          "articles",
+          "slug",
+          "isPublic"
         ]
       },
       "conditions": []
@@ -123,7 +179,9 @@
       "properties": {
         "fields": [
           "name",
-          "articles"
+          "articles",
+          "slug",
+          "isPublic"
         ]
       },
       "conditions": []
@@ -134,7 +192,9 @@
       "properties": {
         "fields": [
           "name",
-          "articles"
+          "articles",
+          "slug",
+          "isPublic"
         ]
       },
       "conditions": []
@@ -339,7 +399,17 @@
           "confirmed",
           "blocked",
           "role",
-          "articles"
+          "articles",
+          "slug",
+          "displayName",
+          "profileImage",
+          "bio",
+          "website",
+          "location",
+          "facebook",
+          "twitter",
+          "status",
+          "last_seen"
         ]
       },
       "conditions": []
@@ -364,7 +434,17 @@
           "confirmed",
           "blocked",
           "role",
-          "articles"
+          "articles",
+          "slug",
+          "displayName",
+          "profileImage",
+          "bio",
+          "website",
+          "location",
+          "facebook",
+          "twitter",
+          "status",
+          "last_seen"
         ]
       },
       "conditions": []
@@ -383,7 +463,17 @@
           "confirmed",
           "blocked",
           "role",
-          "articles"
+          "articles",
+          "slug",
+          "displayName",
+          "profileImage",
+          "bio",
+          "website",
+          "location",
+          "facebook",
+          "twitter",
+          "status",
+          "last_seen"
         ]
       },
       "conditions": []
@@ -396,6 +486,30 @@
     },
     {
       "action": "plugin::content-type-builder.read",
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::documentation.read",
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::documentation.settings.read",
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::documentation.settings.regenerate",
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::documentation.settings.update",
       "subject": null,
       "properties": {},
       "conditions": []

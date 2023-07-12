@@ -162,6 +162,146 @@
           "sortable": false
         }
       },
+      "slug": {
+        "edit": {
+          "label": "slug",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "slug",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "displayName": {
+        "edit": {
+          "label": "displayName",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "displayName",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "profileImage": {
+        "edit": {
+          "label": "profileImage",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "profileImage",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "bio": {
+        "edit": {
+          "label": "bio",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "bio",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "website": {
+        "edit": {
+          "label": "website",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "website",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "location": {
+        "edit": {
+          "label": "location",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "location",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "facebook": {
+        "edit": {
+          "label": "facebook",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "facebook",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "twitter": {
+        "edit": {
+          "label": "twitter",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "twitter",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "status": {
+        "edit": {
+          "label": "status",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "status",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "last_seen": {
+        "edit": {
+          "label": "last_seen",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "last_seen",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -232,6 +372,56 @@
         [
           {
             "name": "articles",
+            "size": 6
+          },
+          {
+            "name": "slug",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "displayName",
+            "size": 6
+          },
+          {
+            "name": "profileImage",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "bio",
+            "size": 6
+          },
+          {
+            "name": "website",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "location",
+            "size": 6
+          },
+          {
+            "name": "facebook",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "twitter",
+            "size": 6
+          },
+          {
+            "name": "status",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "last_seen",
             "size": 6
           }
         ]

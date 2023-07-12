@@ -20,6 +20,13 @@
       "relation": "manyToMany",
       "target": "api::article.article",
       "mappedBy": "tags"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "isPublic": {
+      "type": "boolean",
+      "default": true
     }
   }
 }

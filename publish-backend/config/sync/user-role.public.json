@@ -1,6 +1,6 @@
 {
   "name": "Public",
-  "description": "Default role given to unauthenticated user.",
+  "description": "Default role given to unauthenticated user (unauthenticated API calls).",
   "type": "public",
   "permissions": [
     {
