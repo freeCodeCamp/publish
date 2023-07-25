@@ -10,7 +10,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@lexical/react": "^0.11.1",
     "@tiptap/extension-color": "^2.0.3",
     "@tiptap/extension-list-item": "^2.0.3",
     "@tiptap/extension-text-style": "^2.0.3",
@@ -19,7 +18,6 @@
     "@tiptap/starter-kit": "^2.0.3",
     "eslint": "8.45.0",
     "eslint-config-next": "13.4.12",
-    "lexical": "^0.11.1",
     "next": "13.4.12",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
