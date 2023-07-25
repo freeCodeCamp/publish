@@ -34,13 +34,14 @@ export default function IndexPage({ allArticlesData }) {
         <ul>
           {allArticlesData.data.map((article) => {
             return (
-              <li key={article.id}>
+              <li key={article.id} className='mb-5'>
                 <Link href={`/articles/${article.id}`}>
-                  <strong>{article.attributes.title}</strong><br/>
+                  <strong>{article.attributes.title}</strong>
+                  <br />
                   {article.attributes.body.slice(0, 150)}...
                 </Link>
               </li>
-            )
+            );
           })
           }
         </ul>
