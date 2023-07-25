@@ -15,7 +15,7 @@ export const authOptions = {
       if (account) {
         // Get JWT token to access the Strapi API
         const res = await fetch(
-          `${process.env.STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
+          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
         );
         const data = await res.json();
         // Note: If the email is already registered on Strapi app without using Google Auth

@@ -1,10 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { getArticlesData } from '../lib/articles'
+import { getArticles } from '../lib/articles';
 import { useSession, signIn, signOut } from "next-auth/react";
 
 export async function getServerSideProps() {
-  const allArticlesData = await getArticlesData();
+  const allArticlesData = await getArticles();
   return {
     props: {
       allArticlesData,
