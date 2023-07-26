@@ -1,38 +1,39 @@
-import Image from 'next/image'
-import Link from 'next/link'
+import { useEffect } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { getMe } from '../lib/users';
 import { getArticles } from '../lib/articles';
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 export async function getServerSideProps() {
   const allArticlesData = await getArticles();
   return {
     props: {
-      allArticlesData,
-    },
+      allArticlesData
+    }
   };
 }
 
 export default function IndexPage({ allArticlesData }) {
   const { data: session, status } = useSession();
 
-  const isLoading = status === "loading";
-  if (isLoading) return "Loading...";
+  const isLoading = status === 'loading';
+  if (isLoading) return 'Loading...';
 
   if (session) {
+    console.log('session.user:', session.user);
+
     return (
       <>
-        Signed in as {session.user.email} <br />
+        Signed in as {session.user.email}{' '}
+        <span className='bg-gray-200 rounded p-1'>{session.user?.role}</span>
+        <br />
         {/* JWT token: {session.user.jwt}<br /> */}
         <button onClick={() => signOut()}>Sign out</button>
-
         <h1>Authoring Site (Next.js)</h1>
-
-        <Link href="/articles/new">
-          New Article
-        </Link>
-
+        <Link href='/articles/new'>New Article</Link>
         <ul>
-          {allArticlesData.data.map((article) => {
+          {allArticlesData.data.map(article => {
             return (
               <li key={article.id} className='mb-5'>
                 <Link href={`/articles/${article.id}`}>
@@ -42,8 +43,7 @@ export default function IndexPage({ allArticlesData }) {
                 </Link>
               </li>
             );
-          })
-          }
+          })}
         </ul>
       </>
     );
