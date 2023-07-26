@@ -3,7 +3,7 @@
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getMe(token) {
-  const endpoint = `${api_root}/users/me?populate=*`;
+  const endpoint = `${api_root}/users/me?populate=role`;
 
   const options = {
     method: 'GET',

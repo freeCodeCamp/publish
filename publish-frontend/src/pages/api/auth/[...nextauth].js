@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { getServerSession } from 'next-auth/next';
 
 export const authOptions = {
   providers: [
@@ -9,8 +10,10 @@ export const authOptions = {
     })
   ],
 
+  // Details: https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    // This method is not invoked when you persist sessions in a database.
+    // This callback is called whenever a JSON Web Token is created (i.e. at sign in)
+    // or updated(i.e whenever a session is accessed in the client).
     async jwt({ token, account }) {
       if (account) {
         // Get JWT token to access the Strapi API
@@ -24,27 +27,29 @@ export const authOptions = {
         const { jwt } = data;
         token.jwt = jwt;
       }
+      // The returned value will be encrypted, and it is stored in a cookie.
       return token;
     },
 
+    // The session callback is called whenever a session is checked.
     async session({ session, token }) {
       session.user.jwt = token.jwt;
 
-      // Fetch user role data from /api/users/me?populate=role
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=role`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.jwt}`
-          }
-        }
-      );
+      // // Fetch user role data from /api/users/me?populate=role
+      // const res = await fetch(
+      //   `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=role`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token.jwt}`
+      //     }
+      //   }
+      // );
 
-      if (res.ok) {
-        const userData = await res.json();
-        // Save the role name to the session
-        session.user.role = userData?.role?.name || null;
-      }
+      // if (res.ok) {
+      //   const userData = await res.json();
+      //   // Save the role name to the session
+      //   session.user.role = userData?.role?.name || null;
+      // }
 
       return session;
     }
