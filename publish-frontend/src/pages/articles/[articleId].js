@@ -75,14 +75,16 @@ export default function EditArticlePage() {
 
   return (
     <>
+      <Link href='/'>Home</Link>
+      <Link href={`/articles/preview/${article.id}`} target='_blank'>
+        Preview
+      </Link>
       {/* // We pass the event to the handleSubmit() function on submit. */}
       <ArticleForm
         onSubmit={event => handleSubmit(event, session)}
         initialValues={article}
         onContentChange={handleContentChange}
       />
-
-      <Link href='/'>Home</Link>
     </>
   );
 }
