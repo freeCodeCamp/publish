@@ -236,17 +236,9 @@
           {
             "name": "password",
             "size": 6
-          },
-          {
-            "name": "resetPasswordToken",
-            "size": 6
           }
         ],
         [
-          {
-            "name": "registrationToken",
-            "size": 6
-          },
           {
             "name": "isActive",
             "size": 4

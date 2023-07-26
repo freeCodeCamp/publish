@@ -26,6 +26,12 @@
     },
     {
       "action": "api::tag.tag.findOne"
+    },
+    {
+      "action": "plugin::users-permissions.role.find"
+    },
+    {
+      "action": "plugin::users-permissions.user.me"
     }
   ]
 }

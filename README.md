@@ -61,6 +61,12 @@ Note: This will be the Admin panel for developers/staff. Contributors will write
 
 ### publish-backend (Strapi)
 
+- 💡 If you change configurations from the Admin panel, make sure to export those config by running `npm run cs export`. This command will generate files under `config/sync` directory. Include those files in your Git commit. For more details see: https://market.strapi.io/plugins/strapi-plugin-config-sync
+
+- API docs is available at: http://localhost:1337/documentation/v1.0.0 . The Strapi app needs to be running to view the docs.
+
+#### How to use Admin Panel
+
 - You can manage authors (users to access publish-frontend app) from `Content Manager > User`
 
 - You can manage admin users (users to access Strapi admin panel) from `Settings > ADMINISTRATION PANEL > Users`
@@ -68,10 +74,6 @@ Note: This will be the Admin panel for developers/staff. Contributors will write
 - You can change data models from `Content-Type Builder`
 
 - You can modify what data to expose through API from `Settings > USERS & PERMISSIONS PLUGIN > Roles > Public`
-
-- If you change configurations from the Admin panel, make sure to export those config by running `npm run cs export`. This command will generate files under `config/sync` directory. Include those files in your Git commit. For more details see: https://market.strapi.io/plugins/strapi-plugin-config-sync
-
-- API docs is available at: http://localhost:1337/documentation/v1.0.0 . The Strapi app needs to be running to view the docs.
 
 ### publish-frontend (Next.js)
 

@@ -3,7 +3,8 @@
   "value": {
     "providers": {
       "autoRegister": false,
-      "defaultRole": null
+      "defaultRole": null,
+      "ssoLockedRoles": null
     }
   },
   "type": "object",
