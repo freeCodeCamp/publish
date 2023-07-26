@@ -5,6 +5,7 @@ import UsersList from '@/components/users-list';
 // Get session in getServerSideProps
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth/next';
+import { Flex } from '@chakra-ui/react';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -26,12 +27,12 @@ export default function UsersIndex({ allUsersData }) {
     console.log('session.user:', session.user);
 
     return (
-      <>
+      <Flex>
         <NavMenu session={session} />
-        <main>
+        <main className='p-3'>
           <UsersList allUsersData={allUsersData} />
         </main>
-      </>
+      </Flex>
     );
   }
 

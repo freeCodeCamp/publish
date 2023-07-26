@@ -2,6 +2,7 @@ import { useSession, signIn } from 'next-auth/react';
 import { getTags } from '@/lib/tags';
 import NavMenu from '@/components/nav-menu';
 import TagsList from '@/components/tags-list';
+import { Flex } from '@chakra-ui/react';
 
 export async function getServerSideProps() {
   const allTagsData = await getTags();
@@ -22,12 +23,12 @@ export default function TagsIndex({ allTagsData }) {
     console.log('session.user:', session.user);
 
     return (
-      <>
+      <Flex>
         <NavMenu session={session} />
-        <main>
+        <main className='p-3'>
           <TagsList allTagsData={allTagsData} />
         </main>
-      </>
+      </Flex>
     );
   }
 

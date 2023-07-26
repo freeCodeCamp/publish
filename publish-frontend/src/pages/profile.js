@@ -4,6 +4,7 @@ import NavMenu from '@/components/nav-menu';
 // Get session in getServerSideProps
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth/next';
+import { Flex } from '@chakra-ui/react';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -25,24 +26,44 @@ export default function Profile({ userData }) {
 
   if (session) {
     return (
-      <>
+      <Flex>
         <NavMenu session={session} />
 
-        <main>
+        <main className='p-3'>
           <ul>
-            <li>Username: {userData.username}</li>
-            <li>Email: {userData.email}</li>
-            <li>displayName: {userData.displayName}</li>
-            <li>bio: {userData.bio}</li>
-            <li>website: {userData.website}</li>
-            <li>location: {userData.location}</li>
-            <li>facebook: {userData.facebook}</li>
-            <li>twitter: {userData.twitter}</li>
-            <li>role: {userData.role.name}</li>
-            <li>profileImage: {userData.profileImage}</li>
+            <li>
+              <strong>Username:</strong> {userData.username}
+            </li>
+            <li>
+              <strong>Email:</strong> {userData.email}
+            </li>
+            <li>
+              <strong>displayName:</strong> {userData.displayName}
+            </li>
+            <li>
+              <strong>bio:</strong> {userData.bio}
+            </li>
+            <li>
+              <strong>website:</strong> {userData.website}
+            </li>
+            <li>
+              <strong>location:</strong> {userData.location}
+            </li>
+            <li>
+              <strong>facebook:</strong> {userData.facebook}
+            </li>
+            <li>
+              <strong>twitter:</strong> {userData.twitter}
+            </li>
+            <li>
+              <strong>role:</strong> {userData.role.name}
+            </li>
+            <li>
+              <strong>profileImage:</strong> {userData.profileImage}
+            </li>
           </ul>
         </main>
-      </>
+      </Flex>
     );
   }
 

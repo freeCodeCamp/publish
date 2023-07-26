@@ -1,8 +1,10 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import Link from 'next/link'
-import ArticleForm from "@/components/article-form";
+import NextLink from 'next/link';
+import ArticleForm from '@/components/article-form';
 import { createArticle } from '@/lib/articles';
+// Chakra UI components
+import { Link } from '@chakra-ui/react';
 
 export default function NewArticlePage() {
   // Get auth data from the session
@@ -46,14 +48,18 @@ export default function NewArticlePage() {
 
   return (
     <>
+      <Link as={NextLink} href='/'>
+        Home
+      </Link>{' '}
+      <Link as={NextLink} href='#' target='_blank'>
+        Preview
+      </Link>
       {/* // We pass the event to the handleSubmit() function on submit. */}
       <ArticleForm
         onSubmit={event => handleSubmit(event, session)}
         initialValues={{ title: '', body: '' }}
         onContentChange={handleContentChange}
       />
-
-      <Link href='/'>Home</Link>
     </>
   );
 }

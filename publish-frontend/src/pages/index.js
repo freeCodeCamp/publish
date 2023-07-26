@@ -1,10 +1,14 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import NextLink from 'next/link'; // import as NextLink to avoid conflict with chakra-ui Link component
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { getMe } from '../lib/users';
 import { getArticles } from '../lib/articles';
 import NavMenu from '@/components/nav-menu';
+// Chakra UI components
+import { Button } from '@chakra-ui/react';
+import { Link } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
 export async function getServerSideProps() {
   const allArticlesData = await getArticles();
@@ -23,12 +27,14 @@ export default function IndexPage({ allArticlesData }) {
 
   if (session) {
     return (
-      <>
+      <Flex>
         <NavMenu session={session} />
 
-        <main>
+        <main className='p-3'>
           <div>
-            <Link href='/articles/new'>New Article</Link>
+            <Button colorScheme='blue' as={NextLink} href='/articles/new'>
+              New Article
+            </Button>
           </div>
 
           <div>
@@ -36,7 +42,7 @@ export default function IndexPage({ allArticlesData }) {
               {allArticlesData.data.map(article => {
                 return (
                   <li key={article.id} className='mb-5'>
-                    <Link href={`/articles/${article.id}`}>
+                    <Link as={NextLink} href={`/articles/${article.id}`}>
                       <strong>{article.attributes.title}</strong>
                       <br />
                       {article.attributes.body.slice(0, 150)}...
@@ -47,14 +53,14 @@ export default function IndexPage({ allArticlesData }) {
             </ul>
           </div>
         </main>
-      </>
+      </Flex>
     );
   }
 
   return (
     <>
       Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <Button onClick={() => signIn()}>Sign in</Button>
     </>
   );
 }
