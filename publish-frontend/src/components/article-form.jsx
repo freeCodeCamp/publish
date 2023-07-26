@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Tiptap from 'src/components/tiptap';
+import Tiptap from '@/components/tiptap';
 
 const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
   return (

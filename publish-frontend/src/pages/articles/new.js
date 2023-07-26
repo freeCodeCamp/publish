@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import Link from 'next/link'
 import ArticleForm from "@/components/article-form";
-import { createArticle } from 'src/lib/articles';
+import { createArticle } from '@/lib/articles';
 
 export default function NewArticlePage() {
   // Get auth data from the session

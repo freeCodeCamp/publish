@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Link from 'next/link';
 import ArticleForm from '@/components/article-form';
 import { useRouter } from 'next/router';
-import { getArticle, updateArticle } from 'src/lib/articles';
+import { getArticle, updateArticle } from '@/lib/articles';
 
 export default function EditArticlePage() {
   // Get auth data from the session

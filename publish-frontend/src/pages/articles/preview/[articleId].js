@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getArticle, updateArticle } from 'src/lib/articles';
+import { getArticle } from '@/lib/articles';
 
 export default function PreviewArticlePage() {
   // Get auth data from the session
