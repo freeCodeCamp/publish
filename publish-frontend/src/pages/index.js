@@ -21,14 +21,11 @@ export default function IndexPage({ allArticlesData }) {
   if (isLoading) return 'Loading...';
 
   if (session) {
-    console.log('session.user:', session.user);
-
     return (
       <>
         Signed in as {session.user.email}{' '}
         <span className='bg-gray-200 rounded p-1'>{session.user?.role}</span>
         <br />
-        {/* JWT token: {session.user.jwt}<br /> */}
         <button onClick={() => signOut()}>Sign out</button>
         <h1>Authoring Site (Next.js)</h1>
         <Link href='/articles/new'>New Article</Link>
