@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { getServerSession } from 'next-auth/next';
 
 export const authOptions = {
   providers: [
@@ -9,11 +10,14 @@ export const authOptions = {
     })
   ],
 
+  // Details: https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    // This method is not invoked when you persist sessions in a database.
+    // This callback is called whenever a JSON Web Token is created (i.e. at sign in)
+    // or updated(i.e whenever a session is accessed in the client).
     async jwt({ token, account }) {
       if (account) {
         // Get JWT token to access the Strapi API
+        // Note: This is different from the session JWT that is stored in the cookie at the end of this callback
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
         );
@@ -22,30 +26,36 @@ export const authOptions = {
         // then it will fail to get JWT token
         // https://github.com/strapi/strapi/issues/12907
         const { jwt } = data;
+        // Add the JWT token for Strapi API to session JWT
         token.jwt = jwt;
+
+        // Fetch user role data from /api/users/me?populate=role
+        const res2 = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=role`,
+          {
+            headers: {
+              Authorization: `Bearer ${token.jwt}`
+            }
+          }
+        );
+
+        if (res2.ok) {
+          const userData = await res2.json();
+          // Add the role name to session JWT
+          token.userRole = userData?.role?.name || null;
+          console.log('token.userRole:', token.userRole);
+        }
       }
+      // The returned value will be encrypted, and it is stored in a cookie.
+      // We can access it through the session callback.
       return token;
     },
 
+    // The session callback is called whenever a session is checked.
     async session({ session, token }) {
-      session.user.jwt = token.jwt;
-
-      // Fetch user role data from /api/users/me?populate=role
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=role`,
-        {
-          headers: {
-            Authorization: `Bearer ${token.jwt}`
-          }
-        }
-      );
-
-      if (res.ok) {
-        const userData = await res.json();
-        // Save the role name to the session
-        session.user.role = userData?.role?.name || null;
-      }
-
+      // Decrypt the token in the cookie and return needed values
+      session.user.jwt = token.jwt; // JWT token to access the Strapi API
+      session.user.role = token.userRole;
       return session;
     }
   },
