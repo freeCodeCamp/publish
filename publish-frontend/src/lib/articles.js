@@ -1,6 +1,6 @@
 // Article API calls
 
-const api_root = `${process.env.STRAPI_BACKEND_URL}/api`;
+const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getArticles() {
   const res = await fetch(`${api_root}/articles`);
