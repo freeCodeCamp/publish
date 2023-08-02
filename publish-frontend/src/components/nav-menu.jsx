@@ -3,6 +3,7 @@ import { Badge } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { Link } from '@chakra-ui/react';
+import { isEditor } from '@/lib/current-user';
 
 export default function NavMenu({ session }) {
   return (
@@ -15,17 +16,20 @@ export default function NavMenu({ session }) {
             Posts
           </Link>
         </li>
-        {/* TODO: Show 'Tags' and 'Users' menu to Editors only */}
-        <li>
-          <Link as={NextLink} href='/tags'>
-            Tags
-          </Link>
-        </li>
-        <li>
-          <Link as={NextLink} href='/users'>
-            Users
-          </Link>
-        </li>
+        {isEditor(session) && (
+          <>
+            <li>
+              <Link as={NextLink} href='/tags'>
+                Tags
+              </Link>
+            </li>
+            <li>
+              <Link as={NextLink} href='/users'>
+                Users
+              </Link>
+            </li>
+          </>
+        )}
       </ul>
       <br />
       <div>
