@@ -26,7 +26,8 @@ export default function NewArticlePage() {
       // Need to nest in data object because Strapi expects so
       data: {
         title: event.target.title.value,
-        body: content // Get the content from the state
+        body: content, // Get the content from the state
+        slug: event.target.slug.value
       }
     };
 
@@ -57,7 +58,7 @@ export default function NewArticlePage() {
       {/* // We pass the event to the handleSubmit() function on submit. */}
       <ArticleForm
         onSubmit={event => handleSubmit(event, session)}
-        initialValues={{ title: '', body: '' }}
+        initialValues={{ title: '', body: '', slug: '' }}
         onContentChange={handleContentChange}
       />
     </>
