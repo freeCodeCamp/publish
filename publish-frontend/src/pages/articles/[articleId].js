@@ -1,9 +1,11 @@
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
-import Link from 'next/link';
+import NextLink from 'next/link';
 import ArticleForm from '@/components/article-form';
 import { useRouter } from 'next/router';
-import { getArticle, updateArticle } from 'src/lib/articles';
+import { getArticle, updateArticle } from '@/lib/articles';
+// Chakra UI components
+import { Link } from '@chakra-ui/react';
 
 export default function EditArticlePage() {
   // Get auth data from the session
@@ -65,7 +67,6 @@ export default function EditArticlePage() {
       console.error('createArticle Error:', error);
       alert('Failed to save the article');
     }
-
   };
 
   // loading screen
@@ -75,14 +76,22 @@ export default function EditArticlePage() {
 
   return (
     <>
+      <Link as={NextLink} href='/'>
+        Home
+      </Link>{' '}
+      <Link
+        as={NextLink}
+        href={`/articles/preview/${article.id}`}
+        target='_blank'
+      >
+        Preview
+      </Link>
       {/* // We pass the event to the handleSubmit() function on submit. */}
       <ArticleForm
         onSubmit={event => handleSubmit(event, session)}
         initialValues={article}
         onContentChange={handleContentChange}
       />
-
-      <Link href='/'>Home</Link>
     </>
   );
 }

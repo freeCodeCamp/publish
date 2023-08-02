@@ -10,6 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.1.5",
+    "@chakra-ui/react": "^2.8.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@tiptap/extension-color": "^2.0.3",
     "@tiptap/extension-list-item": "^2.0.3",
     "@tiptap/extension-placeholder": "^2.0.4",
@@ -19,6 +23,7 @@
     "@tiptap/starter-kit": "^2.0.3",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
+    "framer-motion": "^10.13.1",
     "next": "13.4.12",
     "next-auth": "^4.22.1",
     "react": "18.2.0",

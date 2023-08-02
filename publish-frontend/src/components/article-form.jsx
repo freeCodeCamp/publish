@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import Tiptap from 'src/components/tiptap';
+import Tiptap from '@/components/tiptap';
+// Chakra UI components
+import { Button } from '@chakra-ui/react';
 
 const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
   return (
@@ -19,7 +21,9 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
         defaultValue={initialValues?.attributes?.body}
       />
 
-      <button type='submit'>Save</button>
+      <Button colorScheme='blue' type='submit'>
+        Save
+      </Button>
     </form>
   );
 };

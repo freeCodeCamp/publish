@@ -19,3 +19,22 @@ export async function getMe(token) {
   }
   return res.json();
 }
+
+export async function getUsers(token) {
+  const endpoint = `${api_root}/users`;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  const res = await fetch(endpoint, options);
+
+  if (!res.ok) {
+    throw new Error('getUsers Failed');
+  }
+  return res.json();
+}
