@@ -48,7 +48,8 @@ export default function EditArticlePage() {
       // Need to nest in data object because Strapi expects so
       data: {
         title: event.target.title.value,
-        body: content // Get the content from the state
+        body: content, // Get the content from the state
+        slug: event.target.slug.value
       }
     };
 
