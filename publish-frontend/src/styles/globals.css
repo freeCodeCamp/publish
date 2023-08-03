@@ -29,3 +29,9 @@ html {
   display: flex;
   justify-content: flex-end;
 }
+
+.ProseMirror {        
+  min-height: 75vh;
+  max-height: 75vh;
+  overflow: scroll;
+}
