@@ -14,3 +14,18 @@
 a {
   @apply text-blue-600;
 }
+
+html {
+  background-color: #2a2a40;
+}
+
+.editor {
+  width: 75%;
+  background-color: white;
+  padding: 1rem;
+}
+
+.article-container{
+  display: flex;
+  justify-content: flex-end;
+}

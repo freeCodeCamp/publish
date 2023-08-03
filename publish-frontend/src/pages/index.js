@@ -25,42 +25,34 @@ export default function IndexPage({ allArticlesData }) {
   const isLoading = status === 'loading';
   if (isLoading) return 'Loading...';
 
-  if (session) {
-    return (
-      <Flex>
-        <NavMenu session={session} />
-
-        <main className='p-3'>
-          <div>
-            <Button colorScheme='blue' as={NextLink} href='/articles/new'>
-              New Article
-            </Button>
-          </div>
-
-          <div>
-            <ul>
-              {allArticlesData.data.map(article => {
-                return (
-                  <li key={article.id} className='mb-5'>
-                    <Link as={NextLink} href={`/articles/${article.id}`}>
-                      <strong>{article.attributes.title}</strong>
-                      <br />
-                      {article.attributes.body.slice(0, 150)}...
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </main>
-      </Flex>
-    );
-  }
-
   return (
-    <>
-      Not signed in <br />
-      <Button onClick={() => signIn()}>Sign in</Button>
-    </>
+    <Flex>
+     {/* <NavMenu session={session} /> */}
+
+      <main className='p-3'>
+        <div>
+          <Button colorScheme='blue' as={NextLink} href='/articles/new'>
+            New Article
+          </Button>
+        </div>
+
+        <div>
+          <ul>
+            {allArticlesData.data.map(article => {
+              return (
+                <li key={article.id} className='mb-5'>
+                  <Link as={NextLink} href={`/articles/${article.id}`}>
+                    <strong>{article.attributes.title}</strong>
+                    <br />
+                    {article.attributes.body.slice(0, 150)}...
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </main>
+    </Flex>
   );
 }
+

@@ -9,3 +9,8 @@
 .tiptapMenubar button.isActive {
   @apply text-white bg-gray-800;
 }
+
+.editor {
+  width: 75%;
+  height: 100%;
+}
