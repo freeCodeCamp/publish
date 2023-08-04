@@ -1,25 +1,64 @@
 import { useEditor, EditorContent } from '@tiptap/react';
+import React, { useEffect, useRef } from "react";
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import { Color } from '@tiptap/extension-color';
+import BubbleMenu from '@tiptap/extension-bubble-menu'
 import ListItem from '@tiptap/extension-list-item';
 import TextStyle from '@tiptap/extension-text-style';
-import React from 'react';
 
-// Sample code from: https://tiptap.dev/installation/react
-const MenuBar = ({ editor }) => {
-  if (!editor) {
-    return null;
-  }
 
+function MenuBubble({ editor, ref }) {
   return (
-    <div>
+    <div className='menu'>
+      <button
+        type='button'
+        onClick={() => editor.chain().focus().toggleBold().run()}
+      >
+        Bold
+      </button>
+      <button
+        type='button'
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+      >
+        Italic
+      </button>
+      <button
+        type='button'
+        onClick={() => editor.chain().focus().toggleStrike().run()}
+      >
+        Strike
+      </button>
+      <button
+        type='button'
+        onClick={() => editor.chain().focus().toggleCode().run()}
+      >
+        Code
+      </button>
+      <button
+        type='button'
+        onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
+      >
+        h1
+      </button>
+      <button
+        type='button'
+        onClick={() => editor.chain().focus().setHeading({ level: 2 }).run()}
+      >
+        h2
+      </button>
+      <button
+        type='button'
+        onClick={() => editor.chain().focus().setHeading({ level: 3 }).run()}
+      >
+        h3
+      </button>
     </div>
   );
-};
+}
 
 const Tiptap = ({ onChange, defaultValue }) => {
-  // useEditor Hook
+
   const editor = useEditor({
     extensions: [
       Color.configure({ types: [TextStyle.name, ListItem.name] }),
@@ -39,11 +78,11 @@ const Tiptap = ({ onChange, defaultValue }) => {
         placeholder: 'Write something …'
       })
     ],
-    content: defaultValue ? defaultValue : 'type something',
+    content: defaultValue ? defaultValue : '',
     autofocus: true,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none',
+        class: 'prose focus:outline-none',
       }
     },
     onUpdate: ({ editor }) => {
@@ -53,8 +92,8 @@ const Tiptap = ({ onChange, defaultValue }) => {
 
   return (
     <>
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor}/>
+      <MenuBubble editor={editor} /> 
+      <EditorContent editor={editor} />
     </>
   );
 };

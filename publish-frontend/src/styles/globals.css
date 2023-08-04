@@ -11,8 +11,8 @@
   pointer-events: none;
 }
 
-a {
-  @apply text-blue-600;
+h1 {
+  font-size: 3rem;
 }
 
 html {
@@ -20,18 +20,84 @@ html {
 }
 
 .editor {
-  width: 75%;
-  background-color: white;
   padding: 1rem;
+  margin: 1.5rem 0 0 5rem;
+  overflow: hidden;
+
 }
 
 .article-container{
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
+}
+
+.menu{
   display: flex;
-  justify-content: flex-end;
+  padding: 0.2rem;
+  margin: 1rem 0 0 0;
+  border: 1px solid silver;
+  border-radius: 0.25rem;
+  width: 300;
+  max-width: inherit
+}
+
+.side-drawer {
+  background-color: white;
+  border-right: 1px solid silver;
+  width: 300px;
 }
 
 .ProseMirror {        
-  min-height: 75vh;
-  max-height: 75vh;
+  min-height: 70vh;
+  max-height: 70vh;
   overflow: scroll;
+  padding: 1rem;
+  min-width: 100%;
+}
+
+.menu{
+  display: flex;
+  padding: 0.2rem;
+  margin: 1rem 0 0 0;
+  border: 1px solid silver;
+  border-radius: 0.25rem;
+  max-width: inherit
+}
+
+.menu button {
+  padding: 0.2rem;
+  margin: 0.1rem 0.2rem;
+  color: black;
+}
+
+.page {
+  display: flex;
+}
+
+.submit-button {
+  background-color: #1d4ed8;
+  color: white;
+  border: 1px solid;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+}
+
+.draft-button {
+  /* align bottom */
+  align-self: flex-end;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.preview-button {
+  text-decoration: underline;
+  color: rgb(0, 0, 0, 0.80);
+}
+
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1rem 0 0 0;
 }
