@@ -1,5 +1,7 @@
 import React from "react";
 import Tiptap from "@/components/tiptap";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faLongArrowAltLeft } from "@fortawesome/free-solid-svg-icons";
 
 
 const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
@@ -7,7 +9,8 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
     <div className="page">
       <div className="side-drawer">
         <div className="navigation">
-          <h2> Go Back</h2>
+          <FontAwesomeIcon icon={faLongArrowAltLeft} />
+          <h2><span>Go Back</span></h2>
         </div>
         <h2>Your Drafts</h2>
         <ul>
@@ -34,7 +37,10 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
       <div className='article-container'>
 
         <div className="header">
-          <div className="title">Article Title</div>
+          <div className="title" id="title">
+            <span>Article Title</span>
+            <FontAwesomeIcon icon={faEdit} />
+          </div>
           <div className="buttons">
             <button className="preview-button">
               Preview

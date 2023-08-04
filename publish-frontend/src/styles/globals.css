@@ -65,10 +65,14 @@ html {
 }
 
 .title {
-  width: 300px;
+  width: 500px;
   font-size: 1.5rem;
   font-weight: 600;
   margin: 2rem 0 0 5rem;
+}
+
+.title span {
+  margin: 0 1rem 0 0;
 }
 
 .ProseMirror {        

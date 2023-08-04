@@ -6,7 +6,7 @@ import { Color } from '@tiptap/extension-color';
 import ListItem from '@tiptap/extension-list-item';
 import TextStyle from '@tiptap/extension-text-style';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBold, faCode, faHeader, faItalic, faList, faListUl, faStrikethrough } from '@fortawesome/free-solid-svg-icons';
+import { faBold, faCode, faHeader, faItalic, faList, faListUl, faQuoteLeft, faStrikethrough } from '@fortawesome/free-solid-svg-icons';
 
 function MenuBubble({ editor }) {
   return (
@@ -42,6 +42,14 @@ function MenuBubble({ editor }) {
       >
         <FontAwesomeIcon icon={faCode} />
         <span>Code</span>
+      </button>
+      <button 
+        type='button' 
+        className='icon-margin'
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+      >
+        <FontAwesomeIcon icon={faQuoteLeft} />
+        <span>Quote</span>
       </button>
       <div class="vl"></div>
       <button
@@ -118,7 +126,6 @@ const Tiptap = ({ onChange, defaultValue }) => {
       }
     },
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML()); // This callback is triggered on every content change
     }
   });
 
