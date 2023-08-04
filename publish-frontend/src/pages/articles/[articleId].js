@@ -1,11 +1,9 @@
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
-import NextLink from 'next/link';
 import ArticleForm from '@/components/article-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useRouter } from 'next/router';
 import { getArticle, updateArticle } from '@/lib/articles';
-// Chakra UI components
-import { Link } from '@chakra-ui/react';
 
 export default function EditArticlePage() {
   // Get auth data from the session
@@ -77,6 +75,7 @@ export default function EditArticlePage() {
 
   return (
     <>
+      <FontAwesomeIcon icon={faArrowLeft} />
       <ArticleForm
         onSubmit={event => handleSubmit(event, session)}
         initialValues={article}

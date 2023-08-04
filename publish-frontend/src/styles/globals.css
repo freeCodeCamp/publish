@@ -59,6 +59,18 @@ html {
   width: 300px;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  width: 300px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 2rem 0 0 5rem;
+}
+
 .ProseMirror {        
   min-height: 70vh;
   max-height: 70vh;
@@ -76,9 +88,24 @@ html {
   max-width: inherit
 }
 
+.icon-margin span {
+  margin: 0 1rem 0 0.5rem;
+}
+
+.vl {
+  border-left: 1px solid silver;
+  height: 2rem;
+  margin: 0 0.5rem;
+}
+
 .menu button {
   padding: 0.2rem;
   margin: 0.1rem 0.2rem;
+}
+
+.menu button:hover {
+  background-color: #e2e8f0;
+  border-radius: 0.25rem; 
 }
 
 .page {
@@ -95,8 +122,6 @@ html {
 }
 
 .draft-button {
-  /* align bottom */
-  align-self: flex-end;
   margin: 1rem 0.5rem 0 0;
   width: 100%;
 }
@@ -112,7 +137,5 @@ html {
 }
 
 .buttons {
-  display: flex;
-  justify-content: flex-end;
   margin: 1rem 0 0 0;
 }

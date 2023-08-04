@@ -3,8 +3,7 @@ import React, { useState } from "react";
 import NextLink from 'next/link';
 import ArticleForm from '@/components/article-form';
 import { createArticle } from '@/lib/articles';
-// Chakra UI components
-import { Link } from '@chakra-ui/react';
+
 
 export default function NewArticlePage() {
   // Get auth data from the session

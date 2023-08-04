@@ -21,7 +21,7 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
           <li>Article 2</li>
           <li>Article 3</li>
         </ul>
-        <h2>Pubished</h2>
+        <h2>Published</h2>
         <ul>
           <li>Article 1</li>
           <li>Article 2</li>
@@ -32,13 +32,17 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
         </button>
       </div>
       <div className='article-container'>
-        <div className="buttons">
-        <button className="preview-button">
-          Preview
-        </button>
-        <button className="submit-button">
-          Publish
-        </button>
+
+        <div className="header">
+          <div className="title">Article Title</div>
+          <div className="buttons">
+            <button className="preview-button">
+              Preview
+            </button>
+            <button className="submit-button">
+              Publish
+            </button>
+          </div>
         </div>
         <div className="editor">
           <br />
