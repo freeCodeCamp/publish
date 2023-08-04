@@ -1,5 +1,5 @@
 import React from "react";
-import Tiptap from "@/components/tiptap-editor";
+import Tiptap from "@/components/tiptap";
 
 
 const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
