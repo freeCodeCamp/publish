@@ -1,18 +1,35 @@
 import React from "react";
-import dynamic from 'next/dynamic'
-import { Button } from '@chakra-ui/react';
-const Tiptap = dynamic(
-  () => import('@/components/tiptap'),
-  { ssr: false }
-)
+import Tiptap from "@/components/tiptap-editor";
+
 
 const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
   return (
     <div className="page">
       <div className="side-drawer">
-        <Button className="submit-button draft-button" type='submit'>
+        <div className="navigation">
+          <h2> Go Back</h2>
+        </div>
+        <h2>Your Drafts</h2>
+        <ul>
+          <li>Article 1</li>
+          <li>Article 2</li>
+          <li>Article 3</li>
+        </ul>
+        <h2>Pinned Articles</h2>
+        <ul>
+          <li>Article 1</li>
+          <li>Article 2</li>
+          <li>Article 3</li>
+        </ul>
+        <h2>Pubished</h2>
+        <ul>
+          <li>Article 1</li>
+          <li>Article 2</li>
+          <li>Article 3</li>
+        </ul>
+        <button className="submit-button draft-button" type='submit'>
           Save Draft
-        </Button>
+        </button>
       </div>
       <div className='article-container'>
         <div className="buttons">

@@ -11,8 +11,18 @@
   pointer-events: none;
 }
 
-h1 {
-  font-size: 3rem;
+* {
+  color: rgb(0, 0, 0, 0.80);
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+li {
+  padding-left: 1rem;
+  margin: 0.5rem 0
 }
 
 html {
@@ -45,6 +55,7 @@ html {
 .side-drawer {
   background-color: white;
   border-right: 1px solid silver;
+  padding: 1rem;
   width: 300px;
 }
 
@@ -68,7 +79,6 @@ html {
 .menu button {
   padding: 0.2rem;
   margin: 0.1rem 0.2rem;
-  color: black;
 }
 
 .page {
@@ -87,13 +97,18 @@ html {
 .draft-button {
   /* align bottom */
   align-self: flex-end;
-  margin: 0 auto;
+  margin: 1rem 0.5rem 0 0;
   width: 100%;
+}
+
+.navigation {
+  padding: 1rem;
+  border-bottom: 1px solid silver;
 }
 
 .preview-button {
   text-decoration: underline;
-  color: rgb(0, 0, 0, 0.80);
+
 }
 
 .buttons {

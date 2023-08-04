@@ -49,12 +49,6 @@ export default function NewArticlePage() {
 
   return (
     <>
-      <Link as={NextLink} href='/'>
-        Home
-      </Link>{' '}
-      <Link as={NextLink} href='#' target='_blank'>
-        Preview
-      </Link>
       {/* // We pass the event to the handleSubmit() function on submit. */}
       <ArticleForm
         onSubmit={event => handleSubmit(event, session)}
