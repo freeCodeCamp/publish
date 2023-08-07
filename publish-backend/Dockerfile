@@ -13,6 +13,10 @@ WORKDIR /opt/app
 COPY . .
 RUN chown -R node:node /opt/app
 USER node
+# Builds the administration panel
 RUN ["npm", "run", "build"]
 EXPOSE 1337
+# import config from `config/sync/*` files to database
+CMD ["npm", "run", "cs", "import"]
+# Start a Strapi application with autoReload enabled
 CMD ["npm", "run", "develop"]
