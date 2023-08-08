@@ -5,4 +5,3 @@ build/
 node_modules/
 .env
 data/
-backup/
