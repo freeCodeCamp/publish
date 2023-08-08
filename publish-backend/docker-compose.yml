@@ -44,7 +44,7 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_DATABASE: ${DATABASE_NAME}
     volumes:
-      - ./data:/var/lib/mysql # use a bind folder /data
+      - ./data:/var/lib/mysql # use a bind folder ./data
     ports:
       - "3306:3306"
     networks:

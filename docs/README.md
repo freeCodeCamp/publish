@@ -28,24 +28,17 @@ This repository contains 3 separate apps:
 
 1. Change directory to `publish-backend` directory
 
-1. Create a copy of the `.env.example` file and name it `.env`. Add required
-   values.
+1. Create a copy of the `.env.example` file and name it `.env`.
 
-1. Run `npm install`
+1. Run `docker compose up`
 
 1. Run `npm run cs import` to import config from `config/sync/*` files into
    database
 
-1. Run `npm run develop` to start the Strapi app in development mode  
-   Note: You need to run the Strapi app in development mode to modify any
-   Content-Type (data structure).
+Visit http://localhost:1337/admin to access the admin panel.
 
-1. Visit http://localhost:1337/admin to access the admin panel.  
-   Note: This will be the Admin panel for developers/staff. Contributors will
-   write articles on `publish-frontend` (Next.js) app.
-
-1. You will be prompted to create an Admin account if there is no account in
-   your local environment yet.
+You will be prompted to create an Admin account if there is no account in your
+local environment yet.
 
 1. Under `General > Settings > Users & Permissions Plugin > Providers`, enable
    `Google` and `Local` providers. Follow this [link](
@@ -81,6 +74,12 @@ This repository contains 3 separate apps:
 ## Notes
 
 ### publish-backend (Strapi)
+
+- The Admin panel will be for developers only. Contributors will write articles
+  on `publish-frontend` (Next.js) app.
+
+- You need to run the Strapi app in development mode to modify any Content-Type
+  (data structure). If you use `docker compose up` it's configured to do so.
 
 - 💡 If you change configurations from the Admin panel, make sure to export
   those config by running `npm run cs export`. This command will generate files
