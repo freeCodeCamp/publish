@@ -80,12 +80,12 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
                 <div>
                   <input
                     type="text"
+                    className="title-input"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
                   <button className="submit-button icon-margin" onClick={() => setIsEditingTitle(false)}>
-                    <FontAwesomeIcon icon={faEdit} />
-                    <span>Save</span>
+                    Save
                   </button>
                 </div>
               ) : (
@@ -99,12 +99,12 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
               )
             }
           </div>
-          <div className="buttons">
+          <div>
             <button className="preview-button">
               Preview
             </button>
             <button className="submit-button">
-              Publish
+              Send for Review
             </button>
           </div>
         </div>
