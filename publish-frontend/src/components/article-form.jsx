@@ -16,6 +16,10 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
   // show or not show published articles
   const [showPublished, setShowPublished] = useState(true);
 
+  // editing title
+  const [title, setTitle] = useState('this is the title');
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+
   return (
     <div className="page">
       <div className="side-drawer">
@@ -70,9 +74,30 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
       </div>
       <div className='article-container'>
         <div className="header">
-          <div className="title" id="title">
-            <span>Article Title</span>
-            <FontAwesomeIcon icon={faEdit} />
+          <div className="title-pos" id="title">
+            {
+              isEditingTitle ? (
+                <div>
+                  <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <button className="submit-button icon-margin" onClick={() => setIsEditingTitle(false)}>
+                    <FontAwesomeIcon icon={faEdit} />
+                    <span>Save</span>
+                  </button>
+                </div>
+              ) : (
+
+                <button onClick={() => setIsEditingTitle(true)}>
+                  <h1 className="title icon-margin-left">
+                    <span>{title}</span>
+                    <FontAwesomeIcon icon={faEdit} />
+                  </h1>
+                </button>
+              )
+            }
           </div>
           <div className="buttons">
             <button className="preview-button">

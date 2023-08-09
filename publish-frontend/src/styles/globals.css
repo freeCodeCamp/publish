@@ -64,11 +64,14 @@ html {
   justify-content: space-between;
 }
 
-.title {
+.title-pos {
   width: 500px;
+  margin: 2rem 0 0 5rem;
+}
+
+.title {
   font-size: 1.5rem;
   font-weight: 600;
-  margin: 2rem 0 0 5rem;
 }
 
 .title span {
@@ -94,6 +97,10 @@ html {
 
 .icon-margin span {
   margin: 0 1rem 0 0.5rem;
+}
+
+.icon-margin-left span {
+  margin: 0 0.5rem 0 1rem;
 }
 
 .vl {
@@ -137,7 +144,11 @@ html {
 
 .preview-button {
   text-decoration: underline;
+}
 
+.dropdown-button {
+  display: block;
+  border: 1px 0 0 1px solid silver;
 }
 
 .buttons {
