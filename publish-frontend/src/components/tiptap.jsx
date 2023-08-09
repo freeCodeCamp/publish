@@ -1,14 +1,23 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import React from "react";
+import { useCallback } from 'react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import { Color } from '@tiptap/extension-color';
-import ListItem from '@tiptap/extension-list-item';
-import TextStyle from '@tiptap/extension-text-style';
+import Image from '@tiptap/extension-image';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBold, faCode, faHeader, faItalic, faList, faListUl, faQuoteLeft, faStrikethrough } from '@fortawesome/free-solid-svg-icons';
+import { faBold, faCode, faHeader, faImage, faItalic, faList, faListUl, faQuoteLeft, faStrikethrough } from '@fortawesome/free-solid-svg-icons';
 
 function MenuBubble({ editor }) {
+
+
+  const addImage = useCallback(() => {
+    const url = window.prompt('URL')
+
+    if (url) {
+      editor.chain().focus().setImage({ src: url, alt: '' }).run()
+    }
+  }, [editor])
+
   return (
     <div className='menu'>
       <button
@@ -91,6 +100,14 @@ function MenuBubble({ editor }) {
         <span>Ordered</span>
       </button>
       <div class="vl"></div>
+      <button
+        type='button'
+        className='icon-margin'
+        onClick={() => addImage()}
+      >
+        <FontAwesomeIcon icon={faImage} />
+        <span>Image</span>
+      </button>
     </div>
   );
 }
@@ -99,8 +116,6 @@ const Tiptap = ({ onChange, defaultValue }) => {
 
   const editor = useEditor({
     extensions: [
-      Color.configure({ types: [TextStyle.name, ListItem.name] }),
-      TextStyle.configure({ types: [ListItem.name] }),
       StarterKit.configure({
         bulletList: {
           keepMarks: true,
@@ -114,6 +129,9 @@ const Tiptap = ({ onChange, defaultValue }) => {
       Placeholder.configure({
         // Use a placeholder:
         placeholder: 'Write something …'
+      }),
+      Image.configure({
+        inline: true,
       })
     ],
     content: defaultValue ? defaultValue : `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada tortor nec purus viverra, ac laoreet nulla hendrerit. Proin ac vehicula lacus. Donec nulla diam, volutpat eu interdum non, pharetra non mi. In tempor nisi augue, vel volutpat lorem gravida id. Quisque sodales augue in aliquet lacinia. Phasellus interdum convallis orci, sollicitudin pharetra enim fringilla eu. Pellentesque suscipit laoreet ante ut luctus. Etiam sagittis massa id magna efficitur volutpat. Aenean id nulla ut tellus porttitor sagittis ac ut nunc. Fusce non velit vitae purus aliquam finibus convallis vitae justo. In pellentesque risus risus, vitae tincidunt augue iaculis eget. Morbi sed risus lobortis, euismod augue sit amet, lobortis sem.
