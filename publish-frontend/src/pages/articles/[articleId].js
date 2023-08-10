@@ -74,7 +74,6 @@ export default function EditArticlePage() {
 
   return (
     <>
-      <FontAwesomeIcon icon={faArrowLeft} />
       <ArticleForm
         onSubmit={event => handleSubmit(event, session)}
         initialValues={article}
