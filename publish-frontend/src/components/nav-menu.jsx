@@ -1,5 +1,8 @@
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
+import { Link } from '@chakra-ui/react';
+import { Badge } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { isEditor } from '@/lib/current-user';
 
 export default function NavMenu({ session }) {
