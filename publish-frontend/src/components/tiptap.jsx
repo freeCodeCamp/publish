@@ -1,5 +1,4 @@
 import { useEditor, EditorContent } from '@tiptap/react';
-import React from "react";
 import { useCallback } from 'react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';

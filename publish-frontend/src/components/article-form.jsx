@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import Tiptap from "@/components/tiptap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
