@@ -60,7 +60,7 @@ function MenuBubble({ editor }) {
         <FontAwesomeIcon icon={faQuoteLeft} />
         <span>Quote</span>
       </button>
-      <div class="vl"></div>
+      <div className="vl"></div>
       <button
         type='button'
         onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
@@ -82,7 +82,7 @@ function MenuBubble({ editor }) {
         <FontAwesomeIcon icon={faHeader} />
         3
       </button>
-      <div class="vl"></div>
+      <div className="vl"></div>
       <button
         type='button'
         className='icon-margin'
@@ -99,7 +99,7 @@ function MenuBubble({ editor }) {
         <FontAwesomeIcon icon={faList} />
         <span>Ordered</span>
       </button>
-      <div class="vl"></div>
+      <div className="vl"></div>
       <button
         type='button'
         className='icon-margin'
