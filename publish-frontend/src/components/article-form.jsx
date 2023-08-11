@@ -3,9 +3,7 @@ import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
 
-
-const ArticleForm = ({initialValues, onContentChange }) => {
-
+const ArticleForm = ({ initialValues, onContentChange }) => {
   // show or not show drafts
   const [showDrafts, setShowDrafts] = useState(true);
 
@@ -20,15 +18,22 @@ const ArticleForm = ({initialValues, onContentChange }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   return (
-    <div className="page">
-      <div className="side-drawer">
-        <div className="navigation">
+    <div className='page'>
+      <div className='side-drawer'>
+        <div className='navigation'>
           <button>
-            <h2 className="icon-margin"><FontAwesomeIcon icon={faLongArrowAltLeft} /><span>Go Back</span></h2>
+            <h2 className='icon-margin'>
+              <FontAwesomeIcon icon={faLongArrowAltLeft} />
+              <span>Go Back</span>
+            </h2>
           </button>
         </div>
-        <button className="dropdown-button" onClick={() => setShowDrafts(!showDrafts)}
-        ><h2>Drafts</h2></button>
+        <button
+          className='dropdown-button'
+          onClick={() => setShowDrafts(!showDrafts)}
+        >
+          <h2>Drafts</h2>
+        </button>
         {showDrafts && (
           <>
             <div>
@@ -42,7 +47,12 @@ const ArticleForm = ({initialValues, onContentChange }) => {
         )}
         {/* show pinned articles */}
 
-        <button className="dropdown-button" onClick={() => setShowPinned(!showPinned)}><h2>Pinned</h2></button>
+        <button
+          className='dropdown-button'
+          onClick={() => setShowPinned(!showPinned)}
+        >
+          <h2>Pinned</h2>
+        </button>
         {showPinned && (
           <>
             <div>
@@ -55,7 +65,12 @@ const ArticleForm = ({initialValues, onContentChange }) => {
           </>
         )}
         {/* show published articles */}
-        <button className="dropdown-button" onClick={() => setShowPublished(!showPublished)} ><h2>Published</h2></button>
+        <button
+          className='dropdown-button'
+          onClick={() => setShowPublished(!showPublished)}
+        >
+          <h2>Published</h2>
+        </button>
         {showPublished && (
           <>
             <div>
@@ -67,47 +82,43 @@ const ArticleForm = ({initialValues, onContentChange }) => {
             </div>
           </>
         )}
-        <button className="submit-button draft-button" type='submit'>
+        <button className='submit-button draft-button' type='submit'>
           Save Draft
         </button>
       </div>
       <div className='article-container'>
-        <div className="header">
-          <div className="title-pos" id="title">
-            {
-              isEditingTitle ? (
-                <div>
-                  <input
-                    type="text"
-                    className="title-input"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <button className="submit-button icon-margin" onClick={() => setIsEditingTitle(false)}>
-                    Save
-                  </button>
-                </div>
-              ) : (
-
-                <button onClick={() => setIsEditingTitle(true)}>
-                  <h1 className="title icon-margin-left">
-                    <span>{title}</span>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </h1>
+        <div className='header'>
+          <div className='title-pos' id='title'>
+            {isEditingTitle ? (
+              <div>
+                <input
+                  type='text'
+                  className='title-input'
+                  value={title}
+                  onChange={e => setTitle(e.target.value)}
+                />
+                <button
+                  className='submit-button icon-margin'
+                  onClick={() => setIsEditingTitle(false)}
+                >
+                  Save
                 </button>
-              )
-            }
+              </div>
+            ) : (
+              <button onClick={() => setIsEditingTitle(true)}>
+                <h1 className='title icon-margin-left'>
+                  <span>{title}</span>
+                  <FontAwesomeIcon icon={faEdit} />
+                </h1>
+              </button>
+            )}
           </div>
           <div>
-            <button className="preview-button">
-              Preview
-            </button>
-            <button className="submit-button">
-              Send for Review
-            </button>
+            <button className='preview-button'>Preview</button>
+            <button className='submit-button'>Send for Review</button>
           </div>
         </div>
-        <div className="editor">
+        <div className='editor'>
           <br />
           <Tiptap
             onChange={onContentChange}
@@ -116,7 +127,6 @@ const ArticleForm = ({initialValues, onContentChange }) => {
         </div>
       </div>
     </div>
-
   );
 };
 
