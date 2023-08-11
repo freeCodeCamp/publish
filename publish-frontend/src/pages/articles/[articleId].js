@@ -1,5 +1,5 @@
-import { useSession } from "next-auth/react";
-import React, { useState, useEffect } from "react";
+import { useSession } from 'next-auth/react';
+import React, { useState, useEffect } from 'react';
 import ArticleForm from '@/components/article-form';
 import { useRouter } from 'next/router';
 import { getArticle, updateArticle } from '@/lib/articles';

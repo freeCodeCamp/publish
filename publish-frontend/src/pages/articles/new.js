@@ -1,6 +1,5 @@
-import { useSession } from "next-auth/react";
-import React, { useState } from "react";
-import NextLink from 'next/link';
+import { useSession } from 'next-auth/react';
+import React, { useState } from 'react';
 import ArticleForm from '@/components/article-form';
 import { createArticle } from '@/lib/articles';
 

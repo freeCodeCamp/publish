@@ -10,12 +10,12 @@ function MenuBubble({ editor }) {
 
 
   const addImage = useCallback(() => {
-    const url = window.prompt('URL')
+    const url = window.prompt('URL');
 
     if (url) {
-      editor.chain().focus().setImage({ src: url, alt: '' }).run()
+      editor.chain().focus().setImage({ src: url, alt: '' }).run();
     }
-  }, [editor])
+  }, [editor]);
 
   return (
     <div className='menu'>
@@ -111,7 +111,7 @@ function MenuBubble({ editor }) {
   );
 }
 
-const Tiptap = ({ onChange, defaultValue }) => {
+const Tiptap = ({defaultValue }) => {
 
   const editor = useEditor({
     extensions: [
@@ -142,8 +142,6 @@ const Tiptap = ({ onChange, defaultValue }) => {
         class: 'prose focus:outline-none',
       }
     },
-    onUpdate: ({ editor }) => {
-    }
   });
 
   return (

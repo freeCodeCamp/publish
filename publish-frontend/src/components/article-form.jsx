@@ -1,10 +1,10 @@
-import { useState } from "react";
-import Tiptap from "@/components/tiptap";
+import { useState } from 'react';
+import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faLongArrowAltLeft } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
 
 
-const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
+const ArticleForm = ({initialValues, onContentChange }) => {
 
   // show or not show drafts
   const [showDrafts, setShowDrafts] = useState(true);
