@@ -11,6 +11,147 @@
   pointer-events: none;
 }
 
-a {
-  @apply text-blue-600;
+* {
+  color: rgb(0, 0, 0, 0.80);
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+li {
+  padding-left: 1rem;
+  margin: 0.5rem 0
+}
+
+html {
+  background-color: #2a2a40;
+}
+
+.editor {
+  padding: 1rem;
+  margin: 1.5rem 0 0 5rem;
+  overflow: hidden;
+
+}
+
+.article-container{
+  width: 100%;
+  background-color: white;
+  overflow: hidden;
+}
+
+.menu{
+  display: flex;
+  padding: 0.2rem;
+  margin: 1rem 0 0 0;
+  border: 1px solid silver;
+  border-radius: 0.25rem;
+  width: 300;
+  max-width: inherit
+}
+
+.side-drawer {
+  background-color: white;
+  border-right: 1px solid silver;
+  padding: 1rem;
+  width: 300px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin: 1rem;
+}
+
+.title-pos {
+  width: 500px;
+  margin: 0 0 0 5rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.title-input {
+  width: 80%;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border: none;
+  outline: none;
+}
+
+.ProseMirror {        
+  min-height: 70vh;
+  max-height: 70vh;
+  overflow: scroll;
+  padding: 1rem;
+  min-width: 100%;
+}
+
+.menu{
+  display: flex;
+  padding: 0.2rem;
+  margin: 1rem 0 0 0;
+  border: 1px solid silver;
+  border-radius: 0.25rem;
+  max-width: inherit
+}
+
+.icon-margin span {
+  margin: 0 1rem 0 0.5rem;
+}
+
+.icon-margin-left span {
+  margin: 0 0.5rem 0 1rem;
+}
+
+.vl {
+  border-left: 1px solid silver;
+  height: 2rem;
+  margin: 0 0.5rem;
+}
+
+.menu button {
+  padding: 0.2rem;
+  margin: 0.1rem 0.2rem;
+}
+
+.menu button:hover {
+  background-color: #e2e8f0;
+  border-radius: 0.25rem; 
+}
+
+.page {
+  display: flex;
+}
+
+.submit-button {
+  background-color: #1d4ed8;
+  color: white;
+  border: 1px solid;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.draft-button {
+  margin: 1rem 0.5rem 0 0;
+  width: 100%;
+}
+
+.navigation {
+  padding: 1rem;
+  border-bottom: 1px solid silver;
+}
+
+.preview-button {
+  text-decoration: underline;
+  margin-right: 1rem;
+}
+
+.dropdown-button {
+  display: block;
+  border: 1px 0 0 1px solid silver;
 }
