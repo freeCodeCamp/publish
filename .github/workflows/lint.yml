@@ -1,0 +1,23 @@
+name: Frontend Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+      - name: Install dependencies
+        working-directory: ./publish-frontend
+        run: npm install
+      - name: Run lint
+        working-directory: ./publish-frontend
+        run: npm run lint
