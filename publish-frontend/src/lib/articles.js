@@ -1,8 +1,7 @@
 // Article API calls
-
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function getArticles() {
+export async function getArtiles() {
   const res = await fetch(`${api_root}/articles`);
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
