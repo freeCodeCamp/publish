@@ -1,5 +1,5 @@
 name: build & lint
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
     build:
@@ -10,25 +10,21 @@ jobs:
           with:
             node-version: '14.x'
         - name: Install backend dependencies
-          working-directory: /publish-backend
+          working-directory: ./publish-backend
           run: |
             cp .env.example .env
             npm install
         - name: Start backend
-          working-directory: /publish-backend
+          working-directory: ./publish-backend
           run: npm run cs import && npm run develop &
         - name: Install frontend dependencies
-          working-directory: /publish-frontend
+          working-directory: ./publish-frontend
           run: |
             cp sample.env.local .env
             npm install
         - name: Start frontend
-          working-directory: /publish-frontend
+          working-directory: ./publish-frontend
           run: npm run dev
-       
-                
-
-                
 
               
             
