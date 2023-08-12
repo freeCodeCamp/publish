@@ -13,9 +13,9 @@
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "^0.0.7",
     "@strapi/plugin-documentation": "^4.11.5",
-    "@strapi/plugin-i18n": "4.12.1",
-    "@strapi/plugin-users-permissions": "4.12.1",
-    "@strapi/strapi": "4.12.1",
+    "@strapi/plugin-i18n": "4.12.4",
+    "@strapi/plugin-users-permissions": "4.12.4",
+    "@strapi/strapi": "4.12.4",
     "axios": "^1.4.0",
     "better-sqlite3": "8.5.0",
     "eleventy-plugin-error-overlay": "^1.0.0",
