@@ -47,11 +47,20 @@ This repository contains 3 separate apps:
 1. You will be prompted to create an Admin account if there is no account in
    your local environment yet.
 
+1. Under `General > Settings > Users & Permissions Plugin > Providers`, enable
+   `Google` and `Local` providers. Follow this [link](
+   https://next-auth.js.org/providers/google#configuration) to get Google OAuth
+   credentials. In the dialog box in Strapi, set the redirect URL to front-end
+   app to `http://localhost:3000/api/auth/callback/google`(this url doesn't
+   matter as it's mainly used when Strapi handles the complete auth flow which
+   is not the case for us).
+
 ### Run publish-frontend (Next.js) app
 
 1. In another terminal, go to `publish-frontend` directory
 1. Create a copy of the `sample.env.local` file and name it `.env.local`. Add
-   required values.
+   required values. Use the same Google OAuth credentials as you used for
+   `publish-backend` (Strapi) app.
 1. Run `npm install`
 1. Make sure the backend Strapi app is running in another terminal. Then start
    the frontend Next.js app by running `npm run dev`.
