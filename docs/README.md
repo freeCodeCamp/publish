@@ -28,17 +28,22 @@ This repository contains 3 separate apps:
 
 1. Change directory to `publish-backend` directory
 
-1. Create a copy of the `.env.example` file and name it `.env`.
+2. Create a copy of the `.env.example` file and name it `.env`
 
-1. Run `docker compose up`
+3. Run `npm install`
 
-1. Run `npm run cs import` to import config from `config/sync/*` files into
-   database
+4. Run `docker compose up`
 
-Visit http://localhost:1337/admin to access the admin panel.
+5. In another terminal, go to `publish-backend` and run `npm run cs import`.
+   This will import config from `config/sync/*` files into the database.
 
-You will be prompted to create an Admin account if there is no account in your
-local environment yet.
+6. Visit http://localhost:1337/admin to access the admin panel
+
+7. You will be prompted to create an Admin account if there is no account in
+   your local environment yet. Create an account here.
+
+Note: This is an account to login to the admin panel. It's different from the
+account to login to the frontend app.
 
 1. Under `General > Settings > Users & Permissions Plugin > Providers`, enable
    `Google` and `Local` providers. Follow this [link](
@@ -51,21 +56,20 @@ local environment yet.
 ### Run publish-frontend (Next.js) app
 
 1. In another terminal, go to `publish-frontend` directory
-1. Create a copy of the `sample.env.local` file and name it `.env.local`. Add
-   required values. Use the same Google OAuth credentials as you used for
-   `publish-backend` (Strapi) app.
-1. Run `npm install`
-1. Make sure the backend Strapi app is running in another terminal. Then start
+2. Create a copy of the `sample.env.local` file and name it `.env.local`. Add
+   required values.
+3. Run `npm install`
+4. Make sure the backend Strapi app is running in another terminal. Then start
    the frontend Next.js app by running `npm run dev`.
-1. Visit http://localhost:3000/ to access the authoring site
+5. Visit http://localhost:3000/ to access the authoring site
 
 ### Run publish-11ty-test (11ty) app
 
 1. In another terminal, go to `publish-11ty-test` directory
-1. Run `yarn install`
-1. Make sure the backend Strapi app is running in another terminal. Then run
+2. Run `yarn install`
+3. Make sure the backend Strapi app is running in another terminal. Then run
    `yarn serve` to build the static site and serve it.
-1. Visit http://localhost:8080/ to see the user-facing site
+4. Visit http://localhost:8080/ to see the user-facing site
 
 - If you made changes to the contents saved in the backend database, you will
   need to re-build the static site by running `yarn serve` again to see the
