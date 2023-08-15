@@ -15,12 +15,12 @@
     "email": {
       "type": "email",
       "required": true,
-      "unique": true
+      "unique": false
     },
     "token": {
       "type": "string",
       "unique": true,
-      "required": true
+      "required": false
     }
   }
 }

@@ -1,11 +1,13 @@
 import { isEditor } from '@/lib/current-user';
+import { createToken } from '@/lib/email-token';
 import {
   Badge,
   Button,
   FormControl,
   FormLabel,
   Input,
-  Link
+  Link,
+  useToast
 } from '@chakra-ui/react';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
@@ -13,9 +15,17 @@ import { useState } from 'react';
 
 export default function NavMenu({ session }) {
   const [inviteEmail, setInviteEmail] = useState('');
+  const toast = useToast();
 
   const inviteUser = async () => {
     console.log('invite user', inviteEmail);
+    const status = await createToken(inviteEmail, session.user.jwt);
+    toast({
+      title: status ? 'User invited' : 'Error inviting user',
+      status: status ? 'success' : 'error',
+      duration: 5000,
+      isClosable: true
+    });
   };
   return (
     <nav className='border-r-2 border-gray-100 mr-3 p-3 h-screen'>
