@@ -28,12 +28,6 @@
       "relation": "manyToMany",
       "target": "api::post.post",
       "mappedBy": "tags"
-    },
-    "articles": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::article.article",
-      "mappedBy": "tags"
     }
   }
 }
