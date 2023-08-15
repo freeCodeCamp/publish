@@ -44,7 +44,4 @@ module.exports = {
       },
     },
   },
-  passwordless: {
-    enabled: true,
-  },
 };
