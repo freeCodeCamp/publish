@@ -3,7 +3,7 @@
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getArticles() {
-  const res = await fetch(`${api_root}/articles`);
+  const res = await fetch(`${api_root}/articles?publicationState=preview`);
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('getArticles Failed');
