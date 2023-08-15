@@ -20,10 +20,10 @@
         ],
         "locales": [
           "en",
-          "ja",
           "es",
+          "pt-BR",
           "zh-Hans",
-          "pt-BR"
+          "ja"
         ]
       },
       "conditions": []
@@ -34,10 +34,10 @@
       "properties": {
         "locales": [
           "en",
-          "ja",
           "es",
+          "pt-BR",
           "zh-Hans",
-          "pt-BR"
+          "ja"
         ]
       },
       "conditions": []
@@ -48,10 +48,10 @@
       "properties": {
         "locales": [
           "en",
-          "ja",
           "es",
+          "pt-BR",
           "zh-Hans",
-          "pt-BR"
+          "ja"
         ]
       },
       "conditions": []
@@ -73,10 +73,10 @@
         ],
         "locales": [
           "en",
-          "ja",
           "es",
+          "pt-BR",
           "zh-Hans",
-          "pt-BR"
+          "ja"
         ]
       },
       "conditions": []
@@ -98,10 +98,49 @@
         ],
         "locales": [
           "en",
-          "ja",
           "es",
+          "pt-BR",
           "zh-Hans",
-          "pt-BR"
+          "ja"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.create",
+      "subject": "api::email-token.email-token",
+      "properties": {
+        "fields": [
+          "email",
+          "token"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.delete",
+      "subject": "api::email-token.email-token",
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.read",
+      "subject": "api::email-token.email-token",
+      "properties": {
+        "fields": [
+          "email",
+          "token"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.update",
+      "subject": "api::email-token.email-token",
+      "properties": {
+        "fields": [
+          "email",
+          "token"
         ]
       },
       "conditions": []

@@ -22,6 +22,9 @@
       "action": "api::article.article.update"
     },
     {
+      "action": "api::email-token.email-token.create"
+    },
+    {
       "action": "api::tag.tag.find"
     },
     {
