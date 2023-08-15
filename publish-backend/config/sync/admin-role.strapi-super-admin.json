@@ -17,11 +17,7 @@
           "tags"
         ],
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "es",
-          "ja"
+          "en"
         ]
       },
       "conditions": []
@@ -31,11 +27,7 @@
       "subject": "api::post.post",
       "properties": {
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "es",
-          "ja"
+          "en"
         ]
       },
       "conditions": []
@@ -45,11 +37,7 @@
       "subject": "api::post.post",
       "properties": {
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "es",
-          "ja"
+          "en"
         ]
       },
       "conditions": []
@@ -68,11 +56,7 @@
           "tags"
         ],
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "es",
-          "ja"
+          "en"
         ]
       },
       "conditions": []
@@ -91,11 +75,7 @@
           "tags"
         ],
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "es",
-          "ja"
+          "en"
         ]
       },
       "conditions": []
