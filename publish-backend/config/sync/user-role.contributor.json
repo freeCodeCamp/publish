@@ -4,22 +4,22 @@
   "type": "contributor",
   "permissions": [
     {
-      "action": "api::article.article.create"
+      "action": "api::post.post.create"
     },
     {
-      "action": "api::article.article.createLocalization"
+      "action": "api::post.post.createLocalization"
     },
     {
-      "action": "api::article.article.delete"
+      "action": "api::post.post.delete"
     },
     {
-      "action": "api::article.article.find"
+      "action": "api::post.post.find"
     },
     {
-      "action": "api::article.article.findOne"
+      "action": "api::post.post.findOne"
     },
     {
-      "action": "api::article.article.update"
+      "action": "api::post.post.update"
     },
     {
       "action": "api::tag.tag.find"
