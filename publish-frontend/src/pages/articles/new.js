@@ -1,11 +1,10 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import NextLink from 'next/link';
-import ArticleForm from '@/components/article-form';
-import { createArticle } from '@/lib/articles';
+import PostForm from '@/components/post-form';
+import { createPost } from '@/lib/posts';
 
-
-export default function NewArticlePage() {
+export default function NewPostPage() {
   // Get auth data from the session
   const { data: session } = useSession();
   // declare state variable `content`
@@ -37,19 +36,19 @@ export default function NewArticlePage() {
     const token = session.user.jwt;
 
     try {
-      const result = await createArticle(JSONdata, token);
-      console.log('createArticle response: ', JSON.stringify(result));
+      const result = await createPost(JSONdata, token);
+      console.log('createPost response: ', JSON.stringify(result));
       alert('Saved!');
     } catch (error) {
-      console.error('createArticle Error:', error);
-      alert('Failed to save the article');
+      console.error('createPost Error:', error);
+      alert('Failed to save the post');
     }
   };
 
   return (
     <>
       {/* // We pass the event to the handleSubmit() function on submit. */}
-      <ArticleForm
+      <PostForm
         onSubmit={event => handleSubmit(event, session)}
         initialValues={{ title: '', body: '', slug: '' }}
         onContentChange={handleContentChange}

@@ -1,35 +1,35 @@
 import { useSession } from "next-auth/react";
 import React, { useState, useEffect } from "react";
-import ArticleForm from '@/components/article-form';
+import PostForm from '@/components/post-form';
 import { useRouter } from 'next/router';
-import { getArticle, updateArticle } from '@/lib/articles';
+import { getPost, updatePost } from '@/lib/posts';
 
-export default function EditArticlePage() {
+export default function EditPostPage() {
   // Get auth data from the session
   const { data: session } = useSession();
   // declare state variables
-  const [article, setArticle] = useState(null);
+  const [post, setPost] = useState(null);
   const [content, setContent] = useState('');
 
-  // Get the articleId from the dynamic segment in the URL
+  // Get the postId from the dynamic segment in the URL
   const router = useRouter();
-  const { articleId } = router.query;
+  const { postId } = router.query;
 
   useEffect(() => {
-    // Fetch the article data from the server using the articleId
-    const fetchArticle = async () => {
+    // Fetch the post data from the server using the postId
+    const fetchPost = async () => {
       try {
-        const data = await getArticle(articleId);
+        const data = await getPost(postId);
         console.log('GET response: ', data);
-        setArticle(data.data);
+        setPost(data.data);
         setContent(data.data.attributes.body);
       } catch (error) {
-        console.error('Error fetching article:', error);
+        console.error('Error fetching post:', error);
       }
     };
 
-    fetchArticle();
-  }, [articleId]);
+    fetchPost();
+  }, [postId]);
 
   const handleContentChange = updatedContent => {
     setContent(updatedContent);
@@ -58,25 +58,25 @@ export default function EditArticlePage() {
 
     // Sending request
     try {
-      const result = await updateArticle(articleId, JSONdata, token);
-      console.log('updateArticle response: ', JSON.stringify(result));
+      const result = await updatePost(postId, JSONdata, token);
+      console.log('updatePost response: ', JSON.stringify(result));
       alert('Saved!');
     } catch (error) {
-      console.error('createArticle Error:', error);
-      alert('Failed to save the article');
+      console.error('createPost Error:', error);
+      alert('Failed to save the post');
     }
   };
 
   // loading screen
-  if (!article) {
+  if (!post) {
     return <p>Loading...</p>;
   }
 
   return (
     <>
-      <ArticleForm
+      <PostForm
         onSubmit={event => handleSubmit(event, session)}
-        initialValues={article}
+        initialValues={post}
         onContentChange={handleContentChange}
       />
     </>

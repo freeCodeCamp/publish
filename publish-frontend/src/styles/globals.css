@@ -36,7 +36,7 @@ html {
 
 }
 
-.article-container{
+.post-container{
   width: 100%;
   background-color: white;
   overflow: hidden;
@@ -83,7 +83,7 @@ html {
   outline: none;
 }
 
-.ProseMirror {        
+.ProseMirror {
   min-height: 70vh;
   max-height: 70vh;
   overflow: scroll;
@@ -121,7 +121,7 @@ html {
 
 .menu button:hover {
   background-color: #e2e8f0;
-  border-radius: 0.25rem; 
+  border-radius: 0.25rem;
 }
 
 .page {
