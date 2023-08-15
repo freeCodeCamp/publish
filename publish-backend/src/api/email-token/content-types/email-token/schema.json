@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "email_tokens",
+  "info": {
+    "singularName": "email-token",
+    "pluralName": "email-tokens",
+    "displayName": "Email Token",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    "token": {
+      "type": "string",
+      "unique": true,
+      "required": true
+    }
+  }
+}
