@@ -49,12 +49,6 @@
         }
       }
     },
-    "tags": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::tag.tag",
-      "inversedBy": "posts"
-    },
     "author": {
       "type": "relation",
       "relation": "oneToOne",
@@ -75,6 +69,12 @@
         }
       },
       "type": "text"
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "posts"
     }
   }
 }
