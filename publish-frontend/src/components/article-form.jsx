@@ -20,13 +20,13 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
     setFeatureImage(URL.createObjectURL(file));
   }
 
-  function addTag(event){
-    
+  function addTag(event) {
+
     // check if it already contain the tag
     if (!tags.includes(event.target.value)) {
       // remove the tag
       setTags([...tags, event.target.value]);
-    } 
+    }
 
     const tagContainer = document.getElementById('tag-container');
 
@@ -65,7 +65,7 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
               )}
             </div>
             {
-              featureImage && (<button className="submit-button draft-button" onClick={() => setFeatureImage(null)}>
+              featureImage && (<button className="submit-button full-width-btn delete-button" onClick={() => setFeatureImage(null)}>
                 Delete
               </button>)
             }
@@ -85,20 +85,20 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
               <option value="2">Author 2</option>
               <option value="3">Author 3</option>
             </select>
+            <h2 className="input-title">Publish Date</h2>
+            <div className="time-date-input">
+              <input type="date" id="publish-date" name="publish-date" required />
+              <input type="time" id="publish-time" name="publish-time" required />
+            </div>
             <h2 className="input-title">Post URL</h2>
-            <input type="text" id="slug" name="slug" required pattern="\S+"/>
-            <h2 className="input-title">Excerpt</h2>
-            <textarea id="slug" name="slug" rows="4" cols="20"></textarea>
-            <button className="submit-button draft-button">
+            <input type="text" id="slug" name="slug" required pattern="\S+" />
+            <button className="submit-button full-width-btn">
               Save
             </button>
             <br />
-            <hr/>
-            <button className="submit-button draft-button" onClick={() => setIsFocused(false)}>
+            <hr />
+            <button className="submit-button full-width-btn" onClick={() => setIsFocused(false)}>
               View Articles
-            </button>
-            <button className="submit-button draft-button" onClick={() => setIsFocused(false)}>
-              delete
             </button>
           </div>
         )}
@@ -152,9 +152,9 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
 };
 
 function ManageArticles() {
-  const [showDrafts, setShowDrafts] = useState(false);
-  const [showPinned, setShowPinned] = useState(false);
-  const [showPublished, setShowPublished] = useState(false);
+  const [showDrafts, setShowDrafts] = useState(true);
+  const [showPinned, setShowPinned] = useState(true);
+  const [showPublished, setShowPublished] = useState(true);
 
   return (
     <>
@@ -197,7 +197,7 @@ function ManageArticles() {
         </div>
       )}
 
-      <button className="submit-button draft-button" type="submit">
+      <button className="submit-button full-width-btn" type="submit">
         Save Draft
       </button>
     </>
