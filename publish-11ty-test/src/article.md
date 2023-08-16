@@ -1,11 +1,11 @@
 ---
-title: Article
+title: Post
 layout: default.liquid
 pagination:
-  data: articles.data
+  data: posts.data
   size: 1
-  alias: article
-permalink: 'articles/{{ article.id }}/'
+  alias: post
+permalink: 'posts/{{ post.id }}/'
 ---
 
 <style>
@@ -16,21 +16,21 @@ permalink: 'articles/{{ article.id }}/'
 </style>
 
 <p>
-  Published Date: {{ article.attributes.publishedDate }}
+  Published Date: {{ post.attributes.publishedDate }}
 </p>
 
 <p>
-  Tag: {{ article.attributes.tags.data[0].attributes.name }}
+  Tag: {{ post.attributes.tags.data[0].attributes.name }}
 </p>
 
-# {{ article.attributes.title }}
+# {{ post.attributes.title }}
 
 <p>
-  Author: {{ article.attributes.createdBy.username }}
+  Author: {{ post.attributes.createdBy.username }}
 </p>
 
-<img src="http://localhost:1337{{ article.attributes.featureImage.data.attributes.formats.large.url }}">
+<img src="http://localhost:1337{{ post.attributes.featureImage.data.attributes.formats.large.url }}">
 
 <div class="body">
-  {{ article.attributes.body }}
+  {{ post.attributes.body }}
 </div>
