@@ -25,6 +25,11 @@ li {
   margin: 0.5rem 0
 }
 
+hr {
+  background-color:  silver;
+  margin: 1rem 0;
+}
+
 html {
   background-color: #2a2a40;
 }
@@ -54,9 +59,9 @@ html {
 
 .side-drawer {
   background-color: white;
-  border-right: 1px solid silver;
+  border-right: 1px solid silver; 
   padding: 1rem;
-  width: 300px;
+  width: 450px;
 }
 
 .header {
@@ -142,8 +147,8 @@ html {
 }
 
 .navigation {
-  padding: 1rem;
   border-bottom: 1px solid silver;
+  padding-bottom: 2rem;
 }
 
 .preview-button {
@@ -154,4 +159,34 @@ html {
 .dropdown-button {
   display: block;
   border: 1px 0 0 1px solid silver;
+}
+
+.feature-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 175px;
+  max-height: 175px;
+  border-radius:  0.5rem;
+  background-color: #f1f5f9;
+}
+
+.feature-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius:  0.5rem;
+}
+
+
+.tag-selector, input[type="text"], textarea {
+  width: 100%;
+  max-height: 175px;
+  border-radius:  0.5rem;
+  background-color: #f1f5f9;
+}
+
+.input-title {
+  margin-top: 1rem;
 }

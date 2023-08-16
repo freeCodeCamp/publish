@@ -1,75 +1,107 @@
 import { useState } from "react";
 import Tiptap from "@/components/tiptap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faLongArrowAltLeft } from "@fortawesome/free-solid-svg-icons";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 
 const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
-
-  // show or not show drafts
-  const [showDrafts, setShowDrafts] = useState(true);
-
-  // show or not show pinned articles
-  const [showPinned, setShowPinned] = useState(true);
-
-  // show or not show published articles
-  const [showPublished, setShowPublished] = useState(true);
-
   // editing title
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
+  const [tags, setTags] = useState([]);
+
+  const [isFocused, setIsFocused] = useState(false);
+
+  const [featureImage, setFeatureImage] = useState(null);
+
+  function handleFileInputChange(event) {
+    const file = event.target.files[0];
+    setFeatureImage(URL.createObjectURL(file));
+  }
+
+  function addTag(event){
+    
+    // check if it already contain the tag
+    if (!tags.includes(event.target.value)) {
+      // remove the tag
+      setTags([...tags, event.target.value]);
+    } 
+
+    const tagContainer = document.getElementById('tag-container');
+
+    tagContainer.innerHTML = '';
+
+    tags.forEach(tag => {
+      const tagElement = document.createElement('div');
+      tagElement.classList.add('tag');
+      tagElement.innerHTML = tag;
+      const removeButton = document.createElement('button');
+      removeButton.innerHTML = 'x';
+      removeButton.classList.add('remove-button');
+      removeButton.addEventListener('click', () => removeTag(tag));
+      tagElement.appendChild(removeButton);
+      tagContainer.appendChild(tagElement);
+    });
+  }
+
   return (
     <div className="page">
       <div className="side-drawer">
-        <div className="navigation">
-          <button>
-            <h2 className="icon-margin"><FontAwesomeIcon icon={faLongArrowAltLeft} /><span>Go Back</span></h2>
-          </button>
-        </div>
-        <button className="dropdown-button" onClick={() => setShowDrafts(!showDrafts)}
-        ><h2>Drafts</h2></button>
-        {showDrafts && (
-          <>
-            <div>
-              <ol>
-                <li>Article 1</li>
-                <li>Article 2</li>
-                <li>Article 3</li>
-              </ol>
-            </div>
-          </>
-        )}
-        {/* show pinned articles */}
+        {!isFocused ? <ManageArticles /> : (
+          <div>
 
-        <button className="dropdown-button" onClick={() => setShowPinned(!showPinned)}><h2>Pinned</h2></button>
-        {showPinned && (
-          <>
-            <div>
-              <ol>
-                <li>Article 4</li>
-                <li>Article 5</li>
-                <li>Article 6</li>
-              </ol>
+            <h2 className="input-title">Feature Image</h2>
+            <div className="feature-image">
+              {featureImage ? (
+                <img src={featureImage} alt="Feature Image" />
+              ) : (
+                <>
+                  <label htmlFor="feature-image" className="custom-file-upload">
+                    <button type="button" onClick={() => document.getElementById('feature-image').click()}>Select Image</button>
+                  </label>
+                  <input type="file" id="feature-image" accept="image/*" style={{ display: 'none' }} onChange={handleFileInputChange} />
+                </>
+              )}
             </div>
-          </>
-        )}
-        {/* show published articles */}
-        <button className="dropdown-button" onClick={() => setShowPublished(!showPublished)} ><h2>Published</h2></button>
-        {showPublished && (
-          <>
-            <div>
-              <ol>
-                <li>Article 7</li>
-                <li>Article 8</li>
-                <li>Article 9</li>
-              </ol>
+            {
+              featureImage && (<button className="submit-button draft-button" onClick={() => setFeatureImage(null)}>
+                Delete
+              </button>)
+            }
+            <h2 className="input-title">Tags</h2>
+            <div id="tag-container">
             </div>
-          </>
+            <select className="tag-selector" onChange={addTag}>
+              <option value="0">Select a tag</option>
+              <option value="1">Tag 1</option>
+              <option value="2">Tag 2</option>
+              <option value="3">Tag 3</option>
+            </select>
+            <h2 className="input-title">Authors</h2>
+            <select className="tag-selector">
+              <option value="0">Select an author</option>
+              <option value="1">Author 1</option>
+              <option value="2">Author 2</option>
+              <option value="3">Author 3</option>
+            </select>
+            <h2 className="input-title">Post URL</h2>
+            <input type="text" id="slug" name="slug" required pattern="\S+"/>
+            <h2 className="input-title">Excerpt</h2>
+            <textarea id="slug" name="slug" rows="4" cols="20"></textarea>
+            <button className="submit-button draft-button">
+              Save
+            </button>
+            <br />
+            <hr/>
+            <button className="submit-button draft-button" onClick={() => setIsFocused(false)}>
+              View Articles
+            </button>
+            <button className="submit-button draft-button" onClick={() => setIsFocused(false)}>
+              delete
+            </button>
+          </div>
         )}
-        <button className="submit-button draft-button" type='submit'>
-          Save Draft
-        </button>
       </div>
       <div className='article-container'>
         <div className="header">
@@ -107,8 +139,7 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
             </button>
           </div>
         </div>
-        <div className="editor">
-          <br />
+        <div className="editor" onClick={() => setIsFocused(true)}>
           <Tiptap
             onChange={onContentChange}
             defaultValue={initialValues?.attributes?.body}
@@ -119,5 +150,58 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
 
   );
 };
+
+function ManageArticles() {
+  const [showDrafts, setShowDrafts] = useState(false);
+  const [showPinned, setShowPinned] = useState(false);
+  const [showPublished, setShowPublished] = useState(false);
+
+  return (
+    <>
+      <button className="dropdown-button" onClick={() => setShowDrafts(!showDrafts)}>
+        <h2>Drafts</h2>
+      </button>
+      {showDrafts && (
+        <div>
+          <ol>
+            <li>Article 1</li>
+            <li>Article 2</li>
+            <li>Article 3</li>
+          </ol>
+        </div>
+      )}
+
+      <button className="dropdown-button" onClick={() => setShowPinned(!showPinned)}>
+        <h2>Pinned</h2>
+      </button>
+      {showPinned && (
+        <div>
+          <ol>
+            <li>Article 4</li>
+            <li>Article 5</li>
+            <li>Article 6</li>
+          </ol>
+        </div>
+      )}
+
+      <button className="dropdown-button" onClick={() => setShowPublished(!showPublished)}>
+        <h2>Published</h2>
+      </button>
+      {showPublished && (
+        <div>
+          <ol>
+            <li>Article 7</li>
+            <li>Article 8</li>
+            <li>Article 9</li>
+          </ol>
+        </div>
+      )}
+
+      <button className="submit-button draft-button" type="submit">
+        Save Draft
+      </button>
+    </>
+  );
+}
 
 export default ArticleForm;
