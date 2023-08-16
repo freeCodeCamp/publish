@@ -6,7 +6,6 @@ export default function PreviewArticlePage() {
 
   // declare state variables
   const [article, setArticle] = useState(null);
-  const [_content, setContent] = useState('');
 
   // Get the articleId from the dynamic segment in the URL
   const router = useRouter();
