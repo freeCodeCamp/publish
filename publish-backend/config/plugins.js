@@ -1,7 +1,7 @@
 // Default config taken from:
 // https://github.com/strapi/strapi/blob/main/packages/plugins/documentation/server/config/default-plugin-config.js
 
-module.exports = {
+module.exports = ({ env }) => ({
   documentation: {
     enabled: true,
     config: {
@@ -31,7 +31,7 @@ module.exports = {
     config: {
       provider: "nodemailer",
       providerOptions: {
-        host: "localhost",
+        host: env('NODEMAILER_HOST', "localhost"),
         secure: false,
         port: 1025,
         auth: {
@@ -44,4 +44,4 @@ module.exports = {
       },
     },
   },
-};
+});
