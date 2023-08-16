@@ -20,10 +20,10 @@
         ],
         "locales": [
           "en",
-          "es",
-          "pt-BR",
           "zh-Hans",
-          "ja"
+          "pt-BR",
+          "ja",
+          "es"
         ]
       },
       "conditions": []
@@ -34,10 +34,10 @@
       "properties": {
         "locales": [
           "en",
-          "es",
-          "pt-BR",
           "zh-Hans",
-          "ja"
+          "pt-BR",
+          "ja",
+          "es"
         ]
       },
       "conditions": []
@@ -48,10 +48,10 @@
       "properties": {
         "locales": [
           "en",
-          "es",
-          "pt-BR",
           "zh-Hans",
-          "ja"
+          "pt-BR",
+          "ja",
+          "es"
         ]
       },
       "conditions": []
@@ -73,10 +73,10 @@
         ],
         "locales": [
           "en",
-          "es",
-          "pt-BR",
           "zh-Hans",
-          "ja"
+          "pt-BR",
+          "ja",
+          "es"
         ]
       },
       "conditions": []
@@ -98,49 +98,49 @@
         ],
         "locales": [
           "en",
-          "es",
-          "pt-BR",
           "zh-Hans",
-          "ja"
+          "pt-BR",
+          "ja",
+          "es"
         ]
       },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.create",
-      "subject": "api::email-token.email-token",
+      "subject": "api::invited-user.invited-user",
       "properties": {
         "fields": [
           "email",
-          "token"
+          "accepted"
         ]
       },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.delete",
-      "subject": "api::email-token.email-token",
+      "subject": "api::invited-user.invited-user",
       "properties": {},
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.read",
-      "subject": "api::email-token.email-token",
+      "subject": "api::invited-user.invited-user",
       "properties": {
         "fields": [
           "email",
-          "token"
+          "accepted"
         ]
       },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.update",
-      "subject": "api::email-token.email-token",
+      "subject": "api::invited-user.invited-user",
       "properties": {
         "fields": [
           "email",
-          "token"
+          "accepted"
         ]
       },
       "conditions": []

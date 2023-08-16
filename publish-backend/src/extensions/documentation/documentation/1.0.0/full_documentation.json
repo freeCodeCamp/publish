@@ -7,7 +7,7 @@
     "termsOfService": null,
     "contact": null,
     "license": null,
-    "x-generation-date": "2023-08-16T07:29:41.391Z"
+    "x-generation-date": "2023-08-16T16:16:42.676Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -1966,7 +1966,7 @@
           }
         }
       },
-      "EmailTokenRequest": {
+      "InvitedUserRequest": {
         "type": "object",
         "required": [
           "data"
@@ -1982,31 +1982,31 @@
                 "type": "string",
                 "format": "email"
               },
-              "token": {
-                "type": "string"
+              "accepted": {
+                "type": "boolean"
               }
             }
           }
         }
       },
-      "EmailTokenListResponseDataItem": {
+      "InvitedUserListResponseDataItem": {
         "type": "object",
         "properties": {
           "id": {
             "type": "number"
           },
           "attributes": {
-            "$ref": "#/components/schemas/EmailToken"
+            "$ref": "#/components/schemas/InvitedUser"
           }
         }
       },
-      "EmailTokenListResponse": {
+      "InvitedUserListResponse": {
         "type": "object",
         "properties": {
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/EmailTokenListResponseDataItem"
+              "$ref": "#/components/schemas/InvitedUserListResponseDataItem"
             }
           },
           "meta": {
@@ -2035,7 +2035,7 @@
           }
         }
       },
-      "EmailToken": {
+      "InvitedUser": {
         "type": "object",
         "required": [
           "email"
@@ -2045,8 +2045,8 @@
             "type": "string",
             "format": "email"
           },
-          "token": {
-            "type": "string"
+          "accepted": {
+            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -2343,22 +2343,22 @@
           }
         }
       },
-      "EmailTokenResponseDataObject": {
+      "InvitedUserResponseDataObject": {
         "type": "object",
         "properties": {
           "id": {
             "type": "number"
           },
           "attributes": {
-            "$ref": "#/components/schemas/EmailToken"
+            "$ref": "#/components/schemas/InvitedUser"
           }
         }
       },
-      "EmailTokenResponse": {
+      "InvitedUserResponse": {
         "type": "object",
         "properties": {
           "data": {
-            "$ref": "#/components/schemas/EmailTokenResponseDataObject"
+            "$ref": "#/components/schemas/InvitedUserResponseDataObject"
           },
           "meta": {
             "type": "object"
@@ -6188,7 +6188,7 @@
         }
       }
     },
-    "/email-tokens": {
+    "/invited-users": {
       "get": {
         "responses": {
           "200": {
@@ -6196,7 +6196,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmailTokenListResponse"
+                  "$ref": "#/components/schemas/InvitedUserListResponse"
                 }
               }
             }
@@ -6253,7 +6253,7 @@
           }
         },
         "tags": [
-          "Email-token"
+          "Invited-user"
         ],
         "parameters": [
           {
@@ -6358,7 +6358,7 @@
             }
           }
         ],
-        "operationId": "get/email-tokens"
+        "operationId": "get/invited-users"
       },
       "post": {
         "responses": {
@@ -6367,7 +6367,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmailTokenResponse"
+                  "$ref": "#/components/schemas/InvitedUserResponse"
                 }
               }
             }
@@ -6424,23 +6424,23 @@
           }
         },
         "tags": [
-          "Email-token"
+          "Invited-user"
         ],
         "parameters": [],
-        "operationId": "post/email-tokens",
+        "operationId": "post/invited-users",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EmailTokenRequest"
+                "$ref": "#/components/schemas/InvitedUserRequest"
               }
             }
           }
         }
       }
     },
-    "/email-tokens/{id}": {
+    "/invited-users/{id}": {
       "get": {
         "responses": {
           "200": {
@@ -6448,7 +6448,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmailTokenResponse"
+                  "$ref": "#/components/schemas/InvitedUserResponse"
                 }
               }
             }
@@ -6505,7 +6505,7 @@
           }
         },
         "tags": [
-          "Email-token"
+          "Invited-user"
         ],
         "parameters": [
           {
@@ -6519,7 +6519,7 @@
             }
           }
         ],
-        "operationId": "get/email-tokens/{id}"
+        "operationId": "get/invited-users/{id}"
       },
       "put": {
         "responses": {
@@ -6528,7 +6528,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EmailTokenResponse"
+                  "$ref": "#/components/schemas/InvitedUserResponse"
                 }
               }
             }
@@ -6585,7 +6585,7 @@
           }
         },
         "tags": [
-          "Email-token"
+          "Invited-user"
         ],
         "parameters": [
           {
@@ -6599,13 +6599,13 @@
             }
           }
         ],
-        "operationId": "put/email-tokens/{id}",
+        "operationId": "put/invited-users/{id}",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EmailTokenRequest"
+                "$ref": "#/components/schemas/InvitedUserRequest"
               }
             }
           }
@@ -6676,7 +6676,7 @@
           }
         },
         "tags": [
-          "Email-token"
+          "Invited-user"
         ],
         "parameters": [
           {
@@ -6690,7 +6690,7 @@
             }
           }
         ],
-        "operationId": "delete/email-tokens/{id}"
+        "operationId": "delete/invited-users/{id}"
       }
     },
     "/languages": {

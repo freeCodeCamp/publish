@@ -1,7 +1,7 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::api::email-token.email-token",
+  "key": "plugin_content_manager_configuration_content_types::api::invited-user.invited-user",
   "value": {
-    "uid": "api::email-token.email-token",
+    "uid": "api::invited-user.invited-user",
     "settings": {
       "bulkable": true,
       "filterable": true,
@@ -23,7 +23,7 @@
       "email": {
         "edit": {
           "label": "email",
-          "description": "",
+          "description": "End-user email",
           "placeholder": "",
           "visible": true,
           "editable": true
@@ -34,16 +34,16 @@
           "sortable": true
         }
       },
-      "token": {
+      "accepted": {
         "edit": {
-          "label": "token",
-          "description": "Invite token",
+          "label": "accepted",
+          "description": "End-user has accepted and logged in atleast once",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "token",
+          "label": "accepted",
           "searchable": true,
           "sortable": true
         }
@@ -85,14 +85,15 @@
             "size": 6
           },
           {
-            "name": "token",
-            "size": 6
+            "name": "accepted",
+            "size": 4
           }
         ]
       ],
       "list": [
         "email",
-        "token"
+        "accepted",
+        "createdAt"
       ]
     }
   },

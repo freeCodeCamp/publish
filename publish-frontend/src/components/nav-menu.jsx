@@ -1,5 +1,5 @@
 import { isEditor } from '@/lib/current-user';
-import { createToken } from '@/lib/email-token';
+import { inviteUser } from '@/lib/invite-user';
 import {
   Badge,
   Button,
@@ -17,8 +17,8 @@ export default function NavMenu({ session }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const toast = useToast();
 
-  const inviteUser = async () => {
-    const status = await createToken(inviteEmail, session.user.jwt);
+  const invite = async () => {
+    const status = await inviteUser(inviteEmail, session.user.jwt);
     toast({
       title: status ? 'User invited' : 'Error inviting user',
       status: status ? 'success' : 'error',
@@ -45,7 +45,7 @@ export default function NavMenu({ session }) {
               onChange={e => setInviteEmail(e.target.value)}
             />
           </FormControl>
-          <Button colorScheme='blue' onClick={inviteUser}>
+          <Button colorScheme='blue' onClick={invite}>
             Invite
           </Button>
         </li>

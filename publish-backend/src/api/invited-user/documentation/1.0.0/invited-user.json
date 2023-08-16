@@ -1,5 +1,5 @@
 {
-  "/email-tokens": {
+  "/invited-users": {
     "get": {
       "responses": {
         "200": {
@@ -7,7 +7,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EmailTokenListResponse"
+                "$ref": "#/components/schemas/InvitedUserListResponse"
               }
             }
           }
@@ -64,7 +64,7 @@
         }
       },
       "tags": [
-        "Email-token"
+        "Invited-user"
       ],
       "parameters": [
         {
@@ -169,7 +169,7 @@
           }
         }
       ],
-      "operationId": "get/email-tokens"
+      "operationId": "get/invited-users"
     },
     "post": {
       "responses": {
@@ -178,7 +178,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EmailTokenResponse"
+                "$ref": "#/components/schemas/InvitedUserResponse"
               }
             }
           }
@@ -235,23 +235,23 @@
         }
       },
       "tags": [
-        "Email-token"
+        "Invited-user"
       ],
       "parameters": [],
-      "operationId": "post/email-tokens",
+      "operationId": "post/invited-users",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/EmailTokenRequest"
+              "$ref": "#/components/schemas/InvitedUserRequest"
             }
           }
         }
       }
     }
   },
-  "/email-tokens/{id}": {
+  "/invited-users/{id}": {
     "get": {
       "responses": {
         "200": {
@@ -259,7 +259,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EmailTokenResponse"
+                "$ref": "#/components/schemas/InvitedUserResponse"
               }
             }
           }
@@ -316,7 +316,7 @@
         }
       },
       "tags": [
-        "Email-token"
+        "Invited-user"
       ],
       "parameters": [
         {
@@ -330,7 +330,7 @@
           }
         }
       ],
-      "operationId": "get/email-tokens/{id}"
+      "operationId": "get/invited-users/{id}"
     },
     "put": {
       "responses": {
@@ -339,7 +339,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EmailTokenResponse"
+                "$ref": "#/components/schemas/InvitedUserResponse"
               }
             }
           }
@@ -396,7 +396,7 @@
         }
       },
       "tags": [
-        "Email-token"
+        "Invited-user"
       ],
       "parameters": [
         {
@@ -410,13 +410,13 @@
           }
         }
       ],
-      "operationId": "put/email-tokens/{id}",
+      "operationId": "put/invited-users/{id}",
       "requestBody": {
         "required": true,
         "content": {
           "application/json": {
             "schema": {
-              "$ref": "#/components/schemas/EmailTokenRequest"
+              "$ref": "#/components/schemas/InvitedUserRequest"
             }
           }
         }
@@ -487,7 +487,7 @@
         }
       },
       "tags": [
-        "Email-token"
+        "Invited-user"
       ],
       "parameters": [
         {
@@ -501,7 +501,7 @@
           }
         }
       ],
-      "operationId": "delete/email-tokens/{id}"
+      "operationId": "delete/invited-users/{id}"
     }
   }
 }

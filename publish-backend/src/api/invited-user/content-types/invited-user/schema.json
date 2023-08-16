@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "email_tokens",
+  "collectionName": "invited_users",
   "info": {
-    "singularName": "email-token",
-    "pluralName": "email-tokens",
-    "displayName": "Email Token",
+    "singularName": "invited-user",
+    "pluralName": "invited-users",
+    "displayName": "Invited User",
     "description": ""
   },
   "options": {
@@ -17,9 +17,9 @@
       "required": true,
       "unique": true
     },
-    "token": {
-      "type": "string",
-      "unique": true,
+    "accepted": {
+      "type": "boolean",
+      "default": false,
       "required": false
     }
   }

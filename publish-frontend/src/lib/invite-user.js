@@ -1,7 +1,7 @@
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function createToken(email, token) {
-  const res = await fetch(`${api_root}/email-tokens`, {
+export async function inviteUser(email, token) {
+  const res = await fetch(`${api_root}/invited-users`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

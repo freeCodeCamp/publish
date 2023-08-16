@@ -21,15 +21,16 @@ module.exports = {
       models: ["plugin::users-permissions.user"],
       async afterCreate(event) {
         const { email } = event.result;
-        const deleteData = await strapi.db
-          .query("api::email-token.email-token")
-          .delete({
-            where: {
-              email: {
-                $eq: email,
-              },
+        await strapi.db.query("api::invited-user.invited-user").update({
+          where: {
+            email: {
+              $eq: email,
             },
-          });
+          },
+          data: {
+            accepted: true,
+          },
+        });
       },
     });
   },
