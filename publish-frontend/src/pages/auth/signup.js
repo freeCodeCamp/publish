@@ -7,6 +7,7 @@ import {
   InputRightElement
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 
 // TODO: make a common config file for this or setup common fetch/axios with base URL
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
@@ -30,7 +31,14 @@ export default function SignUp({ email }) {
       })
     });
     const data = await res.json();
-    console.log(data);
+    if (res.ok) {
+      // Sign in and route user to home page
+      await signIn('credentials', {
+        identifier: email,
+        password,
+        callbackUrl: '/'
+      });
+    }
   };
 
   return (

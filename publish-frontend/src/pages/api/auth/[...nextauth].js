@@ -16,17 +16,16 @@ export const authOptions = {
         password: { label: 'Password', type: 'password', required: true }
       },
       async authorize(credentials, req) {
-        console.log('creds', credentials);
+        const { identifier, password } = credentials;
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/local`,
           {
             method: 'POST',
-            body: JSON.stringify(credentials),
+            body: JSON.stringify({ identifier, password }),
             headers: { 'Content-Type': 'application/json' }
           }
         );
         const data = await res.json();
-        console.log('data', data);
 
         if (res.ok && data.jwt) {
           const user = { ...data.user, jwt: data.jwt };
@@ -34,7 +33,7 @@ export const authOptions = {
         }
         return null;
       }
-    }),
+    })
   ],
 
   // Details: https://next-auth.js.org/configuration/callbacks

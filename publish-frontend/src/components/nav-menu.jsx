@@ -18,7 +18,6 @@ export default function NavMenu({ session }) {
   const toast = useToast();
 
   const inviteUser = async () => {
-    console.log('invite user', inviteEmail);
     const status = await createToken(inviteEmail, session.user.jwt);
     toast({
       title: status ? 'User invited' : 'Error inviting user',
