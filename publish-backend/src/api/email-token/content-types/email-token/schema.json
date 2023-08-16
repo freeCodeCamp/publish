@@ -15,7 +15,7 @@
     "email": {
       "type": "email",
       "required": true,
-      "unique": false
+      "unique": true
     },
     "token": {
       "type": "string",

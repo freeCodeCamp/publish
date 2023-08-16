@@ -35,35 +35,17 @@ export const authOptions = {
         return null;
       }
     }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET
-    })
   ],
 
   // Details: https://next-auth.js.org/configuration/callbacks
   callbacks: {
     // This callback is called whenever a JSON Web Token is created (i.e. at sign in)
     // or updated(i.e whenever a session is accessed in the client).
-    async jwt({ token, account, user }) {
-      if (account || user) {
+    async jwt({ token, user }) {
+      if (user) {
         // Get JWT token to access the Strapi API
         // Note: This is different from the session JWT that is stored in the cookie at the end of this callback
-        if (account) {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
-          );
-          const data = await res.json();
-          // Note: If the email is already registered on Strapi app without using Google Auth
-          // then it will fail to get JWT token
-          // https://github.com/strapi/strapi/issues/12907
-          const { jwt } = data;
-          // Add the JWT token for Strapi API to session JWT
-          token.jwt = jwt;
-        } else {
-          console.log(user);
-          token.jwt = user.jwt;
-        }
+        token.jwt = user.jwt;
 
         // Fetch user role data from /api/users/me?populate=role
         const res2 = await fetch(

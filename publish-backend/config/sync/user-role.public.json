@@ -10,6 +10,9 @@
       "action": "api::article.article.findOne"
     },
     {
+      "action": "api::email-token.email-token.find"
+    },
+    {
       "action": "api::tag.tag.find"
     },
     {
