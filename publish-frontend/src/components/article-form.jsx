@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Tiptap from "@/components/tiptap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
@@ -9,30 +9,41 @@ const ArticleForm = ({ tags }) => {
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  //const [tags, setTags] = useState([]);
+  const [clientTags, setClientTags] = useState([]);
 
   const [isFocused, setIsFocused] = useState(false);
 
   const [featureImage, setFeatureImage] = useState(null);
+
+  useEffect(() => {
+    createNewTags();
+  }, [clientTags]);
 
   function handleFileInputChange(event) {
     const file = event.target.files[0];
     setFeatureImage(URL.createObjectURL(file));
   }
 
+  function removeTag(tag) {
+    const newTags = clientTags.filter(t => t !== tag);
+    setClientTags(newTags);
+  }
+
   function addTag(event) {
-
-    // check if it already contain the tag
-    if (!tags.includes(event.target.value)) {
-      // remove the tag
-      setTags([...tags, event.target.value]);
+    if (!clientTags.includes(event.target.value)) {
+      const newTags = [...clientTags, event.target.value];
+      setClientTags(newTags);
     }
+  }
 
+  function createNewTags(){
     const tagContainer = document.getElementById('tag-container');
+
+    if(tagContainer === null) return;
 
     tagContainer.innerHTML = '';
 
-    tags.forEach(tag => {
+    clientTags.forEach(tag => {
       const tagElement = document.createElement('div');
       tagElement.classList.add('tag');
       tagElement.innerHTML = tag;
@@ -44,6 +55,7 @@ const ArticleForm = ({ tags }) => {
       tagContainer.appendChild(tagElement);
     });
   }
+
 
   return (
     <div className="page">
@@ -76,7 +88,7 @@ const ArticleForm = ({ tags }) => {
               <option value="0">Select a tag</option>
               {
                 tags.map(tag => (
-                  <option value={tag}>{tag}</option>
+                  <option key={tag.attributes.name} value={tag.attributes.name}>{tag.attributes.name}</option>
                 ))
               }
             </select>
@@ -142,8 +154,7 @@ const ArticleForm = ({ tags }) => {
           </div>
         </div>
         <div className="editor" onClick={() => setIsFocused(true)}>
-          <Tiptap
-          />
+          <Tiptap/>
         </div>
       </div>
     </div>

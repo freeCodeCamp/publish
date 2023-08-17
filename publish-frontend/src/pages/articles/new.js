@@ -1,11 +1,26 @@
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
-import NextLink from 'next/link';
 import ArticleForm from '@/components/article-form';
 import { createArticle } from '@/lib/articles';
 
+const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export default function NewArticlePage() {
+export async function getServerSideProps() {
+  // Fetch tags from API
+  const res = await fetch(`${api_root}/tags`);
+  const tags = await res.json();
+
+  console.log(tags);
+
+  // Pass tags as props to the component
+  return {
+    props: {
+      tags: tags.data,
+    },
+  };
+}
+
+export default function NewArticlePage({tags}) {
   // Get auth data from the session
   const { data: session } = useSession();
   // declare state variable `content`
@@ -50,9 +65,7 @@ export default function NewArticlePage() {
     <>
       {/* // We pass the event to the handleSubmit() function on submit. */}
       <ArticleForm
-        onSubmit={event => handleSubmit(event, session)}
-        initialValues={{ title: '', body: '', slug: '' }}
-        onContentChange={handleContentChange}
+        tags={tags}
       />
     </>
   );
