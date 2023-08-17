@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Tiptap from "@/components/tiptap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import slugify from "slugify";
 
 
 const ArticleForm = ({ tags }) => {
@@ -13,6 +14,8 @@ const ArticleForm = ({ tags }) => {
 
   const [isFocused, setIsFocused] = useState(false);
 
+  const [postUrl , setPostUrl] = useState('');
+
   const [featureImage, setFeatureImage] = useState(null);
 
   useEffect(() => {
@@ -22,6 +25,11 @@ const ArticleForm = ({ tags }) => {
   function handleFileInputChange(event) {
     const file = event.target.files[0];
     setFeatureImage(URL.createObjectURL(file));
+  }
+
+  function handleTitleChange(event) {
+    const newTitle = document.getElementById('title-input').value;
+    setTitle(newTitle);
   }
 
   function removeTag(tag) {
@@ -36,10 +44,10 @@ const ArticleForm = ({ tags }) => {
     }
   }
 
-  function createNewTags(){
+  function createNewTags() {
     const tagContainer = document.getElementById('tag-container');
 
-    if(tagContainer === null) return;
+    if (tagContainer === null) return;
 
     tagContainer.innerHTML = '';
 
@@ -105,7 +113,10 @@ const ArticleForm = ({ tags }) => {
               <input type="time" id="publish-time" name="publish-time" required />
             </div>
             <h2 className="input-title">Post URL</h2>
-            <input type="text" id="slug" name="slug" required pattern="\S+" />
+            <label htmlFor="slug">
+              <input type="text" id="slug" name="slug"  pattern="\S+" placeholder={slugify(title)} onChange={() => setPostUrl(event.target.value)}required/>
+              <span>https://www.freecodecamp.com/news/{slugify(postUrl != '' ? postUrl : title, { lower: true })}</span>
+            </label>
             <button className="submit-button full-width-btn">
               Save
             </button>
@@ -122,17 +133,23 @@ const ArticleForm = ({ tags }) => {
           <div className="title-pos" id="title">
             {
               isEditingTitle ? (
-                <div>
-                  <input
+
+                <>
+                 <input
                     type="text"
-                    className="title-input"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <button className="submit-button icon-margin" onClick={() => setIsEditingTitle(false)}>
+                    id="title-input"
+                    name="title-input"/>
+
+                  <button type='submit' className="submit-button icon-margin" onClick={() => {
+                    handleTitleChange();
+                    setIsEditingTitle(false);
+                  }}>
                     Save
                   </button>
-                </div>
+                </>
+                 
+
+
               ) : (
 
                 <button onClick={() => setIsEditingTitle(true)}>
@@ -154,7 +171,7 @@ const ArticleForm = ({ tags }) => {
           </div>
         </div>
         <div className="editor" onClick={() => setIsFocused(true)}>
-          <Tiptap/>
+          <Tiptap />
         </div>
       </div>
     </div>
