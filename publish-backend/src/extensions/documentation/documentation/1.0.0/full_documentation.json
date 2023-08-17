@@ -7,7 +7,7 @@
     "termsOfService": null,
     "contact": null,
     "license": null,
-    "x-generation-date": "2023-08-16T09:46:17.113Z"
+    "x-generation-date": "2023-08-17T18:06:49.821Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -1540,9 +1540,6 @@
                                                   "slug": {
                                                     "type": "string"
                                                   },
-                                                  "visibility": {
-                                                    "type": "string"
-                                                  },
                                                   "posts": {
                                                     "type": "object",
                                                     "properties": {
@@ -1562,6 +1559,13 @@
                                                         }
                                                       }
                                                     }
+                                                  },
+                                                  "visibility": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                      "public",
+                                                      "internal"
+                                                    ]
                                                   },
                                                   "createdAt": {
                                                     "type": "string",
@@ -1853,9 +1857,6 @@
               "slug": {
                 "type": "string"
               },
-              "visibility": {
-                "type": "string"
-              },
               "posts": {
                 "type": "array",
                 "items": {
@@ -1869,6 +1870,13 @@
                   ],
                   "example": "string or id"
                 }
+              },
+              "visibility": {
+                "type": "string",
+                "enum": [
+                  "public",
+                  "internal"
+                ]
               }
             }
           }
@@ -1930,9 +1938,6 @@
             "type": "string"
           },
           "slug": {
-            "type": "string"
-          },
-          "visibility": {
             "type": "string"
           },
           "posts": {
@@ -3046,9 +3051,6 @@
                                       "slug": {
                                         "type": "string"
                                       },
-                                      "visibility": {
-                                        "type": "string"
-                                      },
                                       "posts": {
                                         "type": "object",
                                         "properties": {
@@ -3068,6 +3070,13 @@
                                             }
                                           }
                                         }
+                                      },
+                                      "visibility": {
+                                        "type": "string",
+                                        "enum": [
+                                          "public",
+                                          "internal"
+                                        ]
                                       },
                                       "createdAt": {
                                         "type": "string",
@@ -3182,6 +3191,13 @@
                 }
               }
             }
+          },
+          "visibility": {
+            "type": "string",
+            "enum": [
+              "public",
+              "internal"
+            ]
           },
           "createdAt": {
             "type": "string",

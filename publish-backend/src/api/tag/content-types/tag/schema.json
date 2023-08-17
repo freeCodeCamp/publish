@@ -18,16 +18,20 @@
     "slug": {
       "type": "string"
     },
-    "visibility": {
-      "type": "string",
-      "required": true,
-      "default": "public"
-    },
     "posts": {
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::post.post",
       "mappedBy": "tags"
+    },
+    "visibility": {
+      "type": "enumeration",
+      "enum": [
+        "public",
+        "internal"
+      ],
+      "default": "public",
+      "required": true
     }
   }
 }
