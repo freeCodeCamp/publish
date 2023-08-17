@@ -29,7 +29,7 @@ export default function UsersIndex({ allUsersData }) {
     return (
       <Flex>
         <NavMenu session={session} />
-        <main className='p-3'>
+        <main style={{ padding: '0.75rem' }}>
           <UsersList allUsersData={allUsersData} />
         </main>
       </Flex>

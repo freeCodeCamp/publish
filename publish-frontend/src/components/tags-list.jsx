@@ -4,7 +4,7 @@ export default function TagsList({ allTagsData }) {
       <ul>
         {allTagsData.data.map(tag => {
           return (
-            <li key={tag.id} className='mb-5'>
+            <li key={tag.id} style={{ marginBottom: '1.25rem' }}>
               <strong>{tag.attributes.name}</strong>
             </li>
           );

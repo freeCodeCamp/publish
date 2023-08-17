@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* CSS for @tiptap/extension-placeholder */
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #adb5bd;
@@ -153,4 +149,12 @@ html {
 .dropdown-button {
   display: block;
   border: 1px 0 0 1px solid silver;
+}
+
+.nav-bar {
+  border-right-width: 2px;
+  border-color: rgb(243 244 246);
+  margin-right: 0.75rem;
+  padding: 0.75rem;
+  height: 100vh;
 }
