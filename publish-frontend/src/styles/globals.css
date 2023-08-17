@@ -199,3 +199,20 @@ html {
   display: flex;
   justify-content: space-between;
 }
+
+.tag {
+  display: inline-block;
+  background-color: #22c55e;
+  color: white;
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  margin: 0.2rem;
+}
+
+.tag button {
+  background-color: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.5rem;
+}
