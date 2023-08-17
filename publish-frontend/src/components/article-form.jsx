@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import Tiptap from "@/components/tiptap";
+import { useEffect, useState } from 'react';
+import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from "@fortawesome/free-solid-svg-icons";
-import slugify from "slugify";
-
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import slugify from 'slugify';
+import { Img } from '@chakra-ui/react';
 
 const ArticleForm = ({ tags }) => {
   // editing title
@@ -14,20 +14,20 @@ const ArticleForm = ({ tags }) => {
 
   const [isFocused, setIsFocused] = useState(false);
 
-  const [postUrl , setPostUrl] = useState('');
+  const [postUrl, setPostUrl] = useState('');
 
   const [featureImage, setFeatureImage] = useState(null);
 
   useEffect(() => {
     createNewTags();
-  }, [clientTags]);
+  }, [clientTags, createNewTags]);
 
   function handleFileInputChange(event) {
     const file = event.target.files[0];
     setFeatureImage(URL.createObjectURL(file));
   }
 
-  function handleTitleChange(event) {
+  function handleTitleChange() {
     const newTitle = document.getElementById('title-input').value;
     setTitle(newTitle);
   }
@@ -64,118 +64,144 @@ const ArticleForm = ({ tags }) => {
     });
   }
 
-
   return (
-    <div className="page">
-      <div className="side-drawer">
-        {!isFocused ? <ManageArticles /> : (
+    <div className='page'>
+      <div className='side-drawer'>
+        {!isFocused ? (
+          <ManageArticles />
+        ) : (
           <div>
-
-            <h2 className="input-title">Feature Image</h2>
-            <div className="feature-image">
+            <h2 className='input-title'>Feature Image</h2>
+            <div className='feature-image'>
               {featureImage ? (
-                <img src={featureImage} alt="Feature Image" />
+                <Img src={featureImage} alt='Feature Image' />
               ) : (
                 <>
-                  <label htmlFor="feature-image" className="custom-file-upload">
-                    <button type="button" onClick={() => document.getElementById('feature-image').click()}>Select Image</button>
+                  <label htmlFor='feature-image' className='custom-file-upload'>
+                    <button
+                      type='button'
+                      onClick={() =>
+                        document.getElementById('feature-image').click()
+                      }
+                    >
+                      Select Image
+                    </button>
                   </label>
-                  <input type="file" id="feature-image" accept="image/*" style={{ display: 'none' }} onChange={handleFileInputChange} />
+                  <input
+                    type='file'
+                    id='feature-image'
+                    accept='image/*'
+                    style={{ display: 'none' }}
+                    onChange={handleFileInputChange}
+                  />
                 </>
               )}
             </div>
-            {
-              featureImage && (<button className="submit-button full-width-btn delete-button" onClick={() => setFeatureImage(null)}>
+            {featureImage && (
+              <button
+                className='submit-button full-width-btn delete-button'
+                onClick={() => setFeatureImage(null)}
+              >
                 Delete
-              </button>)
-            }
-            <h2 className="input-title">Tags</h2>
-            <div id="tag-container">
-            </div>
-            <select className="tag-selector" onChange={addTag}>
-              <option value="0">Select a tag</option>
-              {
-                tags.map(tag => (
-                  <option key={tag.attributes.name} value={tag.attributes.name}>{tag.attributes.name}</option>
-                ))
-              }
+              </button>
+            )}
+            <h2 className='input-title'>Tags</h2>
+            <div id='tag-container'></div>
+            <select className='tag-selector' onChange={addTag}>
+              <option value='0'>Select a tag</option>
+              {tags.map(tag => (
+                <option key={tag.attributes.name} value={tag.attributes.name}>
+                  {tag.attributes.name}
+                </option>
+              ))}
             </select>
-            <h2 className="input-title">Authors</h2>
-            <select className="tag-selector">
-              <option value="0">Select an author</option>
-              <option value="1">Author 1</option>
-              <option value="2">Author 2</option>
-              <option value="3">Author 3</option>
+            <h2 className='input-title'>Authors</h2>
+            <select className='tag-selector'>
+              <option value='0'>Select an author</option>
+              <option value='1'>Author 1</option>
+              <option value='2'>Author 2</option>
+              <option value='3'>Author 3</option>
             </select>
-            <h2 className="input-title">Publish Date</h2>
-            <div className="time-date-input">
-              <input type="date" id="publish-date" name="publish-date" required />
-              <input type="time" id="publish-time" name="publish-time" required />
+            <h2 className='input-title'>Publish Date</h2>
+            <div className='time-date-input'>
+              <input
+                type='date'
+                id='publish-date'
+                name='publish-date'
+                required
+              />
+              <input
+                type='time'
+                id='publish-time'
+                name='publish-time'
+                required
+              />
             </div>
-            <h2 className="input-title">Post URL</h2>
-            <label htmlFor="slug">
-              <input type="text" id="slug" name="slug"  pattern="\S+" placeholder={slugify(title)} onChange={() => setPostUrl(event.target.value)}required/>
-              <span>https://www.freecodecamp.com/news/{slugify(postUrl != '' ? postUrl : title, { lower: true })}</span>
+            <h2 className='input-title'>Post URL</h2>
+            <label htmlFor='slug'>
+              <input
+                type='text'
+                id='slug'
+                name='slug'
+                pattern='\S+'
+                placeholder={slugify(title)}
+                onChange={() => setPostUrl(event.target.value)}
+                required
+              />
+              <span>
+                https://www.freecodecamp.com/news/
+                {slugify(postUrl != '' ? postUrl : title, { lower: true })}
+              </span>
             </label>
-            <button className="submit-button full-width-btn">
-              Save
-            </button>
+            <button className='submit-button full-width-btn'>Save</button>
             <br />
             <hr />
-            <button className="submit-button full-width-btn" onClick={() => setIsFocused(false)}>
+            <button
+              className='submit-button full-width-btn'
+              onClick={() => setIsFocused(false)}
+            >
               View Articles
             </button>
           </div>
         )}
       </div>
       <div className='article-container'>
-        <div className="header">
-          <div className="title-pos" id="title">
-            {
-              isEditingTitle ? (
+        <div className='header'>
+          <div className='title-pos' id='title'>
+            {isEditingTitle ? (
+              <>
+                <input type='text' id='title-input' name='title-input' />
 
-                <>
-                 <input
-                    type="text"
-                    id="title-input"
-                    name="title-input"/>
-
-                  <button type='submit' className="submit-button icon-margin" onClick={() => {
+                <button
+                  type='submit'
+                  className='submit-button icon-margin'
+                  onClick={() => {
                     handleTitleChange();
                     setIsEditingTitle(false);
-                  }}>
-                    Save
-                  </button>
-                </>
-                 
-
-
-              ) : (
-
-                <button onClick={() => setIsEditingTitle(true)}>
-                  <h1 className="title icon-margin-left">
-                    <span>{title}</span>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </h1>
+                  }}
+                >
+                  Save
                 </button>
-              )
-            }
+              </>
+            ) : (
+              <button onClick={() => setIsEditingTitle(true)}>
+                <h1 className='title icon-margin-left'>
+                  <span>{title}</span>
+                  <FontAwesomeIcon icon={faEdit} />
+                </h1>
+              </button>
+            )}
           </div>
           <div>
-            <button className="preview-button">
-              Preview
-            </button>
-            <button className="submit-button">
-              Send for Review
-            </button>
+            <button className='preview-button'>Preview</button>
+            <button className='submit-button'>Send for Review</button>
           </div>
         </div>
-        <div className="editor" onClick={() => setIsFocused(true)}>
+        <div className='editor' onClick={() => setIsFocused(true)}>
           <Tiptap />
         </div>
       </div>
     </div>
-
   );
 };
 
@@ -186,7 +212,10 @@ function ManageArticles() {
 
   return (
     <>
-      <button className="dropdown-button" onClick={() => setShowDrafts(!showDrafts)}>
+      <button
+        className='dropdown-button'
+        onClick={() => setShowDrafts(!showDrafts)}
+      >
         <h2>Drafts</h2>
       </button>
       {showDrafts && (
@@ -199,7 +228,10 @@ function ManageArticles() {
         </div>
       )}
 
-      <button className="dropdown-button" onClick={() => setShowPinned(!showPinned)}>
+      <button
+        className='dropdown-button'
+        onClick={() => setShowPinned(!showPinned)}
+      >
         <h2>Pinned</h2>
       </button>
       {showPinned && (
@@ -212,7 +244,10 @@ function ManageArticles() {
         </div>
       )}
 
-      <button className="dropdown-button" onClick={() => setShowPublished(!showPublished)}>
+      <button
+        className='dropdown-button'
+        onClick={() => setShowPublished(!showPublished)}
+      >
         <h2>Published</h2>
       </button>
       {showPublished && (
@@ -225,7 +260,7 @@ function ManageArticles() {
         </div>
       )}
 
-      <button className="submit-button full-width-btn" type="submit">
+      <button className='submit-button full-width-btn' type='submit'>
         Save Draft
       </button>
     </>

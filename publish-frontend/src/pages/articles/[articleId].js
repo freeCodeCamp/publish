@@ -1,11 +1,10 @@
-import { useSession } from "next-auth/react";
-import React, { useState, useEffect } from "react";
+import { useSession } from 'next-auth/react';
+import React, { useState, useEffect } from 'react';
 import ArticleForm from '@/components/article-form';
 import { useRouter } from 'next/router';
 import { getArticle, updateArticle } from '@/lib/articles';
 
-
-export default function EditArticlePage({tags}) {
+export default function EditArticlePage({ tags }) {
   // Get auth data from the session
   const { data: session } = useSession();
   // declare state variables
@@ -84,5 +83,3 @@ export default function EditArticlePage({tags}) {
     </>
   );
 }
-
-
