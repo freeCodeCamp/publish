@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 
-const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
+const ArticleForm = ({ tags, initialValues, onContentChange }) => {
   // editing title
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  const [tags, setTags] = useState([]);
+  //const [tags, setTags] = useState([]);
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -74,9 +74,11 @@ const ArticleForm = ({ onSubmit, initialValues, onContentChange }) => {
             </div>
             <select className="tag-selector" onChange={addTag}>
               <option value="0">Select a tag</option>
-              <option value="1">Tag 1</option>
-              <option value="2">Tag 2</option>
-              <option value="3">Tag 3</option>
+              {
+                tags.map(tag => (
+                  <option value={tag}>{tag}</option>
+                ))
+              }
             </select>
             <h2 className="input-title">Authors</h2>
             <select className="tag-selector">
