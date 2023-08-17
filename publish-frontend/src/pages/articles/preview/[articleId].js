@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { getArticle } from '@/lib/articles';
 
 export default function PreviewArticlePage() {
-
   // declare state variables
   const [article, setArticle] = useState(null);
 
@@ -18,7 +17,6 @@ export default function PreviewArticlePage() {
         const data = await getArticle(articleId);
         console.log('GET response: ', data);
         setArticle(data.data);
-        setContent(data.data.attributes.body);
       } catch (error) {
         console.error('Error fetching article:', error);
       }
