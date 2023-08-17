@@ -1,8 +1,7 @@
 {
-  "dependencies": {
-  },
   "devDependencies": {
-    "husky": "^8.0.0"
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.0"
   },
   "scripts": {
     "prepare": "husky install"
