@@ -16,7 +16,7 @@ import {
   faStrikethrough
 } from '@fortawesome/free-solid-svg-icons';
 
-function MenuBubble({ editor }) {
+function ToolBar({ editor }) {
   const addImage = useCallback(() => {
     const url = window.prompt('URL');
 
@@ -26,7 +26,7 @@ function MenuBubble({ editor }) {
   }, [editor]);
 
   return (
-    <div className='menu'>
+    <div className='toolbar'>
       <button
         type='button'
         onClick={() => editor.chain().focus().toggleBold().run()}
@@ -146,7 +146,7 @@ const Tiptap = ({}) => {
 
   return (
     <>
-      <MenuBubble editor={editor} />
+      <ToolBar editor={editor} />
       <EditorContent editor={editor} />
     </>
   );

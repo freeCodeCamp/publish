@@ -220,11 +220,11 @@ function ManageArticles() {
       </button>
       {showDrafts && (
         <div>
-          <ol>
+          <ul>
             <li>Article 1</li>
             <li>Article 2</li>
             <li>Article 3</li>
-          </ol>
+          </ul>
         </div>
       )}
 
@@ -236,11 +236,11 @@ function ManageArticles() {
       </button>
       {showPinned && (
         <div>
-          <ol>
+          <ul>
             <li>Article 4</li>
             <li>Article 5</li>
             <li>Article 6</li>
-          </ol>
+          </ul>
         </div>
       )}
 
@@ -252,11 +252,11 @@ function ManageArticles() {
       </button>
       {showPublished && (
         <div>
-          <ol>
+          <ul>
             <li>Article 7</li>
             <li>Article 8</li>
             <li>Article 9</li>
-          </ol>
+          </ul>
         </div>
       )}
 

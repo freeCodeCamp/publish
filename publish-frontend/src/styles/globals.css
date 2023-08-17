@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* CSS for @tiptap/extension-placeholder */
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #adb5bd;
@@ -11,6 +7,18 @@
   pointer-events: none;
 }
 
+.ProseMirror {
+  min-height: 75vh;
+  max-height: 75vh;
+  overflow: scroll;
+  padding: 1rem;
+  min-width: 100%;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
 * {
   color: rgb(0, 0, 0, 0.80);
 }
@@ -18,6 +26,10 @@
 h2 {
   font-size: 20px;
   font-weight: 600;
+}
+
+ul {
+  list-style: none;
 }
 
 li {
@@ -37,14 +49,11 @@ html {
 .editor {
   padding: 1rem;
   margin: 1.5rem 0 0 5rem;
-  overflow: hidden;
-
 }
 
 .article-container{
   width: 100%;
   background-color: white;
-  overflow: hidden;
 }
 
 .menu{
@@ -53,15 +62,16 @@ html {
   margin: 1rem 0 0 0;
   border: 1px solid silver;
   border-radius: 0.25rem;
-  width: 300;
-  max-width: inherit
 }
 
 .side-drawer {
   background-color: white;
-  border-right: 1px solid silver; 
+  border-right: 1px solid silver;
+  overflow-y: scroll;
   padding: 1rem;
-  width: 450px;
+  height: 100vh;
+  min-width: 375px;
+  max-width: 375px;
 }
 
 .header {
@@ -88,21 +98,22 @@ html {
   outline: none;
 }
 
-.ProseMirror {        
-  min-height: 70vh;
-  max-height: 70vh;
-  overflow: scroll;
-  padding: 1rem;
-  min-width: 100%;
-}
-
-.menu{
+.toolbar{
   display: flex;
   padding: 0.2rem;
   margin: 1rem 0 0 0;
   border: 1px solid silver;
   border-radius: 0.25rem;
-  max-width: inherit
+}
+
+.toolbar button {
+  padding: 0.2rem;
+  margin: 0.1rem 0.2rem;
+}
+
+.toolbar button:hover {
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
 }
 
 .icon-margin span {
@@ -119,15 +130,7 @@ html {
   margin: 0 0.5rem;
 }
 
-.menu button {
-  padding: 0.2rem;
-  margin: 0.1rem 0.2rem;
-}
 
-.menu button:hover {
-  background-color: #e2e8f0;
-  border-radius: 0.25rem; 
-}
 
 .page {
   display: flex;
@@ -186,7 +189,9 @@ html {
 
 .tag-selector, input[type="text"], input[type="date"], input[type="time"] {
   width: 100%;
+  padding: 0.5rem;
   max-height: 175px;
+  border: 1px solid #727886;
   border-radius:  0.5rem;
   background-color: #f1f5f9;
 }
