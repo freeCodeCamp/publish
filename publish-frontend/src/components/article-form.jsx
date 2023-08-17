@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 
 
-const ArticleForm = ({ tags, initialValues, onContentChange }) => {
+const ArticleForm = ({ tags }) => {
   // editing title
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -143,8 +143,6 @@ const ArticleForm = ({ tags, initialValues, onContentChange }) => {
         </div>
         <div className="editor" onClick={() => setIsFocused(true)}>
           <Tiptap
-            onChange={onContentChange}
-            defaultValue={initialValues?.attributes?.body}
           />
         </div>
       </div>
