@@ -1,6 +1,5 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import GoogleProvider from 'next-auth/providers/google';
 import Auth0Provider from 'next-auth/providers/auth0';
 
 export const authOptions = {
@@ -16,7 +15,7 @@ export const authOptions = {
         },
         password: { label: 'Password', type: 'password', required: true }
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const { identifier, password } = credentials;
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/local`,
