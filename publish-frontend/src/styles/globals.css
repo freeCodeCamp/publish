@@ -12,7 +12,7 @@
 }
 
 * {
-  color: rgb(0, 0, 0, 0.80);
+  color: rgb(0, 0, 0, 0.8);
 }
 
 h2 {
@@ -22,7 +22,7 @@ h2 {
 
 li {
   padding-left: 1rem;
-  margin: 0.5rem 0
+  margin: 0.5rem 0;
 }
 
 html {
@@ -33,23 +33,22 @@ html {
   padding: 1rem;
   margin: 1.5rem 0 0 5rem;
   overflow: hidden;
-
 }
 
-.article-container{
+.article-container {
   width: 100%;
   background-color: white;
   overflow: hidden;
 }
 
-.menu{
+.menu {
   display: flex;
   padding: 0.2rem;
   margin: 1rem 0 0 0;
   border: 1px solid silver;
   border-radius: 0.25rem;
   width: 300;
-  max-width: inherit
+  max-width: inherit;
 }
 
 .side-drawer {
@@ -83,7 +82,7 @@ html {
   outline: none;
 }
 
-.ProseMirror {        
+.ProseMirror {
   min-height: 70vh;
   max-height: 70vh;
   overflow: scroll;
@@ -91,13 +90,13 @@ html {
   min-width: 100%;
 }
 
-.menu{
+.menu {
   display: flex;
   padding: 0.2rem;
   margin: 1rem 0 0 0;
   border: 1px solid silver;
   border-radius: 0.25rem;
-  max-width: inherit
+  max-width: inherit;
 }
 
 .icon-margin span {
@@ -121,7 +120,7 @@ html {
 
 .menu button:hover {
   background-color: #e2e8f0;
-  border-radius: 0.25rem; 
+  border-radius: 0.25rem;
 }
 
 .page {
