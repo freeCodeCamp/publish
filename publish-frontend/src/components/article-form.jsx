@@ -19,8 +19,28 @@ const ArticleForm = ({ tags }) => {
   const [featureImage, setFeatureImage] = useState(null);
 
   useEffect(() => {
+    function createNewTags() {
+      const tagContainer = document.getElementById('tag-container');
+
+      if (tagContainer === null) return;
+
+      tagContainer.innerHTML = '';
+
+      clientTags.forEach(tag => {
+        const tagElement = document.createElement('div');
+        tagElement.classList.add('tag');
+        tagElement.innerHTML = tag;
+        const removeButton = document.createElement('button');
+        removeButton.innerHTML = 'x';
+        removeButton.classList.add('remove-button');
+        removeButton.addEventListener('click', () => removeTag(tag));
+        tagElement.appendChild(removeButton);
+        tagContainer.appendChild(tagElement);
+      });
+    }
+
     createNewTags();
-  }, [clientTags, createNewTags]);
+  }, [clientTags]);
 
   function handleFileInputChange(event) {
     const file = event.target.files[0];
@@ -42,26 +62,6 @@ const ArticleForm = ({ tags }) => {
       const newTags = [...clientTags, event.target.value];
       setClientTags(newTags);
     }
-  }
-
-  function createNewTags() {
-    const tagContainer = document.getElementById('tag-container');
-
-    if (tagContainer === null) return;
-
-    tagContainer.innerHTML = '';
-
-    clientTags.forEach(tag => {
-      const tagElement = document.createElement('div');
-      tagElement.classList.add('tag');
-      tagElement.innerHTML = tag;
-      const removeButton = document.createElement('button');
-      removeButton.innerHTML = 'x';
-      removeButton.classList.add('remove-button');
-      removeButton.addEventListener('click', () => removeTag(tag));
-      tagElement.appendChild(removeButton);
-      tagContainer.appendChild(tagElement);
-    });
   }
 
   return (
