@@ -1,9 +1,3 @@
-import { useEditor, EditorContent } from '@tiptap/react';
-import { useCallback } from 'react';
-import StarterKit from '@tiptap/starter-kit';
-import Placeholder from '@tiptap/extension-placeholder';
-import Image from '@tiptap/extension-image';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBold,
   faCode,
@@ -15,6 +9,13 @@ import {
   faQuoteLeft,
   faStrikethrough
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Prose } from '@nikolovlazar/chakra-ui-prose';
+import Image from '@tiptap/extension-image';
+import Placeholder from '@tiptap/extension-placeholder';
+import { EditorContent, useEditor } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { useCallback } from 'react';
 
 function MenuBubble({ editor }) {
   const addImage = useCallback(() => {
@@ -144,7 +145,9 @@ const Tiptap = ({ defaultValue }) => {
   return (
     <>
       <MenuBubble editor={editor} />
-      <EditorContent editor={editor} />
+      <Prose>
+        <EditorContent editor={editor} />
+      </Prose>
     </>
   );
 };
