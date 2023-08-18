@@ -27,7 +27,7 @@ export default function IndexPage({ allArticlesData }) {
       <Flex>
         <NavMenu session={session} />
 
-        <main className='p-3'>
+        <main style={{ padding: '0.75rem' }}>
           <div>
             <Button colorScheme='blue' as={NextLink} href='/articles/new'>
               New Article
@@ -38,7 +38,7 @@ export default function IndexPage({ allArticlesData }) {
             <ul>
               {allArticlesData.data.map(article => {
                 return (
-                  <li key={article.id} className='mb-5'>
+                  <li key={article.id} style={{ marginBottom: '1.25rem' }}>
                     <Link as={NextLink} href={`/articles/${article.id}`}>
                       <strong>{article.attributes.title}</strong>
                       <br />

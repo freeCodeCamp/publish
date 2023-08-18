@@ -6,7 +6,7 @@ export default function UsersList({ allUsersData }) {
         {allUsersData.map(user => {
           console.log(user);
           return (
-            <li key={user.id} className='mb-5'>
+            <li key={user.id} style={{ marginBottom: '1.25rem' }}>
               <strong>{user.username}</strong>
               <br />
               <span>email: {user.email}</span>
