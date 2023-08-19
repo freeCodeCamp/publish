@@ -7,7 +7,8 @@
     "develop": "npm run dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
@@ -18,6 +19,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@nikolovlazar/chakra-ui-prose": "^1.2.1",
     "@tiptap/extension-image": "^2.0.4",
     "@tiptap/extension-list-item": "^2.0.3",
     "@tiptap/extension-placeholder": "^2.0.4",
@@ -25,22 +27,19 @@
     "@tiptap/pm": "^2.0.3",
     "@tiptap/react": "^2.0.3",
     "@tiptap/starter-kit": "^2.0.3",
-    "eslint": "8.47.0",
-    "eslint-config-next": "13.4.13",
     "framer-motion": "^10.13.1",
-    "next": "13.4.13",
+    "next": "13.4.19",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.10.1",
-    "sass": "^1.64.1"
+    "slugify": "^1.6.6",
+    "react-icons": "^4.10.1"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.4",
-    "@tailwindcss/typography": "^0.5.9",
-    "autoprefixer": "^10.4.14",
-    "eslint-config-prettier": "^8.8.0",
-    "postcss": "^8.4.27",
-    "tailwindcss": "^3.3.3"
+    "eslint": "^8.46.0",
+    "eslint-config-next": "^13.4.13",
+    "eslint-config-prettier": "^8.10.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "prettier": "^3.0.1"
   }
 }

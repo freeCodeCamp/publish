@@ -29,7 +29,7 @@ export default function Profile({ userData }) {
       <Flex>
         <NavMenu session={session} />
 
-        <main className='p-3'>
+        <main style={{ padding: '0.75rem' }}>
           <ul>
             <li>
               <strong>Username:</strong> {userData.username}

@@ -7,7 +7,7 @@ import { isEditor } from '@/lib/current-user';
 
 export default function NavMenu({ session }) {
   return (
-    <nav className='border-r-2 border-gray-100 mr-3 p-3 h-screen'>
+    <nav className='nav-bar'>
       <h1>Authoring Site (Next.js)</h1>
       <br />
       <ul>

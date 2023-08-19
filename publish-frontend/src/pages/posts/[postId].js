@@ -1,10 +1,10 @@
-import { useSession } from "next-auth/react";
-import React, { useState, useEffect } from "react";
+import { useSession } from 'next-auth/react';
+import React, { useState, useEffect } from 'react';
 import PostForm from '@/components/post-form';
 import { useRouter } from 'next/router';
 import { getPost, updatePost } from '@/lib/posts';
 
-export default function EditPostPage() {
+export default function EditPostPage({ tags }) {
   // Get auth data from the session
   const { data: session } = useSession();
   // declare state variables
@@ -75,6 +75,7 @@ export default function EditPostPage() {
   return (
     <>
       <PostForm
+        tags={tags}
         onSubmit={event => handleSubmit(event, session)}
         initialValues={post}
         onContentChange={handleContentChange}
@@ -82,5 +83,3 @@ export default function EditPostPage() {
     </>
   );
 }
-
-

@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* CSS for @tiptap/extension-placeholder */
 .ProseMirror p.is-editor-empty:first-child::before {
   color: #adb5bd;
@@ -11,8 +7,20 @@
   pointer-events: none;
 }
 
+.ProseMirror {
+  min-height: 75vh;
+  max-height: 75vh;
+  overflow: scroll;
+  padding: 1rem;
+  min-width: 100%;
+}
+
+.ProseMirror:focus {
+  outline: none;
+}
+
 * {
-  color: rgb(0, 0, 0, 0.80);
+  color: rgb(0, 0, 0, 0.8);
 }
 
 h2 {
@@ -20,9 +28,18 @@ h2 {
   font-weight: 600;
 }
 
+ul {
+  list-style: none;
+}
+
 li {
   padding-left: 1rem;
-  margin: 0.5rem 0
+  margin: 0.5rem 0;
+}
+
+hr {
+  background-color:  silver;
+  margin: 1rem 0;
 }
 
 html {
@@ -33,30 +50,29 @@ html {
   padding: 1rem;
   margin: 1.5rem 0 0 5rem;
   overflow: hidden;
-
 }
 
-.post-container{
+.post-container {
   width: 100%;
   background-color: white;
-  overflow: hidden;
 }
 
-.menu{
+.menu {
   display: flex;
   padding: 0.2rem;
   margin: 1rem 0 0 0;
   border: 1px solid silver;
   border-radius: 0.25rem;
-  width: 300;
-  max-width: inherit
 }
 
 .side-drawer {
   background-color: white;
   border-right: 1px solid silver;
+  overflow-y: scroll;
   padding: 1rem;
-  width: 300px;
+  height: 100vh;
+  min-width: 375px;
+  max-width: 375px;
 }
 
 .header {
@@ -83,21 +99,22 @@ html {
   outline: none;
 }
 
-.ProseMirror {
-  min-height: 70vh;
-  max-height: 70vh;
-  overflow: scroll;
-  padding: 1rem;
-  min-width: 100%;
-}
-
-.menu{
+.toolbar{
   display: flex;
   padding: 0.2rem;
   margin: 1rem 0 0 0;
   border: 1px solid silver;
   border-radius: 0.25rem;
-  max-width: inherit
+}
+
+.toolbar button {
+  padding: 0.2rem;
+  margin: 0.1rem 0.2rem;
+}
+
+.toolbar button:hover {
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
 }
 
 .icon-margin span {
@@ -114,10 +131,6 @@ html {
   margin: 0 0.5rem;
 }
 
-.menu button {
-  padding: 0.2rem;
-  margin: 0.1rem 0.2rem;
-}
 
 .menu button:hover {
   background-color: #e2e8f0;
@@ -136,14 +149,18 @@ html {
   padding: 0.5rem 1rem;
 }
 
-.draft-button {
+.delete-button {
+  background-color: #e53e3e !important;
+}
+
+.full-width-btn {
   margin: 1rem 0.5rem 0 0;
   width: 100%;
 }
 
 .navigation {
-  padding: 1rem;
   border-bottom: 1px solid silver;
+  padding-bottom: 2rem;
 }
 
 .preview-button {
@@ -154,4 +171,65 @@ html {
 .dropdown-button {
   display: block;
   border: 1px 0 0 1px solid silver;
+}
+
+.feature-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 175px;
+  max-height: 175px;
+  border-radius:  0.5rem;
+  background-color: #f1f5f9;
+}
+
+.feature-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius:  0.5rem;
+}
+
+
+.tag-selector, input[type="text"], input[type="date"], input[type="time"] {
+  width: 100%;
+  padding: 0.5rem;
+  max-height: 175px;
+  border: 1px solid #727886;
+  border-radius:  0.5rem;
+  background-color: #f1f5f9;
+}
+
+.input-title {
+  margin-top: 1rem;
+}
+
+.time-date-input {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tag {
+  display: inline-block;
+  background-color: #22c55e;
+  color: white;
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  margin: 0.2rem;
+}
+
+.tag button {
+  background-color: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.2rem 0.5rem;
+}
+.nav-bar {
+  border-right-width: 2px;
+  border-color: rgb(243 244 246);
+  margin-right: 0.75rem;
+  padding: 0.75rem;
+  height: 100vh;
 }
