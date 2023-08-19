@@ -1,47 +1,44 @@
-import { useSession } from 'next-auth/react';
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getPost } from '@/lib/posts';
+import { getArticle } from '@/lib/articles';
 
-export default function PreviewPostPage() {
-  // Get auth data from the session
-  const { data: session } = useSession();
+export default function PreviewArticlePage() {
   // declare state variables
-  const [post, setPost] = useState(null);
-  const [content, setContent] = useState('');
+  const [article, setArticle] = useState(null);
 
-  // Get the postId from the dynamic segment in the URL
+  // Get the articleId from the dynamic segment in the URL
   const router = useRouter();
-  const { postId } = router.query;
+  const { articleId } = router.query;
 
   useEffect(() => {
-    // Fetch the post data from the server using the postId
-    const fetchPost = async () => {
+    // Fetch the article data from the server using the articleId
+    const fetchArticle = async () => {
       try {
-        const data = await getPost(postId);
+        const data = await getArticle(articleId);
         console.log('GET response: ', data);
-        setPost(data.data);
-        setContent(data.data.attributes.body);
+        setArticle(data.data);
       } catch (error) {
-        console.error('Error fetching post:', error);
+        console.error('Error fetching article:', error);
       }
     };
 
-    fetchPost();
-  }, [postId]);
+    fetchArticle();
+  }, [articleId]);
 
   // loading screen
-  if (!post) {
+  if (!article) {
     return <p>Loading...</p>;
   }
 
   return (
     <>
       <div>Preview</div>
-      {/* TODO: Post preview page */}
-      <div className='prose lg:prose-xl'>
-        <h1>{post.attributes?.title}</h1>
-        <div dangerouslySetInnerHTML={{ __html: post.attributes?.body }}></div>
+      {/* TODO: Article preview page */}
+      <div>
+        <h1>{article.attributes?.title}</h1>
+        <div
+          dangerouslySetInnerHTML={{ __html: article.attributes?.body }}
+        ></div>
       </div>
     </>
   );
