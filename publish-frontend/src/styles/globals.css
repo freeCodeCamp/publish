@@ -20,7 +20,7 @@
 }
 
 * {
-  color: rgb(0, 0, 0, 0.80);
+  color: rgb(0, 0, 0, 0.8);
 }
 
 h2 {
@@ -34,7 +34,7 @@ ul {
 
 li {
   padding-left: 1rem;
-  margin: 0.5rem 0
+  margin: 0.5rem 0;
 }
 
 hr {
@@ -49,14 +49,15 @@ html {
 .editor {
   padding: 1rem;
   margin: 1.5rem 0 0 5rem;
+  overflow: hidden;
 }
 
-.article-container{
+.article-container {
   width: 100%;
   background-color: white;
 }
 
-.menu{
+.menu {
   display: flex;
   padding: 0.2rem;
   margin: 1rem 0 0 0;
@@ -131,6 +132,10 @@ html {
 }
 
 
+.menu button:hover {
+  background-color: #e2e8f0;
+  border-radius: 0.25rem;
+}
 
 .page {
   display: flex;
@@ -220,4 +225,11 @@ html {
   border: none;
   border-radius: 0.25rem;
   padding: 0.2rem 0.5rem;
+}
+.nav-bar {
+  border-right-width: 2px;
+  border-color: rgb(243 244 246);
+  margin-right: 0.75rem;
+  padding: 0.75rem;
+  height: 100vh;
 }

@@ -34,7 +34,7 @@ export default function PreviewArticlePage() {
     <>
       <div>Preview</div>
       {/* TODO: Article preview page */}
-      <div className='prose lg:prose-xl'>
+      <div>
         <h1>{article.attributes?.title}</h1>
         <div
           dangerouslySetInnerHTML={{ __html: article.attributes?.body }}
