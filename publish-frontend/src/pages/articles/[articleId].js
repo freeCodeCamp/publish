@@ -4,7 +4,7 @@ import ArticleForm from '@/components/article-form';
 import { useRouter } from 'next/router';
 import { getArticle, updateArticle } from '@/lib/articles';
 
-export default function EditArticlePage() {
+export default function EditArticlePage({ tags }) {
   // Get auth data from the session
   const { data: session } = useSession();
   // declare state variables
@@ -75,6 +75,7 @@ export default function EditArticlePage() {
   return (
     <>
       <ArticleForm
+        tags={tags}
         onSubmit={event => handleSubmit(event, session)}
         initialValues={article}
         onContentChange={handleContentChange}
