@@ -87,8 +87,8 @@
         "fields": [
           "name",
           "slug",
-          "visibility",
-          "posts"
+          "posts",
+          "visibility"
         ]
       },
       "conditions": []
@@ -106,8 +106,8 @@
         "fields": [
           "name",
           "slug",
-          "visibility",
-          "posts"
+          "posts",
+          "visibility"
         ]
       },
       "conditions": []
@@ -119,8 +119,8 @@
         "fields": [
           "name",
           "slug",
-          "visibility",
-          "posts"
+          "posts",
+          "visibility"
         ]
       },
       "conditions": []
