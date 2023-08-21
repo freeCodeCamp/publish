@@ -5,20 +5,10 @@
  */
 
 module.exports = {
-  exampleAction: async (ctx, next) => {
-    try {
-      ctx.body = "ok";
-    } catch (err) {
-      ctx.body = err;
-    }
-  },
   find: async (ctx, next) => {
     try {
-      const posts = await strapi.entityService.findMany("api::post.post", {
-        fields: ["title", "body"],
-      });
-
-      ctx.body = posts;
+      const response = await strapi.service("api::custom-post.custom-post").find();
+      ctx.body = response;
     } catch (err) {
       ctx.body = err;
     }
