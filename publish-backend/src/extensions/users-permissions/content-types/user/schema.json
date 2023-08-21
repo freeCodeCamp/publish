@@ -117,7 +117,8 @@
     "posts": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::post.post"
+      "target": "api::post.post",
+      "mappedBy": "author"
     }
   }
 }
