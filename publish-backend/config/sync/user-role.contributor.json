@@ -4,6 +4,9 @@
   "type": "contributor",
   "permissions": [
     {
+      "action": "api::invited-user.invited-user.create"
+    },
+    {
       "action": "api::post.post.create"
     },
     {
@@ -20,9 +23,6 @@
     },
     {
       "action": "api::post.post.update"
-    },
-    {
-      "action": "api::invited-user.invited-user.create"
     },
     {
       "action": "api::tag.tag.find"

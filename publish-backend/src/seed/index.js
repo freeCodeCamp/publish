@@ -3,9 +3,10 @@ const { faker } = require("@faker-js/faker");
 async function createSeedUsers(strapi) {
   await strapi.entityService.create("plugin::users-permissions.user", {
     data: {
-      username: "foo@bar.com",
+      username: "foobar-123",
       email: "foo@bar.com",
       password: "foobar",
+      provider: "local",
       confirmed: true,
       role: {
         connect: [3],
@@ -14,13 +15,27 @@ async function createSeedUsers(strapi) {
   });
   await strapi.entityService.create("plugin::users-permissions.user", {
     data: {
-      username: "dev@user.com",
+      username: "devuser-123",
       email: "dev@user.com",
       password: "devuser",
+      provider: "local",
       confirmed: true,
       role: {
         connect: [3],
       },
+    },
+  });
+}
+
+async function createSeedInvitedUsers(strapi) {
+  await strapi.entityService.create("api::invited-user.invited-user", {
+    data: {
+      email: "foo@bar.com",
+    },
+  });
+  await strapi.entityService.create("api::invited-user.invited-user", {
+    data: {
+      email: "dev@user.com",
     },
   });
 }
@@ -125,6 +140,7 @@ async function generateSeedData(strapi) {
   console.log("Creating seed data...");
 
   await createSeedUsers(strapi);
+  await createSeedInvitedUsers(strapi);
   await createSeedTags(strapi);
   await createSeedPosts(strapi);
 }

@@ -4,13 +4,13 @@
   "type": "public",
   "permissions": [
     {
+      "action": "api::invited-user.invited-user.find"
+    },
+    {
       "action": "api::post.post.find"
     },
     {
       "action": "api::post.post.findOne"
-    },
-    {
-      "action": "api::invited-user.invited-user.find"
     },
     {
       "action": "api::tag.tag.find"
