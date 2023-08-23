@@ -1,35 +1,39 @@
-import { useSession } from 'next-auth/react';
-import React, { useState, useEffect } from 'react';
 import PostForm from '@/components/post-form';
-import { useRouter } from 'next/router';
 import { getPost, updatePost } from '@/lib/posts';
+import { getTags } from '@/lib/tags';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
 
-export default function EditPostPage({ tags }) {
+export async function getServerSideProps({ params }) {
+  const { postId } = params;
+  const { data: tags } = await getTags();
+  const { data: post } = await getPost(postId);
+  return {
+    props: { tags, post }
+  };
+}
+
+export default function EditPostPage({ tags, post }) {
   // Get auth data from the session
   const { data: session } = useSession();
   // declare state variables
-  const [post, setPost] = useState(null);
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(post.attributes.body);
 
-  // Get the postId from the dynamic segment in the URL
-  const router = useRouter();
-  const { postId } = router.query;
+  // useEffect(() => {
+  //   // Fetch the post data from the server using the postId
+  //   const fetchPost = async () => {
+  //     try {
+  //       const data = await getPost(postId);
+  //       console.log('GET response: ', data);
+  //       setPost(data.data);
+  //       setContent(data.data.attributes.body);
+  //     } catch (error) {
+  //       console.error('Error fetching post:', error);
+  //     }
+  //   };
 
-  useEffect(() => {
-    // Fetch the post data from the server using the postId
-    const fetchPost = async () => {
-      try {
-        const data = await getPost(postId);
-        console.log('GET response: ', data);
-        setPost(data.data);
-        setContent(data.data.attributes.body);
-      } catch (error) {
-        console.error('Error fetching post:', error);
-      }
-    };
-
-    fetchPost();
-  }, [postId]);
+  //   fetchPost();
+  // }, [postId]);
 
   const handleContentChange = updatedContent => {
     setContent(updatedContent);
@@ -58,7 +62,7 @@ export default function EditPostPage({ tags }) {
 
     // Sending request
     try {
-      const result = await updatePost(postId, JSONdata, token);
+      const result = await updatePost(post.id, JSONdata, token);
       console.log('updatePost response: ', JSON.stringify(result));
       alert('Saved!');
     } catch (error) {
