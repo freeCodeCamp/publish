@@ -69,7 +69,7 @@ async function createSeedPosts(strapi) {
       title: "Lorem Post 1",
       author: { connect: [2] },
       tags: { connect: [1, 2, 4] },
-      body: faker.lorem.paragraphs(5),
+      body: faker.lorem.paragraphs(5, "<br/>\n"),
       publishedAt: new Date(),
     },
   });
@@ -78,7 +78,7 @@ async function createSeedPosts(strapi) {
       title: "Lorem Post 2",
       author: { connect: [2] },
       tags: { connect: [2, 3] },
-      body: faker.lorem.paragraphs(5),
+      body: faker.lorem.paragraphs(5, "<br/>\n"),
       publishedAt: new Date(),
     },
   });
@@ -87,7 +87,7 @@ async function createSeedPosts(strapi) {
       title: "Unpublished Lorem Post",
       author: { connect: [2] },
       tags: { connect: [2, 3] },
-      body: faker.lorem.paragraphs(5),
+      body: faker.lorem.paragraphs(5, "<br/>\n"),
     },
   });
   await strapi.entityService.create("api::post.post", {
@@ -106,7 +106,7 @@ async function generateSeedData(strapi) {
     "plugin::users-permissions.user",
     {
       filters: {
-        $and: [
+        $or: [
           {
             email: "foo@bar.com",
           },
