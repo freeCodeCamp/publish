@@ -62,21 +62,6 @@
           "sortable": false
         }
       },
-      "author": {
-        "edit": {
-          "label": "author",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "username"
-        },
-        "list": {
-          "label": "author",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "body": {
         "edit": {
           "label": "body",
@@ -118,6 +103,21 @@
           "label": "tags",
           "searchable": false,
           "sortable": false
+        }
+      },
+      "author": {
+        "edit": {
+          "label": "author",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "username"
+        },
+        "list": {
+          "label": "author",
+          "searchable": true,
+          "sortable": true
         }
       },
       "createdAt": {
@@ -175,12 +175,6 @@
         ],
         [
           {
-            "name": "author",
-            "size": 6
-          }
-        ],
-        [
-          {
             "name": "body",
             "size": 12
           }
@@ -192,6 +186,12 @@
           },
           {
             "name": "tags",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "author",
             "size": 6
           }
         ]

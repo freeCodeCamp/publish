@@ -11,10 +11,10 @@
           "title",
           "slug",
           "feature_image",
-          "author",
           "body",
           "excerpt",
-          "tags"
+          "tags",
+          "author"
         ],
         "locales": [
           "en"
@@ -50,10 +50,10 @@
           "title",
           "slug",
           "feature_image",
-          "author",
           "body",
           "excerpt",
-          "tags"
+          "tags",
+          "author"
         ],
         "locales": [
           "en"
@@ -69,10 +69,10 @@
           "title",
           "slug",
           "feature_image",
-          "author",
           "body",
           "excerpt",
-          "tags"
+          "tags",
+          "author"
         ],
         "locales": [
           "en"
