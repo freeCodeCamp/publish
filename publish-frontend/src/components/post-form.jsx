@@ -5,7 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import slugify from 'slugify';
 import { Img } from '@chakra-ui/react';
 
-const PostForm = ({ tags }) => {
+const PostForm = ({ tags, initialValues }) => {
   // editing title
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -198,7 +198,7 @@ const PostForm = ({ tags }) => {
           </div>
         </div>
         <div className='editor' onClick={() => setIsFocused(true)}>
-          <Tiptap />
+          <Tiptap defaultValue={initialValues.attributes.body} />
         </div>
       </div>
     </div>
