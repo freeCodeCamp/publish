@@ -1,4 +1,6 @@
-'use strict';
+"use strict";
+
+const { generateSeedData } = require("./seed");
 
 module.exports = {
   /**
@@ -16,5 +18,14 @@ module.exports = {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap(/*{ strapi }*/) {},
+  async bootstrap({ strapi }) {
+    if (
+      process.env.NODE_ENV === "development" &&
+      process.env.SEED_DATA === "true"
+    ) {
+      console.log("Seeding database...");
+      await generateSeedData(strapi);
+      console.log("Seeding database complete!");
+    }
+  },
 };
