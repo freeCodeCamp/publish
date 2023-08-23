@@ -1,14 +1,14 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::api::language.language",
+  "key": "plugin_content_manager_configuration_content_types::api::post.post",
   "value": {
-    "uid": "api::language.language",
+    "uid": "api::post.post",
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "isoLocales",
-      "defaultSortBy": "isoLocales",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -20,16 +20,16 @@
           "sortable": true
         }
       },
-      "isoLocales": {
+      "title": {
         "edit": {
-          "label": "isoLocales",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "isoLocales",
+          "label": "title",
           "searchable": true,
           "sortable": true
         }
@@ -48,45 +48,74 @@
           "sortable": true
         }
       },
-      "name": {
+      "feature_image": {
         "edit": {
-          "label": "name",
+          "label": "feature_image",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "name",
-          "searchable": true,
-          "sortable": true
+          "label": "feature_image",
+          "searchable": false,
+          "sortable": false
         }
       },
-      "rtl": {
+      "author": {
         "edit": {
-          "label": "rtl",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "rtl",
-          "searchable": true,
-          "sortable": true
-        }
-      },
-      "articles": {
-        "edit": {
-          "label": "articles",
+          "label": "author",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "title"
+          "mainField": "username"
         },
         "list": {
-          "label": "articles",
+          "label": "author",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "body": {
+        "edit": {
+          "label": "body",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "body",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "excerpt": {
+        "edit": {
+          "label": "excerpt",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "excerpt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "tags": {
+        "edit": {
+          "label": "tags",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "tags",
           "searchable": false,
           "sortable": false
         }
@@ -123,14 +152,14 @@
     "layouts": {
       "list": [
         "id",
-        "isoLocales",
-        "slug",
-        "name"
+        "title",
+        "createdAt",
+        "updatedAt"
       ],
       "edit": [
         [
           {
-            "name": "isoLocales",
+            "name": "title",
             "size": 6
           },
           {
@@ -140,17 +169,29 @@
         ],
         [
           {
-            "name": "name",
+            "name": "feature_image",
             "size": 6
-          },
-          {
-            "name": "rtl",
-            "size": 4
           }
         ],
         [
           {
-            "name": "articles",
+            "name": "author",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "body",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "excerpt",
+            "size": 6
+          },
+          {
+            "name": "tags",
             "size": 6
           }
         ]

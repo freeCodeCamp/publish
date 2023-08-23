@@ -1,27 +1,28 @@
-// Article API calls
+// Post API calls
+
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function getArticles() {
-  const res = await fetch(`${api_root}/articles`);
+export async function getPosts() {
+  const res = await fetch(`${api_root}/posts`);
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
-    throw new Error('getArticles Failed');
+    throw new Error('getPosts Failed');
   }
   return res.json();
 }
 
-export async function getArticle(articleId) {
-  console.log('articleId:', articleId);
-  const res = await fetch(`${api_root}/articles/${articleId}`);
+export async function getPost(postId) {
+  console.log('postId:', postId);
+  const res = await fetch(`${api_root}/posts/${postId}`);
   if (!res.ok) {
-    throw new Error('getArticle Failed');
+    throw new Error('getPost Failed');
   }
   return res.json();
 }
 
-export async function createArticle(JSONdata, token) {
+export async function createPost(JSONdata, token) {
   // API endpoint where we send form data.
-  const endpoint = `${api_root}/articles`;
+  const endpoint = `${api_root}/posts`;
 
   // Form the request for sending data to the server.
   const options = {
@@ -39,15 +40,15 @@ export async function createArticle(JSONdata, token) {
   const res = await fetch(endpoint, options);
 
   if (!res.ok) {
-    throw new Error('createArticle Failed');
+    throw new Error('createPost Failed');
   }
 
   return res.json();
 }
 
-export async function updateArticle(articleId, JSONdata, token) {
+export async function updatePost(postId, JSONdata, token) {
   // API endpoint where we send form data.
-  const endpoint = `${api_root}/articles/${articleId}`;
+  const endpoint = `${api_root}/posts/${postId}`;
 
   // Form the request for sending data to the server.
   const options = {
@@ -65,7 +66,7 @@ export async function updateArticle(articleId, JSONdata, token) {
   const res = await fetch(endpoint, options);
 
   if (!res.ok) {
-    throw new Error('updateArticle Failed');
+    throw new Error('updatePost Failed');
   }
 
   return res.json();

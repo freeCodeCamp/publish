@@ -1,6 +1,6 @@
 import NextLink from 'next/link'; // import as NextLink to avoid conflict with chakra-ui Link component
 import { useSession, signIn } from 'next-auth/react';
-import { getArticles } from '../lib/articles';
+import { getPosts } from '../lib/posts';
 import NavMenu from '@/components/nav-menu';
 
 import { Button } from '@chakra-ui/react';
@@ -8,15 +8,15 @@ import { Link } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 
 export async function getServerSideProps() {
-  const allArticlesData = await getArticles();
+  const allPostsData = await getPosts();
   return {
     props: {
-      allArticlesData
+      allPostsData
     }
   };
 }
 
-export default function IndexPage({ allArticlesData }) {
+export default function IndexPage({ allPostsData }) {
   const { data: session, status } = useSession();
 
   const isLoading = status === 'loading';
@@ -29,20 +29,20 @@ export default function IndexPage({ allArticlesData }) {
 
         <main style={{ padding: '0.75rem' }}>
           <div>
-            <Button colorScheme='blue' as={NextLink} href='/articles/new'>
-              New Article
+            <Button colorScheme='blue' as={NextLink} href='/posts/new'>
+              New Post
             </Button>
           </div>
 
           <div>
             <ul>
-              {allArticlesData.data.map(article => {
+              {allPostsData.data.map(post => {
                 return (
-                  <li key={article.id} style={{ marginBottom: '1.25rem' }}>
-                    <Link as={NextLink} href={`/articles/${article.id}`}>
-                      <strong>{article.attributes.title}</strong>
+                  <li key={post.id} style={{ marginBottom: '1.25rem' }}>
+                    <Link as={NextLink} href={`/posts/${post.id}`}>
+                      <strong>{post.attributes.title}</strong>
                       <br />
-                      {article.attributes.body.slice(0, 150)}...
+                      {post.attributes.body.slice(0, 150)}...
                     </Link>
                   </li>
                 );

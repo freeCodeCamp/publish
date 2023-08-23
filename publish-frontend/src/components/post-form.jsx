@@ -5,7 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import slugify from 'slugify';
 import { Img } from '@chakra-ui/react';
 
-const ArticleForm = ({ tags }) => {
+const PostForm = ({ tags }) => {
   // editing title
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -68,7 +68,7 @@ const ArticleForm = ({ tags }) => {
     <div className='page'>
       <div className='side-drawer'>
         {!isFocused ? (
-          <ManageArticles />
+          <ManagePosts />
         ) : (
           <div>
             <h2 className='input-title'>Feature Image</h2>
@@ -160,12 +160,12 @@ const ArticleForm = ({ tags }) => {
               className='submit-button full-width-btn'
               onClick={() => setIsFocused(false)}
             >
-              View Articles
+              View Posts
             </button>
           </div>
         )}
       </div>
-      <div className='article-container'>
+      <div className='post-container'>
         <div className='header'>
           <div className='title-pos' id='title'>
             {isEditingTitle ? (
@@ -205,7 +205,7 @@ const ArticleForm = ({ tags }) => {
   );
 };
 
-function ManageArticles() {
+function ManagePosts() {
   const [showDrafts, setShowDrafts] = useState(true);
   const [showPinned, setShowPinned] = useState(true);
   const [showPublished, setShowPublished] = useState(true);
@@ -221,9 +221,9 @@ function ManageArticles() {
       {showDrafts && (
         <div>
           <ul>
-            <li>Article 1</li>
-            <li>Article 2</li>
-            <li>Article 3</li>
+            <li>Post 1</li>
+            <li>Post 2</li>
+            <li>Post 3</li>
           </ul>
         </div>
       )}
@@ -237,9 +237,9 @@ function ManageArticles() {
       {showPinned && (
         <div>
           <ul>
-            <li>Article 4</li>
-            <li>Article 5</li>
-            <li>Article 6</li>
+            <li>Post 4</li>
+            <li>Post 5</li>
+            <li>Post 6</li>
           </ul>
         </div>
       )}
@@ -253,9 +253,9 @@ function ManageArticles() {
       {showPublished && (
         <div>
           <ul>
-            <li>Article 7</li>
-            <li>Article 8</li>
-            <li>Article 9</li>
+            <li>Post 7</li>
+            <li>Post 8</li>
+            <li>Post 9</li>
           </ul>
         </div>
       )}
@@ -267,4 +267,4 @@ function ManageArticles() {
   );
 }
 
-export default ArticleForm;
+export default PostForm;

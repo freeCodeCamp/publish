@@ -1,10 +1,10 @@
 {
   "kind": "collectionType",
-  "collectionName": "articles",
+  "collectionName": "posts",
   "info": {
-    "singularName": "article",
-    "pluralName": "articles",
-    "displayName": "Article",
+    "singularName": "post",
+    "pluralName": "posts",
+    "displayName": "post",
     "description": ""
   },
   "options": {
@@ -18,28 +18,27 @@
   "attributes": {
     "title": {
       "type": "string",
+      "required": true,
+      "maxLength": 200,
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
-      },
-      "maxLength": 200,
-      "required": true
+      }
     },
     "slug": {
-      "type": "string",
       "pluginOptions": {
         "i18n": {
           "localized": true
         }
       },
-      "maxLength": 100,
-      "required": false,
-      "unique": true
+      "type": "string",
+      "unique": true,
+      "maxLength": 100
     },
-    "featureImage": {
+    "feature_image": {
       "type": "media",
-      "multiple": false,
+      "multiple": true,
       "required": false,
       "allowedTypes": [
         "images"
@@ -49,12 +48,6 @@
           "localized": false
         }
       }
-    },
-    "tags": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::tag.tag",
-      "inversedBy": "articles"
     },
     "author": {
       "type": "relation",
@@ -77,19 +70,11 @@
       },
       "type": "text"
     },
-    "language": {
+    "tags": {
       "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::language.language",
-      "inversedBy": "articles"
-    },
-    "translatorId": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "string"
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "posts"
     }
   }
 }

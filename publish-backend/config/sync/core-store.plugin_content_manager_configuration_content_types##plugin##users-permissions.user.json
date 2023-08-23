@@ -147,21 +147,6 @@
           "sortable": true
         }
       },
-      "articles": {
-        "edit": {
-          "label": "articles",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "title"
-        },
-        "list": {
-          "label": "articles",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "slug": {
         "edit": {
           "label": "slug",
@@ -176,30 +161,30 @@
           "sortable": true
         }
       },
-      "displayName": {
+      "name": {
         "edit": {
-          "label": "displayName",
+          "label": "name",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "displayName",
+          "label": "name",
           "searchable": true,
           "sortable": true
         }
       },
-      "profileImage": {
+      "profile_image": {
         "edit": {
-          "label": "profileImage",
+          "label": "profile_image",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "profileImage",
+          "label": "profile_image",
           "searchable": false,
           "sortable": false
         }
@@ -302,6 +287,21 @@
           "sortable": true
         }
       },
+      "posts": {
+        "edit": {
+          "label": "posts",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "title"
+        },
+        "list": {
+          "label": "posts",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -371,21 +371,7 @@
         ],
         [
           {
-            "name": "articles",
-            "size": 6
-          },
-          {
             "name": "slug",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "displayName",
-            "size": 6
-          },
-          {
-            "name": "profileImage",
             "size": 6
           }
         ],
@@ -422,6 +408,20 @@
         [
           {
             "name": "last_seen",
+            "size": 6
+          },
+          {
+            "name": "posts",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "name",
+            "size": 6
+          },
+          {
+            "name": "profile_image",
             "size": 6
           }
         ]

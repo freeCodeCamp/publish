@@ -4,7 +4,7 @@
   "info": {
     "singularName": "tag",
     "pluralName": "tags",
-    "displayName": "Tag",
+    "displayName": "tag",
     "description": ""
   },
   "options": {
@@ -15,18 +15,23 @@
     "name": {
       "type": "string"
     },
-    "articles": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::article.article",
-      "mappedBy": "tags"
-    },
     "slug": {
       "type": "string"
     },
-    "isPublic": {
-      "type": "boolean",
-      "default": true
+    "posts": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::post.post",
+      "mappedBy": "tags"
+    },
+    "visibility": {
+      "type": "enumeration",
+      "enum": [
+        "public",
+        "internal"
+      ],
+      "default": "public",
+      "required": true
     }
   }
 }

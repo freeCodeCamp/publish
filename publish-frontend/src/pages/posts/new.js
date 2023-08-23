@@ -1,7 +1,7 @@
 // import { useSession } from "next-auth/react";
 import React from 'react';
-import ArticleForm from '@/components/article-form';
-// import { createArticle } from '@/lib/articles';
+import PostForm from '@/components/post-form';
+// import { createPost } from '@/lib/posts';
 
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
@@ -20,7 +20,7 @@ export async function getServerSideProps() {
   };
 }
 
-export default function NewArticlePage({ tags }) {
+export default function NewPostPage({ tags }) {
   // Get auth data from the session
   //const { data: session } = useSession();
   // declare state variable `content`
@@ -52,19 +52,19 @@ export default function NewArticlePage({ tags }) {
   //   const token = session.user.jwt;
 
   //   try {
-  //     const result = await createArticle(JSONdata, token);
-  //     console.log('createArticle response: ', JSON.stringify(result));
+  //     const result = await createPost(JSONdata, token);
+  //     console.log('createPost response: ', JSON.stringify(result));
   //     alert('Saved!');
   //   } catch (error) {
-  //     console.error('createArticle Error:', error);
-  //     alert('Failed to save the article');
+  //     console.error('createPost Error:', error);
+  //     alert('Failed to save the post');
   //   }
   // };
 
   return (
     <>
       {/* // We pass the event to the handleSubmit() function on submit. */}
-      <ArticleForm tags={tags} />
+      <PostForm tags={tags} />
     </>
   );
 }

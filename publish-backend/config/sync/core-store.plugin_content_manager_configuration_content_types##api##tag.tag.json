@@ -34,21 +34,6 @@
           "sortable": true
         }
       },
-      "articles": {
-        "edit": {
-          "label": "articles",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true,
-          "mainField": "title"
-        },
-        "list": {
-          "label": "articles",
-          "searchable": false,
-          "sortable": false
-        }
-      },
       "slug": {
         "edit": {
           "label": "slug",
@@ -63,18 +48,33 @@
           "sortable": true
         }
       },
-      "isPublic": {
+      "visibility": {
         "edit": {
-          "label": "isPublic",
+          "label": "visibility",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "isPublic",
+          "label": "visibility",
           "searchable": true,
           "sortable": true
+        }
+      },
+      "posts": {
+        "edit": {
+          "label": "posts",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "title"
+        },
+        "list": {
+          "label": "posts",
+          "searchable": false,
+          "sortable": false
         }
       },
       "createdAt": {
@@ -118,20 +118,22 @@
           {
             "name": "name",
             "size": 6
-          },
-          {
-            "name": "articles",
-            "size": 6
           }
         ],
         [
           {
             "name": "slug",
             "size": 6
+          }
+        ],
+        [
+          {
+            "name": "visibility",
+            "size": 6
           },
           {
-            "name": "isPublic",
-            "size": 4
+            "name": "posts",
+            "size": 6
           }
         ]
       ]
