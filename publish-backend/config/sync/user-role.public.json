@@ -4,10 +4,10 @@
   "type": "public",
   "permissions": [
     {
-      "action": "api::article.article.find"
+      "action": "api::post.post.find"
     },
     {
-      "action": "api::article.article.findOne"
+      "action": "api::post.post.findOne"
     },
     {
       "action": "api::invited-user.invited-user.find"

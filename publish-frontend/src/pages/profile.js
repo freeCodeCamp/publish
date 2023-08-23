@@ -29,7 +29,7 @@ export default function Profile({ userData }) {
       <Flex>
         <NavMenu session={session} />
 
-        <main className='p-3'>
+        <main style={{ padding: '0.75rem' }}>
           <ul>
             <li>
               <strong>Username:</strong> {userData.username}
@@ -38,7 +38,7 @@ export default function Profile({ userData }) {
               <strong>Email:</strong> {userData.email}
             </li>
             <li>
-              <strong>displayName:</strong> {userData.displayName}
+              <strong>name:</strong> {userData.name}
             </li>
             <li>
               <strong>bio:</strong> {userData.bio}
@@ -59,7 +59,8 @@ export default function Profile({ userData }) {
               <strong>role:</strong> {userData.role.name}
             </li>
             <li>
-              <strong>profileImage:</strong> {userData.profileImage}
+              <strong>profile_image:</strong>{' '}
+              {userData.profile_image.formats.thumbnail.url}
             </li>
           </ul>
         </main>

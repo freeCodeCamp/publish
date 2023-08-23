@@ -1,14 +1,14 @@
 {
-  "key": "plugin_content_manager_configuration_content_types::api::tag.tag",
+  "key": "plugin_content_manager_configuration_content_types::api::post.post",
   "value": {
-    "uid": "api::tag.tag",
+    "uid": "api::post.post",
     "settings": {
       "bulkable": true,
       "filterable": true,
       "searchable": true,
       "pageSize": 10,
-      "mainField": "name",
-      "defaultSortBy": "name",
+      "mainField": "title",
+      "defaultSortBy": "title",
       "defaultSortOrder": "ASC"
     },
     "metadatas": {
@@ -20,16 +20,16 @@
           "sortable": true
         }
       },
-      "name": {
+      "title": {
         "edit": {
-          "label": "name",
+          "label": "title",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "name",
+          "label": "title",
           "searchable": true,
           "sortable": true
         }
@@ -48,31 +48,74 @@
           "sortable": true
         }
       },
-      "visibility": {
+      "feature_image": {
         "edit": {
-          "label": "visibility",
+          "label": "feature_image",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "visibility",
-          "searchable": true,
-          "sortable": true
+          "label": "feature_image",
+          "searchable": false,
+          "sortable": false
         }
       },
-      "posts": {
+      "author": {
         "edit": {
-          "label": "posts",
+          "label": "author",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true,
-          "mainField": "title"
+          "mainField": "username"
         },
         "list": {
-          "label": "posts",
+          "label": "author",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "body": {
+        "edit": {
+          "label": "body",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "body",
+          "searchable": false,
+          "sortable": false
+        }
+      },
+      "excerpt": {
+        "edit": {
+          "label": "excerpt",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "excerpt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "tags": {
+        "edit": {
+          "label": "tags",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "tags",
           "searchable": false,
           "sortable": false
         }
@@ -109,18 +152,16 @@
     "layouts": {
       "list": [
         "id",
-        "name",
+        "title",
         "createdAt",
         "updatedAt"
       ],
       "edit": [
         [
           {
-            "name": "name",
+            "name": "title",
             "size": 6
-          }
-        ],
-        [
+          },
           {
             "name": "slug",
             "size": 6
@@ -128,11 +169,29 @@
         ],
         [
           {
-            "name": "visibility",
+            "name": "feature_image",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "author",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "body",
+            "size": 12
+          }
+        ],
+        [
+          {
+            "name": "excerpt",
             "size": 6
           },
           {
-            "name": "posts",
+            "name": "tags",
             "size": 6
           }
         ]

@@ -5,190 +5,77 @@
   "permissions": [
     {
       "action": "plugin::content-manager.explorer.create",
-      "subject": "api::article.article",
+      "subject": "api::post.post",
       "properties": {
         "fields": [
           "title",
           "slug",
-          "featureImage",
-          "tags",
+          "feature_image",
           "author",
           "body",
           "excerpt",
-          "language",
-          "translatorId"
+          "tags"
         ],
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "ja",
-          "es"
+          "en"
         ]
       },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.delete",
-      "subject": "api::article.article",
+      "subject": "api::post.post",
       "properties": {
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "ja",
-          "es"
+          "en"
         ]
       },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.publish",
-      "subject": "api::article.article",
+      "subject": "api::post.post",
       "properties": {
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "ja",
-          "es"
+          "en"
         ]
       },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.read",
-      "subject": "api::article.article",
+      "subject": "api::post.post",
       "properties": {
         "fields": [
           "title",
           "slug",
-          "featureImage",
-          "tags",
+          "feature_image",
           "author",
           "body",
           "excerpt",
-          "language",
-          "translatorId"
+          "tags"
         ],
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "ja",
-          "es"
+          "en"
         ]
       },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.update",
-      "subject": "api::article.article",
+      "subject": "api::post.post",
       "properties": {
         "fields": [
           "title",
           "slug",
-          "featureImage",
-          "tags",
+          "feature_image",
           "author",
           "body",
           "excerpt",
-          "language",
-          "translatorId"
+          "tags"
         ],
         "locales": [
-          "en",
-          "zh-Hans",
-          "pt-BR",
-          "ja",
-          "es"
-        ]
-      },
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.create",
-      "subject": "api::invited-user.invited-user",
-      "properties": {
-        "fields": [
-          "email",
-          "accepted"
-        ]
-      },
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.delete",
-      "subject": "api::invited-user.invited-user",
-      "properties": {},
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.read",
-      "subject": "api::invited-user.invited-user",
-      "properties": {
-        "fields": [
-          "email",
-          "accepted"
-        ]
-      },
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.update",
-      "subject": "api::invited-user.invited-user",
-      "properties": {
-        "fields": [
-          "email",
-          "accepted"
-        ]
-      },
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.create",
-      "subject": "api::language.language",
-      "properties": {
-        "fields": [
-          "isoLocales",
-          "slug",
-          "name",
-          "rtl",
-          "articles"
-        ]
-      },
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.delete",
-      "subject": "api::language.language",
-      "properties": {},
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.read",
-      "subject": "api::language.language",
-      "properties": {
-        "fields": [
-          "isoLocales",
-          "slug",
-          "name",
-          "rtl",
-          "articles"
-        ]
-      },
-      "conditions": []
-    },
-    {
-      "action": "plugin::content-manager.explorer.update",
-      "subject": "api::language.language",
-      "properties": {
-        "fields": [
-          "isoLocales",
-          "slug",
-          "name",
-          "rtl",
-          "articles"
+          "en"
         ]
       },
       "conditions": []
@@ -199,9 +86,9 @@
       "properties": {
         "fields": [
           "name",
-          "articles",
           "slug",
-          "isPublic"
+          "posts",
+          "visibility"
         ]
       },
       "conditions": []
@@ -218,9 +105,9 @@
       "properties": {
         "fields": [
           "name",
-          "articles",
           "slug",
-          "isPublic"
+          "posts",
+          "visibility"
         ]
       },
       "conditions": []
@@ -231,9 +118,9 @@
       "properties": {
         "fields": [
           "name",
-          "articles",
           "slug",
-          "isPublic"
+          "posts",
+          "visibility"
         ]
       },
       "conditions": []
@@ -438,17 +325,17 @@
           "confirmed",
           "blocked",
           "role",
-          "articles",
           "slug",
-          "displayName",
-          "profileImage",
+          "name",
+          "profile_image",
           "bio",
           "website",
           "location",
           "facebook",
           "twitter",
           "status",
-          "last_seen"
+          "last_seen",
+          "posts"
         ]
       },
       "conditions": []
@@ -473,17 +360,17 @@
           "confirmed",
           "blocked",
           "role",
-          "articles",
           "slug",
-          "displayName",
-          "profileImage",
+          "name",
+          "profile_image",
           "bio",
           "website",
           "location",
           "facebook",
           "twitter",
           "status",
-          "last_seen"
+          "last_seen",
+          "posts"
         ]
       },
       "conditions": []
@@ -502,17 +389,17 @@
           "confirmed",
           "blocked",
           "role",
-          "articles",
           "slug",
-          "displayName",
-          "profileImage",
+          "name",
+          "profile_image",
           "bio",
           "website",
           "location",
           "facebook",
           "twitter",
           "status",
-          "last_seen"
+          "last_seen",
+          "posts"
         ]
       },
       "conditions": []

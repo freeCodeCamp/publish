@@ -1,5 +1,7 @@
 "use strict";
 
+const { generateSeedData } = require("./seed");
+
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -17,6 +19,15 @@ module.exports = {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }) {
+    if (
+      process.env.NODE_ENV === "development" &&
+      process.env.SEED_DATA === "true"
+    ) {
+      console.log("Seeding database...");
+      await generateSeedData(strapi);
+      console.log("Seeding database complete!");
+    }
+
     strapi.db.lifecycles.subscribe({
       models: ["plugin::users-permissions.user"],
       async afterCreate(event) {
