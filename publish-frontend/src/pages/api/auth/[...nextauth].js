@@ -4,40 +4,37 @@ import Auth0Provider from 'next-auth/providers/auth0';
 
 export const authOptions = {
   providers: [
-    CredentialsProvider({
-      name: 'email',
-      credentials: {
-        identifier: {
-          label: 'Email',
-          type: 'email',
-          placeholder: 'foo@bar.com',
-          required: true
+    process.env.NODE_ENV === 'development' &&
+      CredentialsProvider({
+        name: 'email',
+        credentials: {
+          identifier: {
+            label: 'Email',
+            type: 'email',
+            placeholder: 'foo@bar.com',
+            required: true
+          },
+          password: { label: 'Password', type: 'password', required: true }
         },
-        password: { label: 'Password', type: 'password', required: true }
-      },
-      async authorize(credentials) {
-        const { identifier, password } = credentials;
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/local`,
-          {
-            method: 'POST',
-            body: JSON.stringify({ identifier, password }),
-            headers: { 'Content-Type': 'application/json' }
-          }
-        );
-        const data = await res.json();
+        async authorize(credentials) {
+          const { identifier, password } = credentials;
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/local`,
+            {
+              method: 'POST',
+              body: JSON.stringify({ identifier, password }),
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+          const data = await res.json();
 
-        if (res.ok && data.jwt) {
-          const user = { ...data.user, jwt: data.jwt };
-          return user;
+          if (res.ok && data.jwt) {
+            const user = { ...data.user, jwt: data.jwt };
+            return user;
+          }
+          return null;
         }
-        return null;
-      }
-    }),
-    // GoogleProvider({
-    //   clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
-    //   clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET
-    // })
+      }),
     Auth0Provider({
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
