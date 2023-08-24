@@ -5,7 +5,10 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import slugify from 'slugify';
 import { Img } from '@chakra-ui/react';
 
-const PostForm = ({ tags, initialValues }) => {
+const PostForm = ({ tags, authors, _session }) => {
+  const [showDrafts, setShowDrafts] = useState(true);
+  const [showPinned, setShowPinned] = useState(true);
+  const [showPublished, setShowPublished] = useState(true);
   // editing title
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -16,9 +19,16 @@ const PostForm = ({ tags, initialValues }) => {
 
   const [postUrl, setPostUrl] = useState('');
 
-  const [featureImage, setFeatureImage] = useState(null);
+  const [featureImage, setFeatureImage] = useState('');
+
+  const [author, setAuthor] = useState('');
 
   useEffect(() => {
+    function removeTag(tag) {
+      const newTags = clientTags.filter(t => t !== tag);
+      setClientTags(newTags);
+    }
+
     function createNewTags() {
       const tagContainer = document.getElementById('tag-container');
 
@@ -52,11 +62,6 @@ const PostForm = ({ tags, initialValues }) => {
     setTitle(newTitle);
   }
 
-  function removeTag(tag) {
-    const newTags = clientTags.filter(t => t !== tag);
-    setClientTags(newTags);
-  }
-
   function addTag(event) {
     if (!clientTags.includes(event.target.value)) {
       const newTags = [...clientTags, event.target.value];
@@ -64,11 +69,86 @@ const PostForm = ({ tags, initialValues }) => {
     }
   }
 
+  function addAuthor(event) {
+    setAuthor(event.target.value);
+  }
+
+  function handleSubmit() {
+    const data = {
+      data: {
+        title: title,
+        body: {},
+        slug: postUrl.length > 0 ? postUrl : slugify(title, { lower: true }),
+        tags: clientTags,
+        feature_image: featureImage,
+        author: author
+      }
+    };
+
+    console.log(data);
+    console.log('submitting');
+  }
+
   return (
     <div className='page'>
       <div className='side-drawer'>
         {!isFocused ? (
-          <ManagePosts />
+          <>
+            <button
+              className='dropdown-button'
+              onClick={() => setShowDrafts(!showDrafts)}
+            >
+              <h2>Drafts</h2>
+            </button>
+            {showDrafts && (
+              <div>
+                <ul>
+                  <li>Post 1</li>
+                  <li>Post 2</li>
+                  <li>Post 3</li>
+                </ul>
+              </div>
+            )}
+
+            <button
+              className='dropdown-button'
+              onClick={() => setShowPinned(!showPinned)}
+            >
+              <h2>Pinned</h2>
+            </button>
+            {showPinned && (
+              <div>
+                <ul>
+                  <li>Post 4</li>
+                  <li>Post 5</li>
+                  <li>Post 6</li>
+                </ul>
+              </div>
+            )}
+
+            <button
+              className='dropdown-button'
+              onClick={() => setShowPublished(!showPublished)}
+            >
+              <h2>Published</h2>
+            </button>
+            {showPublished && (
+              <div>
+                <ul>
+                  <li>Post 7</li>
+                  <li>Post 8</li>
+                  <li>Post 9</li>
+                </ul>
+              </div>
+            )}
+
+            <button
+              className='submit-button full-width-btn'
+              onClick={handleSubmit}
+            >
+              Save Draft
+            </button>
+          </>
         ) : (
           <div>
             <h2 className='input-title'>Feature Image</h2>
@@ -116,11 +196,13 @@ const PostForm = ({ tags, initialValues }) => {
               ))}
             </select>
             <h2 className='input-title'>Authors</h2>
-            <select className='tag-selector'>
-              <option value='0'>Select an author</option>
-              <option value='1'>Author 1</option>
-              <option value='2'>Author 2</option>
-              <option value='3'>Author 3</option>
+            <select className='tag-selector' onChange={addAuthor}>
+              <option value='0'>Select an Author</option>
+              {authors.map(author => (
+                <option key={author.username} value={author.username}>
+                  {author.username}
+                </option>
+              ))}
             </select>
             <h2 className='input-title'>Publish Date</h2>
             <div className='time-date-input'>
@@ -153,7 +235,12 @@ const PostForm = ({ tags, initialValues }) => {
                 {slugify(postUrl != '' ? postUrl : title, { lower: true })}
               </span>
             </label>
-            <button className='submit-button full-width-btn'>Save</button>
+            <button
+              className='submit-button full-width-btn'
+              onClick={handleSubmit}
+            >
+              Save Draft
+            </button>
             <br />
             <hr />
             <button
@@ -198,73 +285,10 @@ const PostForm = ({ tags, initialValues }) => {
           </div>
         </div>
         <div className='editor' onClick={() => setIsFocused(true)}>
-          <Tiptap defaultValue={initialValues.attributes.body} />
+          <Tiptap />
         </div>
       </div>
     </div>
   );
 };
-
-function ManagePosts() {
-  const [showDrafts, setShowDrafts] = useState(true);
-  const [showPinned, setShowPinned] = useState(true);
-  const [showPublished, setShowPublished] = useState(true);
-
-  return (
-    <>
-      <button
-        className='dropdown-button'
-        onClick={() => setShowDrafts(!showDrafts)}
-      >
-        <h2>Drafts</h2>
-      </button>
-      {showDrafts && (
-        <div>
-          <ul>
-            <li>Post 1</li>
-            <li>Post 2</li>
-            <li>Post 3</li>
-          </ul>
-        </div>
-      )}
-
-      <button
-        className='dropdown-button'
-        onClick={() => setShowPinned(!showPinned)}
-      >
-        <h2>Pinned</h2>
-      </button>
-      {showPinned && (
-        <div>
-          <ul>
-            <li>Post 4</li>
-            <li>Post 5</li>
-            <li>Post 6</li>
-          </ul>
-        </div>
-      )}
-
-      <button
-        className='dropdown-button'
-        onClick={() => setShowPublished(!showPublished)}
-      >
-        <h2>Published</h2>
-      </button>
-      {showPublished && (
-        <div>
-          <ul>
-            <li>Post 7</li>
-            <li>Post 8</li>
-            <li>Post 9</li>
-          </ul>
-        </div>
-      )}
-
-      <button className='submit-button full-width-btn' type='submit'>
-        Save Draft
-      </button>
-    </>
-  );
-}
-
 export default PostForm;
