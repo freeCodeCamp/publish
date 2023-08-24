@@ -30,15 +30,14 @@ export async function createPost(JSONdata, token) {
     // Tell the server we're sending JSON.
     headers: {
       'Content-Type': 'application/json',
+      accept: 'application/json',
       Authorization: `Bearer ${token}`
     },
     // Body of the request is the JSON data we created above.
     body: JSONdata
   };
-
   // Send the form data to our forms API and get a response.
   const res = await fetch(endpoint, options);
-
   if (!res.ok) {
     throw new Error('createPost Failed');
   }

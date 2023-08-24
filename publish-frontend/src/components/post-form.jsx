@@ -4,8 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import slugify from 'slugify';
 import { Img } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
+import { createPost } from '@/lib/posts';
 
-const PostForm = ({ tags, authors, _session }) => {
+const PostForm = ({ tags, authors }) => {
+  const { data: session } = useSession();
+
   const [showDrafts, setShowDrafts] = useState(true);
   const [showPinned, setShowPinned] = useState(true);
   const [showPublished, setShowPublished] = useState(true);
@@ -73,21 +77,27 @@ const PostForm = ({ tags, authors, _session }) => {
     setAuthor(event.target.value);
   }
 
-  function handleSubmit() {
+  const handleSubmit = async session => {
+    const token = session.user.jwt;
     const data = {
       data: {
         title: title,
-        body: {},
         slug: postUrl.length > 0 ? postUrl : slugify(title, { lower: true }),
-        tags: clientTags,
-        feature_image: featureImage,
-        author: author
+        feature_image: [featureImage],
+        author: author,
+        body: 'this is the body',
+        excerpt: 'this is the excerpt',
+        tags: clientTags
       }
     };
 
-    console.log(data);
-    console.log('submitting');
-  }
+    try {
+      await createPost(JSON.stringify(data), token);
+      //console.log(result.body);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className='page'>
@@ -144,7 +154,7 @@ const PostForm = ({ tags, authors, _session }) => {
 
             <button
               className='submit-button full-width-btn'
-              onClick={handleSubmit}
+              onClick={() => handleSubmit(session)}
             >
               Save Draft
             </button>
@@ -237,7 +247,7 @@ const PostForm = ({ tags, authors, _session }) => {
             </label>
             <button
               className='submit-button full-width-btn'
-              onClick={handleSubmit}
+              onClick={() => handleSubmit(session)}
             >
               Save Draft
             </button>
