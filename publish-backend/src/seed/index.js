@@ -3,9 +3,9 @@ const { faker } = require("@faker-js/faker");
 async function createSeedUsers(strapi) {
   await strapi.entityService.create("plugin::users-permissions.user", {
     data: {
-      username: "foobar-123",
-      email: "foo@bar.com",
-      password: "foobar",
+      username: "contributor-user",
+      email: "contributor@user.com",
+      password: "contributor",
       provider: "local",
       confirmed: true,
       role: {
@@ -15,13 +15,13 @@ async function createSeedUsers(strapi) {
   });
   await strapi.entityService.create("plugin::users-permissions.user", {
     data: {
-      username: "devuser-123",
-      email: "dev@user.com",
-      password: "devuser",
+      username: "editor-user",
+      email: "editor@user.com",
+      password: "editor",
       provider: "local",
       confirmed: true,
       role: {
-        connect: [3],
+        connect: [1],
       },
     },
   });
@@ -30,12 +30,12 @@ async function createSeedUsers(strapi) {
 async function createSeedInvitedUsers(strapi) {
   await strapi.entityService.create("api::invited-user.invited-user", {
     data: {
-      email: "foo@bar.com",
+      email: "contributor@user.com",
     },
   });
   await strapi.entityService.create("api::invited-user.invited-user", {
     data: {
-      email: "dev@user.com",
+      email: "editor@user.com",
     },
   });
 }
@@ -82,7 +82,7 @@ async function createSeedPosts(strapi) {
   await strapi.entityService.create("api::post.post", {
     data: {
       title: "Lorem Post 1",
-      author: { connect: [2] },
+      author: { connect: [1] },
       tags: { connect: [1, 2, 4] },
       body: faker.lorem.paragraphs(5, "<br/>\n"),
       publishedAt: new Date(),

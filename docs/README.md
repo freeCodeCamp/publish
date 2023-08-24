@@ -60,7 +60,8 @@ Note: Seeding the database works only on a fresh setup of the containers.
 
 13. Run `docker compose up` again to start the app. You will see the seeded
     data and you can use the seeded users to login in the Next.js app. Email
-    and password of the seeded users are in `src/seed/index.js` file.
+    and password of the seeded users are in `src/seed/index.js` file. One 
+    account of each role(Contributor and Editor) is seeded.
 
 ### Run publish-frontend (Next.js) app
 
