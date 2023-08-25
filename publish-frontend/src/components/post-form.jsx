@@ -7,7 +7,7 @@ import { Img } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { createPost } from '@/lib/posts';
 
-const PostForm = ({ tags, authors }) => {
+const PostForm = ({ tags, authors, initialValues }) => {
   const { data: session } = useSession();
 
   const [showDrafts, setShowDrafts] = useState(true);
@@ -25,7 +25,7 @@ const PostForm = ({ tags, authors }) => {
   const [postUrl, setPostUrl] = useState('');
 
   const [featureImage, setFeatureImage] = useState('');
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState(initialValues?.attributes.body || '');
 
   const [author, setAuthor] = useState([]);
 
@@ -54,9 +54,17 @@ const PostForm = ({ tags, authors }) => {
         tagContainer.appendChild(tagElement);
       });
     }
-
     createNewTags();
   }, [clientTags]);
+
+  useEffect(() => {
+    if (initialValues) {
+      const { title, body } = initialValues.attributes;
+
+      setTitle(title);
+      setContent(body);
+    }
+  }, []);
 
   function handleFileInputChange(event) {
     const file = event.target.files[0];
@@ -312,7 +320,10 @@ const PostForm = ({ tags, authors }) => {
           </div>
         </div>
         <div className='editor' onClick={() => setIsFocused(true)}>
-          <Tiptap handleContentChange={handleContentChange} />
+          <Tiptap
+            handleContentChange={handleContentChange}
+            defaultValue={content}
+          />
         </div>
       </div>
     </div>
