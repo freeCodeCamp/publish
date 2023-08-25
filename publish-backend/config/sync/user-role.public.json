@@ -4,6 +4,9 @@
   "type": "public",
   "permissions": [
     {
+      "action": "api::invited-user.invited-user.find"
+    },
+    {
       "action": "api::post.post.find"
     },
     {

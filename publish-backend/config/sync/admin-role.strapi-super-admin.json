@@ -5,6 +5,45 @@
   "permissions": [
     {
       "action": "plugin::content-manager.explorer.create",
+      "subject": "api::invited-user.invited-user",
+      "properties": {
+        "fields": [
+          "email",
+          "accepted"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.delete",
+      "subject": "api::invited-user.invited-user",
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.read",
+      "subject": "api::invited-user.invited-user",
+      "properties": {
+        "fields": [
+          "email",
+          "accepted"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.update",
+      "subject": "api::invited-user.invited-user",
+      "properties": {
+        "fields": [
+          "email",
+          "accepted"
+        ]
+      },
+      "conditions": []
+    },
+    {
+      "action": "plugin::content-manager.explorer.create",
       "subject": "api::post.post",
       "properties": {
         "fields": [
