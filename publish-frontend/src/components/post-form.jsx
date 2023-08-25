@@ -5,7 +5,7 @@ import { faEdit } from '@fortawesome/free-solid-svg-icons';
 import slugify from 'slugify';
 import { Img } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
-import { createPost } from '@/lib/posts';
+import { createPost, updatePost } from '@/lib/posts';
 
 const PostForm = ({ tags, authors, initialValues }) => {
   const { data: session } = useSession();
@@ -28,6 +28,7 @@ const PostForm = ({ tags, authors, initialValues }) => {
   const [content, setContent] = useState(initialValues?.attributes.body || '');
 
   const [author, setAuthor] = useState([]);
+  const [id, setPostId] = useState(null);
 
   useEffect(() => {
     function removeTag(tag) {
@@ -60,11 +61,13 @@ const PostForm = ({ tags, authors, initialValues }) => {
   useEffect(() => {
     if (initialValues) {
       const { title, body } = initialValues.attributes;
+      const { id } = initialValues;
 
       setTitle(title);
       setContent(body);
+      setPostId(id);
     }
-  }, []);
+  }, [initialValues]);
 
   function handleFileInputChange(event) {
     const file = event.target.files[0];
@@ -120,7 +123,14 @@ const PostForm = ({ tags, authors, initialValues }) => {
     };
 
     try {
-      await createPost(JSON.stringify(data), token);
+      if (!id) {
+        const res = await createPost(JSON.stringify(data), token);
+        setPostId(res.data.id);
+        console.log('created');
+      } else {
+        await updatePost(id, JSON.stringify(data), token);
+        console.log('updated');
+      }
     } catch (error) {
       console.log(error);
     }
