@@ -25,6 +25,7 @@ const PostForm = ({ tags, authors }) => {
   const [postUrl, setPostUrl] = useState('');
 
   const [featureImage, setFeatureImage] = useState('');
+  const [content, setContent] = useState('');
 
   const [author, setAuthor] = useState([]);
 
@@ -92,16 +93,19 @@ const PostForm = ({ tags, authors }) => {
     setAuthor(author);
   }
 
+  function handleContentChange(content) {
+    console.log(content);
+    setContent(content);
+  }
+
   const handleSubmit = async session => {
     const token = session.user.jwt;
     const data = {
       data: {
         title: title,
-        slug: postUrl.length > 0 ? postUrl : slugify(title, { lower: true }),
-        feature_image: [featureImage],
+        slug: slugify(postUrl != '' ? postUrl : title, { lower: true }),
         author: author,
-        body: 'this is the body',
-        excerpt: 'this is the excerpt',
+        body: content,
         tags: clientTagsId,
         locale: 'en'
       }
@@ -308,7 +312,7 @@ const PostForm = ({ tags, authors }) => {
           </div>
         </div>
         <div className='editor' onClick={() => setIsFocused(true)}>
-          <Tiptap />
+          <Tiptap handleContentChange={handleContentChange} />
         </div>
       </div>
     </div>

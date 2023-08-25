@@ -113,7 +113,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ defaultValue }) => {
+const Tiptap = ({ handleContentChange, defaultValue }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -144,6 +144,10 @@ const Tiptap = ({ defaultValue }) => {
       attributes: {
         class: 'prose focus:outline-none'
       }
+    },
+    onUpdate: ({ editor }) => {
+      console.log('update');
+      handleContentChange(editor.getHTML());
     }
   });
 
