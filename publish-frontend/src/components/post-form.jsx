@@ -13,11 +13,12 @@ const PostForm = ({ tags, authors }) => {
   const [showDrafts, setShowDrafts] = useState(true);
   const [showPinned, setShowPinned] = useState(true);
   const [showPublished, setShowPublished] = useState(true);
-  // editing title
+
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const [clientTags, setClientTags] = useState([]);
+  const [clientTagsId, setClientTagsId] = useState([]);
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -25,7 +26,7 @@ const PostForm = ({ tags, authors }) => {
 
   const [featureImage, setFeatureImage] = useState('');
 
-  const [author, setAuthor] = useState('');
+  const [author, setAuthor] = useState([]);
 
   useEffect(() => {
     function removeTag(tag) {
@@ -69,12 +70,26 @@ const PostForm = ({ tags, authors }) => {
   function addTag(event) {
     if (!clientTags.includes(event.target.value)) {
       const newTags = [...clientTags, event.target.value];
+
+      // compare the newTags array to the tags array and get the id of the new tag
+      const newTagsInt = [];
+      newTags.forEach(tag => {
+        tags.forEach(t => {
+          if (tag === t.attributes.name) {
+            newTagsInt.push(t.id);
+          }
+        });
+      });
+
       setClientTags(newTags);
+      setClientTagsId(newTagsInt);
     }
   }
 
   function addAuthor(event) {
-    setAuthor(event.target.value);
+    const author = [];
+    author.push(parseInt(event.target.value));
+    setAuthor(author);
   }
 
   const handleSubmit = async session => {
@@ -87,16 +102,18 @@ const PostForm = ({ tags, authors }) => {
         author: author,
         body: 'this is the body',
         excerpt: 'this is the excerpt',
-        tags: clientTags
+        tags: clientTagsId,
+        locale: 'en'
       }
     };
 
     try {
       await createPost(JSON.stringify(data), token);
-      //console.log(result.body);
     } catch (error) {
       console.log(error);
     }
+
+    console.log(data);
   };
 
   return (
@@ -112,11 +129,7 @@ const PostForm = ({ tags, authors }) => {
             </button>
             {showDrafts && (
               <div>
-                <ul>
-                  <li>Post 1</li>
-                  <li>Post 2</li>
-                  <li>Post 3</li>
-                </ul>
+                <ul>{}</ul>
               </div>
             )}
 
@@ -209,7 +222,7 @@ const PostForm = ({ tags, authors }) => {
             <select className='tag-selector' onChange={addAuthor}>
               <option value='0'>Select an Author</option>
               {authors.map(author => (
-                <option key={author.username} value={author.username}>
+                <option key={author.username} value={author.id}>
                   {author.username}
                 </option>
               ))}
