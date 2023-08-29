@@ -90,6 +90,7 @@ export const authOptions = {
         if (res2.ok) {
           const userData = await res2.json();
           // Add the role name to session JWT
+          token.name = userData?.username || null;
           token.userRole = userData?.role?.name || null;
           console.log('token.userRole:', token.userRole);
         }

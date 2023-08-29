@@ -3,9 +3,8 @@ import { useSession, signIn } from 'next-auth/react';
 import { getPosts } from '../lib/posts';
 import NavMenu from '@/components/nav-menu';
 
-import { Button } from '@chakra-ui/react';
+import { Box, Button } from '@chakra-ui/react';
 import { Link } from '@chakra-ui/react';
-import { Flex } from '@chakra-ui/react';
 
 export async function getServerSideProps() {
   const allPostsData = await getPosts();
@@ -24,10 +23,10 @@ export default function IndexPage({ allPostsData }) {
 
   if (session) {
     return (
-      <Flex>
+      <Box minH='100vh' bgColor='gray.100'>
         <NavMenu session={session} />
 
-        <main style={{ padding: '0.75rem' }}>
+        <Box ml='300px'>
           <div>
             <Button colorScheme='blue' as={NextLink} href='/posts/new'>
               New Post
@@ -49,8 +48,8 @@ export default function IndexPage({ allPostsData }) {
               })}
             </ul>
           </div>
-        </main>
-      </Flex>
+        </Box>
+      </Box>
     );
   }
 
