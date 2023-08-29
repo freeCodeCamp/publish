@@ -12,6 +12,7 @@ import {
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
 import { useState } from 'react';
+import styles from './nav-menu.module.css';
 
 export default function NavMenu({ session }) {
   const [inviteEmail, setInviteEmail] = useState('');
@@ -27,7 +28,7 @@ export default function NavMenu({ session }) {
     });
   };
   return (
-    <nav className='nav-bar'>
+    <nav className={styles.navbar}>
       <h1>Authoring Site (Next.js)</h1>
       <br />
       <ul>
