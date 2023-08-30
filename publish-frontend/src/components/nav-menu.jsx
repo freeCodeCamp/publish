@@ -4,6 +4,7 @@ import {
   Avatar,
   Box,
   Button,
+  CloseButton,
   Flex,
   FormControl,
   FormLabel,
@@ -29,8 +30,7 @@ import { signOut } from 'next-auth/react';
 import { useState } from 'react';
 import styles from './nav-menu.module.css';
 
-export default function NavMenu({ session }) {
-  console.log(session.user);
+export default function NavMenu({ session, onClose, ...rest }) {
   const [inviteEmail, setInviteEmail] = useState('');
   const toast = useToast();
 
@@ -46,15 +46,21 @@ export default function NavMenu({ session }) {
   return (
     <Flex
       flexDirection='column'
-      minH='100vh'
-      w='300px'
+      w={{ base: 'full', md: '300px' }}
       className={styles.navbar}
-      display={{ base: 'none', md: 'flex' }}
+      pos='fixed'
+      {...rest}
     >
       <Box>
-        <Heading size='lg' py='1rem' textAlign='center'>
-          freeCodeCamp
-        </Heading>
+        <Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
+          <Heading size='lg' py='1rem' textAlign='center'>
+            freeCodeCamp
+          </Heading>
+          <CloseButton
+            onClick={onClose}
+            display={{ base: 'flex', md: 'none' }}
+          />
+        </Flex>
 
         <Box>
           <Box>
@@ -82,6 +88,7 @@ export default function NavMenu({ session }) {
         </Box>
       </Box>
       <Spacer />
+      {/* TODO: Remove this when invite users logic is added to users view */}
       <Box mx='10px' mb='1rem'>
         <FormControl isRequired>
           <FormLabel>Invite User</FormLabel>

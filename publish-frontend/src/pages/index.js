@@ -9,31 +9,14 @@ import {
   useDisclosure,
   Drawer,
   DrawerContent,
-  Menu,
-  MenuItem,
   Flex,
   Heading,
-  Spacer,
-  Avatar,
-  MenuButton,
-  MenuList,
   DrawerOverlay,
-  IconButton,
-  CloseButton
+  IconButton
 } from '@chakra-ui/react';
-import {
-  faArrowRightFromBracket,
-  faBars,
-  faChevronDown,
-  faFileLines,
-  faTags,
-  faUser,
-  faUsers
-} from '@fortawesome/free-solid-svg-icons';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from '@chakra-ui/react';
-import styles from '@/components/nav-menu.module.css';
-import { isEditor } from '@/lib/current-user';
 
 export async function getServerSideProps() {
   const allPostsData = await getPosts();
@@ -54,7 +37,11 @@ export default function IndexPage({ allPostsData }) {
   if (session) {
     return (
       <Box minH='100vh' bgColor='gray.100'>
-        <NavMenu session={session} />
+        <NavMenu
+          session={session}
+          onClose={() => onClose}
+          display={{ base: 'none', md: 'flex' }}
+        />
 
         <Drawer
           isOpen={isOpen}
@@ -66,111 +53,7 @@ export default function IndexPage({ allPostsData }) {
         >
           <DrawerOverlay />
           <DrawerContent>
-            <Flex
-              flexDirection='column'
-              minH='100vh'
-              w='full'
-              className={styles.navbar}
-            >
-              <Box>
-                <Flex
-                  h='20'
-                  alignItems='center'
-                  mx='8'
-                  justifyContent='space-between'
-                >
-                  <Heading size='lg' py='1rem' textAlign='center'>
-                    freeCodeCamp
-                  </Heading>
-                  {/* <DrawerCloseButton /> */}
-                  <CloseButton onClick={onClose} />
-                </Flex>
-
-                <Box>
-                  <Box>
-                    <a className={styles.navbarLink}>
-                      <FontAwesomeIcon icon={faFileLines} fixedWidth />
-                      Posts
-                    </a>
-                  </Box>
-                  {isEditor(session) ||
-                    (true && (
-                      <>
-                        <Box>
-                          <a className={styles.navbarLink}>
-                            <FontAwesomeIcon icon={faTags} fixedWidth /> Tags
-                          </a>
-                        </Box>
-                        <Box>
-                          <a className={styles.navbarLink}>
-                            <FontAwesomeIcon icon={faUsers} fixedWidth />
-                            Staff
-                          </a>
-                        </Box>
-                      </>
-                    ))}
-                </Box>
-              </Box>
-              <Spacer />
-              <Box m='0 5px'>
-                <Menu>
-                  <MenuButton
-                    as={Button}
-                    rightIcon={
-                      <FontAwesomeIcon icon={faChevronDown} fixedWidth />
-                    }
-                    bgColor='white'
-                    w='100%'
-                    mt={3}
-                    mb={6}
-                    display='flex'
-                    alignItems='center'
-                    _hover={{
-                      bgColor: 'rgb(243, 244, 246)'
-                    }}
-                    _active={{
-                      bgColor: 'rgb(243, 244, 246)'
-                    }}
-                  >
-                    <Flex>
-                      <Avatar size='sm' mr='8px' my='auto' />
-                      <Flex flexDirection='column'>
-                        <Box fontWeight='600' lineHeight='1.1em' pb='3px'>
-                          {session.user.name}
-                        </Box>
-                        <Box
-                          fontSize='0.75rem'
-                          fontWeight='400'
-                          lineHeight='1.1em'
-                          pb='3px'
-                          color='#54666d'
-                        >
-                          {session.user.email}
-                        </Box>
-                      </Flex>
-                    </Flex>
-                  </MenuButton>
-                  <MenuList>
-                    <MenuItem
-                      icon={<FontAwesomeIcon icon={faUser} fixedWidth />}
-                    >
-                      Your Profile
-                    </MenuItem>
-                    <MenuItem
-                      icon={
-                        <FontAwesomeIcon
-                          icon={faArrowRightFromBracket}
-                          fixedWidth
-                        />
-                      }
-                      onClick={() => signOut()}
-                    >
-                      Sign Out
-                    </MenuItem>
-                  </MenuList>
-                </Menu>
-              </Box>
-            </Flex>
+            <NavMenu session={session} onClose={onClose} />
           </DrawerContent>
         </Drawer>
 
