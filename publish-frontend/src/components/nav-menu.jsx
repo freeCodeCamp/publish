@@ -11,6 +11,7 @@ import {
   FormLabel,
   Heading,
   IconButton,
+  Img,
   Input,
   Menu,
   MenuButton,
@@ -91,9 +92,25 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
           mx='8px'
           justifyContent='space-between'
         >
-          <Heading size='lg' py='1rem' textAlign='center'>
-            freeCodeCamp
-          </Heading>
+          <Box
+            size='lg'
+            py='1rem'
+            mx='20px'
+            textAlign='center'
+            fontWeight='700'
+            fontSize='20px'
+            display='flex'
+            alignItems='center'
+          >
+            <Img
+              src='https://raw.githubusercontent.com/freeCodeCamp/design-style-guide/main/assets/fcc_puck_500_social.jpg'
+              width='32px'
+              height='32px'
+              mr='12px'
+              borderRadius='5px'
+            />
+            freeCodeCamp.org
+          </Box>
           <CloseButton
             onClick={onClose}
             display={{ base: 'flex', md: 'none' }}
