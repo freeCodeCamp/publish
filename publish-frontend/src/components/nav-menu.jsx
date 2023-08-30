@@ -39,7 +39,7 @@ import { useState } from 'react';
 
 const Icon = chakra(FontAwesomeIcon);
 
-const NavbarLink = ({ text, link, icon }) => {
+const NavMenuLink = ({ text, link, icon }) => {
   return (
     <Box
       color='black'
@@ -61,7 +61,7 @@ const NavbarLink = ({ text, link, icon }) => {
   );
 };
 
-const NavbarContent = ({ session, onClose, ...rest }) => {
+const NavMenuContent = ({ session, onClose, ...rest }) => {
   const [inviteEmail, setInviteEmail] = useState('');
   const toast = useToast();
 
@@ -97,13 +97,13 @@ const NavbarContent = ({ session, onClose, ...rest }) => {
         </Flex>
 
         <Box>
-          <NavbarLink text='Posts' icon={faFileLines} link='#' />
+          <NavMenuLink text='Posts' icon={faFileLines} link='#' />
           {isEditor(session) ||
             (true && (
               <>
-                <NavbarLink text='Pages' icon={faNewspaper} link='#' />
-                <NavbarLink text='Tags' icon={faTags} link='#' />
-                <NavbarLink text='Staff' icon={faUsers} link='#' />
+                <NavMenuLink text='Pages' icon={faNewspaper} link='#' />
+                <NavMenuLink text='Tags' icon={faTags} link='#' />
+                <NavMenuLink text='Staff' icon={faUsers} link='#' />
               </>
             ))}
         </Box>
@@ -181,7 +181,10 @@ export default function NavMenu({ session }) {
 
   return (
     <>
-      <NavbarContent session={session} display={{ base: 'none', md: 'flex' }} />
+      <NavMenuContent
+        session={session}
+        display={{ base: 'none', md: 'flex' }}
+      />
       <Drawer
         isOpen={isOpen}
         placement='left'
@@ -192,7 +195,7 @@ export default function NavMenu({ session }) {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <NavbarContent session={session} onClose={onClose} />
+          <NavMenuContent session={session} onClose={onClose} />
         </DrawerContent>
       </Drawer>
 
