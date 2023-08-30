@@ -40,14 +40,5 @@
     "jest": "^29.6.4",
     "sqlite3": "^5.1.6",
     "supertest": "^6.3.3"
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      ".tmp",
-      ".cache"
-    ],
-    "testEnvironment": "node",
-    "testTimeout": 15000
   }
 }
