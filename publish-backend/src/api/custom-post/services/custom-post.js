@@ -94,7 +94,6 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   },
 
   async findOneBySlug(slug, populate = []) {
-    console.log(slug);
     const posts = await strapi.entityService.findMany("api::post.post", {
       publicationState: "live", // only published posts
       filters: {

@@ -132,8 +132,6 @@ describe("custom-post", () => {
       const responsePost = response.body.posts[0];
       expect(responsePost).toEqual(expect.objectContaining(expectedPost));
 
-      console.log(JSON.stringify(responsePost));
-
       // Check author and tag data structure
       expect(responsePost.authors[0]).toEqual(
         expect.objectContaining(expectedAuthor)
