@@ -15,12 +15,14 @@ import {
   MenuItem,
   MenuList,
   Spacer,
-  useToast
+  useToast,
+  chakra
 } from '@chakra-ui/react';
 import {
   faArrowRightFromBracket,
   faChevronDown,
   faFileLines,
+  faNewspaper,
   faTags,
   faUser,
   faUsers
@@ -28,7 +30,30 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
-import styles from './nav-menu.module.css';
+
+const Icon = chakra(FontAwesomeIcon);
+
+const NavbarLink = ({ text, link, icon }) => {
+  return (
+    <Box
+      color='black'
+      p='0.5rem 2rem'
+      display='flex'
+      alignItems='center'
+      fontWeight='400'
+      m='2px 5px'
+      _hover={{
+        bgColor: 'rgb(243, 244, 246)',
+        borderRadius: '5px'
+      }}
+    >
+      <a href={link}>
+        <Icon icon={icon} fixedWidth mr='0.5rem' />
+        {text}
+      </a>
+    </Box>
+  );
+};
 
 export default function NavMenu({ session, onClose, ...rest }) {
   const [inviteEmail, setInviteEmail] = useState('');
@@ -47,7 +72,6 @@ export default function NavMenu({ session, onClose, ...rest }) {
     <Flex
       flexDirection='column'
       w={{ base: 'full', md: '300px' }}
-      className={styles.navbar}
       h='100%'
       pos='fixed'
       bgColor='white'
@@ -66,26 +90,13 @@ export default function NavMenu({ session, onClose, ...rest }) {
         </Flex>
 
         <Box>
-          <Box>
-            <a className={styles.navbarLink}>
-              <FontAwesomeIcon icon={faFileLines} fixedWidth mr />
-              Posts
-            </a>
-          </Box>
+          <NavbarLink text='Posts' icon={faFileLines} link='#' />
           {isEditor(session) ||
             (true && (
               <>
-                <Box>
-                  <a className={styles.navbarLink}>
-                    <FontAwesomeIcon icon={faTags} fixedWidth /> Tags
-                  </a>
-                </Box>
-                <Box>
-                  <a className={styles.navbarLink}>
-                    <FontAwesomeIcon icon={faUsers} fixedWidth />
-                    Staff
-                  </a>
-                </Box>
+                <NavbarLink text='Pages' icon={faNewspaper} link='#' />
+                <NavbarLink text='Tags' icon={faTags} link='#' />
+                <NavbarLink text='Staff' icon={faUsers} link='#' />
               </>
             ))}
         </Box>
@@ -109,7 +120,7 @@ export default function NavMenu({ session, onClose, ...rest }) {
         <Menu>
           <MenuButton
             as={Button}
-            rightIcon={<FontAwesomeIcon icon={faChevronDown} fixedWidth />}
+            rightIcon={<Icon icon={faChevronDown} fixedWidth />}
             bgColor='white'
             w='100%'
             mt={3}
@@ -142,13 +153,11 @@ export default function NavMenu({ session, onClose, ...rest }) {
             </Flex>
           </MenuButton>
           <MenuList>
-            <MenuItem icon={<FontAwesomeIcon icon={faUser} fixedWidth />}>
+            <MenuItem icon={<Icon icon={faUser} fixedWidth />}>
               Your Profile
             </MenuItem>
             <MenuItem
-              icon={
-                <FontAwesomeIcon icon={faArrowRightFromBracket} fixedWidth />
-              }
+              icon={<Icon icon={faArrowRightFromBracket} fixedWidth />}
               onClick={() => signOut()}
             >
               Sign Out
