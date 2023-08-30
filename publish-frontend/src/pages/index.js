@@ -1,7 +1,7 @@
 import NextLink from 'next/link'; // import as NextLink to avoid conflict with chakra-ui Link component
 import { useSession, signIn } from 'next-auth/react';
 import { getPosts } from '../lib/posts';
-import NavMenu from '@/components/nav-menu'; // Rename to sidebar
+import NavMenu from '@/components/nav-menu';
 
 import {
   Box,
