@@ -45,8 +45,6 @@ const NavMenuLink = ({ text, link, icon }) => {
     <Box
       color='black'
       p='0.5rem 2rem'
-      display='flex'
-      alignItems='center'
       fontWeight='400'
       m='2px 5px'
       _hover={{
@@ -83,11 +81,16 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
       h='100%'
       pos='fixed'
       bgColor='white'
-      borderRightWidth='1'
+      borderRightWidth='1px'
       {...rest}
     >
       <Box>
-        <Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
+        <Flex
+          h='20'
+          alignItems='center'
+          mx='8px'
+          justifyContent='space-between'
+        >
           <Heading size='lg' py='1rem' textAlign='center'>
             freeCodeCamp
           </Heading>
@@ -207,7 +210,7 @@ export default function NavMenu({ session }) {
         borderBottomWidth='1px'
         borderBottomColor='gray.200'
         justifyContent='flex-start'
-        px='4'
+        px='4px'
         bgColor='white'
       >
         <IconButton
@@ -215,7 +218,7 @@ export default function NavMenu({ session }) {
           onClick={onOpen}
           icon={<FontAwesomeIcon icon={faBars} />}
         />
-        <Heading size='lg' ml='8' textAlign='center'>
+        <Heading size='lg' ml='8px' textAlign='center'>
           freeCodeCamp
         </Heading>
       </Flex>
