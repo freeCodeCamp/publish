@@ -48,7 +48,10 @@ export default function NavMenu({ session, onClose, ...rest }) {
       flexDirection='column'
       w={{ base: 'full', md: '300px' }}
       className={styles.navbar}
+      h='100%'
       pos='fixed'
+      bgColor='white'
+      borderRightWidth='1'
       {...rest}
     >
       <Box>
@@ -65,7 +68,7 @@ export default function NavMenu({ session, onClose, ...rest }) {
         <Box>
           <Box>
             <a className={styles.navbarLink}>
-              <FontAwesomeIcon icon={faFileLines} fixedWidth />
+              <FontAwesomeIcon icon={faFileLines} fixedWidth mr />
               Posts
             </a>
           </Box>
