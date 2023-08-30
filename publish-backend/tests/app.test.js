@@ -1,8 +1,20 @@
 const fs = require("fs");
 const { setupStrapi, cleanupStrapi } = require("./helpers/strapi");
+const {
+  createTestUsers,
+  createTestTags,
+  createTestPosts,
+} = require("./helpers/data.helper");
+const { testUsers, testTags, testPosts } = require("./helpers/fixtures");
 
 beforeAll(async () => {
+  // Create a Strapi instance in the testing environment
   await setupStrapi();
+
+  // Seed test database
+  await createTestUsers(testUsers);
+  await createTestTags(testTags);
+  await createTestPosts(testPosts);
 });
 
 afterAll(async () => {
@@ -14,3 +26,4 @@ it("strapi is defined", () => {
 });
 
 require("./user");
+require("./custom-post");
