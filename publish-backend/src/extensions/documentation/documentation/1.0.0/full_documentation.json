@@ -7,7 +7,7 @@
     "termsOfService": null,
     "contact": null,
     "license": null,
-    "x-generation-date": "2023-08-23T14:44:39.386Z"
+    "x-generation-date": "2023-08-30T13:09:47.700Z"
   },
   "x-strapi-config": {
     "path": "/documentation",
@@ -505,17 +505,6 @@
               "example": "string or id"
             }
           },
-          "author": {
-            "oneOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "string"
-              }
-            ],
-            "example": "string or id"
-          },
           "body": {
             "type": "string"
           },
@@ -535,6 +524,17 @@
               ],
               "example": "string or id"
             }
+          },
+          "author": {
+            "oneOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "example": "string or id"
           },
           "locale": {
             "type": "string"
@@ -573,17 +573,6 @@
                   "example": "string or id"
                 }
               },
-              "author": {
-                "oneOf": [
-                  {
-                    "type": "integer"
-                  },
-                  {
-                    "type": "string"
-                  }
-                ],
-                "example": "string or id"
-              },
               "body": {
                 "type": "string"
               },
@@ -603,6 +592,17 @@
                   ],
                   "example": "string or id"
                 }
+              },
+              "author": {
+                "oneOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "example": "string or id"
               },
               "locale": {
                 "type": "string"
@@ -1361,60 +1361,42 @@
               }
             }
           },
-          "author": {
+          "body": {
+            "type": "string"
+          },
+          "excerpt": {
+            "type": "string"
+          },
+          "tags": {
             "type": "object",
             "properties": {
               "data": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "number"
-                  },
-                  "attributes": {
-                    "type": "object",
-                    "properties": {
-                      "username": {
-                        "type": "string"
-                      },
-                      "email": {
-                        "type": "string",
-                        "format": "email"
-                      },
-                      "provider": {
-                        "type": "string"
-                      },
-                      "resetPasswordToken": {
-                        "type": "string"
-                      },
-                      "confirmationToken": {
-                        "type": "string"
-                      },
-                      "confirmed": {
-                        "type": "boolean"
-                      },
-                      "blocked": {
-                        "type": "boolean"
-                      },
-                      "role": {
-                        "type": "object",
-                        "properties": {
-                          "data": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "attributes": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "slug": {
+                          "type": "string"
+                        },
+                        "posts": {
+                          "type": "object",
+                          "properties": {
+                            "data": {
+                              "type": "array",
+                              "items": {
                                 "type": "object",
                                 "properties": {
-                                  "name": {
-                                    "type": "string"
-                                  },
-                                  "description": {
-                                    "type": "string"
-                                  },
-                                  "type": {
-                                    "type": "string"
+                                  "id": {
+                                    "type": "number"
                                   },
                                   "attributes": {
                                     "type": "object",

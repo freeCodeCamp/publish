@@ -184,5 +184,19 @@ describe("custom-post", () => {
         expect.objectContaining(expectedTag)
       );
     });
+
+    it("should escape unsafe include value", async () => {
+      // Strapi's default `*` query should not be effective here
+      const response = await request(strapi.server.httpServer).get(
+        `/api/content/posts/slug/${expectedPost.slug}?include=*`
+      );
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.posts[0];
+      expect(responsePost).toEqual(expect.objectContaining(expectedPost));
+
+      // include=* should not return any relations
+      expect(responsePost).not.toHaveProperty("authors");
+    });
   });
 });
