@@ -1,11 +1,31 @@
+import { isEditor } from '@/lib/current-user';
+import { inviteUser } from '@/lib/invite-user';
+import {
+  Badge,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Link,
+  useToast
+} from '@chakra-ui/react';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
-import { Link } from '@chakra-ui/react';
-import { Badge } from '@chakra-ui/react';
-import { Button } from '@chakra-ui/react';
-import { isEditor } from '@/lib/current-user';
+import { useState } from 'react';
 
 export default function NavMenu({ session }) {
+  const [inviteEmail, setInviteEmail] = useState('');
+  const toast = useToast();
+
+  const invite = async () => {
+    const status = await inviteUser(inviteEmail, session.user.jwt);
+    toast({
+      title: status ? 'User invited' : 'Error inviting user',
+      status: status ? 'success' : 'error',
+      duration: 5000,
+      isClosable: true
+    });
+  };
   return (
     <nav className='nav-bar'>
       <h1>Authoring Site (Next.js)</h1>
@@ -15,6 +35,19 @@ export default function NavMenu({ session }) {
           <Link as={NextLink} href='/'>
             Posts
           </Link>
+        </li>
+        <li>
+          <FormControl isRequired>
+            <FormLabel>Invite User</FormLabel>
+            <Input
+              type='email'
+              placeholder='foo@bar.com'
+              onChange={e => setInviteEmail(e.target.value)}
+            />
+          </FormControl>
+          <Button colorScheme='blue' onClick={invite}>
+            Invite
+          </Button>
         </li>
         {isEditor(session) && (
           <>

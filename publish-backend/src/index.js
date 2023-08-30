@@ -27,5 +27,22 @@ module.exports = {
       await generateSeedData(strapi);
       console.log("Seeding database complete!");
     }
+
+    strapi.db.lifecycles.subscribe({
+      models: ["plugin::users-permissions.user"],
+      async afterCreate(event) {
+        const { email } = event.result;
+        await strapi.db.query("api::invited-user.invited-user").update({
+          where: {
+            email: {
+              $eq: email,
+            },
+          },
+          data: {
+            accepted: true,
+          },
+        });
+      },
+    });
   },
 };

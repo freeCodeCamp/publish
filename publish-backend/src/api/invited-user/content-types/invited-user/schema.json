@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "invited_users",
+  "info": {
+    "singularName": "invited-user",
+    "pluralName": "invited-users",
+    "displayName": "Invited User",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    "accepted": {
+      "type": "boolean",
+      "default": false,
+      "required": false
+    }
+  }
+}

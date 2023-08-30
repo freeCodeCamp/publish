@@ -13,6 +13,9 @@
       "action": "api::custom-post.custom-post.findOneBySlug"
     },
     {
+      "action": "api::invited-user.invited-user.find"
+    },
+    {
       "action": "api::post.post.find"
     },
     {
