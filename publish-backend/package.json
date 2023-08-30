@@ -9,7 +9,8 @@
     "build": "strapi build",
     "strapi": "strapi",
     "cs": "config-sync",
-    "test": "jest --forceExit --detectOpenHandles --verbose"
+    "test": "jest --forceExit",
+    "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "^0.0.7",
