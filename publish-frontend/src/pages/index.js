@@ -1,10 +1,9 @@
+import { Box, Button, Link } from '@chakra-ui/react';
+import { signIn, useSession } from 'next-auth/react';
 import NextLink from 'next/link'; // import as NextLink to avoid conflict with chakra-ui Link component
-import { useSession, signIn } from 'next-auth/react';
-import { getPosts } from '../lib/posts';
-import NavMenu from '@/components/nav-menu';
 
-import { Box, Button } from '@chakra-ui/react';
-import { Link } from '@chakra-ui/react';
+import NavMenu from '@/components/nav-menu';
+import { getPosts } from '@/lib/posts';
 
 export async function getServerSideProps() {
   const allPostsData = await getPosts();

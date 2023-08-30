@@ -1,41 +1,42 @@
-import { isEditor } from '@/lib/current-user';
-import { inviteUser } from '@/lib/invite-user';
 import {
   Avatar,
   Box,
   Button,
   CloseButton,
+  Drawer,
+  DrawerContent,
+  DrawerOverlay,
   Flex,
   FormControl,
   FormLabel,
   Heading,
+  IconButton,
   Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Spacer,
-  useToast,
   chakra,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  IconButton,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react';
 import {
   faArrowRightFromBracket,
+  faBars,
   faChevronDown,
   faFileLines,
   faNewspaper,
   faTags,
   faUser,
-  faUsers,
-  faBars
+  faUsers
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { signOut } from 'next-auth/react';
 import { useState } from 'react';
+
+import { isEditor } from '@/lib/current-user';
+import { inviteUser } from '@/lib/invite-user';
 
 const Icon = chakra(FontAwesomeIcon);
 
