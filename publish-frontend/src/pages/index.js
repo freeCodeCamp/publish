@@ -3,19 +3,7 @@ import { useSession, signIn } from 'next-auth/react';
 import { getPosts } from '../lib/posts';
 import NavMenu from '@/components/nav-menu';
 
-import {
-  Box,
-  Button,
-  useDisclosure,
-  Drawer,
-  DrawerContent,
-  Flex,
-  Heading,
-  DrawerOverlay,
-  IconButton
-} from '@chakra-ui/react';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Box, Button } from '@chakra-ui/react';
 import { Link } from '@chakra-ui/react';
 
 export async function getServerSideProps() {
@@ -29,7 +17,6 @@ export async function getServerSideProps() {
 
 export default function IndexPage({ allPostsData }) {
   const { data: session, status } = useSession();
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isLoading = status === 'loading';
   if (isLoading) return 'Loading...';
@@ -37,45 +24,7 @@ export default function IndexPage({ allPostsData }) {
   if (session) {
     return (
       <Box minH='100vh' bgColor='gray.100'>
-        <NavMenu
-          session={session}
-          onClose={() => onClose}
-          display={{ base: 'none', md: 'flex' }}
-        />
-
-        <Drawer
-          isOpen={isOpen}
-          placement='left'
-          onClose={onClose}
-          returnFocusOnClose={false}
-          onOverlayClick={onClose}
-          size='full'
-        >
-          <DrawerOverlay />
-          <DrawerContent>
-            <NavMenu session={session} onClose={onClose} />
-          </DrawerContent>
-        </Drawer>
-
-        <Flex
-          display={{ base: 'flex', md: 'none' }}
-          height='20'
-          alignItems='center'
-          borderBottomWidth='1px'
-          borderBottomColor='gray.200'
-          justifyContent='flex-start'
-          px='4'
-          bgColor='white'
-        >
-          <IconButton
-            variant='outline'
-            onClick={onOpen}
-            icon={<FontAwesomeIcon icon={faBars} />}
-          />
-          <Heading size='lg' ml='8' textAlign='center'>
-            freeCodeCamp
-          </Heading>
-        </Flex>
+        <NavMenu session={session} />
 
         <Box ml={{ base: 0, md: '300px' }}>
           <div>

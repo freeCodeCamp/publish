@@ -16,7 +16,12 @@ import {
   MenuList,
   Spacer,
   useToast,
-  chakra
+  chakra,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  IconButton,
+  useDisclosure
 } from '@chakra-ui/react';
 import {
   faArrowRightFromBracket,
@@ -25,7 +30,8 @@ import {
   faNewspaper,
   faTags,
   faUser,
-  faUsers
+  faUsers,
+  faBars
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { signOut } from 'next-auth/react';
@@ -55,7 +61,7 @@ const NavbarLink = ({ text, link, icon }) => {
   );
 };
 
-export default function NavMenu({ session, onClose, ...rest }) {
+const NavbarContent = ({ session, onClose, ...rest }) => {
   const [inviteEmail, setInviteEmail] = useState('');
   const toast = useToast();
 
@@ -68,6 +74,7 @@ export default function NavMenu({ session, onClose, ...rest }) {
       isClosable: true
     });
   };
+
   return (
     <Flex
       flexDirection='column'
@@ -166,5 +173,48 @@ export default function NavMenu({ session, onClose, ...rest }) {
         </Menu>
       </Box>
     </Flex>
+  );
+};
+
+export default function NavMenu({ session }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <NavbarContent session={session} display={{ base: 'none', md: 'flex' }} />
+      <Drawer
+        isOpen={isOpen}
+        placement='left'
+        onClose={onClose}
+        returnFocusOnClose={false}
+        onOverlayClick={onClose}
+        size='full'
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <NavbarContent session={session} onClose={onClose} />
+        </DrawerContent>
+      </Drawer>
+
+      <Flex
+        display={{ base: 'flex', md: 'none' }}
+        height='20'
+        alignItems='center'
+        borderBottomWidth='1px'
+        borderBottomColor='gray.200'
+        justifyContent='flex-start'
+        px='4'
+        bgColor='white'
+      >
+        <IconButton
+          variant='outline'
+          onClick={onOpen}
+          icon={<FontAwesomeIcon icon={faBars} />}
+        />
+        <Heading size='lg' ml='8' textAlign='center'>
+          freeCodeCamp
+        </Heading>
+      </Flex>
+    </>
   );
 }
