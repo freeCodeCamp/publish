@@ -4,25 +4,18 @@
  * A set of functions called "actions" for `custom-post`
  */
 
-// Allow query parameter to be "authors" to comply with the old API
-// and convert it to "author" to use for populate option
-const authorsToAuthor = (populate) => {
-  const index = populate.indexOf("authors");
-  if (index !== -1) {
-    populate[index] = "author";
-  }
-  return populate;
-};
-
-// Sanitize the query parameter to only allow "authors" and "tags"
+// Allow query parameter to be "authors" to comply with the old API and convert
+// it to "author" to use for populate option. Allow only "authors" and "tags"
 const sanitizePopulate = (includeQuery) => {
   const expectedValues = ["authors", "tags"];
   const input = includeQuery?.split(",") || [];
+  const sanitizedInput = input
+    .filter((item) => expectedValues.includes(item))
+    .map((item) => (item === "authors" ? "author" : item));
 
-  // Filter out unexpected values and remove duplicates
-  const filtered = [...new Set(input.filter((item) => expectedValues.includes(item)))];
-  return authorsToAuthor(filtered);
-}
+  // remove duplicates
+  return [...new Set(sanitizedInput)];
+};
 
 module.exports = {
   find: async (ctx, next) => {

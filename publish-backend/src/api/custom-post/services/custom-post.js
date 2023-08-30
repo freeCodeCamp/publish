@@ -75,8 +75,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
     const formattedPosts = posts.map((post) => formatPost(post));
 
     // format data into desired structure
-    const response = { posts: formattedPosts };
-    return response;
+    return { posts: formattedPosts };
   },
 
   async findOne(id, populate = []) {

@@ -17,9 +17,7 @@ beforeAll(async () => {
   await createTestPosts(testPosts);
 });
 
-afterAll(async () => {
-  await cleanupStrapi();
-});
+afterAll(cleanupStrapi);
 
 it("strapi is defined", () => {
   expect(strapi).toBeDefined();
