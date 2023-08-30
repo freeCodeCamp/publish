@@ -48,9 +48,6 @@ const formatPost = (postObj) => {
     published_at: publishedAt,
   };
 
-  console.log("author", author);
-  console.log("tags", tags);
-
   if (author) {
     const formattedAuthor = formatAuthor(author);
     // Note: with current model relation, there is only 1 author for a post
