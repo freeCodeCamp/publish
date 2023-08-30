@@ -49,6 +49,7 @@ export default function NavMenu({ session }) {
       minH='100vh'
       w='300px'
       className={styles.navbar}
+      display={{ base: 'none', md: 'flex' }}
     >
       <Box>
         <Heading size='lg' py='1rem' textAlign='center'>
