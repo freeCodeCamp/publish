@@ -226,10 +226,3 @@ html {
   border-radius: 0.25rem;
   padding: 0.2rem 0.5rem;
 }
-.nav-bar {
-  border-right-width: 2px;
-  border-color: rgb(243 244 246);
-  margin-right: 0.75rem;
-  padding: 0.75rem;
-  height: 100vh;
-}
