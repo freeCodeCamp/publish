@@ -1,4 +1,4 @@
-import { Box, Button, Link } from '@chakra-ui/react';
+import { Box, Button, Link, Flex, Heading, Spacer } from '@chakra-ui/react';
 import { signIn, useSession } from 'next-auth/react';
 import NextLink from 'next/link'; // import as NextLink to avoid conflict with chakra-ui Link component
 
@@ -25,12 +25,20 @@ export default function IndexPage({ allPostsData }) {
       <Box minH='100vh' bgColor='gray.100'>
         <NavMenu session={session} />
 
-        <Box ml={{ base: 0, md: '300px' }}>
-          <div>
+        <Box ml={{ base: 0, md: '300px' }} px='6'>
+          <Flex
+            alignItems='center'
+            bgColor='rgb(237, 242, 246)'
+            minH='20'
+            position='sticky'
+            top='0'
+          >
+            <Heading>Posts</Heading>
+            <Spacer />
             <Button colorScheme='blue' as={NextLink} href='/posts/new'>
               New Post
             </Button>
-          </div>
+          </Flex>
 
           <div>
             <ul>
