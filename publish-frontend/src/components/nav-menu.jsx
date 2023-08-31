@@ -103,7 +103,7 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
             alignItems='center'
           >
             <Img
-              src='https://raw.githubusercontent.com/freeCodeCamp/design-style-guide/main/assets/fcc_puck_500_social.jpg'
+              src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
               width='32px'
               height='32px'
               mr='12px'
