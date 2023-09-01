@@ -1,12 +1,13 @@
 import {
+  Badge,
   Box,
   Button,
   Flex,
   Heading,
-  Link,
   Spacer,
   Table,
   Tbody,
+  Td,
   Th,
   Thead,
   Tr
@@ -53,16 +54,17 @@ export default function IndexPage({ allPostsData }) {
             </Button>
           </Flex>
 
-          <Box>
-            <Table>
-              <Thead>
+          <Box pb='10'>
+            <Table boxShadow='md' borderWidth='1px'>
+              <Thead bgColor='rgb(243, 244, 246)'>
                 <Tr>
                   <Th>Title</Th>
                   <Th w='140px'>Status</Th>
                 </Tr>
               </Thead>
-              <Tbody>
+              <Tbody bgColor='white'>
                 {allPostsData.data.map(post => {
+                  const title = post.attributes.title;
                   const username =
                     post.attributes.author.data.attributes.username;
                   const relativeUpdatedAt = intlFormatDistance(
@@ -70,19 +72,33 @@ export default function IndexPage({ allPostsData }) {
                     new Date()
                   );
                   const status =
-                    post.attributes.publishedAt !== null
-                      ? 'Published'
-                      : 'Draft';
+                    post.attributes.publishedAt !== null ? (
+                      <Badge>Published</Badge>
+                    ) : (
+                      <Badge colorScheme='pink'>Draft</Badge>
+                    );
                   return (
-                    <Tr key={post.id}>
-                      <Th>
-                        <Link as={NextLink} href={`/posts/${post.id}`}>
-                          {post.attributes.title}
-                        </Link>
-                        <br />
-                        {username} • {relativeUpdatedAt}
-                      </Th>
-                      <Th>{status}</Th>
+                    <Tr
+                      as={NextLink}
+                      href={`/posts/${post.id}`}
+                      display='table-row'
+                      key={post.id}
+                      cursor='pointer'
+                      _hover={{
+                        bgColor: 'rgb(243, 244, 246)'
+                      }}
+                    >
+                      <Td>
+                        <Box fontWeight='600'>{title}</Box>
+                        <Box as='span' fontSize='sm' color='gray.500'>
+                          By{' '}
+                          <Box as='span' fontWeight='500' color='gray.500'>
+                            {username}
+                          </Box>{' '}
+                          • {relativeUpdatedAt}
+                        </Box>
+                      </Td>
+                      <Td>{status}</Td>
                     </Tr>
                   );
                 })}
