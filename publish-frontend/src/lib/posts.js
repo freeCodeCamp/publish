@@ -3,7 +3,7 @@
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getPosts() {
-  const res = await fetch(`${api_root}/posts`);
+  const res = await fetch(`${api_root}/posts?populate=*`);
   if (!res.ok) {
     // This will activate the closest `error.js` Error Boundary
     throw new Error('getPosts Failed');

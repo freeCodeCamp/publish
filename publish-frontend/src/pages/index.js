@@ -1,4 +1,17 @@
-import { Box, Button, Link, Flex, Heading, Spacer } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Link,
+  Spacer,
+  Table,
+  Tbody,
+  Th,
+  Thead,
+  Tr
+} from '@chakra-ui/react';
+import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { signIn, useSession } from 'next-auth/react';
 import NextLink from 'next/link'; // import as NextLink to avoid conflict with chakra-ui Link component
 
@@ -40,21 +53,42 @@ export default function IndexPage({ allPostsData }) {
             </Button>
           </Flex>
 
-          <div>
-            <ul>
-              {allPostsData.data.map(post => {
-                return (
-                  <li key={post.id} style={{ marginBottom: '1.25rem' }}>
-                    <Link as={NextLink} href={`/posts/${post.id}`}>
-                      <strong>{post.attributes.title}</strong>
-                      <br />
-                      {post.attributes.body.slice(0, 150)}...
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
+          <Box>
+            <Table>
+              <Thead>
+                <Tr>
+                  <Th>Title</Th>
+                  <Th w='140px'>Status</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {allPostsData.data.map(post => {
+                  const username =
+                    post.attributes.author.data.attributes.username;
+                  const relativeUpdatedAt = intlFormatDistance(
+                    new Date(post.attributes.updatedAt),
+                    new Date()
+                  );
+                  const status =
+                    post.attributes.publishedAt !== null
+                      ? 'Published'
+                      : 'Draft';
+                  return (
+                    <Tr key={post.id}>
+                      <Th>
+                        <Link as={NextLink} href={`/posts/${post.id}`}>
+                          {post.attributes.title}
+                        </Link>
+                        <br />
+                        {username} • {relativeUpdatedAt}
+                      </Th>
+                      <Th>{status}</Th>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </Box>
         </Box>
       </Box>
     );
