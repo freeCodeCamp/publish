@@ -199,7 +199,9 @@ export default function IndexPage({ posts, users, tags }) {
               <Thead bgColor='rgb(243, 244, 246)'>
                 <Tr>
                   <Th>Title</Th>
-                  <Th w='140px'>Status</Th>
+                  <Th w='140px' display={{ base: 'none', sm: 'table-cell' }}>
+                    Status
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody bgColor='white'>
@@ -237,8 +239,13 @@ export default function IndexPage({ posts, users, tags }) {
                           </Box>{' '}
                           • {relativeUpdatedAt}
                         </Box>
+                        <Box display={{ base: 'block', sm: 'none' }} pt='4px'>
+                          {status}
+                        </Box>
                       </Td>
-                      <Td>{status}</Td>
+                      <Td display={{ base: 'none', sm: 'table-cell' }}>
+                        {status}
+                      </Td>
                     </Tr>
                   );
                 })}
