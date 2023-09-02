@@ -15,6 +15,7 @@ import {
   Td,
   Th,
   Thead,
+  Grid,
   Tr,
   chakra
 } from '@chakra-ui/react';
@@ -32,6 +33,27 @@ import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const Icon = chakra(FontAwesomeIcon);
+
+const FilterButton = ({ text }) => {
+  return (
+    <MenuButton
+      as={Button}
+      rightIcon={<Icon icon={faChevronDown} fixedWidth />}
+      bgColor='white'
+      borderRadius='md'
+      fontSize='14px'
+      boxShadow='sm'
+      _hover={{
+        boxShadow: 'md'
+      }}
+      _active={{
+        bgColor: 'white'
+      }}
+    >
+      {text}
+    </MenuButton>
+  );
+};
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -69,28 +91,17 @@ export default function IndexPage({ posts, users, tags }) {
             </Button>
           </Flex>
 
-          <Flex boxShadow='sm' borderRadius='md' my='4'>
+          <Grid
+            my='4'
+            gap='3'
+            gridTemplateColumns={{
+              base: '1fr',
+              sm: '1fr 1fr',
+              lg: '1fr 1fr 1fr 1fr'
+            }}
+          >
             <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                bgColor='white'
-                borderTopRightRadius='0'
-                borderBottomRightRadius='0'
-                borderRightColor='gray.100'
-                borderRightWidth='1px'
-                fontSize='14px'
-                flexGrow='1'
-                _hover={{
-                  boxShadow:
-                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                }}
-                _active={{
-                  bgColor: 'white'
-                }}
-              >
-                All posts
-              </MenuButton>
+              <FilterButton text='All posts' />
               <MenuList>
                 <MenuOptionGroup defaultValue='all' type='radio'>
                   <MenuItemOption value='all'>All posts</MenuItemOption>
@@ -102,25 +113,7 @@ export default function IndexPage({ posts, users, tags }) {
               </MenuList>
             </Menu>
             <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                bgColor='white'
-                borderRadius='0'
-                borderRightColor='gray.100'
-                borderRightWidth='1px'
-                fontSize='14px'
-                flexGrow='1'
-                _hover={{
-                  boxShadow:
-                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                }}
-                _active={{
-                  bgColor: 'white'
-                }}
-              >
-                All authors
-              </MenuButton>
+              <FilterButton text='All authors' />
               <MenuList>
                 <MenuOptionGroup defaultValue='all' type='radio'>
                   <MenuItemOption value='all'>All authors</MenuItemOption>
@@ -133,25 +126,7 @@ export default function IndexPage({ posts, users, tags }) {
               </MenuList>
             </Menu>
             <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                bgColor='white'
-                borderRadius='0'
-                borderRightColor='gray.100'
-                borderRightWidth='1px'
-                fontSize='14px'
-                flexGrow='1'
-                _hover={{
-                  boxShadow:
-                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                }}
-                _active={{
-                  bgColor: 'white'
-                }}
-              >
-                All tags
-              </MenuButton>
+              <FilterButton text='All tags' />
               <MenuList>
                 <MenuOptionGroup defaultValue='all' type='radio'>
                   <MenuItemOption value='all'>All tags</MenuItemOption>
@@ -164,24 +139,7 @@ export default function IndexPage({ posts, users, tags }) {
               </MenuList>
             </Menu>
             <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                bgColor='white'
-                borderTopLeftRadius='0'
-                borderBottomLeftRadius='0'
-                fontSize='14px'
-                flexGrow='1'
-                _hover={{
-                  boxShadow:
-                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                }}
-                _active={{
-                  bgColor: 'white'
-                }}
-              >
-                Sort by: Newest
-              </MenuButton>
+              <FilterButton text='Sort by: Newest' />
               <MenuList>
                 <MenuOptionGroup defaultValue='newest' type='radio'>
                   <MenuItemOption value='newest'>Newsest</MenuItemOption>
@@ -192,7 +150,7 @@ export default function IndexPage({ posts, users, tags }) {
                 </MenuOptionGroup>
               </MenuList>
             </Menu>
-          </Flex>
+          </Grid>
 
           <Box pb='10'>
             <Table boxShadow='md' borderWidth='1px'>
