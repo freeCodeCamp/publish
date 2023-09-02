@@ -83,7 +83,14 @@ export default function IndexPage({ posts, users, tags }) {
         <NavMenu session={session} />
 
         <Box ml={{ base: 0, md: '300px' }} px='6'>
-          <Flex alignItems='center' minH='20' position='sticky' top='0'>
+          <Flex
+            alignItems='center'
+            minH='20'
+            position='sticky'
+            top='0'
+            bgColor='gray.200'
+            zIndex='9999'
+          >
             <Heading>Posts</Heading>
             <Spacer />
             <Button colorScheme='blue' as={NextLink} href='/posts/new'>
