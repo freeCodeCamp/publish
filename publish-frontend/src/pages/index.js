@@ -64,125 +64,134 @@ export default function IndexPage({ posts, users, tags }) {
           <Flex alignItems='center' minH='20' position='sticky' top='0'>
             <Heading>Posts</Heading>
             <Spacer />
-            <Box mr='4' boxShadow='sm' borderRadius='md'>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                  bgColor='white'
-                  borderTopRightRadius='0'
-                  borderBottomRightRadius='0'
-                  borderRightColor='gray.100'
-                  borderRightWidth='1px'
-                  _hover={{
-                    boxShadow:
-                      '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                  }}
-                  _active={{
-                    bgColor: 'white'
-                  }}
-                >
-                  All posts
-                </MenuButton>
-                <MenuList>
-                  <MenuOptionGroup defaultValue='all' type='radio'>
-                    <MenuItemOption value='all'>All posts</MenuItemOption>
-                    <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
-                    <MenuItemOption value='published'>
-                      Published posts
-                    </MenuItemOption>
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                  bgColor='white'
-                  borderRadius='0'
-                  borderRightColor='gray.100'
-                  borderRightWidth='1px'
-                  _hover={{
-                    boxShadow:
-                      '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                  }}
-                  _active={{
-                    bgColor: 'white'
-                  }}
-                >
-                  All authors
-                </MenuButton>
-                <MenuList>
-                  <MenuOptionGroup defaultValue='all' type='radio'>
-                    <MenuItemOption value='all'>All authors</MenuItemOption>
-                    {users.map(user => (
-                      <MenuItemOption key={user.id} value={user.id}>
-                        {user.username}
-                      </MenuItemOption>
-                    ))}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                  bgColor='white'
-                  borderRadius='0'
-                  borderRightColor='gray.100'
-                  borderRightWidth='1px'
-                  _hover={{
-                    boxShadow:
-                      '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                  }}
-                  _active={{
-                    bgColor: 'white'
-                  }}
-                >
-                  All tags
-                </MenuButton>
-                <MenuList>
-                  <MenuOptionGroup defaultValue='all' type='radio'>
-                    <MenuItemOption value='all'>All tags</MenuItemOption>
-                    {tags.data.map(tag => (
-                      <MenuItemOption key={tag.id} value={tag.id}>
-                        {tag.attributes.name}
-                      </MenuItemOption>
-                    ))}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-                  bgColor='white'
-                  borderTopLeftRadius='0'
-                  borderBottomLeftRadius='0'
-                  _hover={{
-                    boxShadow:
-                      '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
-                  }}
-                  _active={{
-                    bgColor: 'white'
-                  }}
-                >
-                  Sort by: Newest
-                </MenuButton>
-                <MenuList>
-                  <MenuOptionGroup defaultValue='newest' type='radio'>
-                    <MenuItemOption value='newest'>Newsest</MenuItemOption>
-                    <MenuItemOption value='oldest'>Oldest</MenuItemOption>
-                    <MenuItemOption value='recently-updated'>
-                      Recently updated
-                    </MenuItemOption>
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
-            </Box>
             <Button colorScheme='blue' as={NextLink} href='/posts/new'>
               New Post
             </Button>
+          </Flex>
+
+          <Flex boxShadow='sm' borderRadius='md' my='4'>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
+                bgColor='white'
+                borderTopRightRadius='0'
+                borderBottomRightRadius='0'
+                borderRightColor='gray.100'
+                borderRightWidth='1px'
+                fontSize='14px'
+                flexGrow='1'
+                _hover={{
+                  boxShadow:
+                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
+                }}
+                _active={{
+                  bgColor: 'white'
+                }}
+              >
+                All posts
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup defaultValue='all' type='radio'>
+                  <MenuItemOption value='all'>All posts</MenuItemOption>
+                  <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
+                  <MenuItemOption value='published'>
+                    Published posts
+                  </MenuItemOption>
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
+                bgColor='white'
+                borderRadius='0'
+                borderRightColor='gray.100'
+                borderRightWidth='1px'
+                fontSize='14px'
+                flexGrow='1'
+                _hover={{
+                  boxShadow:
+                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
+                }}
+                _active={{
+                  bgColor: 'white'
+                }}
+              >
+                All authors
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup defaultValue='all' type='radio'>
+                  <MenuItemOption value='all'>All authors</MenuItemOption>
+                  {users.map(user => (
+                    <MenuItemOption key={user.id} value={user.id}>
+                      {user.username}
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
+                bgColor='white'
+                borderRadius='0'
+                borderRightColor='gray.100'
+                borderRightWidth='1px'
+                fontSize='14px'
+                flexGrow='1'
+                _hover={{
+                  boxShadow:
+                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
+                }}
+                _active={{
+                  bgColor: 'white'
+                }}
+              >
+                All tags
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup defaultValue='all' type='radio'>
+                  <MenuItemOption value='all'>All tags</MenuItemOption>
+                  {tags.data.map(tag => (
+                    <MenuItemOption key={tag.id} value={tag.id}>
+                      {tag.attributes.name}
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+            <Menu>
+              <MenuButton
+                as={Button}
+                rightIcon={<Icon icon={faChevronDown} fixedWidth />}
+                bgColor='white'
+                borderTopLeftRadius='0'
+                borderBottomLeftRadius='0'
+                fontSize='14px'
+                flexGrow='1'
+                _hover={{
+                  boxShadow:
+                    '0 0 0 1px rgba(0,0,0,.01), 0 2px 4px -1px rgba(0,0,0,.15)'
+                }}
+                _active={{
+                  bgColor: 'white'
+                }}
+              >
+                Sort by: Newest
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup defaultValue='newest' type='radio'>
+                  <MenuItemOption value='newest'>Newsest</MenuItemOption>
+                  <MenuItemOption value='oldest'>Oldest</MenuItemOption>
+                  <MenuItemOption value='recently-updated'>
+                    Recently updated
+                  </MenuItemOption>
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
           </Flex>
 
           <Box pb='10'>
