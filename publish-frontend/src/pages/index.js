@@ -126,7 +126,7 @@ export default function IndexPage({ posts, users, tags }) {
                   <MenuItemOption value='all'>All authors</MenuItemOption>
                   {users.map(user => (
                     <MenuItemOption key={user.id} value={user.id}>
-                      {user.username}
+                      {user.name}
                     </MenuItemOption>
                   ))}
                 </MenuOptionGroup>
@@ -172,8 +172,9 @@ export default function IndexPage({ posts, users, tags }) {
               <Tbody bgColor='white'>
                 {posts.data.map(post => {
                   const title = post.attributes.title;
-                  const username =
-                    post.attributes.author.data.attributes.username;
+                  const name = post.attributes.author.data.attributes.name;
+                  const tag = post.attributes.tags.data[0]?.attributes.name;
+                  console.log(post.attributes.tags);
                   const relativeUpdatedAt = intlFormatDistance(
                     new Date(post.attributes.updatedAt),
                     new Date()
@@ -200,8 +201,16 @@ export default function IndexPage({ posts, users, tags }) {
                         <Box as='span' fontSize='sm' color='gray.500'>
                           By{' '}
                           <Box as='span' fontWeight='500' color='gray.500'>
-                            {username}
+                            {name}
                           </Box>{' '}
+                          {tag && (
+                            <>
+                              in{' '}
+                              <Box as='span' fontWeight='500' color='gray.500'>
+                                {tag}
+                              </Box>{' '}
+                            </>
+                          )}
                           • {relativeUpdatedAt}
                         </Box>
                         <Box display={{ base: 'block', sm: 'none' }} pt='4px'>
