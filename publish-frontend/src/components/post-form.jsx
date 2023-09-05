@@ -7,7 +7,7 @@ import { Img } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { createPost, updatePost } from '@/lib/posts';
 
-const PostForm = ({ tags, authors, initialValues }) => {
+const PostForm = ({ tags, initialValues }) => {
   const { data: session } = useSession();
 
   const [showDrafts, setShowDrafts] = useState(true);
@@ -27,7 +27,6 @@ const PostForm = ({ tags, authors, initialValues }) => {
   const [featureImage, setFeatureImage] = useState('');
   const [content, setContent] = useState(initialValues?.attributes.body || '');
 
-  const [author, setAuthor] = useState([]);
   const [id, setPostId] = useState(null);
 
   useEffect(() => {
@@ -98,12 +97,6 @@ const PostForm = ({ tags, authors, initialValues }) => {
     }
   }
 
-  function addAuthor(event) {
-    const author = [];
-    author.push(parseInt(event.target.value));
-    setAuthor(author);
-  }
-
   function handleContentChange(content) {
     console.log(content);
     setContent(content);
@@ -115,7 +108,6 @@ const PostForm = ({ tags, authors, initialValues }) => {
       data: {
         title: title,
         slug: slugify(postUrl != '' ? postUrl : title, { lower: true }),
-        author: author,
         body: content,
         tags: clientTagsId,
         locale: 'en'
@@ -237,15 +229,6 @@ const PostForm = ({ tags, authors, initialValues }) => {
               {tags.map(tag => (
                 <option key={tag.attributes.name} value={tag.attributes.name}>
                   {tag.attributes.name}
-                </option>
-              ))}
-            </select>
-            <h2 className='input-title'>Authors</h2>
-            <select className='tag-selector' onChange={addAuthor}>
-              <option value='0'>Select an Author</option>
-              {authors.map(author => (
-                <option key={author.username} value={author.id}>
-                  {author.username}
                 </option>
               ))}
             </select>
