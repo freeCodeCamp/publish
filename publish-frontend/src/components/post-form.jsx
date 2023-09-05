@@ -7,7 +7,7 @@ import { Img } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
 import { createPost, updatePost } from '@/lib/posts';
 
-const PostForm = ({ tags, initialValues }) => {
+const PostForm = ({ tags, author, initialValues }) => {
   const { data: session } = useSession();
 
   const [showDrafts, setShowDrafts] = useState(true);
@@ -110,6 +110,7 @@ const PostForm = ({ tags, initialValues }) => {
         slug: slugify(postUrl != '' ? postUrl : title, { lower: true }),
         body: content,
         tags: clientTagsId,
+        author: [author.id],
         locale: 'en'
       }
     };
