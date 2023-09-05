@@ -409,10 +409,6 @@
           {
             "name": "last_seen",
             "size": 6
-          },
-          {
-            "name": "posts",
-            "size": 6
           }
         ],
         [
@@ -422,6 +418,12 @@
           },
           {
             "name": "profile_image",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "posts",
             "size": 6
           }
         ]
