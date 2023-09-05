@@ -174,17 +174,15 @@ export default function IndexPage({ posts, users, tags }) {
                   const title = post.attributes.title;
                   const name = post.attributes.author.data.attributes.name;
                   const tag = post.attributes.tags.data[0]?.attributes.name;
-                  console.log(post.attributes.tags);
                   const relativeUpdatedAt = intlFormatDistance(
                     new Date(post.attributes.updatedAt),
                     new Date()
                   );
-                  const status =
-                    post.attributes.publishedAt !== null ? (
-                      <Badge>Published</Badge>
-                    ) : (
-                      <Badge colorScheme='pink'>Draft</Badge>
-                    );
+                  const status = post.attributes.publishedAt ? (
+                    <Badge>Published</Badge>
+                  ) : (
+                    <Badge colorScheme='pink'>Draft</Badge>
+                  );
                   return (
                     <Tr
                       as={NextLink}
