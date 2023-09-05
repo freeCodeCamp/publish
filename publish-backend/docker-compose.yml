@@ -17,6 +17,8 @@ services:
       ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
       APP_KEYS: ${APP_KEYS}
       NODE_ENV: ${NODE_ENV}
+      DASHBOARD_URL: ${DASHBOARD_URL}
+      NODEMAILER_HOST: mailhog
     volumes:
       - ./config:/opt/app/config
       - ./src:/opt/app/src
@@ -30,6 +32,7 @@ services:
       - strapi
     depends_on:
       - strapiDB
+      - mailhog
 
   strapiDB:
     container_name: strapiDB
@@ -47,6 +50,18 @@ services:
 
     ports:
       - "5432:5432"
+    networks:
+      - strapi
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: "mailhog"
+    platform: linux/amd64
+    logging:
+      driver: none
+    ports:
+      - "1025:1025"
+      - "8025:8025"
     networks:
       - strapi
 

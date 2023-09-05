@@ -1,32 +1,81 @@
 import NextAuth from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import Auth0Provider from 'next-auth/providers/auth0';
 
 export const authOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_OAUTH_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET
+    process.env.NODE_ENV === 'development' &&
+      CredentialsProvider({
+        name: 'email',
+        credentials: {
+          identifier: {
+            label: 'Email',
+            type: 'email',
+            placeholder: 'foo@bar.com',
+            required: true
+          },
+          password: { label: 'Password', type: 'password', required: true }
+        },
+        async authorize(credentials) {
+          const { identifier, password } = credentials;
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/local`,
+            {
+              method: 'POST',
+              body: JSON.stringify({ identifier, password }),
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+          const data = await res.json();
+
+          if (res.ok && data.jwt) {
+            const user = { ...data.user, jwt: data.jwt };
+            return user;
+          }
+          return null;
+        }
+      }),
+    Auth0Provider({
+      clientId: process.env.AUTH0_CLIENT_ID,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET,
+      issuer: process.env.AUTH0_DOMAIN
     })
   ],
 
   // Details: https://next-auth.js.org/configuration/callbacks
   callbacks: {
+    async signIn({ user }) {
+      const { email } = user;
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/invited-users?filters[email][$eq]=${email}`
+      );
+      const { data } = await res.json();
+      if (data.length === 0) {
+        return false;
+      }
+      return true;
+    },
+
     // This callback is called whenever a JSON Web Token is created (i.e. at sign in)
     // or updated(i.e whenever a session is accessed in the client).
-    async jwt({ token, account }) {
-      if (account) {
+    async jwt({ token, user, account }) {
+      if (user && account) {
         // Get JWT token to access the Strapi API
         // Note: This is different from the session JWT that is stored in the cookie at the end of this callback
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
-        );
-        const data = await res.json();
-        // Note: If the email is already registered on Strapi app without using Google Auth
-        // then it will fail to get JWT token
-        // https://github.com/strapi/strapi/issues/12907
-        const { jwt } = data;
-        // Add the JWT token for Strapi API to session JWT
-        token.jwt = jwt;
+        if (account.provider === 'auth0') {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
+          );
+          const data = await res.json();
+          // Note: If the email is already registered on Strapi app without using Auth0
+          // then it will fail to get JWT token
+          // https://github.com/strapi/strapi/issues/12907
+          const { jwt } = data;
+          // Add the JWT token for Strapi API to session JWT
+          token.jwt = jwt;
+        } else {
+          token.jwt = user.jwt;
+        }
 
         // Fetch user role data from /api/users/me?populate=role
         const res2 = await fetch(
@@ -41,6 +90,7 @@ export const authOptions = {
         if (res2.ok) {
           const userData = await res2.json();
           // Add the role name to session JWT
+          token.name = userData?.username || null;
           token.userRole = userData?.role?.name || null;
           console.log('token.userRole:', token.userRole);
         }

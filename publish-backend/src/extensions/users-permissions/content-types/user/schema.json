@@ -22,6 +22,7 @@
     "email": {
       "type": "email",
       "minLength": 6,
+      "unique": true,
       "configurable": false,
       "required": true
     },
@@ -117,7 +118,8 @@
     "posts": {
       "type": "relation",
       "relation": "oneToMany",
-      "target": "api::post.post"
+      "target": "api::post.post",
+      "mappedBy": "author"
     }
   }
 }

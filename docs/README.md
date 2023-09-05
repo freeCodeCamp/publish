@@ -45,13 +45,23 @@ This repository contains 3 separate apps:
 Note: This is an account to login to the admin panel. It's different from the
 account to login to the frontend app.
 
-1. Under `General > Settings > Users & Permissions Plugin > Providers`, enable
-   `Google` and `Local` providers. Follow this [link](
-   https://next-auth.js.org/providers/google#configuration) to get Google OAuth
-   credentials. In the dialog box in Strapi, set the redirect URL to front-end
-   app to `http://localhost:3000/api/auth/callback/google`(this url doesn't
-   matter as it's mainly used when Strapi handles the complete auth flow which
-   is not the case for us).
+8. Stop the docker container by running `docker compose down`
+
+Note: Seeding the database works only on a fresh setup of the containers.
+
+9. Change the `SEED_DATA` value in `.env` file to `true`
+
+10. Run `docker compose up` again
+
+11. If you see `Seeding database complete!` message in the terminal, stop the
+    docker container by running `docker compose down`.
+
+12. Change the `SEED_DATA` value in `.env` file back to `false`
+
+13. Run `docker compose up` again to start the app. You will see the seeded
+    data and you can use the seeded users to login in the Next.js app. Email
+    and password of the seeded users are in `src/seed/index.js` file. One 
+    account of each role(Contributor and Editor) is seeded.
 
 ### Run publish-frontend (Next.js) app
 
@@ -108,8 +118,7 @@ account to login to the frontend app.
 
 ### publish-frontend (Next.js)
 
-- Currently, we use Google OAuth as a sign-in method. This is just a temporary
-  solution for testing/development.
+- We will be using Auth0 as a sign-in method in production
 
   - You have to create the user on `publish-backend` (Strapi) app **by signing
     in through the `publish-frontend` (Next.js) app for the first time**. If you
