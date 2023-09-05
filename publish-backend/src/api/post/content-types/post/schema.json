@@ -49,11 +49,6 @@
         }
       }
     },
-    "author": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
-    },
     "body": {
       "pluginOptions": {
         "i18n": {
@@ -74,6 +69,12 @@
       "type": "relation",
       "relation": "manyToMany",
       "target": "api::tag.tag",
+      "inversedBy": "posts"
+    },
+    "author": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
       "inversedBy": "posts"
     }
   }

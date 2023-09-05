@@ -8,7 +8,9 @@
     "start": "strapi start",
     "build": "strapi build",
     "strapi": "strapi",
-    "cs": "config-sync"
+    "cs": "config-sync",
+    "test": "jest --forceExit",
+    "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "^0.0.7",
@@ -37,6 +39,9 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^8.0.2"
+    "@faker-js/faker": "^8.0.2",
+    "jest": "^29.6.4",
+    "sqlite3": "^5.1.6",
+    "supertest": "^6.3.3"
   }
 }

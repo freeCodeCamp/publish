@@ -1,3 +1,8 @@
+// To use SQLite for testing and PostgreSQL for development,
+// this file has to be in /config/env / development directory.
+// If database.js is present under /config directory, values from that file
+// affect the test environment setup and result in an error.
+
 const path = require("path");
 
 module.exports = ({ env }) => {
