@@ -153,8 +153,6 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
             w='100%'
             mt={3}
             mb={6}
-            display='flex'
-            alignItems='center'
             _hover={{
               bgColor: 'rgb(243, 244, 246)'
             }}
