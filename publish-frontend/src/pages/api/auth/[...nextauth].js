@@ -73,6 +73,7 @@ export const authOptions = {
           const { jwt } = data;
           // Add the JWT token for Strapi API to session JWT
           token.jwt = jwt;
+          token.id = data.user.id;
         } else {
           token.jwt = user.jwt;
         }
@@ -105,6 +106,7 @@ export const authOptions = {
       // Decrypt the token in the cookie and return needed values
       session.user.jwt = token.jwt; // JWT token to access the Strapi API
       session.user.role = token.userRole;
+      session.user.id = token.id;
       return session;
     }
   },

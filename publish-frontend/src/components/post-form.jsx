@@ -98,7 +98,6 @@ const PostForm = ({ tags, author, initialValues }) => {
   }
 
   function handleContentChange(content) {
-    console.log(content);
     setContent(content);
   }
 
@@ -110,10 +109,12 @@ const PostForm = ({ tags, author, initialValues }) => {
         slug: slugify(postUrl != '' ? postUrl : title, { lower: true }),
         body: content,
         tags: clientTagsId,
-        author: [author.id],
+        author: [{ id: author }],
         locale: 'en'
       }
     };
+
+    console.log(data);
 
     try {
       if (!id) {
