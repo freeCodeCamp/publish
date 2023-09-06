@@ -73,7 +73,6 @@ export const authOptions = {
           const { jwt } = data;
           // Add the JWT token for Strapi API to session JWT
           token.jwt = jwt;
-          token.id = data.user.id;
         } else {
           token.jwt = user.jwt;
         }
