@@ -2,24 +2,60 @@
 
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function getPosts() {
-  const res = await fetch(
-    `${api_root}/posts?publicationState=preview&populate=*`
-  );
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('getPosts Failed');
+export async function getPosts(token) {
+  const endpoint = `${api_root}/posts?publicationState=preview&populate=*`;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  try {
+    const res = await fetch(endpoint, options);
+
+    if (!res.ok) {
+      console.error('getPosts responded with error. Status: ', res?.status);
+      throw new Error(`getPosts responded with error. Status: ${res?.status}`);
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error('getPosts Failed. Error: ', error);
+    throw new Error(`getPosts Failed. Error: ${error}`);
   }
-  return res.json();
 }
 
-export async function getPost(postId) {
-  console.log('postId:', postId);
-  const res = await fetch(`${api_root}/posts/${postId}`);
-  if (!res.ok) {
-    throw new Error('getPost Failed');
+export async function getPost(postId, token) {
+  const endpoint = `${api_root}/posts/${postId}`;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  try {
+    const res = await fetch(endpoint, options);
+
+    if (!res.ok) {
+      console.error(
+        `getPost responded with error. postId: ${postId}, Status: ${res?.status}`
+      );
+      throw new Error(
+        `getPost responded with error. postId: ${postId}, Status: ${res?.status}`
+      );
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(`getPost Failed. postId: ${postId}, Error: `, error);
+    throw new Error(`getPost Failed. postId: ${postId}, Error: ${error}`);
   }
-  return res.json();
 }
 
 export async function createPost(JSONdata, token) {
