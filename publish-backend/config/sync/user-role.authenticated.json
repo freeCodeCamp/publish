@@ -4,6 +4,9 @@
   "type": "authenticated",
   "permissions": [
     {
+      "action": "api::invited-user.invited-user.create"
+    },
+    {
       "action": "api::post.post.create"
     },
     {
