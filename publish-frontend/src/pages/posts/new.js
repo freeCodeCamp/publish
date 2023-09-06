@@ -3,8 +3,6 @@ import PostForm from '@/components/post-form';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getServerSession } from 'next-auth/next';
 
-const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
-
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
 

@@ -1,5 +1,4 @@
-import { Button, chakra } from '@chakra-ui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Button } from '@chakra-ui/react';
 import { signIn, useSession } from 'next-auth/react';
 import NextLink from 'next/link';
 
@@ -13,7 +12,7 @@ export default function IndexPage() {
   if (session) {
     return (
       <>
-        <p>You're signed in as {session.user.email}</p>
+        <p>Signed in as {session.user.email}</p>
         <Button colorScheme='blue' as={NextLink} href='/'>
           View Posts
         </Button>
