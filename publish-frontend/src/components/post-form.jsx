@@ -198,7 +198,7 @@ const PostForm = ({ tags, initialValues }) => {
           </div>
         </div>
         <div className='editor' onClick={() => setIsFocused(true)}>
-          <Tiptap defaultValue={initialValues.attributes.body} />
+          <Tiptap defaultValue={initialValues?.attributes.body} />
         </div>
       </div>
     </div>

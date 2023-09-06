@@ -4,6 +4,9 @@
   "type": "authenticated",
   "permissions": [
     {
+      "action": "api::invited-user.invited-user.create"
+    },
+    {
       "action": "api::post.post.create"
     },
     {
@@ -37,10 +40,25 @@
       "action": "api::tag.tag.update"
     },
     {
+      "action": "plugin::upload.content-api.destroy"
+    },
+    {
+      "action": "plugin::upload.content-api.find"
+    },
+    {
+      "action": "plugin::upload.content-api.findOne"
+    },
+    {
+      "action": "plugin::upload.content-api.upload"
+    },
+    {
       "action": "plugin::users-permissions.auth.changePassword"
     },
     {
       "action": "plugin::users-permissions.role.find"
+    },
+    {
+      "action": "plugin::users-permissions.user.destroy"
     },
     {
       "action": "plugin::users-permissions.user.find"
@@ -50,6 +68,12 @@
     },
     {
       "action": "plugin::users-permissions.user.me"
+    },
+    {
+      "action": "plugin::users-permissions.user.update"
+    },
+    {
+      "action": "plugin::users-permissions.user.updateMe"
     }
   ]
 }

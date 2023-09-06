@@ -332,12 +332,6 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "username",
-        "email",
-        "confirmed"
-      ],
       "edit": [
         [
           {
@@ -427,6 +421,13 @@
             "size": 6
           }
         ]
+      ],
+      "list": [
+        "id",
+        "username",
+        "email",
+        "confirmed",
+        "role"
       ]
     }
   },

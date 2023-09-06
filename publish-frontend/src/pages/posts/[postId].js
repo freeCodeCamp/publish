@@ -1,13 +1,16 @@
 import PostForm from '@/components/post-form';
 import { getPost, updatePost } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth/next';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
-export async function getServerSideProps({ params }) {
-  const { postId } = params;
-  const { data: tags } = await getTags();
-  const { data: post } = await getPost(postId);
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+  const { postId } = context.params;
+  const { data: tags } = await getTags(session.user.jwt);
+  const { data: post } = await getPost(postId, session.user.jwt);
   return {
     props: { tags, post }
   };
@@ -18,22 +21,6 @@ export default function EditPostPage({ tags, post }) {
   const { data: session } = useSession();
   // declare state variables
   const [content, setContent] = useState(post.attributes.body);
-
-  // useEffect(() => {
-  //   // Fetch the post data from the server using the postId
-  //   const fetchPost = async () => {
-  //     try {
-  //       const data = await getPost(postId);
-  //       console.log('GET response: ', data);
-  //       setPost(data.data);
-  //       setContent(data.data.attributes.body);
-  //     } catch (error) {
-  //       console.error('Error fetching post:', error);
-  //     }
-  //   };
-
-  //   fetchPost();
-  // }, [postId]);
 
   const handleContentChange = updatedContent => {
     setContent(updatedContent);
