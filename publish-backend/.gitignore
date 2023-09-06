@@ -115,6 +115,11 @@ build
 .strapi-updater.json
 
 ############################
+# Documentation plugin
+############################
+src/extensions/documentation
+
+############################
 # Docker
 ############################
 data
