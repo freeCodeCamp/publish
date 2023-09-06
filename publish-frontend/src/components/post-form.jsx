@@ -109,7 +109,7 @@ const PostForm = ({ tags, author, initialValues }) => {
         slug: slugify(postUrl != '' ? postUrl : title, { lower: true }),
         body: content,
         tags: clientTagsId,
-        author: [{ id: author }],
+        author: [author],
         locale: 'en'
       }
     };

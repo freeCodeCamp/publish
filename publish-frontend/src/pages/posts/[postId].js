@@ -9,9 +9,8 @@ export async function getServerSideProps(context) {
   const { postId } = context.params;
   const { data: tags } = await getTags();
   const { data: post } = await getPost(postId);
-  console.log(session);
   return {
-    props: { tags, post, author: session.user.id }
+    props: { tags, post, author: session?.user?.id }
   };
 }
 

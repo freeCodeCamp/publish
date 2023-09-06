@@ -93,7 +93,7 @@ export const authOptions = {
           // Add the role name to session JWT
           token.name = userData?.username || null;
           token.userRole = userData?.role?.name || null;
-          console.log('token.userRole:', token.userRole);
+          token.id = userData?.id || null;
         }
       }
       // The returned value will be encrypted, and it is stored in a cookie.
