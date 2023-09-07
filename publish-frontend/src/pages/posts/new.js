@@ -4,8 +4,6 @@ import { getTags } from '@/lib/tags';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
-import { getTags } from '@/lib/tags';
-
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const { data: tags } = await getTags(session.user.jwt);
