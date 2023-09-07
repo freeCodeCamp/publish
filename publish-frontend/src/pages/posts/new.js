@@ -1,27 +1,25 @@
 import React from 'react';
 import PostForm from '@/components/post-form';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getTags } from '@/lib/tags';
 import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-
-  // Fetch tags from API
   const { data: tags } = await getTags(session.user.jwt);
 
-  // Pass tags as props to the component
   return {
     props: {
-      tags: tags
+      tags: tags,
+      author: session.user.id
     }
   };
 }
 
-export default function NewPostPage({ tags }) {
+export default function NewPostPage({ tags, author }) {
   return (
     <>
-      {/* // We pass the event to the handleSubmit() function on submit. */}
-      <PostForm tags={tags} />
+      <PostForm tags={tags} author={author} />
     </>
   );
 }

@@ -172,7 +172,7 @@ export default function IndexPage({ posts, users, tags }) {
               <Tbody bgColor='white'>
                 {posts.data.map(post => {
                   const title = post.attributes.title;
-                  const name = post.attributes.author.data.attributes.name;
+                  const name = 'sem';
                   const tag = post.attributes.tags.data[0]?.attributes.name;
                   const relativeUpdatedAt = intlFormatDistance(
                     new Date(post.attributes.updatedAt),

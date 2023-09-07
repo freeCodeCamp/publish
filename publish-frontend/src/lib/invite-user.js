@@ -23,5 +23,4 @@ export async function inviteUser(email, token) {
     console.error(`inviteUser Failed. email: ${email}, Error: `, error);
     throw new Error(`inviteUser Failed. email: ${email}, Error: ${error}`);
   }
-
 }

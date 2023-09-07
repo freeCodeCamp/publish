@@ -92,7 +92,7 @@ export const authOptions = {
           // Add the role name to session JWT
           token.name = userData?.username || null;
           token.userRole = userData?.role?.name || null;
-          console.log('token.userRole:', token.userRole);
+          token.id = userData?.id || null;
         }
       }
       // The returned value will be encrypted, and it is stored in a cookie.
@@ -105,6 +105,7 @@ export const authOptions = {
       // Decrypt the token in the cookie and return needed values
       session.user.jwt = token.jwt; // JWT token to access the Strapi API
       session.user.role = token.userRole;
+      session.user.id = token.id;
       return session;
     }
   },

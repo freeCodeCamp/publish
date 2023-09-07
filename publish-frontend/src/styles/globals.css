@@ -23,191 +23,22 @@
   color: rgb(0, 0, 0, 0.8);
 }
 
-h2 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-ul {
-  list-style: none;
-}
-
-li {
-  padding-left: 1rem;
-  margin: 0.5rem 0;
-}
-
-hr {
-  background-color:  silver;
-  margin: 1rem 0;
-}
-
-html {
-  background-color: #E2E8F0;
-}
-
 .editor {
   padding: 1rem;
   margin: 1.5rem 0 0 5rem;
   overflow: hidden;
 }
 
-.post-container {
-  width: 100%;
-  background-color: white;
-}
 
-.menu {
-  display: flex;
-  padding: 0.2rem;
-  margin: 1rem 0 0 0;
-  border: 1px solid silver;
-  border-radius: 0.25rem;
-}
-
-.side-drawer {
-  background-color: white;
-  border-right: 1px solid silver;
-  overflow-y: scroll;
-  padding: 1rem;
-  height: 100vh;
-  min-width: 375px;
-  max-width: 375px;
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  margin: 1rem;
-}
-
-.title-pos {
-  width: 500px;
-  margin: 0 0 0 5rem;
-}
-
-.title {
-  font-size: 1.5rem;
+h2 {
+  font-size: 20px;
   font-weight: 600;
-}
-
-.title-input {
-  width: 80%;
-  font-size: 1.5rem;
-  font-weight: 600;
-  border: none;
-  outline: none;
-}
-
-.toolbar{
-  display: flex;
-  padding: 0.2rem;
-  margin: 1rem 0 0 0;
-  border: 1px solid silver;
-  border-radius: 0.25rem;
-}
-
-.toolbar button {
-  padding: 0.2rem;
-  margin: 0.1rem 0.2rem;
-}
-
-.toolbar button:hover {
-  background-color: #e2e8f0;
-  border-radius: 0.25rem;
-}
-
-.icon-margin span {
-  margin: 0 1rem 0 0.5rem;
-}
-
-.icon-margin-left span {
-  margin: 0 0.5rem 0 1rem;
 }
 
 .vl {
   border-left: 1px solid silver;
   height: 2rem;
   margin: 0 0.5rem;
-}
-
-
-.menu button:hover {
-  background-color: #e2e8f0;
-  border-radius: 0.25rem;
-}
-
-.page {
-  display: flex;
-}
-
-.submit-button {
-  background-color: #1d4ed8;
-  color: white;
-  border: 1px solid;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-}
-
-.delete-button {
-  background-color: #e53e3e !important;
-}
-
-.full-width-btn {
-  margin: 1rem 0.5rem 0 0;
-  width: 100%;
-}
-
-.navigation {
-  border-bottom: 1px solid silver;
-  padding-bottom: 2rem;
-}
-
-.preview-button {
-  text-decoration: underline;
-  margin-right: 1rem;
-}
-
-.dropdown-button {
-  display: block;
-  border: 1px 0 0 1px solid silver;
-}
-
-.feature-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 175px;
-  max-height: 175px;
-  border-radius:  0.5rem;
-  background-color: #f1f5f9;
-}
-
-.feature-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius:  0.5rem;
-}
-
-
-.tag-selector, input[type="text"], input[type="date"], input[type="time"] {
-  width: 100%;
-  padding: 0.5rem;
-  max-height: 175px;
-  border: 1px solid #727886;
-  border-radius:  0.5rem;
-  background-color: #f1f5f9;
-}
-
-.input-title {
-  margin-top: 1rem;
-}
-
-.time-date-input {
-  display: flex;
-  justify-content: space-between;
 }
 
 .tag {
