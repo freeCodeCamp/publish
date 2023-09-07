@@ -58,9 +58,9 @@ const FilterButton = ({ text }) => {
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const [posts, users, tags] = await Promise.all([
-    getPosts(),
+    getPosts(session.user.jwt),
     getUsers(session.user.jwt),
-    getTags()
+    getTags(session.user.jwt)
   ]);
   return {
     props: {

@@ -6,11 +6,11 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const tags = await getTags();
+  const { data: tags } = await getTags(session.user.jwt);
 
   return {
     props: {
-      tags: tags.data,
+      tags: tags,
       author: session.user.id
     }
   };

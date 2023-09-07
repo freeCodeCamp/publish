@@ -4,9 +4,6 @@
   "type": "contributor",
   "permissions": [
     {
-      "action": "api::invited-user.invited-user.create"
-    },
-    {
       "action": "api::post.post.create"
     },
     {
@@ -31,13 +28,31 @@
       "action": "api::tag.tag.findOne"
     },
     {
+      "action": "plugin::upload.content-api.destroy"
+    },
+    {
+      "action": "plugin::upload.content-api.find"
+    },
+    {
+      "action": "plugin::upload.content-api.findOne"
+    },
+    {
+      "action": "plugin::upload.content-api.upload"
+    },
+    {
       "action": "plugin::users-permissions.role.find"
     },
     {
       "action": "plugin::users-permissions.user.find"
     },
     {
+      "action": "plugin::users-permissions.user.findOne"
+    },
+    {
       "action": "plugin::users-permissions.user.me"
+    },
+    {
+      "action": "plugin::users-permissions.user.updateMe"
     }
   ]
 }

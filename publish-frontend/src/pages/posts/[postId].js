@@ -1,14 +1,14 @@
 import PostForm from '@/components/post-form';
 import { getPost } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
-import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { getServerSession } from 'next-auth/next';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const { postId } = context.params;
-  const { data: tags } = await getTags();
-  const { data: post } = await getPost(postId);
+  const { data: tags } = await getTags(session.user.jwt);
+  const { data: post } = await getPost(postId, session.user.jwt);
   return {
     props: { tags, post, author: session?.user?.id }
   };

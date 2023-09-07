@@ -150,12 +150,6 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "title",
-        "createdAt",
-        "updatedAt"
-      ],
       "edit": [
         [
           {
@@ -195,6 +189,13 @@
             "size": 6
           }
         ]
+      ],
+      "list": [
+        "id",
+        "title",
+        "createdAt",
+        "updatedAt",
+        "author"
       ]
     }
   },

@@ -10,10 +10,17 @@ export async function inviteUser(email, token) {
     body: JSON.stringify({ data: { email } })
   });
 
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.message || 'Something went wrong');
-  }
+  try {
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(
+        data.message || `Something went wrong. Status: ${res?.status}`
+      );
+    }
 
-  return true;
+    return true;
+  } catch (error) {
+    console.error(`inviteUser Failed. email: ${email}, Error: `, error);
+    throw new Error(`inviteUser Failed. email: ${email}, Error: ${error}`);
+  }
 }
