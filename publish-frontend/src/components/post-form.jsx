@@ -19,7 +19,7 @@ import {
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 
-const PostForm = ({ tags, author, initialValues }) => {
+const PostForm = ({ tags, user, initialValues }) => {
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
@@ -102,8 +102,8 @@ const PostForm = ({ tags, author, initialValues }) => {
     setContent(content);
   }
 
-  const handleSubmit = async session => {
-    const token = session.user.jwt;
+  const handleSubmit = async () => {
+    const token = user.jwt;
     const data = {
       data: {
         title: title,
@@ -113,7 +113,7 @@ const PostForm = ({ tags, author, initialValues }) => {
         }),
         body: content,
         tags: clientTagsId,
-        author: [author],
+        author: [user.id],
         locale: 'en'
       }
     };
@@ -257,7 +257,7 @@ const PostForm = ({ tags, author, initialValues }) => {
             </Text>
           </label>
           <Spacer h='1rem' />
-          <Button colorScheme='blue' w='100%' onClick={() => handleSubmit}>
+          <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
             Save as Draft
           </Button>
         </Box>
