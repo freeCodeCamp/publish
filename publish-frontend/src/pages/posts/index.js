@@ -24,6 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 
 import NavMenu from '@/components/nav-menu';
 import { getPosts } from '@/lib/posts';
@@ -72,6 +73,8 @@ export async function getServerSideProps(context) {
 }
 
 export default function IndexPage({ posts, users, tags, user }) {
+  const router = useRouter();
+
   return (
     <Box minH='100vh' bgColor='gray.200'>
       <NavMenu user={user} />
@@ -179,14 +182,13 @@ export default function IndexPage({ posts, users, tags, user }) {
                 );
                 return (
                   <Tr
-                    as={NextLink}
-                    href={`/posts/${post.id}`}
                     display='table-row'
                     key={post.id}
                     cursor='pointer'
                     _hover={{
                       bgColor: 'rgb(243, 244, 246)'
                     }}
+                    onClick={() => router.push(`/posts/${post.id}`)}
                   >
                     <Td>
                       <Box fontWeight='600'>{title}</Box>
