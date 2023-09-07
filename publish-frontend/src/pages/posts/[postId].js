@@ -10,14 +10,14 @@ export async function getServerSideProps(context) {
   const { data: tags } = await getTags(session.user.jwt);
   const { data: post } = await getPost(postId, session.user.jwt);
   return {
-    props: { tags, post, author: session?.user?.id }
+    props: { tags, post, user: session.user }
   };
 }
 
-export default function EditPostPage({ tags, post, author }) {
+export default function EditPostPage({ tags, post, user }) {
   return (
     <>
-      <PostForm tags={tags} author={author} initialValues={post} />
+      <PostForm tags={tags} user={user} initialValues={post} />
     </>
   );
 }

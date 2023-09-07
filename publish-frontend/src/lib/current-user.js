@@ -1,3 +1,3 @@
-export function isEditor(session) {
-  return session?.user?.role === 'Editor';
+export function isEditor(user) {
+  return user?.role === 'Editor';
 }
