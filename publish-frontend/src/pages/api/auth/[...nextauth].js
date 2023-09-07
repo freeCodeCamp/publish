@@ -106,6 +106,7 @@ export const authOptions = {
       session.user.jwt = token.jwt; // JWT token to access the Strapi API
       session.user.role = token.userRole;
       session.user.id = token.id;
+      session.user.image = null; // NOTE: This is temporary until we figure out how to get the image from Strapi
       return session;
     }
   },
