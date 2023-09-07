@@ -1,5 +1,4 @@
 import { getServerSession } from 'next-auth/next';
-import { useSession, signIn } from 'next-auth/react';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getTags } from '@/lib/tags';
 import NavMenu from '@/components/nav-menu';
@@ -11,34 +10,19 @@ export async function getServerSideProps(context) {
   const allTagsData = await getTags(session.user.jwt);
   return {
     props: {
-      allTagsData
+      allTagsData,
+      user: session.user
     }
   };
 }
 
-export default function TagsIndex({ allTagsData }) {
-  const { data: session, status } = useSession();
-
-  const isLoading = status === 'loading';
-  if (isLoading) return 'Loading...';
-
-  if (session) {
-    console.log('session.user:', session.user);
-
-    return (
-      <Flex>
-        <NavMenu session={session} />
-        <main style={{ padding: '0.75rem' }}>
-          <TagsList allTagsData={allTagsData} />
-        </main>
-      </Flex>
-    );
-  }
-
+export default function TagsIndex({ allTagsData, user }) {
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
+    <Flex>
+      <NavMenu user={user} />
+      <main style={{ padding: '0.75rem' }}>
+        <TagsList allTagsData={allTagsData} />
+      </main>
+    </Flex>
   );
 }

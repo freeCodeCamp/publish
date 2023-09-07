@@ -61,12 +61,12 @@ const NavMenuLink = ({ text, link, icon }) => {
   );
 };
 
-const NavMenuContent = ({ session, onClose, ...rest }) => {
+const NavMenuContent = ({ user, onClose, ...rest }) => {
   const [inviteEmail, setInviteEmail] = useState('');
   const toast = useToast();
 
   const invite = async () => {
-    const status = await inviteUser(inviteEmail, session.user.jwt);
+    const status = await inviteUser(inviteEmail, user.jwt);
     toast({
       title: status ? 'User invited' : 'Error inviting user',
       status: status ? 'success' : 'error',
@@ -119,7 +119,7 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
 
         <Box>
           <NavMenuLink text='Posts' icon={faFileLines} link='#' />
-          {isEditor(session) ||
+          {isEditor(user) ||
             (true && (
               <>
                 <NavMenuLink text='Pages' icon={faNewspaper} link='#' />
@@ -164,7 +164,7 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
               <Avatar size='sm' mr='8px' my='auto' />
               <Flex flexDirection='column'>
                 <Box fontWeight='600' lineHeight='1.1em' pb='3px'>
-                  {session.user.name}
+                  {user.name}
                 </Box>
                 <Box
                   fontSize='0.75rem'
@@ -173,7 +173,7 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
                   pb='3px'
                   color='#54666d'
                 >
-                  {session.user.email}
+                  {user.email}
                 </Box>
               </Flex>
             </Flex>
@@ -184,7 +184,7 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
             </MenuItem>
             <MenuItem
               icon={<Icon icon={faArrowRightFromBracket} fixedWidth />}
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: '/' })}
             >
               Sign Out
             </MenuItem>
@@ -195,15 +195,12 @@ const NavMenuContent = ({ session, onClose, ...rest }) => {
   );
 };
 
-export default function NavMenu({ session }) {
+export default function NavMenu({ user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <NavMenuContent
-        session={session}
-        display={{ base: 'none', md: 'flex' }}
-      />
+      <NavMenuContent user={user} display={{ base: 'none', md: 'flex' }} />
       <Drawer
         isOpen={isOpen}
         placement='left'
@@ -214,7 +211,7 @@ export default function NavMenu({ session }) {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <NavMenuContent session={session} onClose={onClose} />
+          <NavMenuContent user={user} onClose={onClose} />
         </DrawerContent>
       </Drawer>
 
