@@ -140,7 +140,7 @@ const PostForm = ({ tags, author, initialValues }) => {
         h='100%'
         bgColor='white'
         borderRightWidth='1px'
-        padding={{ base: '0', md: '0.5rem' }}
+        padding={{ base: '0.5rem' }}
       >
         <Box overflowY='scroll'>
           <Box
@@ -263,7 +263,7 @@ const PostForm = ({ tags, author, initialValues }) => {
         </Box>
       </Flex>
       <Flex flexDirection='column'>
-        <Flex marginTop='1rem' marginLeft='5rem'>
+        <Flex m='1rem 1rem 0 6rem' flexDir={{ base: 'column', lg: 'row' }}>
           {!isEditingTitle ? (
             <>
               <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
@@ -284,13 +284,17 @@ const PostForm = ({ tags, author, initialValues }) => {
             >
               {props => (
                 <Form>
-                  <Stack direction='row'>
+                  <Stack direction={{ base: 'column', lg: 'row' }}>
                     <Field name='title'>
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={form.errors.title && form.touched.title}
                         >
-                          <Input {...field} placeholder='title' />
+                          <Input
+                            {...field}
+                            placeholder='title'
+                            w={{ base: '35%', lg: '100%' }}
+                          />
                           <FormErrorMessage>
                             {form.errors.title}
                           </FormErrorMessage>
@@ -301,6 +305,8 @@ const PostForm = ({ tags, author, initialValues }) => {
                       colorScheme='blue'
                       isLoading={props.isSubmitting}
                       type='submit'
+                      w={{ base: '35%', lg: '100%' }}
+                      margin={{ base: '0 0 1rem 0' }}
                     >
                       Submit
                     </Button>
@@ -309,7 +315,11 @@ const PostForm = ({ tags, author, initialValues }) => {
               )}
             </Formik>
           )}
-          <Stack direction='row' spacing={4} marginLeft='auto'>
+          <Stack
+            direction='row'
+            spacing={4}
+            marginLeft={{ base: '0', lg: 'auto' }}
+          >
             <Button colorScheme='blue' variant='outline'>
               Preview
             </Button>

@@ -23,102 +23,22 @@
   color: rgb(0, 0, 0, 0.8);
 }
 
-h2 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-ul {
-  list-style: none;
-}
-
-li {
-  padding-left: 1rem;
-  margin: 0.5rem 0;
-}
-
-hr {
-  background-color:  silver;
-  margin: 1rem 0;
-}
-
-html {
-  background-color: #E2E8F0;
-}
-
 .editor {
   padding: 1rem;
   margin: 1.5rem 0 0 5rem;
   overflow: hidden;
 }
 
-.toolbar{
-  display: flex;
-  padding: 0.2rem;
-  margin: 1rem 0 0 0;
-  border: 1px solid silver;
-  border-radius: 0.25rem;
-}
 
-.toolbar button {
-  padding: 0.2rem;
-  margin: 0.1rem 0.2rem;
-}
-
-.toolbar button:hover {
-  background-color: #e2e8f0;
-  border-radius: 0.25rem;
-}
-
-.icon-margin span {
-  margin: 0 1rem 0 0.5rem;
-}
-
-.icon-margin-left span {
-  margin: 0 0.5rem 0 1rem;
+h2 {
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .vl {
   border-left: 1px solid silver;
   height: 2rem;
   margin: 0 0.5rem;
-}
-
-
-.menu button:hover {
-  background-color: #e2e8f0;
-  border-radius: 0.25rem;
-}
-
-.page {
-  display: flex;
-}
-
-.submit-button {
-  background-color: #1d4ed8;
-  color: white;
-  border: 1px solid;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-}
-
-
-.tag-selector {
-  width: 100%;
-  padding: 0.5rem;
-  max-height: 175px;
-  border: 1px solid #727886;
-  border-radius:  0.5rem;
-  background-color: #f1f5f9;
-}
-
-.input-title {
-  margin-top: 1rem;
-}
-
-.time-date-input {
-  display: flex;
-  justify-content: space-between;
 }
 
 .tag {
