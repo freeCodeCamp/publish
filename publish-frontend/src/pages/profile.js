@@ -16,7 +16,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function Profile({ userData }) {
+export default function Profile({ userData, user }) {
   return (
     <Flex>
       <NavMenu user={user} />
@@ -52,7 +52,7 @@ export default function Profile({ userData }) {
           </li>
           <li>
             <strong>profile_image:</strong>{' '}
-            {userData.profile_image.formats.thumbnail.url}
+            {userData.profile_image?.formats.thumbnail.url}
           </li>
         </ul>
       </main>
