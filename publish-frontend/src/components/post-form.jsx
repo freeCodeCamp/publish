@@ -137,6 +137,7 @@ const PostForm = ({ tags, user, initialValues }) => {
       <Flex
         flexDirection='column'
         w={{ base: 'full', md: '350px' }}
+        flex='1'
         h='100vh'
         bgColor='white'
         borderRightWidth='1px'
@@ -263,12 +264,8 @@ const PostForm = ({ tags, user, initialValues }) => {
           </Button>
         </Box>
       </Flex>
-      <Flex flexDirection='column' mr='0.5rem'>
-        <Flex
-          m='1rem 0 0 5rem'
-          maxWidth='100%'
-          flexDir={{ base: 'column', lg: 'row' }}
-        >
+      <Flex flexDirection='column' mr='0.5rem' flex='3'>
+        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
           {!isEditingTitle ? (
             <>
               <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
