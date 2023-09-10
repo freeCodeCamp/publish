@@ -158,7 +158,7 @@ function ToolBar({ editor }) {
           Embed
         </MenuButton>
         <MenuList>
-          <MenuItem onClick={() => addYoutubeEmbed()}>Youtube</MenuItem>
+          <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
           <MenuItem>Twitter</MenuItem>
         </MenuList>
       </Menu>
