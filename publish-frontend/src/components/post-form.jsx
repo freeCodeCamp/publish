@@ -142,10 +142,12 @@ const PostForm = ({ tags, user, initialValues }) => {
     <Flex>
       <Flex
         flexDirection='column'
-        w={{ base: 'full', md: '300px' }}
-        h='100%'
+        w={{ base: 'full', md: '350px' }}
+        flex='1'
+        h='100vh'
         bgColor='white'
         borderRightWidth='1px'
+        overflowY='hidden'
         padding={{ base: '0.5rem' }}
       >
         <Box overflowY='scroll'>
@@ -268,8 +270,8 @@ const PostForm = ({ tags, user, initialValues }) => {
           </Button>
         </Box>
       </Flex>
-      <Flex flexDirection='column'>
-        <Flex m='1rem 1rem 0 6rem' flexDir={{ base: 'column', lg: 'row' }}>
+      <Flex flexDirection='column' mr='0.5rem' flex='3'>
+        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
           {!isEditingTitle ? (
             <>
               <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
@@ -334,12 +336,12 @@ const PostForm = ({ tags, user, initialValues }) => {
             </Button>
           </Stack>
         </Flex>
-        <div className='editor'>
+        <Box p='0 0 0 5rem'>
           <Tiptap
             handleContentChange={handleContentChange}
             defaultValue={content}
           />
-        </div>
+        </Box>
       </Flex>
     </Flex>
   );
