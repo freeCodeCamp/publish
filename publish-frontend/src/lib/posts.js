@@ -29,7 +29,7 @@ export async function getPosts(token) {
 }
 
 export async function getPost(postId, token) {
-  const endpoint = `${api_root}/posts/${postId}`;
+  const endpoint = `${api_root}/posts/${postId}?populate=*`;
 
   const options = {
     method: 'GET',

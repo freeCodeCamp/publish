@@ -63,15 +63,21 @@ const PostForm = ({ tags, user, initialValues }) => {
 
   useEffect(() => {
     if (initialValues) {
-      const { title, body } = initialValues.attributes;
+      const { title, body, tags, slug } = initialValues.attributes;
       const { id } = initialValues;
 
-      console.log(initialValues);
+      // console.log(initialValues);
 
       setTitle(title);
       setContent(body);
       setPostId(id);
-      // setClientTags();
+
+      const tagNames = tags.data.map(tag => tag.attributes.name);
+      const tagIds = tags.data.map(tag => tag.id);
+
+      setClientTags(tagNames);
+      setClientTagsId(tagIds);
+      setPostUrl(slug ?? '');
     }
   }, [initialValues]);
 
