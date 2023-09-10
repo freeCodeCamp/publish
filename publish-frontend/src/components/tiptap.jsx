@@ -54,7 +54,6 @@ function ToolBar({ editor }) {
       marginTop='1rem'
       border='1px solid silver'
       borderRadius='lg'
-      maxWidth='100%'
       overflowX='auto'
     >
       <Button
