@@ -8,7 +8,14 @@ import {
   faQuoteLeft,
   faStrikethrough
 } from '@fortawesome/free-solid-svg-icons';
-import { Box, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem
+} from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
 import Image from '@tiptap/extension-image';
@@ -16,6 +23,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useCallback } from 'react';
+import Youtube from '@tiptap/extension-youtube';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -25,6 +33,18 @@ function ToolBar({ editor }) {
       editor.chain().focus().setImage({ src: url, alt: '' }).run();
     }
   }, [editor]);
+
+  const addYoutubeEmbed = () => {
+    const url = window.prompt('URL');
+
+    if (url) {
+      editor.commands.setYoutubeVideo({
+        src: url,
+        width: 640,
+        height: 480
+      });
+    }
+  };
 
   return (
     <Box
@@ -128,6 +148,19 @@ function ToolBar({ editor }) {
       >
         <span>Image</span>
       </Button>
+      <Menu>
+        <MenuButton
+          as={Button}
+          leftIcon={<FontAwesomeIcon icon={faCode} />}
+          variant='ghost'
+        >
+          Embed
+        </MenuButton>
+        <MenuList>
+          <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
+          <MenuItem>Twitter</MenuItem>
+        </MenuList>
+      </Menu>
     </Box>
   );
 }
@@ -151,6 +184,10 @@ const Tiptap = ({ handleContentChange, defaultValue }) => {
       }),
       Image.configure({
         inline: true
+      }),
+      Youtube.configure({
+        width: 480,
+        height: 320
       })
     ],
     content: defaultValue ? defaultValue : '',
