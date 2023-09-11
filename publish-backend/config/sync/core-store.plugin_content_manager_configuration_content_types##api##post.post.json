@@ -120,6 +120,20 @@
           "sortable": true
         }
       },
+      "publish_at": {
+        "edit": {
+          "label": "publish_at",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "publish_at",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -223,6 +237,10 @@
         [
           {
             "name": "author",
+            "size": 6
+          },
+          {
+            "name": "publish_at",
             "size": 6
           }
         ]

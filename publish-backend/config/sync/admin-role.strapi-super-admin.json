@@ -53,7 +53,8 @@
           "body",
           "excerpt",
           "tags",
-          "author"
+          "author",
+          "publish_at"
         ],
         "locales": [
           "en"
@@ -92,7 +93,8 @@
           "body",
           "excerpt",
           "tags",
-          "author"
+          "author",
+          "publish_at"
         ],
         "locales": [
           "en"
@@ -111,7 +113,8 @@
           "body",
           "excerpt",
           "tags",
-          "author"
+          "author",
+          "publish_at"
         ],
         "locales": [
           "en"
