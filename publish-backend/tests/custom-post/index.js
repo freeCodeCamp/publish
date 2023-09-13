@@ -50,12 +50,38 @@ const findPostByTitle = (posts, title) => {
   return posts.find((post) => post.title === title);
 };
 
+// Configure API token for test environment
+let token;
+const getAPIToken = async () => {
+  const tokenService = strapi.service("admin::api-token");
+
+  const attributes = {
+    name: `test token`,
+    description: "",
+    type: "custom",
+    lifespan: null,
+    permissions: [
+      "api::custom-post.custom-post.find",
+      "api::custom-post.custom-post.findOne",
+      "api::custom-post.custom-post.findOneBySlug",
+    ],
+  };
+
+  const apiToken = await tokenService.create(attributes);
+  return apiToken.accessKey;
+};
+
 describe("custom-post", () => {
+  beforeAll(async () => {
+    token = await getAPIToken();
+  });
+
   describe("GET /content/posts", () => {
     it("should return posts", async () => {
-      const response = await request(strapi.server.httpServer).get(
-        "/api/content/posts"
-      );
+      const response = await request(strapi.server.httpServer)
+        .get("/api/content/posts")
+        .set("accept", "application/json")
+        .set("Authorization", `Bearer ${token}`);
 
       // Should return all posts
       expect(response.status).toBe(200);
@@ -74,9 +100,10 @@ describe("custom-post", () => {
     });
 
     it("should return posts with author and tags", async () => {
-      const response = await request(strapi.server.httpServer).get(
-        "/api/content/posts?include=authors,tags"
-      );
+      const response = await request(strapi.server.httpServer)
+        .get("/api/content/posts?include=authors,tags")
+        .set("accept", "application/json")
+        .set("Authorization", `Bearer ${token}`);
 
       // Should return all posts
       expect(response.status).toBe(200);
@@ -102,9 +129,10 @@ describe("custom-post", () => {
 
   describe("GET /content/posts/:id", () => {
     it("should return post", async () => {
-      const response = await request(strapi.server.httpServer).get(
-        `/api/content/posts/${expectedPost.id}`
-      );
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/content/posts/${expectedPost.id}`)
+        .set("accept", "application/json")
+        .set("Authorization", `Bearer ${token}`);
 
       // Should return one single post
       expect(response.status).toBe(200);
@@ -120,9 +148,10 @@ describe("custom-post", () => {
     });
 
     it("should return post with authors and tags", async () => {
-      const response = await request(strapi.server.httpServer).get(
-        `/api/content/posts/${expectedPost.id}?include=authors,tags`
-      );
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/content/posts/${expectedPost.id}?include=authors,tags`)
+        .set("accept", "application/json")
+        .set("Authorization", `Bearer ${token}`);
 
       // Should return one single post
       expect(response.status).toBe(200);
@@ -145,9 +174,10 @@ describe("custom-post", () => {
 
   describe("GET /content/posts/slug/:slug", () => {
     it("should return post", async () => {
-      const response = await request(strapi.server.httpServer).get(
-        `/api/content/posts/slug/${expectedPost.slug}`
-      );
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/content/posts/slug/${expectedPost.slug}`)
+        .set("accept", "application/json")
+        .set("Authorization", `Bearer ${token}`);
 
       // Should return one single post
       expect(response.status).toBe(200);
@@ -163,9 +193,12 @@ describe("custom-post", () => {
     });
 
     it("should return post with authors and tags", async () => {
-      const response = await request(strapi.server.httpServer).get(
-        `/api/content/posts/slug/${expectedPost.slug}?include=authors,tags`
-      );
+      const response = await request(strapi.server.httpServer)
+        .get(
+          `/api/content/posts/slug/${expectedPost.slug}?include=authors,tags`
+        )
+        .set("accept", "application/json")
+        .set("Authorization", `Bearer ${token}`);
 
       // Should return one single post
       expect(response.status).toBe(200);
@@ -187,9 +220,10 @@ describe("custom-post", () => {
 
     it("should escape unsafe include value", async () => {
       // Strapi's default `*` query should not be effective here
-      const response = await request(strapi.server.httpServer).get(
-        `/api/content/posts/slug/${expectedPost.slug}?include=*`
-      );
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/content/posts/slug/${expectedPost.slug}?include=*`)
+        .set("accept", "application/json")
+        .set("Authorization", `Bearer ${token}`);
 
       expect(response.status).toBe(200);
       const responsePost = response.body.posts[0];
