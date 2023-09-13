@@ -11,6 +11,7 @@ const createTestUsers = async (testUsers) => {
     }
   } catch (e) {
     console.error(e);
+    console.error(e.details.errors);
     throw new Error("Failed to create mock users");
   }
 };
@@ -26,6 +27,7 @@ const createTestTags = async (testTags) => {
     }
   } catch (e) {
     console.error(e);
+    console.error(e.details.errors);
     throw new Error("Failed to create mock tags");
   }
 };
@@ -41,9 +43,11 @@ const createTestPosts = async (testPosts) => {
     }
   } catch (e) {
     console.error(e);
+    console.error(e.details.errors);
     throw new Error("Failed to create mock posts");
   }
 };
+
 module.exports = {
   createTestUsers,
   createTestTags,
