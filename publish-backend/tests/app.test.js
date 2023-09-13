@@ -1,4 +1,3 @@
-const fs = require("fs");
 const { setupStrapi, cleanupStrapi } = require("./helpers/strapi");
 const {
   createTestUsers,
