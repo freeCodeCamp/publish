@@ -3,7 +3,7 @@ module.exports = {
     {
       method: "PATCH",
       path: "/posts/:id/schedule",
-      handler: "0-post.schedule",
+      handler: "post.schedule",
       config: {
         policies: [],
         middlewares: [],
@@ -12,7 +12,7 @@ module.exports = {
     {
       method: "PATCH",
       path: "/posts/:id/publish",
-      handler: "0-post.publish",
+      handler: "post.publish",
       config: {
         policies: [],
         middlewares: [],

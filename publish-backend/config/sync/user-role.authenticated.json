@@ -7,12 +7,6 @@
       "action": "api::invited-user.invited-user.create"
     },
     {
-      "action": "api::post.0-post.publish"
-    },
-    {
-      "action": "api::post.0-post.schedule"
-    },
-    {
       "action": "api::post.post.create"
     },
     {
@@ -26,6 +20,12 @@
     },
     {
       "action": "api::post.post.findOne"
+    },
+    {
+      "action": "api::post.post.publish"
+    },
+    {
+      "action": "api::post.post.schedule"
     },
     {
       "action": "api::post.post.update"
