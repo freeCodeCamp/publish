@@ -68,9 +68,10 @@ function ToolBar({ editor }) {
       overflowX='auto'
     >
       <Button
-        p={2}
-        iconSpacing={0}
         variant='ghost'
+        iconSpacing={0}
+        p={2}
+        title='Bold'
         leftIcon={<FontAwesomeIcon icon={faBold} />}
         onClick={() => editor.chain().focus().toggleBold().run()}
       ></Button>
@@ -78,6 +79,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Italic'
         leftIcon={<FontAwesomeIcon icon={faItalic} />}
         onClick={() => editor.chain().focus().toggleItalic().run()}
       ></Button>
@@ -85,6 +87,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Strikethrough'
         leftIcon={<FontAwesomeIcon icon={faStrikethrough} />}
         onClick={() => editor.chain().focus().toggleStrike().run()}
       ></Button>
@@ -92,6 +95,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Code'
         leftIcon={<FontAwesomeIcon icon={faCode} />}
         onClick={() => editor.chain().focus().toggleCode().run()}
       ></Button>
@@ -99,6 +103,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Blockquote'
         leftIcon={<FontAwesomeIcon icon={faQuoteLeft} />}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
       ></Button>
@@ -107,6 +112,7 @@ function ToolBar({ editor }) {
         <MenuButton
           as={Button}
           variant='ghost'
+          title='Heading'
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
         ></MenuButton>
@@ -166,6 +172,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Bullet List'
         leftIcon={<FontAwesomeIcon icon={faListUl} />}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
       ></Button>
@@ -173,6 +180,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Ordered List'
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       ></Button>
@@ -181,6 +189,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Image'
         leftIcon={<FontAwesomeIcon icon={faImage} />}
         onClick={() => addImage()}
       ></Button>
@@ -188,6 +197,7 @@ function ToolBar({ editor }) {
         <MenuButton
           as={Button}
           iconSpacing={0}
+          title='Embed'
           leftIcon={<FontAwesomeIcon icon={faCode} />}
           variant='ghost'
         ></MenuButton>
@@ -200,6 +210,7 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Link'
         leftIcon={<FontAwesomeIcon icon={faLink} />}
         onClick={() => addLink()}
       ></Button>
