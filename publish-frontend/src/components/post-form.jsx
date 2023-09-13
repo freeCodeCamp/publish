@@ -13,8 +13,12 @@ import {
   Input,
   Spacer,
   Stack,
+  Wrap,
+  Tag,
   FormControl,
-  FormErrorMessage
+  FormErrorMessage,
+  TagLabel,
+  TagCloseButton
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
@@ -35,35 +39,6 @@ const PostForm = ({ tags, user, initialValues }) => {
   const [content, setContent] = useState(initialValues?.attributes.body || '');
 
   const [id, setPostId] = useState(null);
-
-  useEffect(() => {
-    function removeTag(tag) {
-      const newTags = clientTags.filter(t => t !== tag);
-      setClientTags(newTags);
-    }
-
-    function createNewTags() {
-      const tagContainer = document.getElementById('tag-container');
-
-      if (tagContainer === null) return;
-
-      tagContainer.innerHTML = '';
-
-      clientTags.forEach(tag => {
-        const tagElement = document.createElement('div');
-        tagElement.classList.add('tag');
-        tagElement.innerHTML = tag;
-        const removeButton = document.createElement('button');
-        removeButton.innerHTML = 'x';
-        removeButton.classList.add('remove-button');
-        removeButton.addEventListener('click', () => removeTag(tag));
-        tagElement.appendChild(removeButton);
-        tagContainer.appendChild(tagElement);
-      });
-    }
-    createNewTags();
-  }, [clientTags]);
-
   useEffect(() => {
     if (initialValues) {
       const { title, body, tags, slug } = initialValues.attributes;
@@ -315,7 +290,27 @@ const PostForm = ({ tags, user, initialValues }) => {
           )}
           <Spacer h='1rem' />
           <Text fontSize='xl'>Tags</Text>
-          <Box id='tag-container' display='flex' flexWrap='wrap' />
+          <Box id='tag-container' display='flex' flexWrap='wrap'>
+            <Wrap spacing={2}>
+              {clientTags.map(tag => (
+                <Tag
+                  key={tag}
+                  size='lg'
+                  borderRadius='full'
+                  colorScheme='green'
+                  variant='solid'
+                >
+                  <TagLabel>{tag}</TagLabel>
+                  <TagCloseButton
+                    onClick={() => {
+                      const newTags = clientTags.filter(t => t !== tag);
+                      setClientTags(newTags);
+                    }}
+                  />
+                </Tag>
+              ))}
+            </Wrap>
+          </Box>
           <Select
             placeholder='Select option'
             onChange={addTag}
