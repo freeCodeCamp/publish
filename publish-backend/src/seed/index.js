@@ -4,7 +4,23 @@ let userIds = []; // For now first user will be contributor and second will be e
 let tagIds = [];
 let internalTagId = null;
 
+const findRoleId = async (strapi, roleName) => {
+  try {
+    const role = await strapi.db
+      .query("plugin::users-permissions.role")
+      .findOne({
+        where: { name: roleName },
+      });
+    return role.id;
+  } catch (e) {
+    console.error(e);
+    throw new Error(`Failed to get Role ID for ${roleName}`);
+  }
+};
+
 async function createSeedUsers(strapi) {
+  const contributor = await findRoleId(strapi, "Contributor");
+  const editor = await findRoleId(strapi, "Editor");
   const userRes1 = await strapi.entityService.create(
     "plugin::users-permissions.user",
     {
@@ -16,7 +32,7 @@ async function createSeedUsers(strapi) {
         provider: "local",
         confirmed: true,
         role: {
-          connect: [3],
+          connect: [contributor],
         },
       },
     }
@@ -32,7 +48,7 @@ async function createSeedUsers(strapi) {
         provider: "local",
         confirmed: true,
         role: {
-          connect: [1],
+          connect: [editor],
         },
       },
     }

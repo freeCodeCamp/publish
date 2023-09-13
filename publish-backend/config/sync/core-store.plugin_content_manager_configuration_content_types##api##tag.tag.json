@@ -48,20 +48,6 @@
           "sortable": true
         }
       },
-      "visibility": {
-        "edit": {
-          "label": "visibility",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "visibility",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "posts": {
         "edit": {
           "label": "posts",
@@ -75,6 +61,20 @@
           "label": "posts",
           "searchable": false,
           "sortable": false
+        }
+      },
+      "visibility": {
+        "edit": {
+          "label": "visibility",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "visibility",
+          "searchable": true,
+          "sortable": true
         }
       },
       "createdAt": {
@@ -101,6 +101,36 @@
         },
         "list": {
           "label": "updatedAt",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "createdBy": {
+        "edit": {
+          "label": "createdBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "createdBy",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "updatedBy": {
+        "edit": {
+          "label": "updatedBy",
+          "description": "",
+          "placeholder": "",
+          "visible": false,
+          "editable": true,
+          "mainField": "firstname"
+        },
+        "list": {
+          "label": "updatedBy",
           "searchable": true,
           "sortable": true
         }
