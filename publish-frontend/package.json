@@ -21,6 +21,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@nikolovlazar/chakra-ui-prose": "^1.2.1",
     "@tiptap/extension-image": "^2.0.4",
+    "@tiptap/extension-link": "^2.1.8",
     "@tiptap/extension-list-item": "^2.0.3",
     "@tiptap/extension-placeholder": "^2.0.4",
     "@tiptap/extension-text-style": "^2.0.3",
