@@ -18,8 +18,10 @@ import {
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
+import { useToast } from '@chakra-ui/react';
 
 const PostForm = ({ tags, user, initialValues }) => {
+  const toast = useToast();
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
@@ -65,8 +67,6 @@ const PostForm = ({ tags, user, initialValues }) => {
     if (initialValues) {
       const { title, body, tags, slug } = initialValues.attributes;
       const { id } = initialValues;
-
-      // console.log(initialValues);
 
       setTitle(title);
       setContent(body);
@@ -128,13 +128,32 @@ const PostForm = ({ tags, user, initialValues }) => {
       if (!id) {
         const res = await createPost(JSON.stringify(data), token);
         setPostId(res.data.id);
-        console.log('created');
+
+        toast({
+          title: 'Post Created.',
+          description: "We've created your post for you.",
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
       } else {
         await updatePost(id, JSON.stringify(data), token);
-        console.log('updated');
+        toast({
+          title: 'Post Updated.',
+          description: "We've updated your post for you.",
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
       }
     } catch (error) {
-      console.log(error);
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
   };
 
@@ -268,6 +287,10 @@ const PostForm = ({ tags, user, initialValues }) => {
           <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
             Save as Draft
           </Button>
+          <Spacer h='1rem' />
+          <Button colorScheme='blue' w='100%' variant='outline'>
+            Preview
+          </Button>
         </Box>
       </Flex>
       <Flex flexDirection='column' mr='0.5rem' flex='3'>
@@ -323,18 +346,6 @@ const PostForm = ({ tags, user, initialValues }) => {
               )}
             </Formik>
           )}
-          <Stack
-            direction='row'
-            spacing={4}
-            marginLeft={{ base: '0', lg: 'auto' }}
-          >
-            <Button colorScheme='blue' variant='outline'>
-              Preview
-            </Button>
-            <Button colorScheme='blue' variant='solid'>
-              Send For Review
-            </Button>
-          </Stack>
         </Flex>
         <Box p='0 0 0 5rem'>
           <Tiptap
