@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import slugify from 'slugify';
 import {
   Flex,
@@ -19,6 +19,7 @@ import {
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
+import NextLink from 'next/link';
 
 const PostForm = ({ tags, user, initialValues }) => {
   const toast = useToast();
@@ -159,15 +160,86 @@ const PostForm = ({ tags, user, initialValues }) => {
 
   return (
     <Flex>
+      <Flex flexDirection='column' mr='1rem' flex='3'>
+        <Box display='flex' justifyContent='start' m='1rem 0 0 5rem'>
+          <Button
+            variant='link'
+            as={NextLink}
+            href='/posts/'
+            leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
+          >
+            <Text fontSize='2xl'>Posts</Text>
+          </Button>
+        </Box>
+        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
+          {!isEditingTitle ? (
+            <>
+              <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
+                <Text fontSize='2xl'>{title}</Text>
+                <Text fontSize='2xl'>
+                  <FontAwesomeIcon icon={faEdit} />
+                </Text>
+              </Stack>
+            </>
+          ) : (
+            <Formik
+              initialValues={{ title: title }}
+              onSubmit={(values, actions) => {
+                setTitle(values.title);
+                setIsEditingTitle(false);
+                actions.setSubmitting(false);
+              }}
+            >
+              {props => (
+                <Form>
+                  <Stack direction={{ base: 'column', lg: 'row' }}>
+                    <Field name='title'>
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.title && form.touched.title}
+                        >
+                          <Input
+                            {...field}
+                            placeholder='title'
+                            w={{ base: '35%', lg: '100%' }}
+                          />
+                          <FormErrorMessage>
+                            {form.errors.title}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Button
+                      colorScheme='blue'
+                      isLoading={props.isSubmitting}
+                      type='submit'
+                      w={{ base: '35%', lg: '100%' }}
+                      margin={{ base: '0 0 1rem 0' }}
+                    >
+                      Submit
+                    </Button>
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
+          )}
+        </Flex>
+        <Box p='0 0 0 5rem'>
+          <Tiptap
+            handleContentChange={handleContentChange}
+            defaultValue={content}
+          />
+        </Box>
+      </Flex>
       <Flex
         flexDirection='column'
         w={{ base: 'full', md: '350px' }}
         flex='1'
         h='100vh'
         bgColor='white'
-        borderRightWidth='1px'
+        borderLeftWidth='1px'
         overflowY='hidden'
-        padding={{ base: '0.5rem' }}
+        padding={{ base: '0.5rem ' }}
       >
         <Box overflowY='scroll'>
           <Box
@@ -291,67 +363,6 @@ const PostForm = ({ tags, user, initialValues }) => {
           <Button colorScheme='blue' w='100%' variant='outline'>
             Preview
           </Button>
-        </Box>
-      </Flex>
-      <Flex flexDirection='column' mr='0.5rem' flex='3'>
-        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
-          {!isEditingTitle ? (
-            <>
-              <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
-                <Text fontSize='2xl'>{title}</Text>
-                <Text fontSize='2xl'>
-                  <FontAwesomeIcon icon={faEdit} />
-                </Text>
-              </Stack>
-            </>
-          ) : (
-            <Formik
-              initialValues={{ title: title }}
-              onSubmit={(values, actions) => {
-                setTitle(values.title);
-                setIsEditingTitle(false);
-                actions.setSubmitting(false);
-              }}
-            >
-              {props => (
-                <Form>
-                  <Stack direction={{ base: 'column', lg: 'row' }}>
-                    <Field name='title'>
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={form.errors.title && form.touched.title}
-                        >
-                          <Input
-                            {...field}
-                            placeholder='title'
-                            w={{ base: '35%', lg: '100%' }}
-                          />
-                          <FormErrorMessage>
-                            {form.errors.title}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                    <Button
-                      colorScheme='blue'
-                      isLoading={props.isSubmitting}
-                      type='submit'
-                      w={{ base: '35%', lg: '100%' }}
-                      margin={{ base: '0 0 1rem 0' }}
-                    >
-                      Submit
-                    </Button>
-                  </Stack>
-                </Form>
-              )}
-            </Formik>
-          )}
-        </Flex>
-        <Box p='0 0 0 5rem'>
-          <Tiptap
-            handleContentChange={handleContentChange}
-            defaultValue={content}
-          />
         </Box>
       </Flex>
     </Flex>
