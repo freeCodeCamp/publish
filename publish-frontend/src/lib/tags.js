@@ -3,7 +3,7 @@
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getTags(token) {
-  const endpoint = `${api_root}/tags`;
+  const endpoint = `${api_root}/tags?populate=*`;
 
   const options = {
     method: 'GET',
