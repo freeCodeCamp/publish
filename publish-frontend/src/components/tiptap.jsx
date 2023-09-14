@@ -61,6 +61,9 @@ function ToolBar({ editor }) {
 
   const convertToMarkdown = () => {
     const content = window.prompt('Markdown');
+
+    if (!content) return;
+
     editor.commands.setContent(content);
   };
 
