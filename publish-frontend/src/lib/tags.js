@@ -16,14 +16,36 @@ export async function getTags(token) {
   try {
     const res = await fetch(endpoint, options);
 
+    return res.json();
+  } catch (error) {
+    console.error('getTags responded with error. Status: ', res?.body);
+    throw new Error(`getTags responded with error. Status: ${res?.body}`);
+  }
+}
+
+export async function createTag(token, data) {
+  const endpoint = `${api_root}/tags`;
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  };
+
+  try {
+    const res = await fetch(endpoint, options);
+
     if (!res.ok) {
-      console.error('getTags responded with error. Status: ', res?.status);
-      throw new Error(`getTags responded with error. Status: ${res?.status}`);
+      console.error('createTag responded with error. Status: ', res?.status);
+      throw new Error(`createTag responded with error. Status: ${res?.status}`);
     }
 
     return res.json();
   } catch (error) {
-    console.error('getTags Failed. Error: ', error);
-    throw new Error(`getTags Failed. Error: ${error}`);
+    console.error('createTag Failed. Error: ', error);
+    throw new Error(`createTag Failed. Error: ${error}`);
   }
 }
