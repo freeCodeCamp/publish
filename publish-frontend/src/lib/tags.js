@@ -16,15 +16,10 @@ export async function getTags(token) {
   try {
     const res = await fetch(endpoint, options);
 
-    if (!res.ok) {
-      console.error('getTags responded with error. Status: ', res?.status);
-      throw new Error(`getTags responded with error. Status: ${res?.status}`);
-    }
-
     return res.json();
   } catch (error) {
-    console.error('getTags Failed. Error: ', error);
-    throw new Error(`getTags Failed. Error: ${error}`);
+    console.error('getTags responded with error. Status: ', res?.body);
+    throw new Error(`getTags responded with error. Status: ${res?.body}`);
   }
 }
 

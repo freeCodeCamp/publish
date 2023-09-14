@@ -153,8 +153,7 @@ const PostForm = ({ tags, user, initialValues }) => {
     };
 
     try {
-      await createTag(token, JSON.stringify(data));
-
+      await createTag(token, data);
       toast({
         title: 'Tag Created.',
         description: "We've created your tag for you.",
@@ -165,7 +164,7 @@ const PostForm = ({ tags, user, initialValues }) => {
     } catch (error) {
       toast({
         title: 'An error occurred.',
-        description: error.message,
+        description: error,
         status: 'error',
         duration: 5000,
         isClosable: true
@@ -380,8 +379,6 @@ const PostForm = ({ tags, user, initialValues }) => {
                   <Formik
                     initialValues={{ tagName: '' }}
                     onSubmit={(values, actions) => {
-                      const newTags = [...clientTags, values.tagName];
-                      setClientTags(newTags);
                       setIsAddingTag(false);
                       handleTagSubmit(values.tagName);
                       actions.setSubmitting(false);
