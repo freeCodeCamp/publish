@@ -57,7 +57,12 @@ const tagsTableBody = (tags, router) => {
           >
             <Td>
               <Box fontWeight='600'>{name}</Box>
-              <Box display={{ base: 'block', sm: 'none' }} pt='4px'>
+              <Box
+                fontSize='sm'
+                color='gray.500'
+                display={{ base: 'block', sm: 'none' }}
+                pt='4px'
+              >
                 {slug} • {noOfPosts} post{noOfPosts > 1 ? 's' : ''}
               </Box>
             </Td>
