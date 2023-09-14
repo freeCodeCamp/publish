@@ -8,7 +8,8 @@ import {
   faLink,
   faListUl,
   faQuoteLeft,
-  faStrikethrough
+  faStrikethrough,
+  faFileExport
 } from '@fortawesome/free-solid-svg-icons';
 import {
   Box,
@@ -27,6 +28,7 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
+import { Markdown } from 'tiptap-markdown';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -55,6 +57,11 @@ function ToolBar({ editor }) {
     if (url) {
       editor.commands.setLink({ href: url, target: '_blank' });
     }
+  };
+
+  const convertToMarkdown = () => {
+    const content = window.prompt('Markdown');
+    editor.commands.setContent(content);
   };
 
   return (
@@ -203,6 +210,14 @@ function ToolBar({ editor }) {
         leftIcon={<FontAwesomeIcon icon={faLink} />}
         onClick={() => addLink()}
       ></Button>
+      <Button
+        variant='ghost'
+        iconSpacing={0}
+        p={2}
+        onClick={() => convertToMarkdown()}
+      >
+        <FontAwesomeIcon icon={faFileExport} />
+      </Button>
     </Box>
   );
 }
@@ -233,7 +248,8 @@ const Tiptap = ({ handleContentChange, defaultValue }) => {
       }),
       Link.configure({
         protocols: ['http', 'https', 'mailto', 'tel']
-      })
+      }),
+      Markdown.configure({})
     ],
     content: defaultValue ? defaultValue : '',
     autofocus: true,
