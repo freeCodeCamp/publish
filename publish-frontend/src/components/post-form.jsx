@@ -16,6 +16,7 @@ import {
   Wrap,
   Tag,
   FormControl,
+  Divider,
   FormErrorMessage,
   TagLabel,
   TagCloseButton
@@ -24,6 +25,8 @@ import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import { isEditor } from '@/lib/current-user';
+import { createTag } from '@/lib/tags';
 
 const PostForm = ({ tags, user, initialValues }) => {
   const toast = useToast();
@@ -37,6 +40,8 @@ const PostForm = ({ tags, user, initialValues }) => {
 
   const [featureImage, setFeatureImage] = useState('');
   const [content, setContent] = useState(initialValues?.attributes.body || '');
+
+  const [isAddingTag, setIsAddingTag] = useState(false);
 
   const [id, setPostId] = useState(null);
   useEffect(() => {
@@ -132,6 +137,41 @@ const PostForm = ({ tags, user, initialValues }) => {
       });
     }
   };
+
+  async function handleTagSubmit(tagName) {
+    const token = user.jwt;
+    const data = {
+      data: {
+        name: tagName,
+        slug: slugify(tagName, {
+          lower: true,
+          specialChar: false
+        }),
+        posts: [],
+        visibility: 'public'
+      }
+    };
+
+    try {
+      await createTag(token, JSON.stringify(data));
+
+      toast({
+        title: 'Tag Created.',
+        description: "We've created your tag for you.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } catch (error) {
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  }
 
   return (
     <Flex>
@@ -289,7 +329,6 @@ const PostForm = ({ tags, user, initialValues }) => {
             </Button>
           )}
           <Spacer h='1rem' />
-          <Text fontSize='xl'>Tags</Text>
           <Box id='tag-container' display='flex' flexWrap='wrap'>
             <Wrap spacing={2}>
               {clientTags.map(tag => (
@@ -311,6 +350,8 @@ const PostForm = ({ tags, user, initialValues }) => {
               ))}
             </Wrap>
           </Box>
+          <Spacer h='1rem' />
+          <Text fontSize='xl'>Tags</Text>
           <Select
             placeholder='Select option'
             onChange={addTag}
@@ -323,8 +364,79 @@ const PostForm = ({ tags, user, initialValues }) => {
               </option>
             ))}
           </Select>
+          {isEditor(user) && (
+            <>
+              {!isAddingTag ? (
+                <Button
+                  colorScheme='blue'
+                  variant='link'
+                  onClick={() => setIsAddingTag(true)}
+                >
+                  Add new Tag
+                </Button>
+              ) : (
+                <>
+                  <Spacer h='1rem' />
+                  <Formik
+                    initialValues={{ tagName: '' }}
+                    onSubmit={(values, actions) => {
+                      const newTags = [...clientTags, values.tagName];
+                      setClientTags(newTags);
+                      setIsAddingTag(false);
+                      handleTagSubmit(values.tagName);
+                      actions.setSubmitting(false);
+                    }}
+                  >
+                    {props => (
+                      <Form>
+                        <Field name='tagName'>
+                          {({ field, form }) => (
+                            <FormControl
+                              isInvalid={
+                                form.errors.tagName && form.touched.tagName
+                              }
+                            >
+                              <Input
+                                {...field}
+                                placeholder='tag name'
+                                w='100%'
+                                required
+                              />
+                              <FormErrorMessage>
+                                {form.errors.tagName}
+                              </FormErrorMessage>
+                            </FormControl>
+                          )}
+                        </Field>
+                        <Button
+                          colorScheme='blue'
+                          isLoading={props.isSubmitting}
+                          type='submit'
+                          w='100%'
+                          margin={{ base: '1rem 0 0 0' }}
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          colorScheme='red'
+                          width='100%'
+                          margin={{ base: '1rem 0 0 0' }}
+                          onClick={() => setIsAddingTag(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </Form>
+                    )}
+                  </Formik>
+                </>
+              )}
+            </>
+          )}
+          <Spacer h='1rem' />
+          <Divider />
           <Spacer h='1rem' />
           <Text fontSize='xl'>Publish Date</Text>
+          <Spacer h='1rem' />
           <Box display='flex' flexDirection='row'>
             <Input type='date' variant='outline' />
             <Input type='time' variant='outline' />
@@ -350,6 +462,8 @@ const PostForm = ({ tags, user, initialValues }) => {
               })}
             </Text>
           </label>
+          <Spacer h='1rem' />
+          <Divider />
           <Spacer h='1rem' />
           <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
             Save as Draft
