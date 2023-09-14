@@ -119,14 +119,13 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
 
         <Box>
           <NavMenuLink text='Posts' icon={faFileLines} link='#' />
-          {isEditor(user) ||
-            (true && (
-              <>
-                <NavMenuLink text='Pages' icon={faNewspaper} link='#' />
-                <NavMenuLink text='Tags' icon={faTags} link='#' />
-                <NavMenuLink text='Staff' icon={faUsers} link='#' />
-              </>
-            ))}
+          {isEditor(user) && (
+            <>
+              <NavMenuLink text='Pages' icon={faNewspaper} link='#' />
+              <NavMenuLink text='Tags' icon={faTags} link='#' />
+              <NavMenuLink text='Staff' icon={faUsers} link='#' />
+            </>
+          )}
         </Box>
       </Box>
       <Spacer />
