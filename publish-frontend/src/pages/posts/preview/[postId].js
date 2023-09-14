@@ -19,7 +19,7 @@ export async function getServerSideProps(context) {
 
   const { params } = context;
   const { postId } = params;
-  console.log('postId: ', postId);
+
   try {
     const data = await getPost(postId, session.user.jwt);
     return {
