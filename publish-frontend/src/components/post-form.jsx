@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import slugify from 'slugify';
 import {
   Flex,
@@ -13,12 +13,20 @@ import {
   Input,
   Spacer,
   Stack,
+  Wrap,
+  Tag,
   FormControl,
-  FormErrorMessage
+  Divider,
+  FormErrorMessage,
+  TagLabel,
+  TagCloseButton
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
+import NextLink from 'next/link';
+import { isEditor } from '@/lib/current-user';
+import { createTag } from '@/lib/tags';
 
 const PostForm = ({ tags, user, initialValues }) => {
   const toast = useToast();
@@ -33,36 +41,9 @@ const PostForm = ({ tags, user, initialValues }) => {
   const [featureImage, setFeatureImage] = useState('');
   const [content, setContent] = useState(initialValues?.attributes.body || '');
 
+  const [isAddingTag, setIsAddingTag] = useState(false);
+
   const [id, setPostId] = useState(null);
-
-  useEffect(() => {
-    function removeTag(tag) {
-      const newTags = clientTags.filter(t => t !== tag);
-      setClientTags(newTags);
-    }
-
-    function createNewTags() {
-      const tagContainer = document.getElementById('tag-container');
-
-      if (tagContainer === null) return;
-
-      tagContainer.innerHTML = '';
-
-      clientTags.forEach(tag => {
-        const tagElement = document.createElement('div');
-        tagElement.classList.add('tag');
-        tagElement.innerHTML = tag;
-        const removeButton = document.createElement('button');
-        removeButton.innerHTML = 'x';
-        removeButton.classList.add('remove-button');
-        removeButton.addEventListener('click', () => removeTag(tag));
-        tagElement.appendChild(removeButton);
-        tagContainer.appendChild(tagElement);
-      });
-    }
-    createNewTags();
-  }, [clientTags]);
-
   useEffect(() => {
     if (initialValues) {
       const { title, body, tags, slug } = initialValues.attributes;
@@ -157,17 +138,122 @@ const PostForm = ({ tags, user, initialValues }) => {
     }
   };
 
+  async function handleTagSubmit(tagName) {
+    const token = user.jwt;
+    const data = {
+      data: {
+        name: tagName,
+        slug: slugify(tagName, {
+          lower: true,
+          specialChar: false
+        }),
+        posts: [],
+        visibility: 'public'
+      }
+    };
+
+    try {
+      await createTag(token, data);
+      toast({
+        title: 'Tag Created.',
+        description: "We've created your tag for you.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } catch (error) {
+      toast({
+        title: 'An error occurred.',
+        description: error,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  }
+
   return (
     <Flex>
+      <Flex flexDirection='column' mr='1rem' flex='3'>
+        <Box display='flex' justifyContent='start' m='1rem 0 0 5rem'>
+          <Button
+            variant='link'
+            as={NextLink}
+            href='/posts/'
+            leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
+          >
+            <Text fontSize='2xl'>Posts</Text>
+          </Button>
+        </Box>
+        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
+          {!isEditingTitle ? (
+            <>
+              <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
+                <Text fontSize='2xl'>{title}</Text>
+                <Text fontSize='2xl'>
+                  <FontAwesomeIcon icon={faEdit} />
+                </Text>
+              </Stack>
+            </>
+          ) : (
+            <Formik
+              initialValues={{ title: title }}
+              onSubmit={(values, actions) => {
+                setTitle(values.title);
+                setIsEditingTitle(false);
+                actions.setSubmitting(false);
+              }}
+            >
+              {props => (
+                <Form>
+                  <Stack direction={{ base: 'column', lg: 'row' }}>
+                    <Field name='title'>
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.title && form.touched.title}
+                        >
+                          <Input
+                            {...field}
+                            placeholder='title'
+                            w={{ base: '35%', lg: '100%' }}
+                          />
+                          <FormErrorMessage>
+                            {form.errors.title}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Button
+                      colorScheme='blue'
+                      isLoading={props.isSubmitting}
+                      type='submit'
+                      w={{ base: '35%', lg: '100%' }}
+                      margin={{ base: '0 0 1rem 0' }}
+                    >
+                      Submit
+                    </Button>
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
+          )}
+        </Flex>
+        <Box p='0 0 0 5rem'>
+          <Tiptap
+            handleContentChange={handleContentChange}
+            defaultValue={content}
+          />
+        </Box>
+      </Flex>
       <Flex
         flexDirection='column'
         w={{ base: 'full', md: '350px' }}
         flex='1'
         h='100vh'
         bgColor='white'
-        borderRightWidth='1px'
+        borderLeftWidth='1px'
         overflowY='hidden'
-        padding={{ base: '0.5rem' }}
+        padding={{ base: '0.5rem ' }}
       >
         <Box overflowY='scroll'>
           <Box
@@ -242,8 +328,29 @@ const PostForm = ({ tags, user, initialValues }) => {
             </Button>
           )}
           <Spacer h='1rem' />
+          <Box id='tag-container' display='flex' flexWrap='wrap'>
+            <Wrap spacing={2}>
+              {clientTags.map(tag => (
+                <Tag
+                  key={tag}
+                  size='lg'
+                  borderRadius='full'
+                  colorScheme='green'
+                  variant='solid'
+                >
+                  <TagLabel>{tag}</TagLabel>
+                  <TagCloseButton
+                    onClick={() => {
+                      const newTags = clientTags.filter(t => t !== tag);
+                      setClientTags(newTags);
+                    }}
+                  />
+                </Tag>
+              ))}
+            </Wrap>
+          </Box>
+          <Spacer h='1rem' />
           <Text fontSize='xl'>Tags</Text>
-          <Box id='tag-container' display='flex' flexWrap='wrap' />
           <Select
             placeholder='Select option'
             onChange={addTag}
@@ -256,8 +363,77 @@ const PostForm = ({ tags, user, initialValues }) => {
               </option>
             ))}
           </Select>
+          {isEditor(user) && (
+            <>
+              {!isAddingTag ? (
+                <Button
+                  colorScheme='blue'
+                  variant='link'
+                  onClick={() => setIsAddingTag(true)}
+                >
+                  Add new Tag
+                </Button>
+              ) : (
+                <>
+                  <Spacer h='1rem' />
+                  <Formik
+                    initialValues={{ tagName: '' }}
+                    onSubmit={(values, actions) => {
+                      setIsAddingTag(false);
+                      handleTagSubmit(values.tagName);
+                      actions.setSubmitting(false);
+                    }}
+                  >
+                    {props => (
+                      <Form>
+                        <Field name='tagName'>
+                          {({ field, form }) => (
+                            <FormControl
+                              isInvalid={
+                                form.errors.tagName && form.touched.tagName
+                              }
+                            >
+                              <Input
+                                {...field}
+                                placeholder='tag name'
+                                w='100%'
+                                required
+                              />
+                              <FormErrorMessage>
+                                {form.errors.tagName}
+                              </FormErrorMessage>
+                            </FormControl>
+                          )}
+                        </Field>
+                        <Button
+                          colorScheme='blue'
+                          isLoading={props.isSubmitting}
+                          type='submit'
+                          w='100%'
+                          margin={{ base: '1rem 0 0 0' }}
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          colorScheme='red'
+                          width='100%'
+                          margin={{ base: '1rem 0 0 0' }}
+                          onClick={() => setIsAddingTag(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </Form>
+                    )}
+                  </Formik>
+                </>
+              )}
+            </>
+          )}
+          <Spacer h='1rem' />
+          <Divider />
           <Spacer h='1rem' />
           <Text fontSize='xl'>Publish Date</Text>
+          <Spacer h='1rem' />
           <Box display='flex' flexDirection='row'>
             <Input type='date' variant='outline' />
             <Input type='time' variant='outline' />
@@ -284,6 +460,8 @@ const PostForm = ({ tags, user, initialValues }) => {
             </Text>
           </label>
           <Spacer h='1rem' />
+          <Divider />
+          <Spacer h='1rem' />
           <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
             Save as Draft
           </Button>
@@ -291,67 +469,6 @@ const PostForm = ({ tags, user, initialValues }) => {
           <Button colorScheme='blue' w='100%' variant='outline'>
             Preview
           </Button>
-        </Box>
-      </Flex>
-      <Flex flexDirection='column' mr='0.5rem' flex='3'>
-        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
-          {!isEditingTitle ? (
-            <>
-              <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
-                <Text fontSize='2xl'>{title}</Text>
-                <Text fontSize='2xl'>
-                  <FontAwesomeIcon icon={faEdit} />
-                </Text>
-              </Stack>
-            </>
-          ) : (
-            <Formik
-              initialValues={{ title: title }}
-              onSubmit={(values, actions) => {
-                setTitle(values.title);
-                setIsEditingTitle(false);
-                actions.setSubmitting(false);
-              }}
-            >
-              {props => (
-                <Form>
-                  <Stack direction={{ base: 'column', lg: 'row' }}>
-                    <Field name='title'>
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={form.errors.title && form.touched.title}
-                        >
-                          <Input
-                            {...field}
-                            placeholder='title'
-                            w={{ base: '35%', lg: '100%' }}
-                          />
-                          <FormErrorMessage>
-                            {form.errors.title}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                    <Button
-                      colorScheme='blue'
-                      isLoading={props.isSubmitting}
-                      type='submit'
-                      w={{ base: '35%', lg: '100%' }}
-                      margin={{ base: '0 0 1rem 0' }}
-                    >
-                      Submit
-                    </Button>
-                  </Stack>
-                </Form>
-              )}
-            </Formik>
-          )}
-        </Flex>
-        <Box p='0 0 0 5rem'>
-          <Tiptap
-            handleContentChange={handleContentChange}
-            defaultValue={content}
-          />
         </Box>
       </Flex>
     </Flex>
