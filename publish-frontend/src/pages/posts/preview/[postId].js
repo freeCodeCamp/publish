@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getPost } from '@/lib/posts';
@@ -37,6 +37,7 @@ export async function getServerSideProps(context) {
 
 export default function PreviewArticlePage({ post, unsavedPostContent }) {
   const toast = useToast();
+  const toastIdRef = useRef();
 
   const editor = useEditor({
     extensions: [
@@ -73,7 +74,11 @@ export default function PreviewArticlePage({ post, unsavedPostContent }) {
       }
     },
     onCreate: () => {
-      toast({
+      // Prevent from creating a new toast every time the editor is created
+      if (toastIdRef.current) {
+        toast.close(toastIdRef.current);
+      }
+      toastIdRef.current = toast({
         title: `Preview Mode`,
         description: `This is just a preview of the formatting of the content for readability. The page may look different when published on the publication.`,
         isClosable: true,
