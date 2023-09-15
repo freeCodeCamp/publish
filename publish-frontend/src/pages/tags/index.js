@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Flex,
+  Grid,
   Heading,
   Spacer,
   Table,
@@ -9,12 +10,13 @@ import {
   Td,
   Th,
   Thead,
-  Tr
+  Tr,
+  useRadio,
+  useRadioGroup
 } from '@chakra-ui/react';
 import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
 
 import NavMenu from '@/components/nav-menu';
 import { getTags } from '@/lib/tags';
@@ -38,7 +40,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-const tagsTableBody = (tags, router) => {
+const TagsTableBody = (tags, router) => {
   return (
     <Tbody bgColor='white'>
       {tags.map(tag => {
@@ -77,18 +79,27 @@ const tagsTableBody = (tags, router) => {
   );
 };
 
+const TagFilterButton = ({ tagType, ...radioProps }) => {
+  const { getInputProps, getRadioProps } = useRadio(radioProps);
+
+  return (
+    <Box as='label'>
+      <input {...getInputProps()} />
+      <Box {...getRadioProps()} _checked={{ color: 'blue' }}>
+        {tagType}
+      </Box>
+    </Box>
+  );
+};
+
 export default function TagsIndex({ publicTags, internalTags, user }) {
   const router = useRouter();
 
-  const [isPublic, setIsPublic] = useState(true);
+  const { value, getRadioProps, getRootProps } = useRadioGroup({
+    defaultValue: 'public'
+  });
 
   return (
-    // <Flex>
-    //   <NavMenu user={user} />
-    //   <main style={{ padding: '0.75rem' }}>
-    // <TagsList allTagsData={allTagsData} />
-    //   </main>
-    // </Flex>
     <Box minH='100vh' bgColor='gray.200'>
       <NavMenu user={user} />
 
@@ -108,7 +119,7 @@ export default function TagsIndex({ publicTags, internalTags, user }) {
           </Button>
         </Flex>
 
-        {/* <Grid
+        <Grid
           my='4'
           gap='3'
           gridTemplateColumns={{
@@ -116,58 +127,17 @@ export default function TagsIndex({ publicTags, internalTags, user }) {
             sm: '1fr 1fr',
             lg: '1fr 1fr 1fr 1fr'
           }}
+          {...getRootProps()}
         >
-          <Menu>
-            <FilterButton text='All posts' />
-            <MenuList>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All posts</MenuItemOption>
-                <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
-                <MenuItemOption value='published'>
-                  Published posts
-                </MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='All authors' />
-            <MenuList>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All authors</MenuItemOption>
-                {users.map(user => (
-                  <MenuItemOption key={user.id} value={user.id}>
-                    {user.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='All tags' />
-            <MenuList>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All tags</MenuItemOption>
-                {tags.data.map(tag => (
-                  <MenuItemOption key={tag.id} value={tag.id}>
-                    {tag.attributes.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='Sort by: Newest' />
-            <MenuList>
-              <MenuOptionGroup defaultValue='newest' type='radio'>
-                <MenuItemOption value='newest'>Newsest</MenuItemOption>
-                <MenuItemOption value='oldest'>Oldest</MenuItemOption>
-                <MenuItemOption value='recently-updated'>
-                  Recently updated
-                </MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-        </Grid> */}
+          <TagFilterButton
+            tagType='public'
+            {...getRadioProps({ value: 'public' })}
+          />
+          <TagFilterButton
+            tagType='internal'
+            {...getRadioProps({ value: 'internal' })}
+          />
+        </Grid>
 
         <Box pb='10'>
           <Table boxShadow='md' borderWidth='1px'>
@@ -182,9 +152,9 @@ export default function TagsIndex({ publicTags, internalTags, user }) {
                 </Th>
               </Tr>
             </Thead>
-            {isPublic
-              ? tagsTableBody(publicTags, router)
-              : tagsTableBody(internalTags, router)}
+            {value === 'public'
+              ? TagsTableBody(publicTags, router)
+              : TagsTableBody(internalTags, router)}
           </Table>
         </Box>
       </Box>
