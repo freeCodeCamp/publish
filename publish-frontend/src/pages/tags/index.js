@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   Flex,
-  Grid,
   Heading,
   Spacer,
   Table,
@@ -83,12 +82,32 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
   const { getInputProps, getRadioProps } = useRadio(radioProps);
 
   return (
-    <Box as='label'>
+    <Button
+      as='label'
+      bgColor='white'
+      fontSize='14px'
+      boxShadow='sm'
+      cursor='pointer'
+      borderRight='1px solid'
+      borderColor='gray.200'
+      borderLeftRadius={radioProps.value === 'public' ? 'md' : 'none'}
+      borderRightRadius={radioProps.value === 'public' ? 'none' : 'md'}
+      _hover={{
+        boxShadow: 'md'
+      }}
+      _active={{
+        bgColor: 'white'
+      }}
+    >
       <input {...getInputProps()} />
-      <Box {...getRadioProps()} _checked={{ color: 'blue' }}>
-        {tagType}
+      <Box
+        {...getRadioProps()}
+        _checked={{ color: '#3eb0ef' }}
+        textTransform='capitalize'
+      >
+        {tagType} tags
       </Box>
-    </Box>
+    </Button>
   );
 };
 
@@ -114,19 +133,30 @@ export default function TagsIndex({ publicTags, internalTags, user }) {
         >
           <Heading>Tags</Heading>
           <Spacer />
+          <Box
+            mr={{ base: 0, md: '4' }}
+            display={{ base: 'none', md: 'grid' }}
+            gridTemplateColumns='1fr 1fr'
+            {...getRootProps()}
+          >
+            <TagFilterButton
+              tagType='public'
+              {...getRadioProps({ value: 'public' })}
+            />
+            <TagFilterButton
+              tagType='internal'
+              {...getRadioProps({ value: 'internal' })}
+            />
+          </Box>
           <Button colorScheme='blue' as={NextLink} href='/tags/new'>
             New Tag
           </Button>
         </Flex>
 
-        <Grid
+        <Box
           my='4'
-          gap='3'
-          gridTemplateColumns={{
-            base: '1fr',
-            sm: '1fr 1fr',
-            lg: '1fr 1fr 1fr 1fr'
-          }}
+          display={{ base: 'grid', md: 'none' }}
+          gridTemplateColumns='1fr 1fr'
           {...getRootProps()}
         >
           <TagFilterButton
@@ -137,7 +167,7 @@ export default function TagsIndex({ publicTags, internalTags, user }) {
             tagType='internal'
             {...getRadioProps({ value: 'internal' })}
           />
-        </Grid>
+        </Box>
 
         <Box pb='10'>
           <Table boxShadow='md' borderWidth='1px'>
