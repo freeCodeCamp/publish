@@ -30,7 +30,7 @@ import { createTag } from '@/lib/tags';
 
 const PostForm = ({ tags, user, initialValues }) => {
   const toast = useToast();
-  const [title, setTitle] = useState('this is the title');
+  const [title, setTitle] = useState('(UNTITLED)');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
   const [clientTags, setClientTags] = useState([]);
@@ -241,7 +241,9 @@ const PostForm = ({ tags, user, initialValues }) => {
         <Box p='0 0 0 5rem'>
           <Tiptap
             handleContentChange={handleContentChange}
-            defaultValue={content}
+            content={content}
+            user={user}
+            postId={id}
           />
         </Box>
       </Flex>

@@ -27,6 +27,9 @@ import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
+import { v4 as uuidv4 } from 'uuid';
+import { useRouter } from 'next/router';
+import { createPost } from '@/lib/posts';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -240,7 +243,8 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, defaultValue }) => {
+const Tiptap = ({ handleContentChange, content, postId, user }) => {
+  const router = useRouter();
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -268,15 +272,38 @@ const Tiptap = ({ handleContentChange, defaultValue }) => {
         protocols: ['http', 'https', 'mailto', 'tel']
       })
     ],
-    content: defaultValue ? defaultValue : '',
+    content: content ? content : '',
     autofocus: true,
     editorProps: {
       attributes: {
         class: 'prose focus:outline-none'
       }
     },
-    onUpdate: ({ editor }) => {
-      console.log('update');
+    onUpdate: async ({ editor }) => {
+      if (!postId) {
+        const nonce = uuidv4();
+        const token = user.jwt;
+
+        const data = {
+          data: {
+            title: '(UNTITLED)',
+            slug: nonce,
+            body: content,
+            tags: [],
+            author: [user.id],
+            locale: 'en'
+          }
+        };
+
+        try {
+          const post = await createPost(JSON.stringify(data), token);
+
+          router.push(`/posts/${post.data.id}`);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
       handleContentChange(editor.getHTML());
     }
   });
