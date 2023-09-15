@@ -7,6 +7,7 @@ const formatAuthor = (authorObj = {}) => {
     createdAt,
     updatedAt,
     // Exclude the attributes below from the response
+    /* eslint-disable no-unused-vars */
     username,
     email,
     provider,
@@ -15,6 +16,7 @@ const formatAuthor = (authorObj = {}) => {
     confirmationToken,
     confirmed,
     blocked,
+    /* eslint-enable no-unused-vars */
     // Exclude the attributes above from the response
     ...rest
   } = authorObj;

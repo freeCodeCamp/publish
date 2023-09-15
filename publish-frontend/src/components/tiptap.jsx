@@ -68,9 +68,10 @@ function ToolBar({ editor }) {
       overflowX='auto'
     >
       <Button
-        p={2}
-        iconSpacing={0}
         variant='ghost'
+        iconSpacing={0}
+        p={2}
+        title='Bold'
         leftIcon={<FontAwesomeIcon icon={faBold} />}
         onClick={() => editor.chain().focus().toggleBold().run()}
       ></Button>
@@ -78,6 +79,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Italic'
+        aria-label='Italic'
         leftIcon={<FontAwesomeIcon icon={faItalic} />}
         onClick={() => editor.chain().focus().toggleItalic().run()}
       ></Button>
@@ -85,6 +88,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Strikethrough'
+        aria-aria-label='Strikethrough'
         leftIcon={<FontAwesomeIcon icon={faStrikethrough} />}
         onClick={() => editor.chain().focus().toggleStrike().run()}
       ></Button>
@@ -92,6 +97,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Code'
+        aria-label='Code'
         leftIcon={<FontAwesomeIcon icon={faCode} />}
         onClick={() => editor.chain().focus().toggleCode().run()}
       ></Button>
@@ -99,6 +106,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Blockquote'
+        aria-label='Blockquote'
         leftIcon={<FontAwesomeIcon icon={faQuoteLeft} />}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
       ></Button>
@@ -107,12 +116,16 @@ function ToolBar({ editor }) {
         <MenuButton
           as={Button}
           variant='ghost'
+          title='Heading'
+          aria-label='Heading'
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
         ></MenuButton>
         <MenuList>
           <MenuItem
             leftIcon={faHeader}
+            title='Heading 1'
+            aria-label='Heading 1'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 1 }).run()
             }
@@ -121,6 +134,8 @@ function ToolBar({ editor }) {
           </MenuItem>
           <MenuItem
             leftIcon={faHeader}
+            title='Heading 2'
+            aria-label='Heading 2'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 2 }).run()
             }
@@ -129,6 +144,8 @@ function ToolBar({ editor }) {
           </MenuItem>
           <MenuItem
             leftIcon={faHeader}
+            title='Heading 3'
+            aria-label='Heading 3'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 3 }).run()
             }
@@ -137,6 +154,8 @@ function ToolBar({ editor }) {
           </MenuItem>
           <MenuItem
             leftIcon={faHeader}
+            title='Heading 4'
+            aria-label='Heading 4'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 4 }).run()
             }
@@ -145,6 +164,8 @@ function ToolBar({ editor }) {
           </MenuItem>
           <MenuItem
             leftIcon={faHeader}
+            title='Heading 5'
+            aria-label='Heading 5'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 5 }).run()
             }
@@ -153,6 +174,8 @@ function ToolBar({ editor }) {
           </MenuItem>
           <MenuItem
             leftIcon={faHeader}
+            title='Heading 6'
+            aria-label='Heading 6'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 6 }).run()
             }
@@ -166,6 +189,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Bullet List'
+        aria-label='Bullet List'
         leftIcon={<FontAwesomeIcon icon={faListUl} />}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
       ></Button>
@@ -173,6 +198,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Ordered List'
+        aria-label='Ordered List'
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       ></Button>
@@ -181,6 +208,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Image'
+        aria-label='Image'
         leftIcon={<FontAwesomeIcon icon={faImage} />}
         onClick={() => addImage()}
       ></Button>
@@ -188,6 +217,8 @@ function ToolBar({ editor }) {
         <MenuButton
           as={Button}
           iconSpacing={0}
+          title='Embed'
+          aria-label='Embed'
           leftIcon={<FontAwesomeIcon icon={faCode} />}
           variant='ghost'
         ></MenuButton>
@@ -200,6 +231,8 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
+        title='Link'
+        aria-label='Link'
         leftIcon={<FontAwesomeIcon icon={faLink} />}
         onClick={() => addLink()}
       ></Button>
