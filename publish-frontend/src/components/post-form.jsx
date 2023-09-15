@@ -24,6 +24,7 @@ import {
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import Link from 'next/link';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
