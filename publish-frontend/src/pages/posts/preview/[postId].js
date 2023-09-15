@@ -99,7 +99,7 @@ export default function PreviewArticlePage({
         <Text fontSize='xxx-large' fontWeight='bold'>
           {post?.title}
         </Text>
-        <Text>Written by {post.author.data.attributes.username}</Text>
+        <Text>Written by {post.author.data.attributes.name}</Text>
         <Prose>
           <EditorContent editor={editor} />
         </Prose>
