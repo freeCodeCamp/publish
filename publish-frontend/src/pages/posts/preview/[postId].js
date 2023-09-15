@@ -1,6 +1,5 @@
 import React from 'react';
 import { getServerSession } from 'next-auth/next';
-import NextLink from 'next/link';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { getPost } from '@/lib/posts';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
@@ -10,9 +9,8 @@ import Placeholder from '@tiptap/extension-placeholder';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import Link from '@tiptap/extension-link';
-import { Text, Button, Box, Alert, AlertIcon } from '@chakra-ui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { Text, Box } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -37,11 +35,9 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function PreviewArticlePage({
-  post,
-  unsavedPostContent,
-  postId
-}) {
+export default function PreviewArticlePage({ post, unsavedPostContent }) {
+  const toast = useToast();
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -73,29 +69,24 @@ export default function PreviewArticlePage({
     editable: false,
     editorProps: {
       attributes: {
-        class: 'prose'
+        class: 'preview'
       }
+    },
+    onCreate: () => {
+      toast({
+        title: `Preview Mode`,
+        description: `This is just a preview of the formatting of the content for readability. The page may look different when published on the publication.`,
+        isClosable: true,
+        status: 'info',
+        position: 'bottom-left',
+        duration: null
+      });
     }
   });
 
   return (
     <>
-      <Alert status='warning'>
-        <AlertIcon />
-        This is just a preview of the formatting of the content for readability.
-        The page may look different when published on the publication.
-      </Alert>
-      <Box display='flex' justifyContent='start' m='1rem 0 0 5rem'>
-        <Button
-          variant='link'
-          as={NextLink}
-          href={`/posts/${postId}`}
-          leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
-        >
-          <Text fontSize='2xl'>Post</Text>
-        </Button>
-      </Box>
-      <Box m='0 auto' w='100vh'>
+      <Box m='0rem auto' w='100vh' pt='5rem'>
         <Text fontSize='xxx-large' fontWeight='bold'>
           {post?.title}
         </Text>
