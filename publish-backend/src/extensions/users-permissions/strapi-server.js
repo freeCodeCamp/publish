@@ -10,7 +10,7 @@ module.exports = (plugin) => {
         where: { id: ctx.state.user.id },
         data: ctx.request.body,
       })
-      .then((res) => {
+      .then(() => {
         ctx.response.status = 200;
       });
   };
