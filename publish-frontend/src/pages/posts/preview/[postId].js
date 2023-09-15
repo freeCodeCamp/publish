@@ -25,6 +25,7 @@ export async function getServerSideProps(context) {
     return {
       props: {
         post: data.data.attributes,
+        unsavedPostContent: context.query.content,
         postId: postId
       }
     };
@@ -36,7 +37,11 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function PreviewArticlePage({ post, postId }) {
+export default function PreviewArticlePage({
+  post,
+  unsavedPostContent,
+  postId
+}) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -64,7 +69,7 @@ export default function PreviewArticlePage({ post, postId }) {
         protocols: ['http', 'https', 'mailto', 'tel']
       })
     ],
-    content: post?.body,
+    content: unsavedPostContent,
     editable: false,
     editorProps: {
       attributes: {
