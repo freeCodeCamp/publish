@@ -279,8 +279,9 @@ const Tiptap = ({ handleContentChange, content, postId, user }) => {
         class: 'prose focus:outline-none'
       }
     },
-    onUpdate: async ({ editor }) => {
+    onFocus: async ({ editor }) => {
       if (!postId) {
+        editor.commands.blur();
         const nonce = uuidv4();
         const token = user.jwt;
 
@@ -303,7 +304,6 @@ const Tiptap = ({ handleContentChange, content, postId, user }) => {
           console.log(error);
         }
       }
-
       handleContentChange(editor.getHTML());
     }
   });
