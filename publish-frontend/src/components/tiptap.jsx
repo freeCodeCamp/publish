@@ -299,7 +299,7 @@ const Tiptap = ({ handleContentChange, content, postId, user }) => {
         try {
           const post = await createPost(JSON.stringify(data), token);
 
-          router.push(`/posts/${post.data.id}`);
+          router.replace(`/posts/${post.data.id}`);
         } catch (error) {
           console.log(error);
         }
