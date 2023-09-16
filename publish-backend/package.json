@@ -16,10 +16,10 @@
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "^0.0.7",
     "@strapi/plugin-documentation": "^4.11.5",
-    "@strapi/plugin-i18n": "4.13.3",
-    "@strapi/plugin-users-permissions": "4.13.3",
+    "@strapi/plugin-i18n": "4.13.6",
+    "@strapi/plugin-users-permissions": "4.13.6",
     "@strapi/provider-email-nodemailer": "^4.12.4",
-    "@strapi/strapi": "4.13.3",
+    "@strapi/strapi": "4.13.6",
     "axios": "^1.4.0",
     "better-sqlite3": "8.6.0",
     "eleventy-plugin-error-overlay": "^1.0.0",
