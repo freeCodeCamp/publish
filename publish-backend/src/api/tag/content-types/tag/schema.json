@@ -13,8 +13,7 @@
   "pluginOptions": {},
   "attributes": {
     "name": {
-      "type": "string",
-      "unique": true
+      "type": "string"
     },
     "slug": {
       "type": "string",
