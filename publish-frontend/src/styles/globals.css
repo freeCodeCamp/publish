@@ -17,8 +17,8 @@
 
 .preview {
   min-height: 0;
-  max-height: 7500vh;
-  overflow: scroll;
+  max-height: unset;
+  overflow: unset;
   padding: 1rem;
   min-width: 100%;
 }
