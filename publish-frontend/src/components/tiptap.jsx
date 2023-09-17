@@ -8,8 +8,7 @@ import {
   faLink,
   faListUl,
   faQuoteLeft,
-  faStrikethrough,
-  faFileExport
+  faStrikethrough
 } from '@fortawesome/free-solid-svg-icons';
 import {
   Box,
@@ -57,14 +56,6 @@ function ToolBar({ editor }) {
     if (url) {
       editor.commands.setLink({ href: url, target: '_blank' });
     }
-  };
-
-  const convertToMarkdown = () => {
-    const content = window.prompt('Markdown');
-
-    if (!content) return;
-
-    editor.commands.setContent(content);
   };
 
   return (
@@ -213,14 +204,6 @@ function ToolBar({ editor }) {
         leftIcon={<FontAwesomeIcon icon={faLink} />}
         onClick={() => addLink()}
       ></Button>
-      <Button
-        variant='ghost'
-        iconSpacing={0}
-        p={2}
-        onClick={() => convertToMarkdown()}
-      >
-        <FontAwesomeIcon icon={faFileExport} />
-      </Button>
     </Box>
   );
 }
@@ -252,7 +235,9 @@ const Tiptap = ({ handleContentChange, defaultValue }) => {
       Link.configure({
         protocols: ['http', 'https', 'mailto', 'tel']
       }),
-      Markdown.configure({})
+      Markdown.configure({
+        transformPastedText: true
+      })
     ],
     content: defaultValue ? defaultValue : '',
     autofocus: true,
