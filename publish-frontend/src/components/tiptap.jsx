@@ -80,7 +80,7 @@ function ToolBar({ editor }) {
         iconSpacing={0}
         p={2}
         title='Italic'
-        aria-label='Italic'
+        aria-labelledby='Italic'
         leftIcon={<FontAwesomeIcon icon={faItalic} />}
         onClick={() => editor.chain().focus().toggleItalic().run()}
       ></Button>
@@ -89,7 +89,7 @@ function ToolBar({ editor }) {
         iconSpacing={0}
         p={2}
         title='Strikethrough'
-        aria-aria-label='Strikethrough'
+        aria-labelledby='Strikethrough'
         leftIcon={<FontAwesomeIcon icon={faStrikethrough} />}
         onClick={() => editor.chain().focus().toggleStrike().run()}
       ></Button>
@@ -98,7 +98,7 @@ function ToolBar({ editor }) {
         iconSpacing={0}
         p={2}
         title='Code'
-        aria-label='Code'
+        aria-labelledby='Code'
         leftIcon={<FontAwesomeIcon icon={faCode} />}
         onClick={() => editor.chain().focus().toggleCode().run()}
       ></Button>
@@ -107,7 +107,7 @@ function ToolBar({ editor }) {
         iconSpacing={0}
         p={2}
         title='Blockquote'
-        aria-label='Blockquote'
+        aria-labelledby='Blockquote'
         leftIcon={<FontAwesomeIcon icon={faQuoteLeft} />}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
       ></Button>
@@ -117,7 +117,7 @@ function ToolBar({ editor }) {
           as={Button}
           variant='ghost'
           title='Heading'
-          aria-label='Heading'
+          aria-labelledby='Heading'
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
         ></MenuButton>
@@ -125,7 +125,7 @@ function ToolBar({ editor }) {
           <MenuItem
             leftIcon={faHeader}
             title='Heading 1'
-            aria-label='Heading 1'
+            aria-labelledby='Heading 1'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 1 }).run()
             }
@@ -135,7 +135,7 @@ function ToolBar({ editor }) {
           <MenuItem
             leftIcon={faHeader}
             title='Heading 2'
-            aria-label='Heading 2'
+            aria-labelledby='Heading 2'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 2 }).run()
             }
@@ -145,7 +145,7 @@ function ToolBar({ editor }) {
           <MenuItem
             leftIcon={faHeader}
             title='Heading 3'
-            aria-label='Heading 3'
+            aria-labelledby='Heading 3'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 3 }).run()
             }
@@ -155,7 +155,7 @@ function ToolBar({ editor }) {
           <MenuItem
             leftIcon={faHeader}
             title='Heading 4'
-            aria-label='Heading 4'
+            aria-labelledby='Heading 4'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 4 }).run()
             }
@@ -165,7 +165,7 @@ function ToolBar({ editor }) {
           <MenuItem
             leftIcon={faHeader}
             title='Heading 5'
-            aria-label='Heading 5'
+            aria-labelledby='Heading 5'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 5 }).run()
             }
@@ -175,7 +175,7 @@ function ToolBar({ editor }) {
           <MenuItem
             leftIcon={faHeader}
             title='Heading 6'
-            aria-label='Heading 6'
+            aria-labelledby='Heading 6'
             onClick={() =>
               editor.chain().focus().setHeading({ level: 6 }).run()
             }
@@ -190,7 +190,7 @@ function ToolBar({ editor }) {
         iconSpacing={0}
         p={2}
         title='Bullet List'
-        aria-label='Bullet List'
+        aria-labelledby='Bullet List'
         leftIcon={<FontAwesomeIcon icon={faListUl} />}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
       ></Button>
