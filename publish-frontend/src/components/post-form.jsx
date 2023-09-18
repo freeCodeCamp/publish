@@ -25,11 +25,13 @@ import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import Link from 'next/link';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
 
 const PostForm = ({ tags, user, initialValues }) => {
   const toast = useToast();
+
   const [title, setTitle] = useState('this is the title');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
@@ -466,9 +468,17 @@ const PostForm = ({ tags, user, initialValues }) => {
             Save as Draft
           </Button>
           <Spacer h='1rem' />
-          <Button colorScheme='blue' w='100%' variant='outline'>
-            Preview
-          </Button>
+          <Link
+            href={{
+              pathname: `/posts/preview/${id}`,
+              query: { content: content }
+            }}
+            target='_blank'
+          >
+            <Button colorScheme='blue' w='100%' variant='outline'>
+              Preview
+            </Button>
+          </Link>
         </Box>
       </Flex>
     </Flex>
