@@ -16,7 +16,8 @@
       "type": "string"
     },
     "slug": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
     "posts": {
       "type": "relation",
