@@ -18,7 +18,7 @@ const sanitizePopulate = (includeQuery) => {
 };
 
 module.exports = {
-  find: async (ctx, next) => {
+  find: async (ctx) => {
     try {
       const populate = sanitizePopulate(ctx.request.query.include);
       const response = await strapi
@@ -29,7 +29,7 @@ module.exports = {
       ctx.body = err;
     }
   },
-  findOne: async (ctx, next) => {
+  findOne: async (ctx) => {
     try {
       const populate = sanitizePopulate(ctx.request.query.include);
       const response = await strapi
@@ -40,7 +40,7 @@ module.exports = {
       ctx.body = err;
     }
   },
-  findOneBySlug: async (ctx, next) => {
+  findOneBySlug: async (ctx) => {
     try {
       const populate = sanitizePopulate(ctx.request.query.include);
       const response = await strapi
