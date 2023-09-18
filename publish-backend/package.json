@@ -7,6 +7,7 @@
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
+    "lint": "eslint .",
     "strapi": "strapi",
     "cs": "config-sync",
     "test": "jest --forceExit",
@@ -15,10 +16,10 @@
   "dependencies": {
     "@ckeditor/strapi-plugin-ckeditor": "^0.0.7",
     "@strapi/plugin-documentation": "^4.11.5",
-    "@strapi/plugin-i18n": "4.13.3",
-    "@strapi/plugin-users-permissions": "4.13.3",
+    "@strapi/plugin-i18n": "4.13.6",
+    "@strapi/plugin-users-permissions": "4.13.6",
     "@strapi/provider-email-nodemailer": "^4.12.4",
-    "@strapi/strapi": "4.13.3",
+    "@strapi/strapi": "4.13.6",
     "axios": "^1.4.0",
     "better-sqlite3": "8.6.0",
     "eleventy-plugin-error-overlay": "^1.0.0",
@@ -40,6 +41,9 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
+    "eslint": "^8.49.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-jest": "^27.2.3",
     "jest": "^29.6.4",
     "sqlite3": "^5.1.6",
     "supertest": "^6.3.3"
