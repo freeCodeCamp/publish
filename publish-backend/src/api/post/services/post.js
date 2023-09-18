@@ -8,7 +8,6 @@ const { createCoreService } = require('@strapi/strapi').factories;
 
 module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   async create(reqBody = {}) {
-    console.log("reqBody", reqBody);
     // Prevent updating these fields through this endpoint
     delete reqBody.data.publishedAt;
     delete reqBody.data.publish_at;

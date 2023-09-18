@@ -39,9 +39,6 @@ describe("post", () => {
         .set("Authorization", `Bearer ${contributorJWT}`)
         .send(JSON.stringify(postToCreate));
 
-      console.log("contributorJWT: " + contributorJWT);
-      console.log(JSON.stringify(response.body));
-
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
@@ -68,8 +65,6 @@ describe("post", () => {
           })
         );
 
-      console.log(JSON.stringify(response.body));
-
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
@@ -86,8 +81,6 @@ describe("post", () => {
       const now = new Date();
       const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
 
-      console.log("editorJWT: " + editorJWT);
-
       const response = await request(strapi.server.httpServer)
         .patch(`/api/posts/${post.id}/schedule`)
         .set("Content-Type", "application/json")
@@ -99,8 +92,6 @@ describe("post", () => {
             },
           })
         );
-
-      console.log(JSON.stringify(response.body));
 
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
@@ -119,8 +110,6 @@ describe("post", () => {
         .set("Content-Type", "application/json")
         .set("Authorization", `Bearer ${editorJWT}`)
         .send();
-
-      console.log(JSON.stringify(response.body));
 
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
