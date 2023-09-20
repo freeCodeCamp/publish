@@ -241,7 +241,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, defaultValue }) => {
+const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -272,15 +272,16 @@ const Tiptap = ({ handleContentChange, defaultValue }) => {
         transformPastedText: true
       })
     ],
-    content: defaultValue ? defaultValue : '',
+    content: content ? content : '',
     autofocus: true,
     editorProps: {
       attributes: {
         class: 'prose focus:outline-none'
       }
     },
-    onUpdate: ({ editor }) => {
-      console.log('update');
+    onUpdate: async ({ editor }) => {
+      handleHasTyped();
+
       handleContentChange(editor.getHTML());
     }
   });
