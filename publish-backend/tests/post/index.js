@@ -74,7 +74,7 @@ describe("post", () => {
     });
 
     it("should not set publishedAt to future date", async () => {
-      let postToCreateCopy = { ...postToCreate };
+      const postToCreateCopy = { ...postToCreate };
       const now = new Date();
       const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
       postToCreateCopy.data.publishedAt = oneHourFromNow;

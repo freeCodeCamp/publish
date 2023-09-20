@@ -7,7 +7,7 @@
 const { createCoreController } = require('@strapi/strapi').factories;
 
 const isEditor = (ctx) => {
-  ctx.state.user.role.name === "Editor";
+  return ctx.state.user.role.name === "Editor";
 };
 
 
