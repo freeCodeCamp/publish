@@ -82,8 +82,8 @@ export default function PreviewArticlePage({ post }) {
         description: `This is just a preview of the formatting of the content for readability. The page may look different when published on the publication.`,
         isClosable: true,
         status: 'info',
-        position: 'top-right',
-        duration: 4000
+        position: 'bottom-right',
+        duration: 5000
       });
     }
   });
