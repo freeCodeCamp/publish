@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { v4 as uuidv4 } from 'uuid';
 import slugify from 'slugify';
 import {
   Flex,
@@ -25,11 +26,15 @@ import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
 
 const PostForm = ({ tags, user, initialValues }) => {
   const toast = useToast();
+  const router = useRouter();
+  const hasCreatedPost = useRef(false);
+
   const [title, setTitle] = useState('(UNTITLED)');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
@@ -42,8 +47,10 @@ const PostForm = ({ tags, user, initialValues }) => {
   const [content, setContent] = useState(initialValues?.attributes.body || '');
 
   const [isAddingTag, setIsAddingTag] = useState(false);
-
   const [id, setPostId] = useState(null);
+
+  const [hasTyped, setHasTyped] = useState(false);
+
   useEffect(() => {
     if (initialValues) {
       const { title, body, tags, slug } = initialValues.attributes;
@@ -62,9 +69,28 @@ const PostForm = ({ tags, user, initialValues }) => {
     }
   }, [initialValues]);
 
+  useEffect(() => {
+    async function handlePossibleCreationOnTyped() {
+      if (!id && hasTyped && !hasCreatedPost.current) {
+        hasCreatedPost.current = true;
+        await handleSubmit();
+      }
+    }
+
+    handlePossibleCreationOnTyped();
+  }, [hasTyped]);
+
   function handleFileInputChange(event) {
     const file = event.target.files[0];
     setFeatureImage(URL.createObjectURL(file));
+  }
+
+  function handleContentChange(content) {
+    setContent(content);
+  }
+
+  function handleHasTyped() {
+    setHasTyped(true);
   }
 
   function addTag(event) {
@@ -85,19 +111,20 @@ const PostForm = ({ tags, user, initialValues }) => {
     }
   }
 
-  function handleContentChange(content) {
-    setContent(content);
-  }
-
   const handleSubmit = async () => {
+    const nonce = uuidv4();
     const token = user.jwt;
+
     const data = {
       data: {
         title: title,
-        slug: slugify(postUrl != '' ? postUrl : title, {
-          lower: true,
-          specialChar: false
-        }),
+        slug: slugify(
+          postUrl != '' ? postUrl : title != '(UNTITLED)' ? title : nonce,
+          {
+            lower: true,
+            specialChar: false
+          }
+        ),
         body: content,
         tags: clientTagsId,
         author: [user.id],
@@ -108,7 +135,8 @@ const PostForm = ({ tags, user, initialValues }) => {
     try {
       if (!id) {
         const res = await createPost(JSON.stringify(data), token);
-        setPostId(res.data.id);
+
+        router.replace(`/posts/${res.data.id}`);
 
         toast({
           title: 'Post Created.',
@@ -241,6 +269,7 @@ const PostForm = ({ tags, user, initialValues }) => {
         <Box p='0 0 0 5rem'>
           <Tiptap
             handleContentChange={handleContentChange}
+            handleHasTyped={handleHasTyped}
             content={content}
             user={user}
             postId={id}

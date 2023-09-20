@@ -25,11 +25,8 @@ import Placeholder from '@tiptap/extension-placeholder';
 import Link from '@tiptap/extension-link';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
-import { v4 as uuidv4 } from 'uuid';
-import { useRouter } from 'next/router';
-import { createPost } from '@/lib/posts';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -243,42 +240,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, content, postId, user }) => {
-  const router = useRouter();
-  const hasCreatedPost = useRef(false);
-  const [hasTyped, setHasTyped] = useState(false);
-
-  useEffect(() => {
-    async function checkIfNewPost() {
-      if (!postId && hasTyped && !hasCreatedPost.current) {
-        hasCreatedPost.current = true;
-
-        const nonce = uuidv4();
-        const token = user.jwt;
-
-        const data = {
-          data: {
-            title: '(UNTITLED)',
-            slug: nonce,
-            body: content,
-            tags: [],
-            author: [user.id],
-            locale: 'en'
-          }
-        };
-
-        try {
-          const post = await createPost(JSON.stringify(data), token);
-          router.replace(`/posts/${post.data.id}`);
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
-
-    checkIfNewPost();
-  }, [hasTyped]);
-
+const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -314,7 +276,8 @@ const Tiptap = ({ handleContentChange, content, postId, user }) => {
       }
     },
     onUpdate: async ({ editor }) => {
-      setHasTyped(true);
+      handleHasTyped();
+
       handleContentChange(editor.getHTML());
     }
   });
