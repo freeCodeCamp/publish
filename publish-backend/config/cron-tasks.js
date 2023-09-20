@@ -15,8 +15,8 @@ module.exports = {
           publishedAt: {
             $null: true, // filter posts that have not been published
           },
-          publish_at: {
-            $lt: new Date(), // AND 'publish_at' is lower than the current datetime
+          scheduled_at: {
+            $lt: new Date(), // AND 'scheduled_at' is lower than the current datetime
           },
         },
       }

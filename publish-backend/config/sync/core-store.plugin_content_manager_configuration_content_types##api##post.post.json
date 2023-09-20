@@ -120,16 +120,16 @@
           "sortable": true
         }
       },
-      "publish_at": {
+      "scheduled_at": {
         "edit": {
-          "label": "publish_at",
+          "label": "scheduled_at",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "publish_at",
+          "label": "scheduled_at",
           "searchable": true,
           "sortable": true
         }
@@ -240,7 +240,7 @@
             "size": 6
           },
           {
-            "name": "publish_at",
+            "name": "scheduled_at",
             "size": 6
           }
         ]

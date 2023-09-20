@@ -64,7 +64,7 @@ const setupFixtures = async () => {
         body: "<p>draft post</p>",
         slug: "draft-post",
         publishedAt: null,
-        publish_at: null,
+        scheduled_at: null,
         author: {
           connect: [1],
         },

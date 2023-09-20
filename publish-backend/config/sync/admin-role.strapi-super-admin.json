@@ -54,7 +54,7 @@
           "excerpt",
           "tags",
           "author",
-          "publish_at"
+          "scheduled_at"
         ],
         "locales": [
           "en"
@@ -94,7 +94,7 @@
           "excerpt",
           "tags",
           "author",
-          "publish_at"
+          "scheduled_at"
         ],
         "locales": [
           "en"
@@ -114,7 +114,7 @@
           "excerpt",
           "tags",
           "author",
-          "publish_at"
+          "scheduled_at"
         ],
         "locales": [
           "en"

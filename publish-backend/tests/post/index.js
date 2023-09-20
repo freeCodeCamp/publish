@@ -18,7 +18,7 @@ beforeAll(async () => {
       body: "<p>test body</p>",
       slug: "new-post",
       publishedAt: new Date("2023-08-30T00:00:00.000Z"),
-      publish_at: new Date("2023-08-30T00:00:00.000Z"),
+      scheduled_at: new Date("2023-08-30T00:00:00.000Z"),
       author: {
         connect: [contributorUser.id],
       },
@@ -32,7 +32,7 @@ afterEach(async () => {
 
 describe("post", () => {
   describe("POST /posts", () => {
-    it("should create post excluding publishedAt and publish_at", async () => {
+    it("should create post excluding publishedAt and scheduled_at", async () => {
       const response = await request(strapi.server.httpServer)
         .post("/api/posts")
         .set("Content-Type", "application/json")
@@ -42,13 +42,13 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      // Should not set publishedAt and publish_at through this endpoint
+      // Should not set publishedAt and scheduled_at through this endpoint
       expect(responsePost.publishedAt).toBeNull();
-      expect(responsePost.publish_at).toBeNull();
+      expect(responsePost.scheduled_at).toBeNull();
     });
   });
   describe("PUT /posts/:id", () => {
-    it("should update post excluding publishedAt and publish_at", async () => {
+    it("should update post excluding publishedAt and scheduled_at", async () => {
       // find a post to update
       const post = await getPost("test-slug");
 
@@ -60,7 +60,7 @@ describe("post", () => {
           JSON.stringify({
             data: {
               publishedAt: new Date(),
-              publish_at: new Date(),
+              scheduled_at: new Date(),
             },
           })
         );
@@ -68,9 +68,9 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      // Should not update publishedAt and publish_at through this endpoint
+      // Should not update publishedAt and scheduled_at through this endpoint
       expect(responsePost.publishedAt).toEqual(post.publishedAt);
-      expect(responsePost.publish_at).toEqual(post.publish_at);
+      expect(responsePost.scheduled_at).toEqual(post.scheduled_at);
     });
   });
   describe("PATCH /posts/:id/schedule", () => {
@@ -88,7 +88,7 @@ describe("post", () => {
         .send(
           JSON.stringify({
             data: {
-              publish_at: oneHourFromNow,
+              scheduled_at: oneHourFromNow,
             },
           })
         );
@@ -96,8 +96,8 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      // Should set publish_at
-      expect(responsePost.publish_at).toEqual(oneHourFromNow.toISOString());
+      // Should set scheduled_at
+      expect(responsePost.scheduled_at).toEqual(oneHourFromNow.toISOString());
     });
 
     it("should prevent contributors scheduling publishing a post", async () => {
@@ -114,7 +114,7 @@ describe("post", () => {
         .send(
           JSON.stringify({
             data: {
-              publish_at: oneHourFromNow,
+              scheduled_at: oneHourFromNow,
             },
           })
         );

@@ -77,7 +77,7 @@
       "target": "plugin::users-permissions.user",
       "inversedBy": "posts"
     },
-    "publish_at": {
+    "scheduled_at": {
       "pluginOptions": {
         "i18n": {
           "localized": true

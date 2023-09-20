@@ -10,7 +10,7 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   async create(reqBody = {}) {
     // Prevent updating these fields through this endpoint
     delete reqBody.data.publishedAt;
-    delete reqBody.data.publish_at;
+    delete reqBody.data.scheduled_at;
 
     return strapi.entityService.create("api::post.post", reqBody);
   },
@@ -18,17 +18,17 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   async update(postId, reqBody = {}) {
     // Prevent updating these fields through this endpoint
     delete reqBody.data.publishedAt;
-    delete reqBody.data.publish_at;
+    delete reqBody.data.scheduled_at;
 
     return strapi.entityService.update("api::post.post", postId, reqBody);
   },
 
   async schedule(postId, reqBody = {}) {
-    // Extract the publish_at field from the reqBody object
-    const { publish_at } = reqBody.data;
-    // update only the publish_at field
+    // Extract the scheduled_at field from the reqBody object
+    const { scheduled_at } = reqBody.data;
+    // update only the scheduled_at field
     return strapi.entityService.update("api::post.post", postId, {
-      data: { publish_at },
+      data: { scheduled_at },
     });
   },
 
