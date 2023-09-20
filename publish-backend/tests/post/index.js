@@ -99,6 +99,28 @@ describe("post", () => {
       // Should set publish_at
       expect(responsePost.publish_at).toEqual(oneHourFromNow.toISOString());
     });
+
+    it("should prevent contributors scheduling publishing a post", async () => {
+      // find a post to update
+      const post = await getPost("draft-post");
+
+      const now = new Date();
+      const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+
+      const response = await request(strapi.server.httpServer)
+        .patch(`/api/posts/${post.id}/schedule`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(
+          JSON.stringify({
+            data: {
+              publish_at: oneHourFromNow,
+            },
+          })
+        );
+
+      expect(response.status).toBe(403);
+    });
   });
   describe("PATCH /posts/:id/publish", () => {
     it("should publish a post", async () => {
@@ -116,6 +138,19 @@ describe("post", () => {
 
       // Should be published
       expect(responsePost.publishedAt).not.toBeNull();
+    });
+
+    it("should prevent contributors publishing a post", async () => {
+      // find a post to publish
+      const post = await getPost("draft-post");
+
+      const response = await request(strapi.server.httpServer)
+        .patch(`/api/posts/${post.id}/publish`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
     });
   });
 });
