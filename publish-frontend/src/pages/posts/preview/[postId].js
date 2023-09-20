@@ -83,7 +83,7 @@ export default function PreviewArticlePage({ post }) {
         isClosable: true,
         status: 'info',
         position: 'bottom-right',
-        duration: 5000
+        duration: null
       });
     }
   });
