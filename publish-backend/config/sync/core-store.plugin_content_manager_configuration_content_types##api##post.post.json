@@ -134,20 +134,6 @@
           "sortable": true
         }
       },
-      "custom_published_at": {
-        "edit": {
-          "label": "custom_published_at",
-          "description": "",
-          "placeholder": "",
-          "visible": true,
-          "editable": true
-        },
-        "list": {
-          "label": "custom_published_at",
-          "searchable": true,
-          "sortable": true
-        }
-      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -255,12 +241,6 @@
           },
           {
             "name": "scheduled_at",
-            "size": 6
-          }
-        ],
-        [
-          {
-            "name": "custom_published_at",
             "size": 6
           }
         ]

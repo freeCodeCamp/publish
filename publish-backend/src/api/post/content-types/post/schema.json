@@ -84,14 +84,6 @@
         }
       },
       "type": "datetime"
-    },
-    "custom_published_at": {
-      "pluginOptions": {
-        "i18n": {
-          "localized": true
-        }
-      },
-      "type": "datetime"
     }
   }
 }
