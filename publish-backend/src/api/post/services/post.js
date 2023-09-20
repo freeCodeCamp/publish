@@ -38,4 +38,11 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
       data: { publishedAt: new Date() },
     });
   },
+
+  async unpublish(postId) {
+    // update only the publishedAt field
+    return strapi.entityService.update("api::post.post", postId, {
+      data: { publishedAt: null },
+    });
+  },
 }));

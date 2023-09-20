@@ -153,4 +153,36 @@ describe("post", () => {
       expect(response.status).toBe(403);
     });
   });
+  describe("PATCH /posts/:id/unpublish", () => {
+    it("should unpublish a post", async () => {
+      // find a post to unpublish
+      const post = await getPost("published-post");
+
+      const response = await request(strapi.server.httpServer)
+        .patch(`/api/posts/${post.id}/unpublish`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      // Should be unpublished
+      expect(responsePost.publishedAt).toBeNull();
+    });
+
+    it("should prevent contributors unpublishing a post", async () => {
+      // find a post to unpublish
+      const post = await getPost("published-post");
+
+      const response = await request(strapi.server.httpServer)
+        .patch(`/api/posts/${post.id}/unpublish`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
+    });
+  });
+
 });

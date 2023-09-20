@@ -31,4 +31,14 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       ctx.body = err;
     }
   },
+  async unpublish(ctx) {
+    try {
+      const response = await strapi
+        .service("api::post.post")
+        .unpublish(ctx.request.params.id);
+      ctx.body = this.transformResponse(response);
+    } catch (err) {
+      ctx.body = err;
+    }
+  },
 }));

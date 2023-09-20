@@ -18,5 +18,14 @@ module.exports = {
         middlewares: [],
       },
     },
+    {
+      method: "PATCH",
+      path: "/posts/:id/unpublish",
+      handler: "post.unpublish",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };
