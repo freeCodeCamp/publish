@@ -26,6 +26,7 @@ import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
 import NextLink from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
@@ -78,6 +79,7 @@ const PostForm = ({ tags, user, initialValues }) => {
     }
 
     handlePossibleCreationOnTyped();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasTyped]);
 
   function handleFileInputChange(event) {
@@ -497,9 +499,17 @@ const PostForm = ({ tags, user, initialValues }) => {
             Save as Draft
           </Button>
           <Spacer h='1rem' />
-          <Button colorScheme='blue' w='100%' variant='outline'>
-            Preview
-          </Button>
+          <Link
+            href={{
+              pathname: `/posts/preview/${id}`,
+              query: { content: content }
+            }}
+            target='_blank'
+          >
+            <Button colorScheme='blue' w='100%' variant='outline'>
+              Preview
+            </Button>
+          </Link>
         </Box>
       </Flex>
     </Flex>

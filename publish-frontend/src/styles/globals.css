@@ -15,6 +15,14 @@
   min-width: 100%;
 }
 
+.preview {
+  min-height: 0;
+  max-height: unset;
+  overflow: unset;
+  padding: 1rem;
+  min-width: 100%;
+}
+
 .ProseMirror:focus {
   outline: none;
 }
