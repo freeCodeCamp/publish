@@ -25,7 +25,7 @@ import Placeholder from '@tiptap/extension-placeholder';
 import Link from '@tiptap/extension-link';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Youtube from '@tiptap/extension-youtube';
 import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/router';
@@ -245,6 +245,40 @@ function ToolBar({ editor }) {
 
 const Tiptap = ({ handleContentChange, content, postId, user }) => {
   const router = useRouter();
+  const hasCreatedPost = useRef(false);
+  const [hasTyped, setHasTyped] = useState(false);
+
+  useEffect(() => {
+    async function checkIfNewPost() {
+      if (!postId && hasTyped && !hasCreatedPost.current) {
+        hasCreatedPost.current = true;
+
+        const nonce = uuidv4();
+        const token = user.jwt;
+
+        const data = {
+          data: {
+            title: '(UNTITLED)',
+            slug: nonce,
+            body: content,
+            tags: [],
+            author: [user.id],
+            locale: 'en'
+          }
+        };
+
+        try {
+          const post = await createPost(JSON.stringify(data), token);
+          router.replace(`/posts/${post.data.id}`);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    }
+
+    checkIfNewPost();
+  }, [hasTyped]);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -279,31 +313,8 @@ const Tiptap = ({ handleContentChange, content, postId, user }) => {
         class: 'prose focus:outline-none'
       }
     },
-    onFocus: async ({ editor }) => {
-      if (!postId) {
-        editor.commands.blur();
-        const nonce = uuidv4();
-        const token = user.jwt;
-
-        const data = {
-          data: {
-            title: '(UNTITLED)',
-            slug: nonce,
-            body: content,
-            tags: [],
-            author: [user.id],
-            locale: 'en'
-          }
-        };
-
-        try {
-          const post = await createPost(JSON.stringify(data), token);
-
-          router.replace(`/posts/${post.data.id}`);
-        } catch (error) {
-          console.log(error);
-        }
-      }
+    onUpdate: async ({ editor }) => {
+      setHasTyped(true);
       handleContentChange(editor.getHTML());
     }
   });
