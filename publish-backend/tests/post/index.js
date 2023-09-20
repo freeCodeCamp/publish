@@ -1,6 +1,5 @@
 const request = require("supertest");
 const { getUser, getPost, getUserJWT } = require("../helpers/helpers");
-const { ValidationError } = require("@strapi/utils").errors;
 
 let contributorJWT = "";
 let editorJWT = "";
