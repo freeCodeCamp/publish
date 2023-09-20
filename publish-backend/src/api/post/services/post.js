@@ -1,25 +1,19 @@
 'use strict';
 
+const { ValidationError } = require("@strapi/utils").errors;
+
 /**
  * post service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+const { createCoreService } = require("@strapi/strapi").factories;
 
 module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   async create(reqBody = {}) {
-    // Prevent updating these fields through this endpoint
-    delete reqBody.data.publishedAt;
-    delete reqBody.data.scheduled_at;
-
     return strapi.entityService.create("api::post.post", reqBody);
   },
 
   async update(postId, reqBody = {}) {
-    // Prevent updating these fields through this endpoint
-    delete reqBody.data.publishedAt;
-    delete reqBody.data.scheduled_at;
-
     return strapi.entityService.update("api::post.post", postId, reqBody);
   },
 
@@ -44,5 +38,12 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
     return strapi.entityService.update("api::post.post", postId, {
       data: { publishedAt: null },
     });
+  },
+
+  validatePublishedAt(publishedAt) {
+    if (publishedAt > new Date()) {
+      throw new ValidationError("publishedAt must be a past date");
+    }
+    return true;
   },
 }));

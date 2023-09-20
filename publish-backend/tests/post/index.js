@@ -1,5 +1,6 @@
 const request = require("supertest");
 const { getUser, getPost, getUserJWT } = require("../helpers/helpers");
+const { ValidationError } = require("@strapi/utils").errors;
 
 let contributorJWT = "";
 let editorJWT = "";
@@ -27,12 +28,38 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-  jest.setTimeout(1000);
+  // delete the created test post
+  try {
+    const post = await getPost(postToCreate.data.slug);
+    if (post) {
+      await strapi.entityService.delete("api::post.post", post.id);
+    }
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 describe("post", () => {
   describe("POST /posts", () => {
-    it("should create post excluding publishedAt and scheduled_at", async () => {
+    it("should create post including publishedAt and scheduled_at for editors", async () => {
+      const response = await request(strapi.server.httpServer)
+        .post("/api/posts")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(postToCreate));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.publishedAt).toEqual(
+        postToCreate.data.publishedAt.toISOString()
+      );
+      expect(responsePost.scheduled_at).toEqual(
+        postToCreate.data.publishedAt.toISOString()
+      );
+    });
+
+    it("should create post excluding publishedAt and scheduled_at for contributors", async () => {
       const response = await request(strapi.server.httpServer)
         .post("/api/posts")
         .set("Content-Type", "application/json")
@@ -42,13 +69,58 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      // Should not set publishedAt and scheduled_at through this endpoint
+      // Should not set publishedAt and scheduled_at for contributors
       expect(responsePost.publishedAt).toBeNull();
       expect(responsePost.scheduled_at).toBeNull();
     });
+
+    it("should not set publishedAt to future date", async () => {
+      let postToCreateCopy = { ...postToCreate };
+      const now = new Date();
+      const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+      postToCreateCopy.data.publishedAt = oneHourFromNow;
+
+      const response = await request(strapi.server.httpServer)
+        .post("/api/posts")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(postToCreateCopy));
+
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe(
+        "publishedAt must be a past date"
+      );
+    });
   });
   describe("PUT /posts/:id", () => {
-    it("should update post excluding publishedAt and scheduled_at", async () => {
+    it("should update post including publishedAt and scheduled_at for editors", async () => {
+      // find a post to update
+      const post = await getPost("test-slug");
+      const newData = {
+        data: {
+          publishedAt: new Date(),
+          scheduled_at: new Date(),
+        },
+      };
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(newData));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.publishedAt).toEqual(
+        newData.data.publishedAt.toISOString()
+      );
+      expect(responsePost.scheduled_at).toEqual(
+        newData.data.scheduled_at.toISOString()
+      );
+    });
+
+    it("should update post excluding publishedAt and scheduled_at for contributors", async () => {
       // find a post to update
       const post = await getPost("test-slug");
 
@@ -71,6 +143,30 @@ describe("post", () => {
       // Should not update publishedAt and scheduled_at through this endpoint
       expect(responsePost.publishedAt).toEqual(post.publishedAt);
       expect(responsePost.scheduled_at).toEqual(post.scheduled_at);
+    });
+
+    it("should not set publishedAt to future date", async () => {
+      const now = new Date();
+      const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+
+      // find a post to update
+      const post = await getPost("test-slug");
+      const newData = {
+        data: {
+          publishedAt: oneHourFromNow,
+        },
+      };
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(newData));
+
+      expect(response.status).toBe(400);
+      expect(response.body.error.message).toBe(
+        "publishedAt must be a past date"
+      );
     });
   });
   describe("PATCH /posts/:id/schedule", () => {
@@ -184,5 +280,4 @@ describe("post", () => {
       expect(response.status).toBe(403);
     });
   });
-
 });

@@ -6,7 +6,32 @@
 
 const { createCoreController } = require('@strapi/strapi').factories;
 
+const isEditor = (ctx) => {
+  ctx.state.user.role.name === "Editor";
+};
+
+
 module.exports = createCoreController("api::post.post", ({ strapi }) => ({
+  async create(ctx) {
+    if (!isEditor(ctx)) {
+      // don't allow publishing or scheduling posts
+      delete ctx.request.body.data.publishedAt;
+      delete ctx.request.body.data.scheduled_at;
+    }
+
+    // call the default core action with modified data
+    return await super.create(ctx);
+  },
+  async update(ctx) {
+    if (!isEditor(ctx)) {
+      // don't allow publishing or scheduling posts
+      delete ctx.request.body.data.publishedAt;
+      delete ctx.request.body.data.scheduled_at;
+    }
+
+    // call the default core action with modified data
+    return await super.update(ctx);
+  },
   async schedule(ctx) {
     try {
       const response = await strapi
