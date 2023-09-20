@@ -23,7 +23,6 @@ export async function getServerSideProps(context) {
     return {
       props: {
         post: data.data.attributes,
-        unsavedPostContent: context.query.content,
         postId: postId
       }
     };
@@ -35,7 +34,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function PreviewArticlePage({ post, unsavedPostContent }) {
+export default function PreviewArticlePage({ post }) {
   const toast = useToast();
   const toastIdRef = useRef();
 
@@ -66,7 +65,7 @@ export default function PreviewArticlePage({ post, unsavedPostContent }) {
         protocols: ['http', 'https', 'mailto', 'tel']
       })
     ],
-    content: unsavedPostContent,
+    content: post?.body,
     editable: false,
     editorProps: {
       attributes: {
@@ -83,7 +82,7 @@ export default function PreviewArticlePage({ post, unsavedPostContent }) {
         description: `This is just a preview of the formatting of the content for readability. The page may look different when published on the publication.`,
         isClosable: true,
         status: 'info',
-        position: 'bottom-left',
+        position: 'bottom-right',
         duration: null
       });
     }

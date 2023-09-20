@@ -501,8 +501,7 @@ const PostForm = ({ tags, user, initialValues }) => {
           <Spacer h='1rem' />
           <Link
             href={{
-              pathname: `/posts/preview/${id}`,
-              query: { content: content }
+              pathname: `/posts/preview/${id}`
             }}
             target='_blank'
           >
