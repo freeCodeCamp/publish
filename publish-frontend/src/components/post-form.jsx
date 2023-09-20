@@ -31,7 +31,7 @@ import { useRouter } from 'next/router';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
 
-const PostForm = ({ tags, user, initialValues }) => {
+const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
   const hasCreatedPost = useRef(false);
@@ -42,10 +42,12 @@ const PostForm = ({ tags, user, initialValues }) => {
   const [clientTags, setClientTags] = useState([]);
   const [clientTagsId, setClientTagsId] = useState([]);
 
+  const [author, setAuthor] = useState('');
+
   const [postUrl, setPostUrl] = useState('');
 
   const [featureImage, setFeatureImage] = useState('');
-  const [content, setContent] = useState(initialValues?.attributes.body || '');
+  const [content, setContent] = useState(post?.attributes.body || '');
 
   const [isAddingTag, setIsAddingTag] = useState(false);
   const [id, setPostId] = useState(null);
@@ -53,9 +55,9 @@ const PostForm = ({ tags, user, initialValues }) => {
   const [hasTyped, setHasTyped] = useState(false);
 
   useEffect(() => {
-    if (initialValues) {
-      const { title, body, tags, slug } = initialValues.attributes;
-      const { id } = initialValues;
+    if (post) {
+      const { title, body, tags, slug } = post.attributes;
+      const { id } = post;
 
       setTitle(title);
       setContent(body);
@@ -68,7 +70,7 @@ const PostForm = ({ tags, user, initialValues }) => {
       setClientTagsId(tagIds);
       setPostUrl(slug ?? '');
     }
-  }, [initialValues]);
+  }, [post]);
 
   useEffect(() => {
     async function handlePossibleCreationOnTyped() {
@@ -129,7 +131,7 @@ const PostForm = ({ tags, user, initialValues }) => {
         ),
         body: content,
         tags: clientTagsId,
-        author: [user.id],
+        author: [author != '' ? author : user.id],
         locale: 'en'
       }
     };
@@ -463,7 +465,26 @@ const PostForm = ({ tags, user, initialValues }) => {
             </>
           )}
           <Spacer h='1rem' />
-          <Divider />
+          {isEditor(user) && (
+            <>
+              <Spacer h='1rem' />
+              <Text fontSize='xl'>Author</Text>
+              <Select
+                placeholder='Select option'
+                w='100%'
+                marginTop='1rem'
+                defaultValue={post ? post.attributes.author.data.id : user.id}
+                onChange={e => setAuthor(e.target.value)}
+              >
+                {authors.map(author => (
+                  <option key={author.id} value={author.id}>
+                    {author.username}
+                  </option>
+                ))}
+              </Select>
+              <Spacer h='1rem' />
+            </>
+          )}
           <Spacer h='1rem' />
           <Text fontSize='xl'>Publish Date</Text>
           <Spacer h='1rem' />
