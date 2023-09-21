@@ -18,7 +18,7 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Field, Form, Formik } from 'formik';
 import { getServerSession } from 'next-auth/next';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import slugify from 'slugify';
 
@@ -39,7 +39,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function CreateTag({ user }) {
-  // const router = useRouter();
+  const router = useRouter();
   const toast = useToast();
 
   const [tagData, setTagData] = useState({
@@ -104,7 +104,6 @@ export default function CreateTag({ user }) {
         visibility: tagData.isInternal ? 'internal' : 'public'
       }
     };
-    console.log(data);
 
     try {
       await createTag(token, data);
@@ -114,6 +113,7 @@ export default function CreateTag({ user }) {
         duration: 5000,
         isClosable: true
       });
+      router.push('/tags');
     } catch (error) {
       console.log(error);
       toast({
