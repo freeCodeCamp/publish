@@ -206,6 +206,7 @@ const PostForm = ({ tags, user, authors, post }) => {
         ),
         body: content,
         tags: clientTagsId,
+        publishDate: publishDate,
         author: [author != '' ? author : user.id],
         locale: 'en'
       }
