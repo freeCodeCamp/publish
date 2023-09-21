@@ -1,4 +1,10 @@
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
   Breadcrumb,
   BreadcrumbItem,
@@ -12,6 +18,7 @@ import {
   Heading,
   Input,
   chakra,
+  useDisclosure,
   useToast
 } from '@chakra-ui/react';
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +26,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Field, Form, Formik } from 'formik';
 import { getServerSession } from 'next-auth/next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import slugify from 'slugify';
 
 import NavMenu from '@/components/nav-menu';
@@ -43,6 +50,8 @@ export async function getServerSideProps(context) {
 export default function EditTag({ tag, user }) {
   const router = useRouter();
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef();
 
   const [tagData, setTagData] = useState({
     name: tag.attributes.name,
@@ -144,7 +153,7 @@ export default function EditTag({ tag, user }) {
           position={{ md: 'sticky' }}
           top='0'
           bgColor='gray.200'
-          zIndex='9999'
+          zIndex='999'
         >
           <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
             <BreadcrumbItem>
@@ -211,13 +220,43 @@ export default function EditTag({ tag, user }) {
                 <Button
                   colorScheme='red'
                   isLoading={isSubmitting}
-                  onClick={async () => {
-                    setSubmitting(true);
-                    await handleDelete();
-                  }}
+                  onClick={onOpen}
                 >
                   Delete tag
                 </Button>
+                <AlertDialog
+                  isOpen={isOpen}
+                  leastDestructiveRef={cancelRef}
+                  onClose={onClose}
+                >
+                  <AlertDialogOverlay>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        Are you sure you want to delete this tag?
+                      </AlertDialogHeader>
+                      <AlertDialogBody>
+                        You{"'"}re about to delete <b>{`"${tagData.name}"`}</b>.
+                        This is permanent!
+                      </AlertDialogBody>
+                      <AlertDialogFooter>
+                        <Button ref={cancelRef} onClick={onClose}>
+                          Cancel
+                        </Button>
+                        <Button
+                          colorScheme='red'
+                          isLoading={isSubmitting}
+                          onClick={async () => {
+                            setSubmitting(true);
+                            await handleDelete();
+                          }}
+                          ml={3}
+                        >
+                          Delete
+                        </Button>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialogOverlay>
+                </AlertDialog>
               </Form>
             )}
           </Formik>
