@@ -39,7 +39,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [title, setTitle] = useState('(UNTITLED)');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [postId, setPostId] = useState(post?.id ? post.id : null);
+  const [postId, setPostId] = useState(post?.id);
 
   const [clientTags, setClientTags] = useState([]);
   const [clientTagsId, setClientTagsId] = useState([]);
