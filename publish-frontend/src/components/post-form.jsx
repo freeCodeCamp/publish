@@ -133,7 +133,7 @@ const PostForm = ({ tags, user, authors, post }) => {
   }
 
   function handleDateTimeOnInit() {
-    const { publishDate } = post.attributes;
+    const { publishDate } = post.atttributes;
 
     const date = new Date(publishDate ? publishDate : Date.now());
 
@@ -163,464 +163,465 @@ const PostForm = ({ tags, user, authors, post }) => {
 
     setPublishDate(publishDate);
     setPublishTime(formattedTime);
-    function handleContentChange(content) {
-      setContent(content);
-    }
+  }
+  function handleContentChange(content) {
+    setContent(content);
+  }
 
-    function handleHasTyped() {
-      setHasTyped(true);
-    }
+  function handleHasTyped() {
+    setHasTyped(true);
+  }
 
-    function addTag(event) {
-      if (!clientTags.includes(event.target.value)) {
-        const newTags = [...clientTags, event.target.value];
+  function addTag(event) {
+    if (!clientTags.includes(event.target.value)) {
+      const newTags = [...clientTags, event.target.value];
 
-        const newTagsInt = [];
-        newTags.forEach(tag => {
-          tags.forEach(t => {
-            if (tag === t.attributes.name) {
-              newTagsInt.push(t.id);
-            }
-          });
+      const newTagsInt = [];
+      newTags.forEach(tag => {
+        tags.forEach(t => {
+          if (tag === t.attributes.name) {
+            newTagsInt.push(t.id);
+          }
         });
+      });
 
-        setClientTags(newTags);
-        setClientTagsId(newTagsInt);
-      }
+      setClientTags(newTags);
+      setClientTagsId(newTagsInt);
     }
+  }
 
-    const handleSubmit = async () => {
-      const nonce = uuidv4();
-      const token = user.jwt;
+  const handleSubmit = async () => {
+    const nonce = uuidv4();
+    const token = user.jwt;
 
-      const data = {
-        data: {
-          title: title,
-          slug: slugify(
-            postUrl != '' ? postUrl : title != '(UNTITLED)' ? title : nonce,
-            {
-              lower: true,
-              specialChar: false
-            }
-          ),
-          body: content,
-          tags: clientTagsId,
-          author: [author != '' ? author : user.id],
-          locale: 'en'
-        }
-      };
-
-      try {
-        if (!id) {
-          const res = await createPost(JSON.stringify(data), token);
-
-          router.replace(`/posts/${res.data.id}`);
-
-          toast({
-            title: 'Post Created.',
-            description: "We've created your post for you.",
-            status: 'success',
-            duration: 5000,
-            isClosable: true
-          });
-        } else {
-          await updatePost(id, JSON.stringify(data), token);
-          toast({
-            title: 'Post Updated.',
-            description: "We've updated your post for you.",
-            status: 'success',
-            duration: 5000,
-            isClosable: true
-          });
-        }
-      } catch (error) {
-        toast({
-          title: 'An error occurred.',
-          description: error.message,
-          status: 'error',
-          duration: 5000,
-          isClosable: true
-        });
+    const data = {
+      data: {
+        title: title,
+        slug: slugify(
+          postUrl != '' ? postUrl : title != '(UNTITLED)' ? title : nonce,
+          {
+            lower: true,
+            specialChar: false
+          }
+        ),
+        body: content,
+        tags: clientTagsId,
+        author: [author != '' ? author : user.id],
+        locale: 'en'
       }
     };
 
-    async function handleTagSubmit(tagName) {
-      const token = user.jwt;
-      const data = {
-        data: {
-          name: tagName,
-          slug: slugify(tagName, {
-            lower: true,
-            specialChar: false
-          }),
-          posts: [],
-          visibility: 'public'
-        }
-      };
+    try {
+      if (!id) {
+        const res = await createPost(JSON.stringify(data), token);
 
-      try {
-        await createTag(token, data);
+        router.replace(`/posts/${res.data.id}`);
+
         toast({
-          title: 'Tag Created.',
-          description: "We've created your tag for you.",
+          title: 'Post Created.',
+          description: "We've created your post for you.",
           status: 'success',
           duration: 5000,
           isClosable: true
         });
-      } catch (error) {
+      } else {
+        await updatePost(id, JSON.stringify(data), token);
         toast({
-          title: 'An error occurred.',
-          description: error,
-          status: 'error',
+          title: 'Post Updated.',
+          description: "We've updated your post for you.",
+          status: 'success',
           duration: 5000,
           isClosable: true
         });
       }
+    } catch (error) {
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
     }
+  };
 
-    return (
-      <Flex>
-        <Flex flexDirection='column' mr='1rem' flex='3'>
-          <Box display='flex' justifyContent='start' m='1rem 0 0 5rem'>
-            <Button
-              variant='link'
-              as={NextLink}
-              href='/posts/'
-              leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
+  async function handleTagSubmit(tagName) {
+    const token = user.jwt;
+    const data = {
+      data: {
+        name: tagName,
+        slug: slugify(tagName, {
+          lower: true,
+          specialChar: false
+        }),
+        posts: [],
+        visibility: 'public'
+      }
+    };
+
+    try {
+      await createTag(token, data);
+      toast({
+        title: 'Tag Created.',
+        description: "We've created your tag for you.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } catch (error) {
+      toast({
+        title: 'An error occurred.',
+        description: error,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  }
+
+  return (
+    <Flex>
+      <Flex flexDirection='column' mr='1rem' flex='3'>
+        <Box display='flex' justifyContent='start' m='1rem 0 0 5rem'>
+          <Button
+            variant='link'
+            as={NextLink}
+            href='/posts/'
+            leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
+          >
+            <Text fontSize='2xl'>Posts</Text>
+          </Button>
+        </Box>
+        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
+          {!isEditingTitle ? (
+            <>
+              <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
+                <Text fontSize='2xl'>{title}</Text>
+                <Text fontSize='2xl'>
+                  <FontAwesomeIcon icon={faEdit} />
+                </Text>
+              </Stack>
+            </>
+          ) : (
+            <Formik
+              initialValues={{ title: title }}
+              onSubmit={(values, actions) => {
+                setTitle(values.title);
+                setIsEditingTitle(false);
+                actions.setSubmitting(false);
+              }}
             >
-              <Text fontSize='2xl'>Posts</Text>
-            </Button>
+              {props => (
+                <Form>
+                  <Stack direction={{ base: 'column', lg: 'row' }}>
+                    <Field name='title'>
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={form.errors.title && form.touched.title}
+                        >
+                          <Input
+                            {...field}
+                            placeholder='title'
+                            w={{ base: '35%', lg: '100%' }}
+                          />
+                          <FormErrorMessage>
+                            {form.errors.title}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Button
+                      colorScheme='blue'
+                      isLoading={props.isSubmitting}
+                      type='submit'
+                      w={{ base: '35%', lg: '100%' }}
+                      margin={{ base: '0 0 1rem 0' }}
+                    >
+                      Submit
+                    </Button>
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
+          )}
+        </Flex>
+        <Box p='0 0 0 5rem'>
+          <Tiptap
+            handleContentChange={handleContentChange}
+            handleHasTyped={handleHasTyped}
+            content={content}
+            user={user}
+            postId={id}
+          />
+        </Box>
+      </Flex>
+      <Flex
+        flexDirection='column'
+        w={{ base: 'full', md: '350px' }}
+        flex='1'
+        h='100vh'
+        bgColor='white'
+        borderLeftWidth='1px'
+        overflowY='hidden'
+        padding={{ base: '0.5rem ' }}
+      >
+        <Box overflowY='scroll'>
+          <Box
+            size='lg'
+            py='1rem'
+            mx='20px'
+            textAlign='center'
+            fontWeight='700'
+            fontSize='20px'
+            display='flex'
+            alignItems='center'
+          >
+            <Img
+              src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
+              width='32px'
+              height='32px'
+              mr='12px'
+              borderRadius='5px'
+            />
+            freeCodeCamp.org
           </Box>
-          <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
-            {!isEditingTitle ? (
+          <Box
+            display='flex'
+            borderWidth='1px'
+            borderRadius='lg'
+            w='100%'
+            h='175px'
+            overflow='hidden'
+            bg='#f1f5f9'
+            justifyContent='center'
+            alignItems='center'
+          >
+            {!featureImage ? (
               <>
-                <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
-                  <Text fontSize='2xl'>{title}</Text>
-                  <Text fontSize='2xl'>
-                    <FontAwesomeIcon icon={faEdit} />
-                  </Text>
-                </Stack>
+                <label htmlFor='feature-image' className='custom-file-upload'>
+                  <button
+                    type='button'
+                    onClick={() =>
+                      document.getElementById('feature-image').click()
+                    }
+                  >
+                    Select Image
+                  </button>
+                </label>
+                <input
+                  type='file'
+                  id='feature-image'
+                  accept='image/*'
+                  style={{ display: 'none' }}
+                  onChange={handleFileInputChange}
+                />{' '}
               </>
             ) : (
-              <Formik
-                initialValues={{ title: title }}
-                onSubmit={(values, actions) => {
-                  setTitle(values.title);
-                  setIsEditingTitle(false);
-                  actions.setSubmitting(false);
-                }}
-              >
-                {props => (
-                  <Form>
-                    <Stack direction={{ base: 'column', lg: 'row' }}>
-                      <Field name='title'>
-                        {({ field, form }) => (
-                          <FormControl
-                            isInvalid={form.errors.title && form.touched.title}
-                          >
-                            <Input
-                              {...field}
-                              placeholder='title'
-                              w={{ base: '35%', lg: '100%' }}
-                            />
-                            <FormErrorMessage>
-                              {form.errors.title}
-                            </FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
-                      <Button
-                        colorScheme='blue'
-                        isLoading={props.isSubmitting}
-                        type='submit'
-                        w={{ base: '35%', lg: '100%' }}
-                        margin={{ base: '0 0 1rem 0' }}
-                      >
-                        Submit
-                      </Button>
-                    </Stack>
-                  </Form>
-                )}
-              </Formik>
-            )}
-          </Flex>
-          <Box p='0 0 0 5rem'>
-            <Tiptap
-              handleContentChange={handleContentChange}
-              handleHasTyped={handleHasTyped}
-              content={content}
-              user={user}
-              postId={id}
-            />
-          </Box>
-        </Flex>
-        <Flex
-          flexDirection='column'
-          w={{ base: 'full', md: '350px' }}
-          flex='1'
-          h='100vh'
-          bgColor='white'
-          borderLeftWidth='1px'
-          overflowY='hidden'
-          padding={{ base: '0.5rem ' }}
-        >
-          <Box overflowY='scroll'>
-            <Box
-              size='lg'
-              py='1rem'
-              mx='20px'
-              textAlign='center'
-              fontWeight='700'
-              fontSize='20px'
-              display='flex'
-              alignItems='center'
-            >
               <Img
-                src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
-                width='32px'
-                height='32px'
-                mr='12px'
-                borderRadius='5px'
-              />
-              freeCodeCamp.org
-            </Box>
-            <Box
-              display='flex'
-              borderWidth='1px'
-              borderRadius='lg'
-              w='100%'
-              h='175px'
-              overflow='hidden'
-              bg='#f1f5f9'
-              justifyContent='center'
-              alignItems='center'
-            >
-              {!featureImage ? (
-                <>
-                  <label htmlFor='feature-image' className='custom-file-upload'>
-                    <button
-                      type='button'
-                      onClick={() =>
-                        document.getElementById('feature-image').click()
-                      }
-                    >
-                      Select Image
-                    </button>
-                  </label>
-                  <input
-                    type='file'
-                    id='feature-image'
-                    accept='image/*'
-                    style={{ display: 'none' }}
-                    onChange={handleFileInputChange}
-                  />{' '}
-                </>
-              ) : (
-                <Img
-                  src={featureImage}
-                  alt='feature'
-                  borderRadius='lg'
-                  objectFit='cover'
-                  w='100%'
-                  h='100%'
-                />
-              )}
-            </Box>
-            <Spacer h='1rem' />
-            {featureImage && (
-              <Button
-                colorScheme='red'
+                src={featureImage}
+                alt='feature'
+                borderRadius='lg'
+                objectFit='cover'
                 w='100%'
-                onClick={() => setFeatureImage(null)}
-              >
-                Delete Image
-              </Button>
+                h='100%'
+              />
             )}
-            <Spacer h='1rem' />
-            <Box id='tag-container' display='flex' flexWrap='wrap'>
-              <Wrap spacing={2}>
-                {clientTags.map(tag => (
-                  <Tag
-                    key={tag}
-                    size='lg'
-                    borderRadius='full'
-                    colorScheme='green'
-                    variant='solid'
-                  >
-                    <TagLabel>{tag}</TagLabel>
-                    <TagCloseButton
-                      onClick={() => {
-                        const newTags = clientTags.filter(t => t !== tag);
-                        setClientTags(newTags);
-                      }}
-                    />
-                  </Tag>
-                ))}
-              </Wrap>
-            </Box>
-            <Spacer h='1rem' />
-            <Text fontSize='xl'>Tags</Text>
-            <Select
-              placeholder='Select option'
-              onChange={addTag}
+          </Box>
+          <Spacer h='1rem' />
+          {featureImage && (
+            <Button
+              colorScheme='red'
               w='100%'
-              marginTop='1rem'
+              onClick={() => setFeatureImage(null)}
             >
-              {tags.map(tag => (
-                <option key={tag.id} value={tag.attributes.name}>
-                  {tag.attributes.name}
-                </option>
-              ))}
-            </Select>
-            {isEditor(user) && (
-              <>
-                {!isAddingTag ? (
-                  <Button
-                    colorScheme='blue'
-                    variant='link'
-                    onClick={() => setIsAddingTag(true)}
-                  >
-                    Add new Tag
-                  </Button>
-                ) : (
-                  <>
-                    <Spacer h='1rem' />
-                    <Formik
-                      initialValues={{ tagName: '' }}
-                      onSubmit={(values, actions) => {
-                        setIsAddingTag(false);
-                        handleTagSubmit(values.tagName);
-                        actions.setSubmitting(false);
-                      }}
-                    >
-                      {props => (
-                        <Form>
-                          <Field name='tagName'>
-                            {({ field, form }) => (
-                              <FormControl
-                                isInvalid={
-                                  form.errors.tagName && form.touched.tagName
-                                }
-                              >
-                                <Input
-                                  {...field}
-                                  placeholder='tag name'
-                                  w='100%'
-                                  required
-                                />
-                                <FormErrorMessage>
-                                  {form.errors.tagName}
-                                </FormErrorMessage>
-                              </FormControl>
-                            )}
-                          </Field>
-                          <Button
-                            colorScheme='blue'
-                            isLoading={props.isSubmitting}
-                            type='submit'
-                            w='100%'
-                            margin={{ base: '1rem 0 0 0' }}
-                          >
-                            Submit
-                          </Button>
-                          <Button
-                            colorScheme='red'
-                            width='100%'
-                            margin={{ base: '1rem 0 0 0' }}
-                            onClick={() => setIsAddingTag(false)}
-                          >
-                            Cancel
-                          </Button>
-                        </Form>
-                      )}
-                    </Formik>
-                  </>
-                )}
-              </>
-            )}
-            <Spacer h='1rem' />
-            {isEditor(user) && (
-              <>
-                <Spacer h='1rem' />
-                <Text fontSize='xl'>Author</Text>
-                <Select
-                  placeholder='Select option'
-                  w='100%'
-                  marginTop='1rem'
-                  defaultValue={post ? post.attributes.author.data.id : user.id}
-                  onChange={e => setAuthor(e.target.value)}
+              Delete Image
+            </Button>
+          )}
+          <Spacer h='1rem' />
+          <Box id='tag-container' display='flex' flexWrap='wrap'>
+            <Wrap spacing={2}>
+              {clientTags.map(tag => (
+                <Tag
+                  key={tag}
+                  size='lg'
+                  borderRadius='full'
+                  colorScheme='green'
+                  variant='solid'
                 >
-                  {authors.map(author => (
-                    <option key={author.id} value={author.id}>
-                      {author.username}
-                    </option>
-                  ))}
-                </Select>
-                <Spacer h='1rem' />
-              </>
-            )}
-            <Spacer h='1rem' />
-            <Text fontSize='xl'>Publish Date</Text>
-            <Spacer h='1rem' />
-            <Box display='flex' flexDirection='row'>
-              <Input
-                type='date'
-                variant='outline'
-                id='publish-date'
-                onChange={handlePublishDateChange}
-              />
-              <Input
-                type='time'
-                variant='outline'
-                id='publish-time'
-                onChange={handlePublishTimeChange}
-              />
-            </Box>
-            <Text fontStyle='italic' fontSize='md' opacity='0.6'>
-              (Time is unique to the selected locale timezone)
-            </Text>
-            <Spacer h='1rem' />
-            <Text fontSize='xl'>Post Url</Text>
-            <label>
-              <Input
-                type='text'
-                placeholder='Post Url'
-                value={postUrl}
-                id='slug'
-                onChange={e => setPostUrl(e.target.value)}
+                  <TagLabel>{tag}</TagLabel>
+                  <TagCloseButton
+                    onClick={() => {
+                      const newTags = clientTags.filter(t => t !== tag);
+                      setClientTags(newTags);
+                    }}
+                  />
+                </Tag>
+              ))}
+            </Wrap>
+          </Box>
+          <Spacer h='1rem' />
+          <Text fontSize='xl'>Tags</Text>
+          <Select
+            placeholder='Select option'
+            onChange={addTag}
+            w='100%'
+            marginTop='1rem'
+          >
+            {tags.map(tag => (
+              <option key={tag.id} value={tag.attributes.name}>
+                {tag.attributes.name}
+              </option>
+            ))}
+          </Select>
+          {isEditor(user) && (
+            <>
+              {!isAddingTag ? (
+                <Button
+                  colorScheme='blue'
+                  variant='link'
+                  onClick={() => setIsAddingTag(true)}
+                >
+                  Add new Tag
+                </Button>
+              ) : (
+                <>
+                  <Spacer h='1rem' />
+                  <Formik
+                    initialValues={{ tagName: '' }}
+                    onSubmit={(values, actions) => {
+                      setIsAddingTag(false);
+                      handleTagSubmit(values.tagName);
+                      actions.setSubmitting(false);
+                    }}
+                  >
+                    {props => (
+                      <Form>
+                        <Field name='tagName'>
+                          {({ field, form }) => (
+                            <FormControl
+                              isInvalid={
+                                form.errors.tagName && form.touched.tagName
+                              }
+                            >
+                              <Input
+                                {...field}
+                                placeholder='tag name'
+                                w='100%'
+                                required
+                              />
+                              <FormErrorMessage>
+                                {form.errors.tagName}
+                              </FormErrorMessage>
+                            </FormControl>
+                          )}
+                        </Field>
+                        <Button
+                          colorScheme='blue'
+                          isLoading={props.isSubmitting}
+                          type='submit'
+                          w='100%'
+                          margin={{ base: '1rem 0 0 0' }}
+                        >
+                          Submit
+                        </Button>
+                        <Button
+                          colorScheme='red'
+                          width='100%'
+                          margin={{ base: '1rem 0 0 0' }}
+                          onClick={() => setIsAddingTag(false)}
+                        >
+                          Cancel
+                        </Button>
+                      </Form>
+                    )}
+                  </Formik>
+                </>
+              )}
+            </>
+          )}
+          <Spacer h='1rem' />
+          {isEditor(user) && (
+            <>
+              <Spacer h='1rem' />
+              <Text fontSize='xl'>Author</Text>
+              <Select
+                placeholder='Select option'
                 w='100%'
                 marginTop='1rem'
-                variant='outline'
-              />
-              <Text fontStyle='italic' fontSize='md' opacity='0.6'>
-                https://www.freecodecamp.com/news/
-                {slugify(postUrl != '' ? postUrl : title, {
-                  lower: true,
-                  specialChar: false
-                })}
-              </Text>
-            </label>
-            <Spacer h='1rem' />
-            <Divider />
-            <Spacer h='1rem' />
-            <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
-              Save as Draft
-            </Button>
-            <Spacer h='1rem' />
-            <Link
-              href={{
-                pathname: `/posts/preview/${id}`
-              }}
-              target='_blank'
-            >
-              <Button colorScheme='blue' w='100%' variant='outline'>
-                Preview
-              </Button>
-            </Link>
+                defaultValue={post ? post.attributes.author.data.id : user.id}
+                onChange={e => setAuthor(e.target.value)}
+              >
+                {authors.map(author => (
+                  <option key={author.id} value={author.id}>
+                    {author.username}
+                  </option>
+                ))}
+              </Select>
+              <Spacer h='1rem' />
+            </>
+          )}
+          <Spacer h='1rem' />
+          <Text fontSize='xl'>Publish Date</Text>
+          <Spacer h='1rem' />
+          <Box display='flex' flexDirection='row'>
+            <Input
+              type='date'
+              variant='outline'
+              id='publish-date'
+              onChange={handlePublishDateChange}
+            />
+            <Input
+              type='time'
+              variant='outline'
+              id='publish-time'
+              onChange={handlePublishTimeChange}
+            />
           </Box>
-        </Flex>
+          <Text fontStyle='italic' fontSize='md' opacity='0.6'>
+            (Time is unique to the selected locale timezone)
+          </Text>
+          <Spacer h='1rem' />
+          <Text fontSize='xl'>Post Url</Text>
+          <label>
+            <Input
+              type='text'
+              placeholder='Post Url'
+              value={postUrl}
+              id='slug'
+              onChange={e => setPostUrl(e.target.value)}
+              w='100%'
+              marginTop='1rem'
+              variant='outline'
+            />
+            <Text fontStyle='italic' fontSize='md' opacity='0.6'>
+              https://www.freecodecamp.com/news/
+              {slugify(postUrl != '' ? postUrl : title, {
+                lower: true,
+                specialChar: false
+              })}
+            </Text>
+          </label>
+          <Spacer h='1rem' />
+          <Divider />
+          <Spacer h='1rem' />
+          <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
+            Save as Draft
+          </Button>
+          <Spacer h='1rem' />
+          <Link
+            href={{
+              pathname: `/posts/preview/${id}`
+            }}
+            target='_blank'
+          >
+            <Button colorScheme='blue' w='100%' variant='outline'>
+              Preview
+            </Button>
+          </Link>
+        </Box>
       </Flex>
-    );
-  }
+    </Flex>
+  );
 };
+
 export default PostForm;
