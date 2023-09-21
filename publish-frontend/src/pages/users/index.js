@@ -122,7 +122,11 @@ export default function UsersIndex({ allUsers, invitedUsers, user }) {
                     <Avatar size='sm' mr='4' />
                     <Text fontWeight='600'>{userEmail}</Text>
                   </Flex>
-                  <Badge>{userRole}</Badge>
+                  <Badge
+                    colorScheme={userRole === 'Contributor' ? 'gray' : 'purple'}
+                  >
+                    {userRole}
+                  </Badge>
                 </Flex>
               );
             })}
