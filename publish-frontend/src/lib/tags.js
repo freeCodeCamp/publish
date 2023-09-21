@@ -49,3 +49,46 @@ export async function createTag(token, data) {
     throw new Error(`createTag Failed. Error: ${error}`);
   }
 }
+
+export async function getTag(token, tagId) {
+  const endpoint = `${api_root}/tags/${tagId}?populate=*`;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  try {
+    const res = await fetch(endpoint, options);
+
+    return res.json();
+  } catch (error) {
+    console.error('getTag responded with error. Status: ', res?.body);
+    throw new Error(`getTag responded with error. Status: ${res?.body}`);
+  }
+}
+
+export async function updateTag(token, tagId, data) {
+  const endpoint = `${api_root}/tags/${tagId}?populate=*`;
+
+  const options = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(data)
+  };
+
+  try {
+    const res = await fetch(endpoint, options);
+
+    return res.json();
+  } catch (error) {
+    console.error('updateTag responded with error. Status: ', res?.body);
+    throw new Error(`updateTag responded with error. Status: ${res?.body}`);
+  }
+}
