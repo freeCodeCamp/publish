@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
@@ -140,21 +140,12 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   };
 
-  // this ensures that the event listener has the latest version of handleSubmit.
-  // otherwise, it will have the initial version of the function, which will
-  // hold old values of state. This is because the event listener is created
-  // when the component is first rendered, and it will not be updated when
-  // the state changes.
-
-  const handleKeyDown = useCallback(
-    function (event) {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-        event.preventDefault();
-        handleSubmit();
-      }
-    },
-    [handleSubmit]
-  );
+  function handleKeyDown(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault();
+      handleSubmit();
+    }
+  }
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
