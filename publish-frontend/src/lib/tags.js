@@ -92,3 +92,24 @@ export async function updateTag(token, tagId, data) {
     throw new Error(`updateTag responded with error. Status: ${res?.body}`);
   }
 }
+
+export async function deleteTag(token, tagId) {
+  const endpoint = `${api_root}/tags/${tagId}`;
+
+  const options = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  try {
+    const res = await fetch(endpoint, options);
+
+    return res.json();
+  } catch (error) {
+    console.error('deleteTag responded with error. Status: ', res?.body);
+    throw new Error(`deleteTag responded with error. Status: ${res?.body}`);
+  }
+}

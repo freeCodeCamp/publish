@@ -18,11 +18,12 @@ import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Field, Form, Formik } from 'formik';
 import { getServerSession } from 'next-auth/next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import slugify from 'slugify';
 
 import NavMenu from '@/components/nav-menu';
-import { getTag, updateTag } from '@/lib/tags';
+import { deleteTag, getTag, updateTag } from '@/lib/tags';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const Icon = chakra(FontAwesomeIcon);
@@ -40,6 +41,7 @@ export async function getServerSideProps(context) {
 }
 
 export default function EditTag({ tag, user }) {
+  const router = useRouter();
   const toast = useToast();
 
   const [tagData, setTagData] = useState({
@@ -94,6 +96,31 @@ export default function EditTag({ tag, user }) {
         duration: 5000,
         isClosable: true
       });
+      router.push('/tags');
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    const token = user.jwt;
+
+    try {
+      await deleteTag(token, tag.id);
+      toast({
+        title: 'Tag Deleted',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+      router.push('/tags');
     } catch (error) {
       console.log(error);
       toast({
@@ -141,7 +168,7 @@ export default function EditTag({ tag, user }) {
               await handleSubmit();
             }}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, setSubmitting }) => (
               <Form>
                 <Field name='name' validate={validateNameField}>
                   {({ field, form }) => (
@@ -177,8 +204,19 @@ export default function EditTag({ tag, user }) {
                   colorScheme='blue'
                   isLoading={isSubmitting}
                   type='submit'
+                  mr='4'
                 >
                   Save
+                </Button>
+                <Button
+                  colorScheme='red'
+                  isLoading={isSubmitting}
+                  onClick={async () => {
+                    setSubmitting(true);
+                    await handleDelete();
+                  }}
+                >
+                  Delete tag
                 </Button>
               </Form>
             )}
