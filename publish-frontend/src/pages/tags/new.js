@@ -38,7 +38,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function TagsIndex({ user }) {
+export default function CreateTag({ user }) {
   // const router = useRouter();
   const toast = useToast();
 
@@ -141,7 +141,7 @@ export default function TagsIndex({ user }) {
         >
           <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
             <BreadcrumbItem>
-              <BreadcrumbLink textDecoration='none'>
+              <BreadcrumbLink textDecoration='none' href='/tags'>
                 <Heading size='lg'>Tags</Heading>
               </BreadcrumbLink>
             </BreadcrumbItem>
