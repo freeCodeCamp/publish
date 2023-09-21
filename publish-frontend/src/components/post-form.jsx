@@ -1,7 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronLeft,
+  faEdit,
+  faGear
+} from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
 import slugify from 'slugify';
 import {
@@ -20,7 +24,11 @@ import {
   Divider,
   FormErrorMessage,
   TagLabel,
-  TagCloseButton
+  TagCloseButton,
+  CloseButton,
+  useDisclosure,
+  Slide,
+  IconButton
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
@@ -34,6 +42,8 @@ import { createTag } from '@/lib/tags';
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
+  const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: true });
+
   const hasCreatedPost = useRef(false);
 
   const [title, setTitle] = useState('(UNTITLED)');
@@ -206,17 +216,28 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   return (
     <Flex>
-      <Flex flexDirection='column' mr='1rem' flex='3'>
-        <Box display='flex' justifyContent='start' m='1rem 0 0 5rem'>
-          <Button
-            variant='link'
-            as={NextLink}
-            href='/posts/'
-            leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
-          >
-            <Text fontSize='2xl'>Posts</Text>
-          </Button>
-        </Box>
+      <Flex flexDirection='column' mr='1rem' maxWidth='100%' flex='4'>
+        <Flex justifyContent='space-between' m='1rem 0 0 5rem'>
+          <Box>
+            <Button
+              variant='link'
+              as={NextLink}
+              href='/posts/'
+              leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
+            >
+              <Text fontSize='2xl'>Posts</Text>
+            </Button>
+          </Box>
+          <Box>
+            <IconButton
+              marginRight='auto'
+              variant='ghost'
+              onClick={onOpen}
+              aria-label='Open Post Drawer'
+              icon={<FontAwesomeIcon icon={faGear} />}
+            />
+          </Box>
+        </Flex>
         <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
           {!isEditingTitle ? (
             <>
@@ -280,258 +301,265 @@ const PostForm = ({ tags, user, authors, post }) => {
           />
         </Box>
       </Flex>
-      <Flex
-        flexDirection='column'
-        w={{ base: 'full', md: '350px' }}
-        flex='1'
-        h='100vh'
-        bgColor='white'
-        borderLeftWidth='1px'
-        overflowY='hidden'
-        padding={{ base: '0.5rem ' }}
-      >
-        <Box overflowY='scroll'>
-          <Box
-            size='lg'
-            py='1rem'
-            mx='20px'
-            textAlign='center'
-            fontWeight='700'
-            fontSize='20px'
-            display='flex'
-            alignItems='center'
-          >
-            <Img
-              src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
-              width='32px'
-              height='32px'
-              mr='12px'
-              borderRadius='5px'
-            />
-            freeCodeCamp.org
-          </Box>
-          <Box
-            display='flex'
-            borderWidth='1px'
-            borderRadius='lg'
-            w='100%'
-            h='175px'
-            overflow='hidden'
-            bg='#f1f5f9'
-            justifyContent='center'
-            alignItems='center'
-          >
-            {!featureImage ? (
-              <>
-                <label htmlFor='feature-image' className='custom-file-upload'>
-                  <button
-                    type='button'
-                    onClick={() =>
-                      document.getElementById('feature-image').click()
-                    }
-                  >
-                    Select Image
-                  </button>
-                </label>
-                <input
-                  type='file'
-                  id='feature-image'
-                  accept='image/*'
-                  style={{ display: 'none' }}
-                  onChange={handleFileInputChange}
-                />{' '}
-              </>
-            ) : (
-              <Img
-                src={featureImage}
-                alt='feature'
-                borderRadius='lg'
-                objectFit='cover'
-                w='100%'
-                h='100%'
-              />
-            )}
-          </Box>
-          <Spacer h='1rem' />
-          {featureImage && (
-            <Button
-              colorScheme='red'
-              w='100%'
-              onClick={() => setFeatureImage(null)}
+      <Slide direction='right' in={isOpen} style={{ zIndex: 10 }}>
+        <Flex
+          flexDirection='column'
+          w={{ base: 'full', md: '350px' }}
+          minW={{ base: 'full', md: '350px' }}
+          flex='1'
+          pos='fixed'
+          right='0'
+          h='100vh'
+          bgColor='white'
+          borderLeftWidth='1px'
+          overflowY='hidden'
+          padding={{ base: '0.5rem ' }}
+        >
+          <Flex width='100%' height='75px' justifyContent='space-between'>
+            <Box
+              size='lg'
+              py='1rem'
+              textAlign='center'
+              fontWeight='700'
+              fontSize='20px'
+              display='flex'
+              alignItems='center'
             >
-              Delete Image
-            </Button>
-          )}
-          <Spacer h='1rem' />
-          <Box id='tag-container' display='flex' flexWrap='wrap'>
-            <Wrap spacing={2}>
-              {clientTags.map(tag => (
-                <Tag
-                  key={tag}
-                  size='lg'
-                  borderRadius='full'
-                  colorScheme='green'
-                  variant='solid'
-                >
-                  <TagLabel>{tag}</TagLabel>
-                  <TagCloseButton
-                    onClick={() => {
-                      const newTags = clientTags.filter(t => t !== tag);
-                      setClientTags(newTags);
-                    }}
-                  />
-                </Tag>
-              ))}
-            </Wrap>
-          </Box>
-          <Spacer h='1rem' />
-          <Text fontSize='xl'>Tags</Text>
-          <Select
-            placeholder='Select option'
-            onChange={addTag}
-            w='100%'
-            marginTop='1rem'
-          >
-            {tags.map(tag => (
-              <option key={tag.id} value={tag.attributes.name}>
-                {tag.attributes.name}
-              </option>
-            ))}
-          </Select>
-          {isEditor(user) && (
-            <>
-              {!isAddingTag ? (
-                <Button
-                  colorScheme='blue'
-                  variant='link'
-                  onClick={() => setIsAddingTag(true)}
-                >
-                  Add new Tag
-                </Button>
-              ) : (
+              <Img
+                src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
+                width='32px'
+                height='32px'
+                mr='12px'
+                borderRadius='5px'
+              />
+              freeCodeCamp.org
+            </Box>
+            <CloseButton alignSelf='center' onClick={onClose} />
+          </Flex>
+          <Box overflowY='scroll'>
+            <Box
+              display='flex'
+              borderWidth='1px'
+              borderRadius='lg'
+              w='100%'
+              h='175px'
+              overflow='hidden'
+              bg='#f1f5f9'
+              justifyContent='center'
+              alignItems='center'
+            >
+              {!featureImage ? (
                 <>
-                  <Spacer h='1rem' />
-                  <Formik
-                    initialValues={{ tagName: '' }}
-                    onSubmit={(values, actions) => {
-                      setIsAddingTag(false);
-                      handleTagSubmit(values.tagName);
-                      actions.setSubmitting(false);
-                    }}
-                  >
-                    {props => (
-                      <Form>
-                        <Field name='tagName'>
-                          {({ field, form }) => (
-                            <FormControl
-                              isInvalid={
-                                form.errors.tagName && form.touched.tagName
-                              }
-                            >
-                              <Input
-                                {...field}
-                                placeholder='tag name'
-                                w='100%'
-                                required
-                              />
-                              <FormErrorMessage>
-                                {form.errors.tagName}
-                              </FormErrorMessage>
-                            </FormControl>
-                          )}
-                        </Field>
-                        <Button
-                          colorScheme='blue'
-                          isLoading={props.isSubmitting}
-                          type='submit'
-                          w='100%'
-                          margin={{ base: '1rem 0 0 0' }}
-                        >
-                          Submit
-                        </Button>
-                        <Button
-                          colorScheme='red'
-                          width='100%'
-                          margin={{ base: '1rem 0 0 0' }}
-                          onClick={() => setIsAddingTag(false)}
-                        >
-                          Cancel
-                        </Button>
-                      </Form>
-                    )}
-                  </Formik>
+                  <label htmlFor='feature-image' className='custom-file-upload'>
+                    <button
+                      type='button'
+                      onClick={() =>
+                        document.getElementById('feature-image').click()
+                      }
+                    >
+                      Select Image
+                    </button>
+                  </label>
+                  <input
+                    type='file'
+                    id='feature-image'
+                    accept='image/*'
+                    style={{ display: 'none' }}
+                    onChange={handleFileInputChange}
+                  />{' '}
                 </>
+              ) : (
+                <Img
+                  src={featureImage}
+                  alt='feature'
+                  borderRadius='lg'
+                  objectFit='cover'
+                  w='100%'
+                  h='100%'
+                />
               )}
-            </>
-          )}
-          <Spacer h='1rem' />
-          {isEditor(user) && (
-            <>
-              <Spacer h='1rem' />
-              <Text fontSize='xl'>Author</Text>
-              <Select
-                placeholder='Select option'
+            </Box>
+            <Spacer h='1rem' />
+            {featureImage && (
+              <Button
+                colorScheme='red'
                 w='100%'
-                marginTop='1rem'
-                defaultValue={post ? post.attributes.author.data.id : user.id}
-                onChange={e => setAuthor(e.target.value)}
+                onClick={() => setFeatureImage(null)}
               >
-                {authors.map(author => (
-                  <option key={author.id} value={author.id}>
-                    {author.username}
-                  </option>
+                Delete Image
+              </Button>
+            )}
+            <Spacer h='1rem' />
+            <Box id='tag-container' display='flex' flexWrap='wrap'>
+              <Wrap spacing={2}>
+                {clientTags.map(tag => (
+                  <Tag
+                    key={tag}
+                    size='lg'
+                    borderRadius='full'
+                    colorScheme='green'
+                    variant='solid'
+                  >
+                    <TagLabel>{tag}</TagLabel>
+                    <TagCloseButton
+                      onClick={() => {
+                        const newTags = clientTags.filter(t => t !== tag);
+                        setClientTags(newTags);
+                      }}
+                    />
+                  </Tag>
                 ))}
-              </Select>
-              <Spacer h='1rem' />
-            </>
-          )}
-          <Spacer h='1rem' />
-          <Text fontSize='xl'>Publish Date</Text>
-          <Spacer h='1rem' />
-          <Box display='flex' flexDirection='row'>
-            <Input type='date' variant='outline' />
-            <Input type='time' variant='outline' />
-          </Box>
-          <Spacer h='1rem' />
-          <Text fontSize='xl'>Post Url</Text>
-          <label>
-            <Input
-              type='text'
-              placeholder='Post Url'
-              value={postUrl}
-              id='slug'
-              onChange={e => setPostUrl(e.target.value)}
+              </Wrap>
+            </Box>
+            <Spacer h='1rem' />
+            <Text fontSize='xl'>Tags</Text>
+            <Select
+              placeholder='Select option'
+              onChange={addTag}
               w='100%'
               marginTop='1rem'
-              variant='outline'
-            />
-            <Text fontStyle='italic' fontSize='md'>
-              https://www.freecodecamp.com/news/
-              {slugify(postUrl != '' ? postUrl : title, {
-                lower: true,
-                specialChar: false
-              })}
-            </Text>
-          </label>
-          <Spacer h='1rem' />
-          <Divider />
-          <Spacer h='1rem' />
-          <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
-            Save as Draft
-          </Button>
-          <Spacer h='1rem' />
-          <Link
-            href={{
-              pathname: `/posts/preview/${id}`
-            }}
-            target='_blank'
-          >
-            <Button colorScheme='blue' w='100%' variant='outline'>
-              Preview
+            >
+              {tags.map(tag => (
+                <option key={tag.id} value={tag.attributes.name}>
+                  {tag.attributes.name}
+                </option>
+              ))}
+            </Select>
+            {isEditor(user) && (
+              <>
+                {!isAddingTag ? (
+                  <Button
+                    colorScheme='blue'
+                    variant='link'
+                    onClick={() => setIsAddingTag(true)}
+                  >
+                    Add new Tag
+                  </Button>
+                ) : (
+                  <>
+                    <Spacer h='1rem' />
+                    <Formik
+                      initialValues={{ tagName: '' }}
+                      onSubmit={(values, actions) => {
+                        setIsAddingTag(false);
+                        handleTagSubmit(values.tagName);
+                        actions.setSubmitting(false);
+                      }}
+                    >
+                      {props => (
+                        <Form>
+                          <Field name='tagName'>
+                            {({ field, form }) => (
+                              <FormControl
+                                isInvalid={
+                                  form.errors.tagName && form.touched.tagName
+                                }
+                              >
+                                <Input
+                                  {...field}
+                                  placeholder='tag name'
+                                  w='100%'
+                                  required
+                                />
+                                <FormErrorMessage>
+                                  {form.errors.tagName}
+                                </FormErrorMessage>
+                              </FormControl>
+                            )}
+                          </Field>
+                          <Button
+                            colorScheme='blue'
+                            isLoading={props.isSubmitting}
+                            type='submit'
+                            w='100%'
+                            margin={{ base: '1rem 0 0 0' }}
+                          >
+                            Submit
+                          </Button>
+                          <Button
+                            colorScheme='red'
+                            width='100%'
+                            margin={{ base: '1rem 0 0 0' }}
+                            onClick={() => setIsAddingTag(false)}
+                          >
+                            Cancel
+                          </Button>
+                        </Form>
+                      )}
+                    </Formik>
+                  </>
+                )}
+              </>
+            )}
+            <Spacer h='1rem' />
+            {isEditor(user) && (
+              <>
+                <Spacer h='1rem' />
+                <Text fontSize='xl'>Author</Text>
+                <Select
+                  placeholder='Select option'
+                  w='100%'
+                  marginTop='1rem'
+                  defaultValue={post ? post.attributes.author.data.id : user.id}
+                  onChange={e => setAuthor(e.target.value)}
+                >
+                  {authors.map(author => (
+                    <option key={author.id} value={author.id}>
+                      {author.username}
+                    </option>
+                  ))}
+                </Select>
+                <Spacer h='1rem' />
+              </>
+            )}
+            <Spacer h='1rem' />
+            <Text fontSize='xl'>Publish Date</Text>
+            <Spacer h='1rem' />
+            <Box display='flex' flexDirection='row'>
+              <Input type='date' variant='outline' />
+              <Input type='time' variant='outline' />
+            </Box>
+            <Spacer h='1rem' />
+            <Text fontSize='xl'>Post Url</Text>
+            <label>
+              <Input
+                type='text'
+                placeholder='Post Url'
+                value={postUrl}
+                id='slug'
+                onChange={e => setPostUrl(e.target.value)}
+                w='100%'
+                marginTop='1rem'
+                variant='outline'
+              />
+              <Text fontStyle='italic' fontSize='md'>
+                https://www.freecodecamp.com/news/
+                {slugify(postUrl != '' ? postUrl : title, {
+                  lower: true,
+                  specialChar: false
+                })}
+              </Text>
+            </label>
+            <Spacer h='1rem' />
+            <Divider />
+            <Spacer h='1rem' />
+            <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
+              Save as Draft
             </Button>
-          </Link>
-        </Box>
-      </Flex>
+            <Spacer h='1rem' />
+            <Link
+              href={{
+                pathname: `/posts/preview/${id}`
+              }}
+              target='_blank'
+            >
+              <Button colorScheme='blue' w='100%' variant='outline'>
+                Preview
+              </Button>
+            </Link>
+          </Box>
+        </Flex>
+      </Slide>
     </Flex>
   );
 };
