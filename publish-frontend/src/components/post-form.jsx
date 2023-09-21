@@ -106,7 +106,6 @@ const PostForm = ({ tags, user, authors, post }) => {
       }
     };
 
-    console.log(data.data.body);
     try {
       if (!postId) {
         const res = await createPost(JSON.stringify(data), token);
@@ -158,8 +157,6 @@ const PostForm = ({ tags, user, authors, post }) => {
   );
 
   useEffect(() => {
-    console.log('adding event listener');
-    window.removeEventListener('keydown', handleKeyDown);
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
