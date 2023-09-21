@@ -60,11 +60,18 @@ async function createSeedInvitedUsers(strapi) {
   await strapi.entityService.create("api::invited-user.invited-user", {
     data: {
       email: "contributor@user.com",
+      accepted: "true",
     },
   });
   await strapi.entityService.create("api::invited-user.invited-user", {
     data: {
       email: "editor@user.com",
+      accepted: "true",
+    },
+  });
+  await strapi.entityService.create("api::invited-user.invited-user", {
+    data: {
+      email: "invited@user.com",
     },
   });
 }
