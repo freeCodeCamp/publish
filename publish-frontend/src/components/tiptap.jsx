@@ -16,7 +16,8 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem
+  MenuItem,
+  Text
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
@@ -292,6 +293,17 @@ const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
+      <Box right='25px' bottom='25px' zIndex='1' position='fixed'>
+        <Text
+          fontSize='xl'
+          opacity={0.6}
+          backgroundColor='white'
+          padding='0.5rem'
+        >
+          {content.split(' ').length > 1 ? 'words ' : 'word '}
+          {content.split(' ').length}
+        </Text>
+      </Box>
     </>
   );
 };
