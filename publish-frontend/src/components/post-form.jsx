@@ -263,18 +263,15 @@ const PostForm = ({ tags, user, authors, post }) => {
                 }}
               >
                 {props => (
-                  <Form>
+                  <Form style={{ width: '100%' }}>
                     <Stack direction={{ base: 'column', lg: 'row' }}>
                       <Field name='title'>
                         {({ field, form }) => (
                           <FormControl
+                            w='30%'
                             isInvalid={form.errors.title && form.touched.title}
                           >
-                            <Input
-                              {...field}
-                              placeholder='title'
-                              w={{ base: '35%', lg: '100%' }}
-                            />
+                            <Input {...field} placeholder='title' required />
                             <FormErrorMessage>
                               {form.errors.title}
                             </FormErrorMessage>
@@ -285,7 +282,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                         colorScheme='blue'
                         isLoading={props.isSubmitting}
                         type='submit'
-                        w={{ base: '35%', lg: '100%' }}
+                        w='15%'
                         margin={{ base: '0 0 1rem 0' }}
                       >
                         Submit
