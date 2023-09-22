@@ -43,21 +43,21 @@ const Icon = chakra(FontAwesomeIcon);
 
 const NavMenuLink = ({ text, link, icon }) => {
   return (
-    <Box
-      color='black'
-      p='0.5rem 2rem'
-      fontWeight='400'
-      m='2px 5px'
-      _hover={{
-        bgColor: 'rgb(243, 244, 246)',
-        borderRadius: '5px'
-      }}
-    >
-      <a href={link}>
+    <a href={link}>
+      <Box
+        color='black'
+        p='0.5rem 2rem'
+        fontWeight='400'
+        m='2px 5px'
+        _hover={{
+          bgColor: 'rgb(243, 244, 246)',
+          borderRadius: '5px'
+        }}
+      >
         <Icon icon={icon} fixedWidth mr='0.5rem' />
         {text}
-      </a>
-    </Box>
+      </Box>
+    </a>
   );
 };
 
@@ -118,12 +118,12 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
         </Flex>
 
         <Box>
-          <NavMenuLink text='Posts' icon={faFileLines} link='#' />
+          <NavMenuLink text='Posts' icon={faFileLines} link='/posts' />
           {isEditor(user) && (
             <>
-              <NavMenuLink text='Pages' icon={faNewspaper} link='#' />
-              <NavMenuLink text='Tags' icon={faTags} link='#' />
-              <NavMenuLink text='Staff' icon={faUsers} link='#' />
+              <NavMenuLink text='Pages' icon={faNewspaper} link='/pages' />
+              <NavMenuLink text='Tags' icon={faTags} link='/tags' />
+              <NavMenuLink text='Staff' icon={faUsers} link='/users' />
             </>
           )}
         </Box>
