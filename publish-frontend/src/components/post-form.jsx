@@ -27,8 +27,12 @@ import {
   TagCloseButton,
   CloseButton,
   useDisclosure,
-  Slide,
-  IconButton
+  IconButton,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { createPost, updatePost } from '@/lib/posts';
@@ -215,128 +219,121 @@ const PostForm = ({ tags, user, authors, post }) => {
   }
 
   return (
-    <Flex>
-      <Flex flexDirection='column' mr='1rem' maxWidth='100%' flex='4'>
-        <Flex justifyContent='space-between' m='1rem 0 0 5rem'>
-          <Box>
-            <Button
-              variant='link'
-              as={NextLink}
-              href='/posts/'
-              leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
-            >
-              <Text fontSize='2xl'>Posts</Text>
-            </Button>
-          </Box>
-          <Box>
-            <IconButton
-              marginRight='auto'
-              variant='ghost'
-              onClick={onOpen}
-              aria-label='Open Post Drawer'
-              icon={<FontAwesomeIcon icon={faGear} />}
+    <>
+      <Flex>
+        <Flex flexDirection='column' mr='1rem' maxWidth='100%' flex='4'>
+          <Flex justifyContent='space-between' m='1rem 0 0 5rem'>
+            <Box>
+              <Button
+                variant='link'
+                as={NextLink}
+                href='/posts/'
+                leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
+              >
+                <Text fontSize='2xl'>Posts</Text>
+              </Button>
+            </Box>
+            <Box>
+              <IconButton
+                marginRight='auto'
+                variant='ghost'
+                onClick={onOpen}
+                aria-label='Open Post Drawer'
+                icon={<FontAwesomeIcon icon={faGear} />}
+              />
+            </Box>
+          </Flex>
+          <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
+            {!isEditingTitle ? (
+              <>
+                <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
+                  <Text fontSize='2xl'>{title}</Text>
+                  <Text fontSize='2xl'>
+                    <FontAwesomeIcon icon={faEdit} />
+                  </Text>
+                </Stack>
+              </>
+            ) : (
+              <Formik
+                initialValues={{ title: title }}
+                onSubmit={(values, actions) => {
+                  setTitle(values.title);
+                  setIsEditingTitle(false);
+                  actions.setSubmitting(false);
+                }}
+              >
+                {props => (
+                  <Form>
+                    <Stack direction={{ base: 'column', lg: 'row' }}>
+                      <Field name='title'>
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={form.errors.title && form.touched.title}
+                          >
+                            <Input
+                              {...field}
+                              placeholder='title'
+                              w={{ base: '35%', lg: '100%' }}
+                            />
+                            <FormErrorMessage>
+                              {form.errors.title}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Button
+                        colorScheme='blue'
+                        isLoading={props.isSubmitting}
+                        type='submit'
+                        w={{ base: '35%', lg: '100%' }}
+                        margin={{ base: '0 0 1rem 0' }}
+                      >
+                        Submit
+                      </Button>
+                    </Stack>
+                  </Form>
+                )}
+              </Formik>
+            )}
+          </Flex>
+          <Box p='0 0 0 5rem'>
+            <Tiptap
+              handleContentChange={handleContentChange}
+              handleHasTyped={handleHasTyped}
+              content={content}
+              user={user}
+              postId={id}
             />
           </Box>
         </Flex>
-        <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
-          {!isEditingTitle ? (
-            <>
-              <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
-                <Text fontSize='2xl'>{title}</Text>
-                <Text fontSize='2xl'>
-                  <FontAwesomeIcon icon={faEdit} />
-                </Text>
-              </Stack>
-            </>
-          ) : (
-            <Formik
-              initialValues={{ title: title }}
-              onSubmit={(values, actions) => {
-                setTitle(values.title);
-                setIsEditingTitle(false);
-                actions.setSubmitting(false);
-              }}
-            >
-              {props => (
-                <Form>
-                  <Stack direction={{ base: 'column', lg: 'row' }}>
-                    <Field name='title'>
-                      {({ field, form }) => (
-                        <FormControl
-                          isInvalid={form.errors.title && form.touched.title}
-                        >
-                          <Input
-                            {...field}
-                            placeholder='title'
-                            w={{ base: '35%', lg: '100%' }}
-                          />
-                          <FormErrorMessage>
-                            {form.errors.title}
-                          </FormErrorMessage>
-                        </FormControl>
-                      )}
-                    </Field>
-                    <Button
-                      colorScheme='blue'
-                      isLoading={props.isSubmitting}
-                      type='submit'
-                      w={{ base: '35%', lg: '100%' }}
-                      margin={{ base: '0 0 1rem 0' }}
-                    >
-                      Submit
-                    </Button>
-                  </Stack>
-                </Form>
-              )}
-            </Formik>
-          )}
-        </Flex>
-        <Box p='0 0 0 5rem'>
-          <Tiptap
-            handleContentChange={handleContentChange}
-            handleHasTyped={handleHasTyped}
-            content={content}
-            user={user}
-            postId={id}
-          />
-        </Box>
       </Flex>
-      <Slide direction='right' in={isOpen} style={{ zIndex: 10 }}>
-        <Flex
-          flexDirection='column'
-          w={{ base: 'full', md: '350px' }}
-          minW={{ base: 'full', md: '350px' }}
-          flex='1'
-          pos='fixed'
-          right='0'
-          h='100vh'
-          bgColor='white'
-          borderLeftWidth='1px'
-          overflowY='hidden'
-          padding={{ base: '0.5rem ' }}
-        >
-          <Flex width='100%' height='75px' justifyContent='space-between'>
-            <Box
-              size='lg'
-              py='1rem'
-              textAlign='center'
-              fontWeight='700'
-              fontSize='20px'
-              display='flex'
-              alignItems='center'
-            >
-              <Img
-                src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
-                width='32px'
-                height='32px'
-                mr='12px'
-                borderRadius='5px'
-              />
-              freeCodeCamp.org
-            </Box>
-            <CloseButton alignSelf='center' onClick={onClose} />
-          </Flex>
-          <Box overflowY='scroll'>
+      <Drawer isOpen={isOpen} placement='right' onClose={onClose}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth='1px'>
+            <Flex width='100%' height='75px' justifyContent='space-between'>
+              <Box
+                size='lg'
+                py='1rem'
+                textAlign='center'
+                fontWeight='700'
+                fontSize='20px'
+                display='flex'
+                alignItems='center'
+              >
+                <Img
+                  src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
+                  width='32px'
+                  height='32px'
+                  mr='12px'
+                  borderRadius='5px'
+                />
+                freeCodeCamp.org
+              </Box>
+              <CloseButton alignSelf='center' onClick={onClose} />
+            </Flex>
+          </DrawerHeader>
+          <DrawerBody>
             <Box
               display='flex'
               borderWidth='1px'
@@ -557,10 +554,10 @@ const PostForm = ({ tags, user, authors, post }) => {
                 Preview
               </Button>
             </Link>
-          </Box>
-        </Flex>
-      </Slide>
-    </Flex>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 export default PostForm;
