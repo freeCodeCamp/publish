@@ -33,3 +33,6 @@
   margin: 0 0.5rem;
 }
 
+ul {
+  list-style-type: none;
+}

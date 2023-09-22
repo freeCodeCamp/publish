@@ -72,117 +72,118 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Bold'
+        title='Add bold text'
+        aria-label='Add bold text'
         leftIcon={<FontAwesomeIcon icon={faBold} />}
         onClick={() => editor.chain().focus().toggleBold().run()}
-      ></Button>
+      />
       <Button
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Italic'
-        aria-label='Italic'
+        title='Add italic text'
+        aria-label='Add italic text'
         leftIcon={<FontAwesomeIcon icon={faItalic} />}
         onClick={() => editor.chain().focus().toggleItalic().run()}
-      ></Button>
+      />
       <Button
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Strikethrough'
-        aria-aria-label='Strikethrough'
+        title='Add strikethrough text'
+        aria-label='Add strikethrough text'
         leftIcon={<FontAwesomeIcon icon={faStrikethrough} />}
         onClick={() => editor.chain().focus().toggleStrike().run()}
-      ></Button>
+      />
       <Button
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Code'
-        aria-label='Code'
+        title='Add code'
+        aria-label='Add code'
         leftIcon={<FontAwesomeIcon icon={faCode} />}
         onClick={() => editor.chain().focus().toggleCode().run()}
-      ></Button>
+      />
       <Button
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Blockquote'
-        aria-label='Blockquote'
+        title='Add blockquote'
+        aria-label='Add blockquote'
         leftIcon={<FontAwesomeIcon icon={faQuoteLeft} />}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
-      ></Button>
+      />
       <div className='vl'></div>
       <Menu>
         <MenuButton
           as={Button}
           variant='ghost'
-          title='Heading'
-          aria-label='Heading'
+          title='select heading text'
+          aria-label='select heading text'
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
-        ></MenuButton>
-        <MenuList>
-          <MenuItem
-            leftIcon={faHeader}
-            title='Heading 1'
-            aria-label='Heading 1'
-            onClick={() =>
-              editor.chain().focus().setHeading({ level: 1 }).run()
-            }
-          >
-            1
-          </MenuItem>
-          <MenuItem
-            leftIcon={faHeader}
-            title='Heading 2'
-            aria-label='Heading 2'
-            onClick={() =>
-              editor.chain().focus().setHeading({ level: 2 }).run()
-            }
-          >
-            2
-          </MenuItem>
-          <MenuItem
-            leftIcon={faHeader}
-            title='Heading 3'
-            aria-label='Heading 3'
-            onClick={() =>
-              editor.chain().focus().setHeading({ level: 3 }).run()
-            }
-          >
-            3
-          </MenuItem>
-          <MenuItem
-            leftIcon={faHeader}
-            title='Heading 4'
-            aria-label='Heading 4'
-            onClick={() =>
-              editor.chain().focus().setHeading({ level: 4 }).run()
-            }
-          >
-            4
-          </MenuItem>
-          <MenuItem
-            leftIcon={faHeader}
-            title='Heading 5'
-            aria-label='Heading 5'
-            onClick={() =>
-              editor.chain().focus().setHeading({ level: 5 }).run()
-            }
-          >
-            5
-          </MenuItem>
-          <MenuItem
-            leftIcon={faHeader}
-            title='Heading 6'
-            aria-label='Heading 6'
-            onClick={() =>
-              editor.chain().focus().setHeading({ level: 6 }).run()
-            }
-          >
-            6
-          </MenuItem>
+        />
+        <MenuList as='ul'>
+          <li>
+            <MenuItem
+              leftIcon={faHeader}
+              onClick={() =>
+                editor.chain().focus().setHeading({ level: 1 }).run()
+              }
+            >
+              Add heading 1
+            </MenuItem>
+          </li>
+          <li>
+            <MenuItem
+              leftIcon={faHeader}
+              onClick={() =>
+                editor.chain().focus().setHeading({ level: 2 }).run()
+              }
+            >
+              Add heading 2
+            </MenuItem>
+          </li>
+          <li>
+            <MenuItem
+              leftIcon={faHeader}
+              onClick={() =>
+                editor.chain().focus().setHeading({ level: 3 }).run()
+              }
+            >
+              Add heading 3
+            </MenuItem>
+          </li>
+          <li>
+            <MenuItem
+              leftIcon={faHeader}
+              onClick={() =>
+                editor.chain().focus().setHeading({ level: 4 }).run()
+              }
+            >
+              Add heading 4
+            </MenuItem>
+          </li>
+          <li>
+            <MenuItem
+              leftIcon={faHeader}
+              onClick={() =>
+                editor.chain().focus().setHeading({ level: 5 }).run()
+              }
+            >
+              Add heading 5
+            </MenuItem>
+          </li>
+          <li>
+            <MenuItem
+              leftIcon={faHeader}
+              onClick={() =>
+                editor.chain().focus().setHeading({ level: 6 }).run()
+              }
+            >
+              Add heading 6
+            </MenuItem>
+          </li>
         </MenuList>
       </Menu>
       <div className='vl'></div>
@@ -190,53 +191,57 @@ function ToolBar({ editor }) {
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Bullet List'
-        aria-label='Bullet List'
+        title='Add a bullet List'
+        aria-label='Add a bullet List'
         leftIcon={<FontAwesomeIcon icon={faListUl} />}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-      ></Button>
+      />
       <Button
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Ordered List'
-        aria-label='Ordered List'
+        title='Add an ordered List'
+        aria-label='Add an ordered List'
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
-      ></Button>
+      />
       <div className='vl'></div>
       <Button
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Image'
-        aria-label='Image'
+        title='add an image'
+        aria-label='add an image'
         leftIcon={<FontAwesomeIcon icon={faImage} />}
         onClick={() => addImage()}
-      ></Button>
+      />
       <Menu>
         <MenuButton
           as={Button}
           iconSpacing={0}
-          title='Embed'
-          aria-label='Embed'
+          title='Select embed content'
+          aria-label='Select embed content'
           leftIcon={<FontAwesomeIcon icon={faCode} />}
           variant='ghost'
-        ></MenuButton>
-        <MenuList>
-          <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
-          <MenuItem>Twitter</MenuItem>
+        />
+        <MenuList as='ul'>
+          <li>
+            <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
+          </li>
+          <li>
+            <MenuItem>Twitter</MenuItem>
+          </li>
         </MenuList>
       </Menu>
       <Button
         variant='ghost'
         iconSpacing={0}
         p={2}
-        title='Link'
-        aria-label='Link'
+        title='Add a link'
+        aria-label='Add a link'
         leftIcon={<FontAwesomeIcon icon={faLink} />}
         onClick={() => addLink()}
-      ></Button>
+      />
     </Box>
   );
 }
