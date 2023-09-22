@@ -20,7 +20,7 @@ export async function getMe(token) {
 }
 
 export async function getUsers(token) {
-  const endpoint = `${api_root}/users`;
+  const endpoint = `${api_root}/users?populate=*`;
 
   const options = {
     method: 'GET',
