@@ -46,7 +46,7 @@ import { createTag } from '@/lib/tags';
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
-  const { isOpen, onClose, onOpen } = useDisclosure({ defaultIsOpen: true });
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const hasCreatedPost = useRef(false);
 
