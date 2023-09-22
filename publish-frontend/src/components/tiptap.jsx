@@ -28,6 +28,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
 import { Markdown } from 'tiptap-markdown';
+import Code from '@tiptap/extension-code';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -270,6 +271,11 @@ const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
       }),
       Markdown.configure({
         transformPastedText: true
+      }),
+      Code.configure({
+        HTMLAttributes: {
+          class: 'code'
+        }
       })
     ],
     content: content ? content : '',
