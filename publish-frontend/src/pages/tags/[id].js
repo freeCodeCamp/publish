@@ -129,7 +129,7 @@ export default function EditTag({ tag, user }) {
         duration: 5000,
         isClosable: true
       });
-      router.push('/tags');
+      router.replace('/tags');
     } catch (error) {
       console.log(error);
       toast({
