@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import NavMenu from '@/components/nav-menu';
 import { getTags } from '@/lib/tags';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { useEffect } from 'react';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -30,10 +31,17 @@ export async function getServerSideProps(context) {
   const internalTags = tags.data.filter(
     tag => tag.attributes.visibility === 'internal'
   );
+  let isInternal = false;
+
+  if (context.query.type) {
+    isInternal = true;
+  }
+
   return {
     props: {
       publicTags,
       internalTags,
+      isInternal,
       user: session.user
     }
   };
@@ -111,12 +119,25 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
   );
 };
 
-export default function TagsIndex({ publicTags, internalTags, user }) {
+export default function TagsIndex({
+  publicTags,
+  internalTags,
+  isInternal,
+  user
+}) {
   const router = useRouter();
 
   const { value, getRadioProps, getRootProps } = useRadioGroup({
-    defaultValue: 'public'
+    defaultValue: !isInternal ? 'public' : 'internal'
   });
+
+  useEffect(() => {
+    if (value === 'internal') {
+      router.replace('/tags?type=internal', undefined, { shallow: true });
+    } else {
+      router.replace('/tags', undefined, { shallow: true });
+    }
+  }, [value, router]);
 
   return (
     <Box minH='100vh' bgColor='gray.200'>
