@@ -103,7 +103,6 @@ export default function UsersIndex({ allUsers, invitedUsers, user }) {
           <Box my='4' boxShadow='md' bgColor='white'>
             {allUsers.map(user => {
               const userEmail = user.email;
-              console.log(user);
               const userRole = user.role.name;
               return (
                 <Flex
