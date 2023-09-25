@@ -14,7 +14,6 @@
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
   "dependencies": {
-    "@ckeditor/strapi-plugin-ckeditor": "^0.0.7",
     "@strapi/plugin-documentation": "^4.11.5",
     "@strapi/plugin-i18n": "4.13.7",
     "@strapi/plugin-users-permissions": "4.13.7",
