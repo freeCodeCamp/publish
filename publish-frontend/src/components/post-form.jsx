@@ -52,6 +52,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [title, setTitle] = useState('(UNTITLED)');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [postId, setPostId] = useState(post?.id);
 
   const [clientTags, setClientTags] = useState([]);
   const [clientTagsId, setClientTagsId] = useState([]);
@@ -64,7 +65,6 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [content, setContent] = useState(post?.attributes.body || '');
 
   const [isAddingTag, setIsAddingTag] = useState(false);
-  const [id, setPostId] = useState(null);
 
   const [hasTyped, setHasTyped] = useState(false);
 
@@ -84,11 +84,11 @@ const PostForm = ({ tags, user, authors, post }) => {
       setClientTagsId(tagIds);
       setPostUrl(slug ?? '');
     }
-  }, [post]);
+  }, []);
 
   useEffect(() => {
     async function handlePossibleCreationOnTyped() {
-      if (!id && hasTyped && !hasCreatedPost.current) {
+      if (!postId && hasTyped && !hasCreatedPost.current) {
         hasCreatedPost.current = true;
         await handleSubmit();
       }
@@ -97,6 +97,76 @@ const PostForm = ({ tags, user, authors, post }) => {
     handlePossibleCreationOnTyped();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasTyped]);
+
+  const handleSubmit = async () => {
+    const nonce = uuidv4();
+    const token = user.jwt;
+
+    const data = {
+      data: {
+        title: title,
+        slug: slugify(
+          postUrl != '' ? postUrl : title != '(UNTITLED)' ? title : nonce,
+          {
+            lower: true,
+            specialChar: false
+          }
+        ),
+        body: content,
+        tags: clientTagsId,
+        author: [author != '' ? author : user.id],
+        locale: 'en'
+      }
+    };
+
+    try {
+      if (!postId) {
+        const res = await createPost(JSON.stringify(data), token);
+
+        router.replace(`/posts/${res.data.id}`);
+
+        toast({
+          title: 'Post Created.',
+          description: "We've created your post for you.",
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
+      } else {
+        await updatePost(postId, JSON.stringify(data), token);
+        toast({
+          title: 'Post Updated.',
+          description: "We've updated your post for you.",
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
+
+  function handleKeyDown(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      event.preventDefault();
+      handleSubmit();
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   function handleFileInputChange(event) {
     const file = event.target.files[0];
@@ -128,61 +198,6 @@ const PostForm = ({ tags, user, authors, post }) => {
       setClientTagsId(newTagsInt);
     }
   }
-
-  const handleSubmit = async () => {
-    const nonce = uuidv4();
-    const token = user.jwt;
-
-    const data = {
-      data: {
-        title: title,
-        slug: slugify(
-          postUrl != '' ? postUrl : title != '(UNTITLED)' ? title : nonce,
-          {
-            lower: true,
-            specialChar: false
-          }
-        ),
-        body: content,
-        tags: clientTagsId,
-        author: [author != '' ? author : user.id],
-        locale: 'en'
-      }
-    };
-
-    try {
-      if (!id) {
-        const res = await createPost(JSON.stringify(data), token);
-
-        router.replace(`/posts/${res.data.id}`);
-
-        toast({
-          title: 'Post Created.',
-          description: "We've created your post for you.",
-          status: 'success',
-          duration: 5000,
-          isClosable: true
-        });
-      } else {
-        await updatePost(id, JSON.stringify(data), token);
-        toast({
-          title: 'Post Updated.',
-          description: "We've updated your post for you.",
-          status: 'success',
-          duration: 5000,
-          isClosable: true
-        });
-      }
-    } catch (error) {
-      toast({
-        title: 'An error occurred.',
-        description: error.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-  };
 
   async function handleTagSubmit(tagName) {
     const token = user.jwt;
@@ -263,18 +278,15 @@ const PostForm = ({ tags, user, authors, post }) => {
                 }}
               >
                 {props => (
-                  <Form>
+                  <Form style={{ width: '100%' }}>
                     <Stack direction={{ base: 'column', lg: 'row' }}>
                       <Field name='title'>
                         {({ field, form }) => (
                           <FormControl
+                            w='30%'
                             isInvalid={form.errors.title && form.touched.title}
                           >
-                            <Input
-                              {...field}
-                              placeholder='title'
-                              w={{ base: '35%', lg: '100%' }}
-                            />
+                            <Input {...field} placeholder='title' required />
                             <FormErrorMessage>
                               {form.errors.title}
                             </FormErrorMessage>
@@ -285,7 +297,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                         colorScheme='blue'
                         isLoading={props.isSubmitting}
                         type='submit'
-                        w={{ base: '35%', lg: '100%' }}
+                        w='15%'
                         margin={{ base: '0 0 1rem 0' }}
                       >
                         Submit
@@ -302,7 +314,7 @@ const PostForm = ({ tags, user, authors, post }) => {
               handleHasTyped={handleHasTyped}
               content={content}
               user={user}
-              postId={id}
+              postId={postId}
             />
           </Box>
         </Flex>
@@ -546,7 +558,7 @@ const PostForm = ({ tags, user, authors, post }) => {
             <Spacer h='1rem' />
             <Link
               href={{
-                pathname: `/posts/preview/${id}`
+                pathname: `/posts/preview/${postId}`
               }}
               target='_blank'
             >
