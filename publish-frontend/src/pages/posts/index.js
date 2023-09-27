@@ -94,7 +94,7 @@ export default function IndexPage({ posts, users, tags, user }) {
     try {
       const res = await createPost(JSON.stringify(data), token);
 
-      router.replace(`/posts/${res.data.id}`);
+      router.push(`/posts/${res.data.id}`);
     } catch (err) {
       toast({
         title: 'An error occurred.',
