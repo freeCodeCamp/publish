@@ -123,7 +123,7 @@ function ToolBar({ editor }) {
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
         />
-        <MenuList as='ul'>
+        <MenuList as='ul' listStyleType='none'>
           <li>
             <MenuItem
               leftIcon={faHeader}
@@ -224,7 +224,7 @@ function ToolBar({ editor }) {
           leftIcon={<FontAwesomeIcon icon={faCode} />}
           variant='ghost'
         />
-        <MenuList as='ul'>
+        <MenuList as='ul' listStyleType='none'>
           <li>
             <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
           </li>
