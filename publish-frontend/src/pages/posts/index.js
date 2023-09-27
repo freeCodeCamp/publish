@@ -23,14 +23,15 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-
+import { v4 as uuidv4 } from 'uuid';
 import NavMenu from '@/components/nav-menu';
 import { getPosts } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
 import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { useToast } from '@chakra-ui/react';
+import { createPost } from '@/lib/posts';
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -74,6 +75,43 @@ export async function getServerSideProps(context) {
 
 export default function IndexPage({ posts, users, tags, user }) {
   const router = useRouter();
+  const toast = useToast();
+
+  const newPost = async () => {
+    const nonce = uuidv4();
+    const token = user.jwt;
+
+    const data = {
+      data: {
+        title: '(UNTITLED)',
+        slug: nonce,
+        body: '',
+        tags: [],
+        author: [user.id]
+      }
+    };
+
+    try {
+      const res = await createPost(JSON.stringify(data), token);
+      toast({
+        title: 'Post Created',
+        description: "We've updated your post for you.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+
+      router.replace(`/posts/${res.data.id}`);
+    } catch (err) {
+      toast({
+        title: 'An error occurred.',
+        description: err.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
 
   return (
     <Box minH='100vh' bgColor='gray.200'>
@@ -90,7 +128,7 @@ export default function IndexPage({ posts, users, tags, user }) {
         >
           <Heading>Posts</Heading>
           <Spacer />
-          <Button colorScheme='blue' as={NextLink} href='/posts/new'>
+          <Button colorScheme='blue' onClick={newPost}>
             New Post
           </Button>
         </Flex>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -35,20 +35,17 @@ import {
   DrawerContent
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
-import { createPost, updatePost } from '@/lib/posts';
+import { updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
-  const router = useRouter();
-  const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const hasCreatedPost = useRef(false);
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const [title, setTitle] = useState('(UNTITLED)');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -65,8 +62,6 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [content, setContent] = useState(post?.attributes.body || '');
 
   const [isAddingTag, setIsAddingTag] = useState(false);
-
-  const [hasTyped, setHasTyped] = useState(false);
 
   useEffect(() => {
     if (post) {
@@ -85,18 +80,6 @@ const PostForm = ({ tags, user, authors, post }) => {
       setPostUrl(slug ?? '');
     }
   }, []);
-
-  useEffect(() => {
-    async function handlePossibleCreationOnTyped() {
-      if (!postId && hasTyped && !hasCreatedPost.current) {
-        hasCreatedPost.current = true;
-        await handleSubmit();
-      }
-    }
-
-    handlePossibleCreationOnTyped();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasTyped]);
 
   const handleSubmit = async () => {
     const nonce = uuidv4();
@@ -120,28 +103,14 @@ const PostForm = ({ tags, user, authors, post }) => {
     };
 
     try {
-      if (!postId) {
-        const res = await createPost(JSON.stringify(data), token);
-
-        router.replace(`/posts/${res.data.id}`);
-
-        toast({
-          title: 'Post Created.',
-          description: "We've created your post for you.",
-          status: 'success',
-          duration: 5000,
-          isClosable: true
-        });
-      } else {
-        await updatePost(postId, JSON.stringify(data), token);
-        toast({
-          title: 'Post Updated.',
-          description: "We've updated your post for you.",
-          status: 'success',
-          duration: 5000,
-          isClosable: true
-        });
-      }
+      await updatePost(postId, JSON.stringify(data), token);
+      toast({
+        title: 'Post Updated.',
+        description: "We've updated your post for you.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
     } catch (error) {
       toast({
         title: 'An error occurred.',
@@ -175,10 +144,6 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   function handleContentChange(content) {
     setContent(content);
-  }
-
-  function handleHasTyped() {
-    setHasTyped(true);
   }
 
   function addTag(event) {
@@ -311,7 +276,6 @@ const PostForm = ({ tags, user, authors, post }) => {
           <Box p='0 0 0 5rem'>
             <Tiptap
               handleContentChange={handleContentChange}
-              handleHasTyped={handleHasTyped}
               content={content}
               user={user}
               postId={postId}
