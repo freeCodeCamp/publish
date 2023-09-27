@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -79,9 +79,9 @@ const PostForm = ({ tags, user, authors, post }) => {
       setClientTagsId(tagIds);
       setPostUrl(slug ?? '');
     }
-  }, []);
+  }, [post]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const nonce = uuidv4();
     const token = user.jwt;
 
@@ -120,22 +120,22 @@ const PostForm = ({ tags, user, authors, post }) => {
         isClosable: true
       });
     }
-  };
-
-  function handleKeyDown(event) {
-    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
-      event.preventDefault();
-      handleSubmit();
-    }
-  }
+  }, [toast, postId, title, postUrl, content, clientTagsId, author, user]);
 
   useEffect(() => {
+    function handleKeyDown(event) {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        handleSubmit();
+      }
+    }
+
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown]);
+  }, [handleSubmit]);
 
   function handleFileInputChange(event) {
     const file = event.target.files[0];
