@@ -242,7 +242,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
+const Tiptap = ({ handleContentChange, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -286,8 +286,6 @@ const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
       }
     },
     onUpdate: async ({ editor }) => {
-      handleHasTyped();
-
       handleContentChange(editor.getHTML());
     }
   });
