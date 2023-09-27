@@ -30,6 +30,7 @@ import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
 import { Markdown } from 'tiptap-markdown';
 import Code from '@tiptap/extension-code';
+import CharacterCount from '@tiptap/extension-character-count';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -277,7 +278,8 @@ const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
         HTMLAttributes: {
           class: 'code'
         }
-      })
+      }),
+      CharacterCount.configure({})
     ],
     content: content ? content : '',
     autofocus: true,
@@ -293,21 +295,22 @@ const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
     }
   });
 
+  const words = editor?.storage.characterCount.words();
+
   return (
     <>
       <ToolBar editor={editor} />
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
-      <Box right='25px' bottom='25px' zIndex='1' position='fixed'>
+      <Box right='50px' bottom='50px' zIndex='1' position='fixed'>
         <Text
           fontSize='xl'
           opacity={0.6}
           backgroundColor='white'
           padding='0.5rem'
         >
-          {content.split(' ').length > 1 ? 'words ' : 'word '}
-          {content.split(' ').length}
+          {words === 1 ? `${words} word` : `${words} words`}
         </Text>
       </Box>
     </>
