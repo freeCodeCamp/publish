@@ -103,7 +103,7 @@ const PostForm = ({ tags, user, authors, post }) => {
     };
 
     try {
-      await updatePost(postId, JSON.stringify(data), token);
+      await updatePost(postId, data, token);
       toast({
         title: 'Post Updated.',
         description: "We've updated your post for you.",
