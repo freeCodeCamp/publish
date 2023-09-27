@@ -44,10 +44,10 @@ export async function getPost(postId, token) {
 
     if (!res.ok) {
       console.error(
-        `getPost responded with error. postId: ${postId}, Status: ${res?.status}`
+        `getPost responded with error. postId: ${postId}, Status: ${res.status}`
       );
       throw new Error(
-        `getPost responded with error. postId: ${postId}, Status: ${res?.status}`
+        `getPost responded with error. postId: ${postId}, Status: ${res.status}`
       );
     }
 
