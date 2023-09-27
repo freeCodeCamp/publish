@@ -93,13 +93,6 @@ export default function IndexPage({ posts, users, tags, user }) {
 
     try {
       const res = await createPost(JSON.stringify(data), token);
-      toast({
-        title: 'Post Created',
-        description: "We've updated your post for you.",
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
 
       router.replace(`/posts/${res.data.id}`);
     } catch (err) {
