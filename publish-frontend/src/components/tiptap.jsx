@@ -28,6 +28,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
 import { Markdown } from 'tiptap-markdown';
+import Code from '@tiptap/extension-code';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -246,7 +247,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
+const Tiptap = ({ handleContentChange, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -275,6 +276,11 @@ const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
       }),
       Markdown.configure({
         transformPastedText: true
+      }),
+      Code.configure({
+        HTMLAttributes: {
+          class: 'code'
+        }
       })
     ],
     content: content ? content : '',
@@ -285,8 +291,6 @@ const Tiptap = ({ handleContentChange, handleHasTyped, content }) => {
       }
     },
     onUpdate: async ({ editor }) => {
-      handleHasTyped();
-
       handleContentChange(editor.getHTML());
     }
   });
