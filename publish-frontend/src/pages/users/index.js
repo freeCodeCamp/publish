@@ -4,34 +4,102 @@ import {
   Box,
   Button,
   Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Heading,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Select,
   Spacer,
-  Text
+  Text,
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
+import { Field, Form, Formik } from 'formik';
 import { getServerSession } from 'next-auth/next';
-import NextLink from 'next/link';
+import { useState } from 'react';
 
 import NavMenu from '@/components/nav-menu';
-import { getInvitedUsers } from '@/lib/invite-user';
+import { getInvitedUsers, inviteUser } from '@/lib/invite-user';
+import { getRoles } from '@/lib/roles';
 import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const allUsers = await getUsers(session.user.jwt);
+  const rolesData = await getRoles(session.user.jwt);
   const invitedUsers = await getInvitedUsers(session.user.jwt);
+
+  const roles = rolesData.roles.reduce(
+    (acc, role) => ({ ...acc, [role.name]: role.id }),
+    {}
+  );
+  delete roles.Public;
 
   return {
     props: {
       allUsers,
       invitedUsers,
+      roles,
       user: session.user
     }
   };
 }
 
-export default function UsersIndex({ allUsers, invitedUsers, user }) {
+export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+
+  const [inviteData, setInviteData] = useState({
+    email: '',
+    role: 'Contributor'
+  });
+
+  const handleChange = event => {
+    const { name, value } = event.target;
+    setInviteData({
+      ...inviteData,
+      [name]: value
+    });
+  };
+
+  const handleSubmit = async () => {
+    const token = user.jwt;
+    const data = {
+      data: {
+        email: inviteData.email,
+        role: [roles[inviteData.role]]
+      }
+    };
+
+    try {
+      await inviteUser(token, data);
+      toast({
+        title: 'User invited.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
+
   return (
     <Box minH='100vh' bgColor='gray.200'>
       <NavMenu user={user} />
@@ -43,14 +111,83 @@ export default function UsersIndex({ allUsers, invitedUsers, user }) {
           position={{ md: 'sticky' }}
           top='0'
           bgColor='gray.200'
-          zIndex='9999'
+          zIndex='999'
         >
           <Heading>Staff users</Heading>
           <Spacer />
-          <Button colorScheme='blue' as={NextLink} href='/tags/new'>
+          <Button colorScheme='blue' onClick={onOpen}>
             Invite user
           </Button>
         </Flex>
+
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Invite a New User</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Formik
+                initialValues={inviteData}
+                enableReinitialize={true}
+                onSubmit={async (_values, _actions) => {
+                  await handleSubmit();
+                  onClose();
+                  setInviteData({
+                    email: '',
+                    role: 'Contributor'
+                  });
+                }}
+              >
+                {({ isSubmitting }) => (
+                  <Form>
+                    <Field name='email'>
+                      {({ field, form }) => (
+                        <FormControl
+                          pb='4'
+                          isInvalid={form.errors.email}
+                          isRequired
+                        >
+                          <FormLabel>Email</FormLabel>
+                          <Input
+                            {...field}
+                            type='email'
+                            onChange={handleChange}
+                          />
+                          <FormErrorMessage>
+                            {form.errors.email}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Field name='role' required>
+                      {({ field }) => (
+                        <FormControl pb='8' isRequired>
+                          <FormLabel>Role</FormLabel>
+                          <Select {...field} onChange={handleChange}>
+                            {Object.keys(roles).map(role => (
+                              <option key={role} value={role}>
+                                {role}
+                              </option>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Button
+                      colorScheme='blue'
+                      isLoading={isSubmitting}
+                      type='submit'
+                      w='100%'
+                      mb='4'
+                    >
+                      Send invitation
+                    </Button>
+                  </Form>
+                )}
+              </Formik>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
 
         <Box pb='10' mt='4'>
           <Heading size='md'>Invited Users</Heading>

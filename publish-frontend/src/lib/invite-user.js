@@ -24,14 +24,14 @@ export async function getInvitedUsers(token) {
   }
 }
 
-export async function inviteUser(email, token) {
+export async function inviteUser(token, data) {
   const res = await fetch(`${api_root}/invited-users`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify({ data: { email } })
+    body: JSON.stringify(data)
   });
 
   try {
@@ -44,6 +44,7 @@ export async function inviteUser(email, token) {
 
     return true;
   } catch (error) {
+    const { email } = data.data;
     console.error(`inviteUser Failed. email: ${email}, Error: `, error);
     throw new Error(`inviteUser Failed. email: ${email}, Error: ${error}`);
   }
