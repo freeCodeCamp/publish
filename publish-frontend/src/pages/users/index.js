@@ -248,7 +248,11 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                     <Avatar size='sm' mr='4' />
                     <Flex flexDirection='column'>
                       <Text fontWeight='600'>{userEmail}</Text>
-                      <Text fontSize='sm' color='gray.500'>
+                      <Text
+                        fontSize='sm'
+                        color='gray.500'
+                        suppressHydrationWarning
+                      >
                         Invitation sent: {createdAt}
                       </Text>
                     </Flex>
