@@ -24,6 +24,7 @@ import {
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { Field, Form, Formik } from 'formik';
 import { getServerSession } from 'next-auth/next';
+import { useRouter } from 'next/router';
 
 import NavMenu from '@/components/nav-menu';
 import {
@@ -34,7 +35,6 @@ import {
 import { getRoles } from '@/lib/roles';
 import { getUsers, userExists } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { useRouter } from 'next/router';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -80,7 +80,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
         duration: 5000,
         isClosable: true
       });
-      router.reload();
+      router.replace(router.asPath);
     } catch (error) {
       console.log(error);
       toast({
