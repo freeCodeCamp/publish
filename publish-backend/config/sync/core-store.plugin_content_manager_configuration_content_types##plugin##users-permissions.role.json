@@ -92,6 +92,21 @@
           "sortable": false
         }
       },
+      "invited_users": {
+        "edit": {
+          "label": "invited_users",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "id"
+        },
+        "list": {
+          "label": "invited_users",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -182,6 +197,10 @@
         [
           {
             "name": "users",
+            "size": 6
+          },
+          {
+            "name": "invited_users",
             "size": 6
           }
         ]

@@ -7,9 +7,6 @@
       "action": "api::invited-user.invited-user.create"
     },
     {
-      "action": "api::invited-user.invited-user.find"
-    },
-    {
       "action": "api::post.post.create"
     },
     {

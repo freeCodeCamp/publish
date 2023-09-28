@@ -48,6 +48,21 @@
           "sortable": true
         }
       },
+      "role": {
+        "edit": {
+          "label": "role",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true,
+          "mainField": "name"
+        },
+        "list": {
+          "label": "role",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -108,12 +123,6 @@
       }
     },
     "layouts": {
-      "list": [
-        "email",
-        "accepted",
-        "createdAt",
-        "createdBy"
-      ],
       "edit": [
         [
           {
@@ -124,7 +133,20 @@
             "name": "accepted",
             "size": 4
           }
+        ],
+        [
+          {
+            "name": "role",
+            "size": 6
+          }
         ]
+      ],
+      "list": [
+        "email",
+        "role",
+        "accepted",
+        "createdAt",
+        "createdBy"
       ]
     }
   },
