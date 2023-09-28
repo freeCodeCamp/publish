@@ -3,6 +3,7 @@ import {
   Badge,
   Box,
   Button,
+  ButtonGroup,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -25,9 +26,11 @@ import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { Field, Form, Formik } from 'formik';
 import { getServerSession } from 'next-auth/next';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 
 import NavMenu from '@/components/nav-menu';
 import {
+  deleteInvitedUser,
   getInvitedUsers,
   inviteUser,
   invitedUserExists
@@ -63,6 +66,8 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
   const toast = useToast();
   const router = useRouter();
 
+  const [revokingInvitation, setRevokingInvitation] = useState(false);
+
   const handleSubmit = async values => {
     const token = user.jwt;
     const data = {
@@ -91,6 +96,31 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
         isClosable: true
       });
     }
+  };
+
+  const revokeInvitation = async invitedUserId => {
+    setRevokingInvitation(true);
+    const token = user.jwt;
+    try {
+      await deleteInvitedUser(token, invitedUserId);
+      toast({
+        title: 'User invitation revoked.',
+        status: 'success',
+        duration: 5000,
+        isClosable: true
+      });
+      router.replace(router.asPath);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: 'An error occurred.',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+    setRevokingInvitation(false);
   };
 
   return (
@@ -229,8 +259,29 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                     columnGap='4'
                     fontWeight='500'
                   >
-                    <Text>Revoke</Text>
-                    <Text>Resend</Text>
+                    <ButtonGroup size='sm' variant='ghost'>
+                      <Button
+                        textTransform='uppercase'
+                        cursor='pointer'
+                        fontSize='xs'
+                        isLoading={revokingInvitation}
+                        _hover={{
+                          bgColor: 'red.50',
+                          color: 'red.500'
+                        }}
+                        onClick={() => revokeInvitation(user.id)}
+                      >
+                        Revoke
+                      </Button>
+                      <Button
+                        textTransform='uppercase'
+                        cursor='pointer'
+                        fontSize='xs'
+                        isDisabled={revokingInvitation}
+                      >
+                        Resend
+                      </Button>
+                    </ButtonGroup>
                     <Badge
                       colorScheme={
                         userRole === 'Contributor' ? 'gray' : 'purple'
