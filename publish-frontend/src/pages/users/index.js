@@ -59,6 +59,7 @@ export default function UsersIndex({ allUsers, invitedUsers, user }) {
               if (user.attributes.accepted) return null;
 
               const userEmail = user.attributes.email;
+              const userRole = user.attributes.role.data.attributes.name;
               const createdAt = intlFormatDistance(
                 new Date(user.attributes.createdAt),
                 new Date()
@@ -92,7 +93,13 @@ export default function UsersIndex({ allUsers, invitedUsers, user }) {
                   >
                     <Text>Revoke</Text>
                     <Text>Resend</Text>
-                    <Badge>Editor</Badge>
+                    <Badge
+                      colorScheme={
+                        userRole === 'Contributor' ? 'gray' : 'purple'
+                      }
+                    >
+                      {userRole}
+                    </Badge>
                   </Flex>
                 </Flex>
               );

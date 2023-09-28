@@ -1,7 +1,7 @@
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getInvitedUsers(token) {
-  const res = await fetch(`${api_root}/invited-users`, {
+  const res = await fetch(`${api_root}/invited-users?populate=*`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
