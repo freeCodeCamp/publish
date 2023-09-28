@@ -53,7 +53,13 @@ function ToolBar({ editor }) {
   };
 
   const addTwitterEmbed = () => {
-    editor.commands.setEmbed({});
+    const id = window.prompt('Tweet ID');
+
+    if (id) {
+      editor.commands.setTwitterEmbed({
+        tweetId: id.toString()
+      });
+    }
   };
 
   const addLink = () => {
@@ -231,7 +237,7 @@ function ToolBar({ editor }) {
         ></MenuButton>
         <MenuList>
           <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
-          <MenuItem onClick={() => addTwitterEmbed()} >Twitter</MenuItem>
+          <MenuItem onClick={() => addTwitterEmbed()}>Twitter</MenuItem>
         </MenuList>
       </Menu>
       <Button
@@ -261,9 +267,30 @@ const Tiptap = ({ handleContentChange, content }) => {
           keepAttributes: false
         }
       }),
-
+      Placeholder.configure({
+        // Use a placeholder:
+        placeholder: 'Write something …'
+      }),
+      Image.configure({
+        inline: true
+      }),
+      Youtube.configure({
+        width: 480,
+        height: 320
+      }),
+      Link.configure({
+        protocols: ['http', 'https', 'mailto', 'tel']
+      }),
+      Markdown.configure({
+        transformPastedText: true
+      }),
+      Code.configure({
+        HTMLAttributes: {
+          class: 'code'
+        }
+      })
     ],
-    content: '',
+    content: content ? content : '',
     autofocus: true,
     editorProps: {
       attributes: {

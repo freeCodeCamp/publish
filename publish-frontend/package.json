@@ -38,6 +38,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
+    "react-twitter-embed": "^4.0.4",
     "slugify": "^1.6.6",
     "tiptap-markdown": "^0.8.2",
     "uuid": "^9.0.1"

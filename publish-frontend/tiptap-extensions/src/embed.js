@@ -1,44 +1,46 @@
-import { Node, mergeAttributes } from '@tiptap/core'
+import TwitterEmbed from '@/components/twitter-embed';
+import { Node, mergeAttributes } from '@tiptap/core';
+import { ReactNodeViewRenderer } from '@tiptap/react';
 
 export const Embed = Node.create({
   name: 'twitter-embed',
+  group: 'block',
+  atom: true,
 
-  addOptions() {
+  addAttributes() {
     return {
-      HTMLAttributes: {
-        style: {
-          default: 'width: 50px; height: 50px; color: red;',
-        },
-      },
-    }
+      tweetId: {
+        default: null
+      }
+    };
   },
 
   parseHTML() {
     return [
       {
-        tag: 'div',
-      },
-    ]
+        tag: 'twitter-embed'
+      }
+    ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
+    return ['twitter-embed', mergeAttributes(HTMLAttributes)];
+  },
+
+  addNodeView() {
+    return ReactNodeViewRenderer(TwitterEmbed);
   },
 
   addCommands() {
-   return {
-    setEmbed: options => ({ commands }) => {
-      return commands.insertContent({
-        type: this.name,
-        attrs: options,
-      })
-    }
-   }
-  },
-
-  addKeyboardShortcuts() {
     return {
-      'Mod-e': () => this.editor.commands.toggleMark('twitter-embed'),
-    }
-  },
-})
+      setTwitterEmbed:
+        options =>
+        ({ commands }) => {
+          return commands.insertContent({
+            type: this.name,
+            attrs: options
+          });
+        }
+    };
+  }
+});
