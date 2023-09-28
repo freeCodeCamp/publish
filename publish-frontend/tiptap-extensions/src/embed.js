@@ -1,32 +1,44 @@
-import { Mark, mergeAttributes } from '@tiptap/core'
+import { Node, mergeAttributes } from '@tiptap/core'
 
-export const Embed = Mark.create({
+export const Embed = Node.create({
   name: 'twitter-embed',
 
   addOptions() {
     return {
-      HTMLAttributes: {},
+      HTMLAttributes: {
+        style: {
+          default: 'width: 50px; height: 50px; color: red;',
+        },
+      },
     }
   },
 
   parseHTML() {
     return [
-
+      {
+        tag: 'div',
+      },
     ]
   },
 
   renderHTML({ HTMLAttributes }) {
-    return []
+    return ['div', mergeAttributes(this.options.HTMLAttributes, HTMLAttributes), 0]
   },
 
   addCommands() {
-    return {
-
+   return {
+    setEmbed: options => ({ commands }) => {
+      return commands.insertContent({
+        type: this.name,
+        attrs: options,
+      })
     }
+   }
   },
 
   addKeyboardShortcuts() {
     return {
+      'Mod-e': () => this.editor.commands.toggleMark('twitter-embed'),
     }
   },
 })

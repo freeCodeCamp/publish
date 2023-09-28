@@ -29,6 +29,7 @@ import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
 import { Markdown } from 'tiptap-markdown';
 import Code from '@tiptap/extension-code';
+import Embed from '../../tiptap-extensions/src';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -49,6 +50,10 @@ function ToolBar({ editor }) {
         height: 480
       });
     }
+  };
+
+  const addTwitterEmbed = () => {
+    editor.commands.setEmbed({});
   };
 
   const addLink = () => {
@@ -226,7 +231,7 @@ function ToolBar({ editor }) {
         ></MenuButton>
         <MenuList>
           <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
-          <MenuItem>Twitter</MenuItem>
+          <MenuItem onClick={() => addTwitterEmbed()} >Twitter</MenuItem>
         </MenuList>
       </Menu>
       <Button
@@ -245,6 +250,7 @@ function ToolBar({ editor }) {
 const Tiptap = ({ handleContentChange, content }) => {
   const editor = useEditor({
     extensions: [
+      Embed,
       StarterKit.configure({
         bulletList: {
           keepMarks: true,
@@ -255,30 +261,9 @@ const Tiptap = ({ handleContentChange, content }) => {
           keepAttributes: false
         }
       }),
-      Placeholder.configure({
-        // Use a placeholder:
-        placeholder: 'Write something …'
-      }),
-      Image.configure({
-        inline: true
-      }),
-      Youtube.configure({
-        width: 480,
-        height: 320
-      }),
-      Link.configure({
-        protocols: ['http', 'https', 'mailto', 'tel']
-      }),
-      Markdown.configure({
-        transformPastedText: true
-      }),
-      Code.configure({
-        HTMLAttributes: {
-          class: 'code'
-        }
-      })
+
     ],
-    content: content ? content : '',
+    content: '',
     autofocus: true,
     editorProps: {
       attributes: {
