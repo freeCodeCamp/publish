@@ -49,3 +49,24 @@ export async function inviteUser(token, data) {
     throw new Error(`inviteUser Failed. email: ${email}, Error: ${error}`);
   }
 }
+
+export async function invitedUserExists(token, email) {
+  const endpoint = `${api_root}/invited-users?filters[email][$eqi]=${email}`;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  const res = await fetch(endpoint, options);
+
+  if (!res.ok) {
+    throw new Error('invitedUserExists Failed');
+  }
+
+  const data = await res.json();
+  return data.data.length > 0;
+}

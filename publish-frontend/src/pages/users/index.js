@@ -24,13 +24,17 @@ import {
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { Field, Form, Formik } from 'formik';
 import { getServerSession } from 'next-auth/next';
-import { useState } from 'react';
 
 import NavMenu from '@/components/nav-menu';
-import { getInvitedUsers, inviteUser } from '@/lib/invite-user';
+import {
+  getInvitedUsers,
+  inviteUser,
+  invitedUserExists
+} from '@/lib/invite-user';
 import { getRoles } from '@/lib/roles';
-import { getUsers } from '@/lib/users';
+import { getUsers, userExists } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { useRouter } from 'next/router';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -57,26 +61,14 @@ export async function getServerSideProps(context) {
 export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
+  const router = useRouter();
 
-  const [inviteData, setInviteData] = useState({
-    email: '',
-    role: 'Contributor'
-  });
-
-  const handleChange = event => {
-    const { name, value } = event.target;
-    setInviteData({
-      ...inviteData,
-      [name]: value
-    });
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async values => {
     const token = user.jwt;
     const data = {
       data: {
-        email: inviteData.email,
-        role: [roles[inviteData.role]]
+        email: values.email,
+        role: [roles[values.role]]
       }
     };
 
@@ -88,6 +80,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
         duration: 5000,
         isClosable: true
       });
+      router.reload();
     } catch (error) {
       console.log(error);
       toast({
@@ -127,15 +120,27 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
             <ModalCloseButton />
             <ModalBody>
               <Formik
-                initialValues={inviteData}
-                enableReinitialize={true}
-                onSubmit={async (_values, _actions) => {
-                  await handleSubmit();
+                initialValues={{ email: '', role: 'Contributor' }}
+                onSubmit={async (values, actions) => {
+                  // Check if user exists
+                  if (await userExists(user.jwt, values.email)) {
+                    actions.setErrors({
+                      email: 'A user with that email address already exists.'
+                    });
+                    return;
+                  }
+
+                  // Check if user has already been invited
+                  if (await invitedUserExists(user.jwt, values.email)) {
+                    actions.setErrors({
+                      email:
+                        'A user with that email address has already been invited.'
+                    });
+                    return;
+                  }
+
+                  await handleSubmit(values);
                   onClose();
-                  setInviteData({
-                    email: '',
-                    role: 'Contributor'
-                  });
                 }}
               >
                 {({ isSubmitting }) => (
@@ -148,11 +153,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                           isRequired
                         >
                           <FormLabel>Email</FormLabel>
-                          <Input
-                            {...field}
-                            type='email'
-                            onChange={handleChange}
-                          />
+                          <Input {...field} type='email' />
                           <FormErrorMessage>
                             {form.errors.email}
                           </FormErrorMessage>
@@ -163,7 +164,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                       {({ field }) => (
                         <FormControl pb='8' isRequired>
                           <FormLabel>Role</FormLabel>
-                          <Select {...field} onChange={handleChange}>
+                          <Select {...field}>
                             {Object.keys(roles).map(role => (
                               <option key={role} value={role}>
                                 {role}
