@@ -127,7 +127,6 @@ function ToolBar({ editor }) {
         <MenuList as='ul' listStyleType='none'>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
                 editor.chain().focus().setHeading({ level: 1 }).run()
               }
@@ -137,7 +136,6 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
                 editor.chain().focus().setHeading({ level: 2 }).run()
               }
@@ -147,7 +145,6 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
                 editor.chain().focus().setHeading({ level: 3 }).run()
               }
@@ -157,7 +154,6 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
                 editor.chain().focus().setHeading({ level: 4 }).run()
               }
@@ -167,7 +163,6 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
                 editor.chain().focus().setHeading({ level: 5 }).run()
               }
@@ -177,7 +172,6 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
                 editor.chain().focus().setHeading({ level: 6 }).run()
               }
