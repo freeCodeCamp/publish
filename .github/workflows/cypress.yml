@@ -16,9 +16,6 @@ jobs:
         - name: create .env file (backend)
           working-directory: ./publish-backend
           run: cp .env.example .env
-        - name: install packages (backend)
-          working-directory: ./publish-backend
-          run: npm install
         - name: create .env file (frontend)
           working-directory: ./publish-frontend
           run: cp sample.env.local .env.local
@@ -29,14 +26,14 @@ jobs:
           working-directory: ./publish-backend
           run: | 
             docker compose up -d && wait
-            npm run cs export
-            echo "y"
+            npm run cs export && wait
+            echo "y" |
+            docker compose down
         - name: seed data
           working-directory: ./publish-backend
           env:
             SEED_DATA: true
           run: |
-            npm install
             docker compose up -d
         - name: Cypress run
           uses: cypress-io/github-action@v6
