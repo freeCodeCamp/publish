@@ -128,7 +128,7 @@ function ToolBar({ editor }) {
           <li>
             <MenuItem
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 1 }).run()
+                editor.chain().focus().toggleHeading({ level: 1 }).run()
               }
             >
               Add heading 1
@@ -137,7 +137,7 @@ function ToolBar({ editor }) {
           <li>
             <MenuItem
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 2 }).run()
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
               }
             >
               Add heading 2
@@ -146,7 +146,7 @@ function ToolBar({ editor }) {
           <li>
             <MenuItem
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 3 }).run()
+                editor.chain().focus().toggleHeading({ level: 3 }).run()
               }
             >
               Add heading 3
@@ -155,7 +155,7 @@ function ToolBar({ editor }) {
           <li>
             <MenuItem
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 4 }).run()
+                editor.chain().focus().toggleHeading({ level: 4 }).run()
               }
             >
               Add heading 4
@@ -164,7 +164,7 @@ function ToolBar({ editor }) {
           <li>
             <MenuItem
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 5 }).run()
+                editor.chain().focus().toggleHeading({ level: 5 }).run()
               }
             >
               Add heading 5
@@ -173,7 +173,7 @@ function ToolBar({ editor }) {
           <li>
             <MenuItem
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 6 }).run()
+                editor.chain().focus().toggleHeading({ level: 6 }).run()
               }
             >
               Add heading 6
