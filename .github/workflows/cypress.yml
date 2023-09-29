@@ -34,7 +34,7 @@ jobs:
           env:
             SEED_DATA: true
           run: |
-            docker compose up -d
+            docker compose up -d && wait
         - name: Cypress run
           uses: cypress-io/github-action@v6
           with:
