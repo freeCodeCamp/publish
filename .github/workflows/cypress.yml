@@ -22,6 +22,9 @@ jobs:
         - name: install packages (frontend)
           working-directory: ./publish-frontend
           run: npm install
+        - name: install packages (backend)
+          working-directory: ./publish-backend
+          run: npm install
         - name: Import strappi config
           working-directory: ./publish-backend
           run: | 
