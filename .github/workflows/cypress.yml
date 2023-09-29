@@ -25,6 +25,9 @@ jobs:
         - name: install packages (frontend)
           working-directory: ./publish-frontend
           run: npm install
+        - name: Start Strappi backend
+          working-directory: ./publish-backend
+          run: docker compose up -d &
         - name: export Strappi config
           working-directory: ./publish-backend
           run: | 
