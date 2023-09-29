@@ -26,15 +26,17 @@ jobs:
           working-directory: ./publish-frontend
           run: npm install
         - name: export Strappi config
-          working-directory: ./publish-frontend
-          run: npm run cs export
+          working-directory: ./publish-backend
+          run: | 
+            npm run cs export
+            echo "y"
         - name: seed data
           working-directory: ./publish-backend
           env:
             SEED_DATA: true
           run: |
             npm install
-            docker-compose up -d
+            docker compose up -d
         - name: Cypress run
           uses: cypress-io/github-action@v6
           with:
