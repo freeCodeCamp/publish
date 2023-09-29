@@ -29,8 +29,7 @@ jobs:
           working-directory: ./publish-backend
           run: | 
             docker compose up -d && wait
-            npm run cs export && wait
-            echo "y"
+            npm run cs export
             docker compose down
         - name: seed data
           working-directory: ./publish-backend
