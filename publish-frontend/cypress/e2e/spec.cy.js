@@ -1,5 +1,6 @@
 describe('template spec', () => {
-  it('the site runs!', () => {
+  it('is possible to login', () => {
     cy.visit('/');
+    cy.contains('Sign in').click();
   });
 });
