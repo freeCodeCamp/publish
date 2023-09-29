@@ -17,8 +17,8 @@ export async function getPosts(token) {
     const res = await fetch(endpoint, options);
 
     if (!res.ok) {
-      console.error('getPosts responded with error. Status: ', res?.status);
-      throw new Error(`getPosts responded with error. Status: ${res?.status}`);
+      console.error('getPosts responded with error. Status: ', res.status);
+      throw new Error(`getPosts responded with error. Status: ${res.status}`);
     }
 
     return res.json();
@@ -44,10 +44,10 @@ export async function getPost(postId, token) {
 
     if (!res.ok) {
       console.error(
-        `getPost responded with error. postId: ${postId}, Status: ${res?.status}`
+        `getPost responded with error. postId: ${postId}, Status: ${res.status}`
       );
       throw new Error(
-        `getPost responded with error. postId: ${postId}, Status: ${res?.status}`
+        `getPost responded with error. postId: ${postId}, Status: ${res.status}`
       );
     }
 
@@ -58,7 +58,7 @@ export async function getPost(postId, token) {
   }
 }
 
-export async function createPost(JSONdata, token) {
+export async function createPost(data, token) {
   // API endpoint where we send form data.
   const endpoint = `${api_root}/posts`;
 
@@ -71,8 +71,7 @@ export async function createPost(JSONdata, token) {
       accept: 'application/json',
       Authorization: `Bearer ${token}`
     },
-    // Body of the request is the JSON data we created above.
-    body: JSONdata
+    body: JSON.stringify(data)
   };
   // Send the form data to our forms API and get a response.
   const res = await fetch(endpoint, options);
@@ -83,7 +82,7 @@ export async function createPost(JSONdata, token) {
   return res.json();
 }
 
-export async function updatePost(postId, JSONdata, token) {
+export async function updatePost(postId, data, token) {
   // API endpoint where we send form data.
   const endpoint = `${api_root}/posts/${postId}`;
 
@@ -95,8 +94,7 @@ export async function updatePost(postId, JSONdata, token) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
-    // Body of the request is the JSON data we created above.
-    body: JSONdata
+    body: JSON.stringify(data)
   };
 
   // Send the form data to our forms API and get a response.
