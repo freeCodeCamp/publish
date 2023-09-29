@@ -7,6 +7,8 @@
     "develop": "npm run dev",
     "build": "next build",
     "start": "next start",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "lint": "next lint",
     "prettier": "prettier --write ."
   },
@@ -43,6 +45,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "cypress": "^13.3.0",
     "eslint": "^8.46.0",
     "eslint-config-next": "^13.4.13",
     "eslint-config-prettier": "^8.10.0",
