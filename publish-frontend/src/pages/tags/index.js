@@ -137,7 +137,8 @@ export default function TagsIndex({
     } else {
       router.replace('/tags', undefined, { shallow: true });
     }
-  }, [value, router]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   return (
     <Box minH='100vh' bgColor='gray.200'>
