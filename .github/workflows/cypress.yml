@@ -16,9 +16,8 @@ jobs:
               working-directory: ./publish-frontend
         steps:
         - uses: actions/checkout@v2
-        - name: Install dependencies
-          run: npm install
-        - name: Start server
-          run: npm run dev &
-        - name: Run tests
-          run: npm run cy:run
+        - name: Cypress run
+          uses: cypress-io/github-action@v6
+          with:
+            start: npm run dev
+            wait-on: 'http://localhost:3000'
