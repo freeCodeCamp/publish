@@ -11,13 +11,11 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-        defaults:
-            run:
-              working-directory: ./publish-frontend
         steps:
         - uses: actions/checkout@v2
         - name: Cypress run
           uses: cypress-io/github-action@v6
           with:
+            working-directory: ./publish-frontend
             start: npm run develop
             wait-on: 'http://localhost:3000'
