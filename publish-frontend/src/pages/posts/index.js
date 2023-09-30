@@ -138,7 +138,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           <Menu>
             <FilterButton text='All posts' />
             <MenuList>
-              <MenuOptionGroup  defaultValue='all' type='radio'>
+              <MenuOptionGroup defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All posts</MenuItemOption>
                 <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
                 <MenuItemOption value='published'>
