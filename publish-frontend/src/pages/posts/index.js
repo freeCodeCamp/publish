@@ -44,6 +44,7 @@ const FilterButton = ({ text }) => {
       borderRadius='md'
       fontSize='14px'
       boxShadow='sm'
+      position='unset'
       _hover={{
         boxShadow: 'md'
       }}
@@ -117,7 +118,6 @@ export default function IndexPage({ posts, users, tags, user }) {
           position='sticky'
           top='0'
           bgColor='gray.200'
-          zIndex='9999'
         >
           <Heading>Posts</Heading>
           <Spacer />
@@ -138,7 +138,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           <Menu>
             <FilterButton text='All posts' />
             <MenuList>
-              <MenuOptionGroup defaultValue='all' type='radio'>
+              <MenuOptionGroup  defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All posts</MenuItemOption>
                 <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
                 <MenuItemOption value='published'>
