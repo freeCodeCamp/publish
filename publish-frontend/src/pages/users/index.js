@@ -11,6 +11,7 @@ import {
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 
 import NavMenu from '@/components/nav-menu';
 import { getInvitedUsers } from '@/lib/invite-user';
@@ -32,6 +33,8 @@ export async function getServerSideProps(context) {
 }
 
 export default function UsersIndex({ allUsers, invitedUsers, user }) {
+  const router = useRouter();
+
   return (
     <Box minH='100vh' bgColor='gray.200'>
       <NavMenu user={user} />
@@ -116,6 +119,7 @@ export default function UsersIndex({ allUsers, invitedUsers, user }) {
                   borderBottom='1px solid'
                   borderColor='gray.200'
                   cursor='pointer'
+                  onClick={() => router.push(`/users/${user.id}`)}
                 >
                   <Flex alignItems='center' pr='2'>
                     <Avatar size='sm' mr='4' />
