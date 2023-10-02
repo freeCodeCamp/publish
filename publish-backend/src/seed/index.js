@@ -27,6 +27,7 @@ async function createSeedUsers(strapi) {
       data: {
         username: "contributor-user",
         name: "contributor-user",
+        slug: "contributor-user",
         email: "contributor@user.com",
         password: "contributor",
         provider: "local",
@@ -43,6 +44,7 @@ async function createSeedUsers(strapi) {
       data: {
         username: "editor-user",
         name: "editor-user",
+        slug: "editor-user",
         email: "editor@user.com",
         password: "editor",
         provider: "local",
