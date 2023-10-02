@@ -65,6 +65,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       userData: {
+        id: userData.id,
         name: userData.name,
         slug: userData.slug ?? '',
         email: userData.email,
@@ -89,7 +90,7 @@ export default function EditTag({ userData, user, roles }) {
 
   const handleSubmit = async values => {
     const token = user.jwt;
-    let data = {
+    let updatedUserData = {
       name: values.name,
       slug: slugify(values.slug, {
         lower: true,
@@ -102,19 +103,18 @@ export default function EditTag({ userData, user, roles }) {
       twitter: values.twitter,
       bio: values.bio
     };
-    if (isEditor(user)) {
-      data = {
-        ...data,
+    if (isEditor(user) && user.id != router.query.id) {
+      updatedUserData = {
+        ...updatedUserData,
         role: roles[values.role]
       };
     }
 
     try {
-      console.log('data', data);
-      if (user.id === router.query.id) {
-        // await updateMe(token, userData.id, data);
+      if (user.id == router.query.id) {
+        await updateMe(token, updatedUserData);
       } else {
-        // await updateUser(token, userData.id, data);
+        await updateUser(token, userData.id, updatedUserData);
       }
       toast({
         title: 'User Updated.',
@@ -122,7 +122,6 @@ export default function EditTag({ userData, user, roles }) {
         duration: 5000,
         isClosable: true
       });
-      router.push('/users');
     } catch (error) {
       console.log(error);
       toast({
@@ -174,7 +173,7 @@ export default function EditTag({ userData, user, roles }) {
         >
           <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
             <BreadcrumbItem>
-              <BreadcrumbLink textDecoration='none' href='/tags'>
+              <BreadcrumbLink textDecoration='none' href='/users'>
                 <Heading size='lg'>Staff</Heading>
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -232,22 +231,24 @@ export default function EditTag({ userData, user, roles }) {
                     </FormControl>
                   )}
                 </Field>
-                <Field name='role'>
-                  {({ field }) => (
-                    <FormControl pb='8' isDisabled={!isEditor(user)}>
-                      <FormLabel>Role</FormLabel>
-                      <Select {...field} value={values.role}>
-                        {Object.keys(roles).map(role => {
-                          return (
-                            <option key={role} value={role}>
-                              {role}
-                            </option>
-                          );
-                        })}
-                      </Select>
-                    </FormControl>
-                  )}
-                </Field>
+                {user.id != router.query.id && (
+                  <Field name='role'>
+                    {({ field }) => (
+                      <FormControl pb='8' isDisabled={!isEditor(user)}>
+                        <FormLabel>Role</FormLabel>
+                        <Select {...field}>
+                          {Object.keys(roles).map(role => {
+                            return (
+                              <option key={role} value={role}>
+                                {role}
+                              </option>
+                            );
+                          })}
+                        </Select>
+                      </FormControl>
+                    )}
+                  </Field>
+                )}
                 <Field name='location'>
                   {({ field }) => (
                     <FormControl pb='8'>
