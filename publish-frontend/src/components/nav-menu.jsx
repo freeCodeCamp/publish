@@ -7,20 +7,16 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   IconButton,
   Img,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Spacer,
   chakra,
-  useDisclosure,
-  useToast
+  useDisclosure
 } from '@chakra-ui/react';
 import {
   faArrowRightFromBracket,
@@ -35,10 +31,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { signOut } from 'next-auth/react';
 import NextLink from 'next/link';
-import { useState } from 'react';
 
 import { isEditor } from '@/lib/current-user';
-import { inviteUser } from '@/lib/invite-user';
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -63,19 +57,6 @@ const NavMenuLink = ({ text, link, icon }) => {
 };
 
 const NavMenuContent = ({ user, onClose, ...rest }) => {
-  const [inviteEmail, setInviteEmail] = useState('');
-  const toast = useToast();
-
-  const invite = async () => {
-    const status = await inviteUser(inviteEmail, user.jwt);
-    toast({
-      title: status ? 'User invited' : 'Error inviting user',
-      status: status ? 'success' : 'error',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
   return (
     <Flex
       flexDirection='column'
@@ -130,20 +111,6 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
         </Box>
       </Box>
       <Spacer />
-      {/* TODO: Remove this when invite users logic is added to users view */}
-      <Box mx='10px' mb='1rem'>
-        <FormControl isRequired>
-          <FormLabel>Invite User</FormLabel>
-          <Input
-            type='email'
-            placeholder='foo@bar.com'
-            onChange={e => setInviteEmail(e.target.value)}
-          />
-        </FormControl>
-        <Button colorScheme='blue' onClick={invite}>
-          Invite
-        </Button>
-      </Box>
       <Box m='0 5px'>
         <Menu>
           <MenuButton

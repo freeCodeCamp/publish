@@ -58,6 +58,27 @@ export async function getUsers(token) {
   return res.json();
 }
 
+export async function userExists(token, email) {
+  const endpoint = `${api_root}/users?filters[email][$eqi]=${email}`;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  };
+
+  const res = await fetch(endpoint, options);
+
+  if (!res.ok) {
+    throw new Error('userExists Failed');
+  }
+
+  const data = await res.json();
+  return data.length > 0;
+}
+
 export async function getUser(token, userId) {
   const endpoint = `${api_root}/users/${userId}?populate=role`;
 

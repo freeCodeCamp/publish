@@ -9,7 +9,8 @@
       "properties": {
         "fields": [
           "email",
-          "accepted"
+          "accepted",
+          "role"
         ]
       },
       "conditions": []
@@ -26,7 +27,8 @@
       "properties": {
         "fields": [
           "email",
-          "accepted"
+          "accepted",
+          "role"
         ]
       },
       "conditions": []
@@ -37,7 +39,8 @@
       "properties": {
         "fields": [
           "email",
-          "accepted"
+          "accepted",
+          "role"
         ]
       },
       "conditions": []
