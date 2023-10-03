@@ -18,7 +18,8 @@ import {
   Th,
   Thead,
   Tr,
-  chakra
+  chakra,
+  useToast
 } from '@chakra-ui/react';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,17 +28,17 @@ import { getServerSession } from 'next-auth/next';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
+
 import NavMenu from '@/components/nav-menu';
-import { getPosts } from '@/lib/posts';
+import { isEditor } from '@/lib/current-user';
+import { createPost, getPosts } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
 import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { useToast } from '@chakra-ui/react';
-import { createPost } from '@/lib/posts';
 
 const Icon = chakra(FontAwesomeIcon);
 
-const FilterButton = ({ text }) => {
+const FilterButton = ({ text, ...props }) => {
   return (
     <MenuButton
       as={Button}
@@ -53,6 +54,7 @@ const FilterButton = ({ text }) => {
       _active={{
         bgColor: 'white'
       }}
+      {...props}
     >
       {text}
     </MenuButton>
@@ -138,46 +140,50 @@ export default function IndexPage({ posts, users, tags, user }) {
             lg: '1fr 1fr 1fr 1fr'
           }}
         >
+          {isEditor(user) && (
+            <>
+              <Menu>
+                <FilterButton text='All posts' />
+                <MenuList zIndex={2}>
+                  <MenuOptionGroup defaultValue='all' type='radio'>
+                    <MenuItemOption value='all'>All posts</MenuItemOption>
+                    <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
+                    <MenuItemOption value='published'>
+                      Published posts
+                    </MenuItemOption>
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+              <Menu>
+                <FilterButton text='All authors' />
+                <MenuList zIndex={2}>
+                  <MenuOptionGroup defaultValue='all' type='radio'>
+                    <MenuItemOption value='all'>All authors</MenuItemOption>
+                    {users.map(user => (
+                      <MenuItemOption key={user.id} value={user.id}>
+                        {user.name}
+                      </MenuItemOption>
+                    ))}
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+              <Menu>
+                <FilterButton text='All tags' />
+                <MenuList zIndex={2}>
+                  <MenuOptionGroup defaultValue='all' type='radio'>
+                    <MenuItemOption value='all'>All tags</MenuItemOption>
+                    {tags.data.map(tag => (
+                      <MenuItemOption key={tag.id} value={tag.id}>
+                        {tag.attributes.name}
+                      </MenuItemOption>
+                    ))}
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+            </>
+          )}
           <Menu>
-            <FilterButton text='All posts' />
-            <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All posts</MenuItemOption>
-                <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
-                <MenuItemOption value='published'>
-                  Published posts
-                </MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='All authors' />
-            <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All authors</MenuItemOption>
-                {users.map(user => (
-                  <MenuItemOption key={user.id} value={user.id}>
-                    {user.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='All tags' />
-            <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All tags</MenuItemOption>
-                {tags.data.map(tag => (
-                  <MenuItemOption key={tag.id} value={tag.id}>
-                    {tag.attributes.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='Sort by: Newest' />
+            <FilterButton text='Sort by: Newest' gridColumnEnd='-1' />
             <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='newest' type='radio'>
                 <MenuItemOption value='newest'>Newsest</MenuItemOption>
