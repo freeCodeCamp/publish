@@ -12,7 +12,7 @@ export async function getInvitedUsers(token) {
   try {
     if (!res.ok) {
       throw new Error(
-        data.message || `Something went wrong. Status: ${res?.status}`
+        data.message || `Something went wrong. Status: ${res.status}`
       );
     }
     const data = await res.json();
@@ -38,7 +38,7 @@ export async function inviteUser(token, data) {
     const data = await res.json();
     if (!res.ok) {
       throw new Error(
-        data.message || `Something went wrong. Status: ${res?.status}`
+        data.message || `Something went wrong. Status: ${res.status}`
       );
     }
 

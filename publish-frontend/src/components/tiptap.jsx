@@ -16,7 +16,8 @@ import {
   Menu,
   MenuButton,
   MenuList,
-  MenuItem
+  MenuItem,
+  Text
 } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Prose } from '@nikolovlazar/chakra-ui-prose';
@@ -29,6 +30,7 @@ import { useCallback } from 'react';
 import Youtube from '@tiptap/extension-youtube';
 import { Markdown } from 'tiptap-markdown';
 import Code from '@tiptap/extension-code';
+import CharacterCount from '@tiptap/extension-character-count';
 
 function ToolBar({ editor }) {
   const addImage = useCallback(() => {
@@ -127,9 +129,8 @@ function ToolBar({ editor }) {
         <MenuList as='ul' listStyleType='none'>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 1 }).run()
+                editor.chain().focus().toggleHeading({ level: 1 }).run()
               }
             >
               Add heading 1
@@ -137,9 +138,8 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 2 }).run()
+                editor.chain().focus().toggleHeading({ level: 2 }).run()
               }
             >
               Add heading 2
@@ -147,9 +147,8 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 3 }).run()
+                editor.chain().focus().toggleHeading({ level: 3 }).run()
               }
             >
               Add heading 3
@@ -157,9 +156,8 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 4 }).run()
+                editor.chain().focus().toggleHeading({ level: 4 }).run()
               }
             >
               Add heading 4
@@ -167,9 +165,8 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 5 }).run()
+                editor.chain().focus().toggleHeading({ level: 5 }).run()
               }
             >
               Add heading 5
@@ -177,9 +174,8 @@ function ToolBar({ editor }) {
           </li>
           <li>
             <MenuItem
-              leftIcon={faHeader}
               onClick={() =>
-                editor.chain().focus().setHeading({ level: 6 }).run()
+                editor.chain().focus().toggleHeading({ level: 6 }).run()
               }
             >
               Add heading 6
@@ -281,7 +277,8 @@ const Tiptap = ({ handleContentChange, content }) => {
         HTMLAttributes: {
           class: 'code'
         }
-      })
+      }),
+      CharacterCount.configure({})
     ],
     content: content ? content : '',
     autofocus: true,
@@ -295,12 +292,24 @@ const Tiptap = ({ handleContentChange, content }) => {
     }
   });
 
+  const words = editor?.storage.characterCount.words();
+
   return (
     <>
       <ToolBar editor={editor} />
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
+      <Box right='50px' bottom='50px' zIndex='1' position='fixed'>
+        <Text
+          fontSize='xl'
+          opacity={0.6}
+          backgroundColor='white'
+          padding='0.5rem'
+        >
+          {words === 1 ? `${words} word` : `${words} words`}
+        </Text>
+      </Box>
     </>
   );
 };
