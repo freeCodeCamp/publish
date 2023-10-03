@@ -42,7 +42,9 @@ module.exports = {
               },
             },
           });
-        event.params.data.role = invitedUser.role.id;
+        if (invitedUser) {
+          event.params.data.role = invitedUser.role.id;
+        }
       },
       async afterCreate(event) {
         const { email } = event.result;
