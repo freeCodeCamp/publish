@@ -13,6 +13,7 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Heading,
   Input,
@@ -42,7 +43,9 @@ const Icon = chakra(FontAwesomeIcon);
 const editUserInfoSchema = Yup.object().shape({
   name: Yup.string().required('Please enter a name.'),
   slug: Yup.string().required('Please enter a slug.'),
-  email: Yup.string().email('Please enter a valid email address.'),
+  email: Yup.string()
+    .email('Please enter a valid email address.')
+    .required('Please enter a valid email address.'),
   role: Yup.string(),
   location: Yup.string(),
   website: Yup.string(),
@@ -201,12 +204,15 @@ export default function EditTag({ userData, user, roles }) {
                     <FormControl pb='8' isInvalid={form.errors.name}>
                       <FormLabel>Full Name</FormLabel>
                       <Input {...field} />
+                      <FormHelperText fontSize='sm'>
+                        Use your real name so people can recognise you
+                      </FormHelperText>
                       <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
                 <Field name='slug'>
-                  {({ field }) => (
+                  {({ field, form }) => (
                     <FormControl
                       pb='8'
                       onBlur={() => {
@@ -217,17 +223,27 @@ export default function EditTag({ userData, user, roles }) {
                           strict: true
                         });
                       }}
+                      isInvalid={form.errors.slug}
                     >
                       <FormLabel>Slug</FormLabel>
                       <Input {...field} />
+                      <FormHelperText fontSize='sm'>
+                        {/* TODO: Update for locale when its setup */}
+                        https://www.freecodecamp.org/news/author/{values.slug}
+                      </FormHelperText>
+                      <FormErrorMessage>{form.errors.slug}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
                 <Field name='email'>
-                  {({ field }) => (
-                    <FormControl pb='8'>
+                  {({ field, form }) => (
+                    <FormControl pb='8' isInvalid={form.errors.email}>
                       <FormLabel>Email</FormLabel>
                       <Input {...field} type='email' />
+                      <FormHelperText fontSize='sm'>
+                        Used for notifications
+                      </FormHelperText>
+                      <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
@@ -269,23 +285,34 @@ export default function EditTag({ userData, user, roles }) {
                   {({ field }) => (
                     <FormControl pb='8'>
                       <FormLabel>Facebook Profile</FormLabel>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        placeholder='https://www.facebook.com/username'
+                      />
                     </FormControl>
                   )}
                 </Field>
+                {/* NOTE: Should this be X or Twitter */}
                 <Field name='twitter'>
                   {({ field }) => (
                     <FormControl pb='8'>
                       <FormLabel>Twitter Profile</FormLabel>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        placeholder='https://twitter.com/username'
+                      />
                     </FormControl>
                   )}
                 </Field>
                 <Field name='bio'>
-                  {({ field }) => (
-                    <FormControl pb='8'>
+                  {({ field, form }) => (
+                    <FormControl pb='8' isInvalid={form.errors.bio}>
                       <FormLabel>Bio</FormLabel>
-                      <Textarea {...field} maxLength='200' />
+                      <Textarea {...field} />
+                      <FormHelperText fontSize='sm'>
+                        Write about you, in 200 characters or less
+                      </FormHelperText>
+                      <FormErrorMessage>{form.errors.bio}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
