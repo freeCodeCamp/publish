@@ -59,6 +59,20 @@ module.exports = {
           },
         });
       },
+      async beforeDelete(event) {
+        const { id } = event.params.where;
+        const { email } = await strapi.entityService.findOne(
+          "plugin::users-permissions.user",
+          id
+        );
+        await strapi.db.query("api::invited-user.invited-user").delete({
+          where: {
+            email: {
+              $eq: email,
+            },
+          },
+        });
+      },
     });
   },
 };
