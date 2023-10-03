@@ -223,7 +223,7 @@ export default function IndexPage({ posts, users, tags, user }) {
                     }}
                     position='relative'
                   >
-                    <Td  display='grid' gap='.25em'>
+                    <Td display='grid' gap='.25em'>
                       <ChakraLink
                         background='transparent'
                         as={NextLink}
