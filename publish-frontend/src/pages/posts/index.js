@@ -221,7 +221,7 @@ export default function IndexPage({ posts, users, tags, user }) {
                       bgColor: 'rgb(243, 244, 246)'
                     }}
                   >
-                    <Td position='relative' display='flex' gap='.5em'>
+                    <Td position='relative' display='grid' gap='.25em'>
                       <ChakraLink
                         background='transparent'
                         as={NextLink}
@@ -236,7 +236,6 @@ export default function IndexPage({ posts, users, tags, user }) {
                           width: '100%',
                           height: '100%',
                           cursor: 'pointer',
-                          textDecoration: 'underline'
                         }}
                         href={`/posts/${post.id}`}
                         fontWeight='600'
