@@ -221,8 +221,9 @@ export default function IndexPage({ posts, users, tags, user }) {
                     _hover={{
                       bgColor: 'rgb(243, 244, 246)'
                     }}
+                    position='relative'
                   >
-                    <Td position='relative' display='grid' gap='.25em'>
+                    <Td  display='grid' gap='.25em'>
                       <ChakraLink
                         background='transparent'
                         as={NextLink}
