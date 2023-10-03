@@ -165,8 +165,9 @@ export default function EditTag({ userData, user, roles }) {
     <Box minH='100vh' bgColor='gray.200'>
       <NavMenu user={user} />
 
-      <Box ml={{ base: 0, md: '300px' }} px='6'>
+      <Box ml={{ base: 0, md: '300px' }} pb='8'>
         <Flex
+          px='6'
           alignItems='center'
           minH='20'
           position={{ md: 'sticky' }}
@@ -188,7 +189,7 @@ export default function EditTag({ userData, user, roles }) {
           </Breadcrumb>
         </Flex>
 
-        <Box p='4' pb='6' bgColor='white' rounded='4' boxShadow='md'>
+        <Box p='4' mx='6' pb='6' bgColor='white' rounded='4' boxShadow='md'>
           <Formik
             initialValues={userData}
             enableReinitialize={true}
