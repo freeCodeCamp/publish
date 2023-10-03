@@ -120,6 +120,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           position='sticky'
           top='0'
           bgColor='gray.200'
+          zIndex={2}
         >
           <Heading>Posts</Heading>
           <Spacer />
