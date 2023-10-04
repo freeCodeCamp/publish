@@ -120,7 +120,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           position='sticky'
           top='0'
           bgColor='gray.200'
-          zIndex={2}
+          zIndex={3}
         >
           <Heading>Posts</Heading>
           <Spacer />
@@ -140,7 +140,7 @@ export default function IndexPage({ posts, users, tags, user }) {
         >
           <Menu>
             <FilterButton text='All posts' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All posts</MenuItemOption>
                 <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
@@ -152,7 +152,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           </Menu>
           <Menu>
             <FilterButton text='All authors' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All authors</MenuItemOption>
                 {users.map(user => (
@@ -165,7 +165,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           </Menu>
           <Menu>
             <FilterButton text='All tags' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All tags</MenuItemOption>
                 {tags.data.map(tag => (
@@ -178,7 +178,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           </Menu>
           <Menu>
             <FilterButton text='Sort by: Newest' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='newest' type='radio'>
                 <MenuItemOption value='newest'>Newsest</MenuItemOption>
                 <MenuItemOption value='oldest'>Oldest</MenuItemOption>
