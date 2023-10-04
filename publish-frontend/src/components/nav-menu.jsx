@@ -30,6 +30,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { signOut } from 'next-auth/react';
+import NextLink from 'next/link';
 
 import { isEditor } from '@/lib/current-user';
 
@@ -145,7 +146,11 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             </Flex>
           </MenuButton>
           <MenuList>
-            <MenuItem icon={<Icon icon={faUser} fixedWidth />}>
+            <MenuItem
+              icon={<Icon icon={faUser} fixedWidth />}
+              as={NextLink}
+              href={`/users/${user.id}`}
+            >
               Your Profile
             </MenuItem>
             <MenuItem

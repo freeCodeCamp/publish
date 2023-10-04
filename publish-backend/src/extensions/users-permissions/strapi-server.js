@@ -12,6 +12,16 @@ module.exports = (plugin) => {
       })
       .then(() => {
         ctx.response.status = 200;
+        ctx.response.body = {
+          status: "success",
+        };
+      })
+      .catch((err) => {
+        ctx.response.status = 400;
+        ctx.response.body = {
+          status: "error",
+          message: err.message,
+        };
       });
   };
 
