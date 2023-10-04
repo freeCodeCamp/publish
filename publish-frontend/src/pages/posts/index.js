@@ -105,31 +105,40 @@ export async function getServerSideProps(context) {
     getUsers(session.user.jwt),
     getTags(session.user.jwt)
   ]);
+
   return {
     props: {
       posts,
       usersData,
       tagsData,
-      user: session.user
+      user: session.user,
+      queryParams: context.query
     }
   };
 }
 
-export default function IndexPage({ posts, usersData, tagsData, user }) {
+export default function IndexPage({
+  posts,
+  usersData,
+  tagsData,
+  user,
+  queryParams
+}) {
   const router = useRouter();
   const toast = useToast();
 
   const [filter, setFilter] = useState({
-    postType: 'All',
-    author: 'all',
-    tag: 'all',
-    sortBy: 'newest'
+    postType: queryParams?.postType || 'All',
+    author: queryParams?.author || 'all',
+    tag: queryParams?.tag || 'all',
+    sortBy: queryParams?.sortBy || 'newest'
   });
   let [filteredPosts, setFilteredPosts] = useState(posts.data);
   let [currentAuthor, setCurrentAuthor] = useState('all');
   let [currentTag, setCurrentTag] = useState('all');
 
   useEffect(() => {
+    // Filter posts
     setFilteredPosts(
       posts.data.filter(post => {
         return (
@@ -143,6 +152,29 @@ export default function IndexPage({ posts, usersData, tagsData, user }) {
     setCurrentTag(
       tagsData.data.find(tag => tag.attributes.slug === filter.tag)?.attributes
         .name
+    );
+
+    // Update URL query params without reloading the page
+    const queryParams = {};
+    if (filter.postType !== 'All') {
+      queryParams.postType = filter.postType;
+    }
+    if (filter.author !== 'all') {
+      queryParams.author = filter.author;
+    }
+    if (filter.tag !== 'all') {
+      queryParams.tag = filter.tag;
+    }
+    if (filter.sortBy !== 'newest') {
+      queryParams.sortBy = filter.sortBy;
+    }
+    router.replace(
+      {
+        pathname: '/posts',
+        query: queryParams
+      },
+      undefined,
+      { shallow: true }
     );
   }, [filter, posts.data, tagsData.data, usersData]);
 
