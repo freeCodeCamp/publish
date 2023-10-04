@@ -304,32 +304,29 @@ export default function IndexPage({
                   </MenuOptionGroup>
                 </MenuList>
               </Menu>
-              <Menu>
-                <FilterButton
-                  text={filter.tag === 'all' ? 'All tags' : currentTag}
-                />
-                <MenuList zIndex={2}>
-                  <MenuOptionGroup
-                    value={filter.tag}
-                    type='radio'
-                    onChange={value => setFilter({ ...filter, tag: value })}
-                  >
-                    <MenuItemOption value='all'>All tags</MenuItemOption>
-                    {tagsData.data.map(tag => (
-                      <MenuItemOption key={tag.id} value={tag.attributes.slug}>
-                        {tag.attributes.name}
-                      </MenuItemOption>
-                    ))}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
             </>
           )}
           <Menu>
             <FilterButton
-              text={`Sort by: ${sortButtonNames[filter.sortBy]}`}
-              gridColumnEnd='-1'
+              text={filter.tag === 'all' ? 'All tags' : currentTag}
             />
+            <MenuList zIndex={2}>
+              <MenuOptionGroup
+                value={filter.tag}
+                type='radio'
+                onChange={value => setFilter({ ...filter, tag: value })}
+              >
+                <MenuItemOption value='all'>All tags</MenuItemOption>
+                {tagsData.data.map(tag => (
+                  <MenuItemOption key={tag.id} value={tag.attributes.slug}>
+                    {tag.attributes.name}
+                  </MenuItemOption>
+                ))}
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+          <Menu>
+            <FilterButton text={`Sort by: ${sortButtonNames[filter.sortBy]}`} />
             <MenuList zIndex={2}>
               <MenuOptionGroup
                 value={filter.sortBy}
