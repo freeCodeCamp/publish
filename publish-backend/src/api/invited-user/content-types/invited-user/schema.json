@@ -21,6 +21,12 @@
       "type": "boolean",
       "default": false,
       "required": false
+    },
+    "role": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.role",
+      "inversedBy": "invited_users"
     }
   }
 }

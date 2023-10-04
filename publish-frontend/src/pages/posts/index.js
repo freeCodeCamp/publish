@@ -44,6 +44,7 @@ const FilterButton = ({ text }) => {
       borderRadius='md'
       fontSize='14px'
       boxShadow='sm'
+      position='unset'
       _hover={{
         boxShadow: 'md'
       }}
@@ -94,7 +95,7 @@ export default function IndexPage({ posts, users, tags, user }) {
     try {
       const res = await createPost(JSON.stringify(data), token);
 
-      router.replace(`/posts/${res.data.id}`);
+      router.push(`/posts/${res.data.id}`);
     } catch (err) {
       toast({
         title: 'An error occurred.',
@@ -117,7 +118,6 @@ export default function IndexPage({ posts, users, tags, user }) {
           position='sticky'
           top='0'
           bgColor='gray.200'
-          zIndex='9999'
         >
           <Heading>Posts</Heading>
           <Spacer />

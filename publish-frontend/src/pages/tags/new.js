@@ -17,30 +17,21 @@ import {
 import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Field, Form, Formik } from 'formik';
-import { getServerSession } from 'next-auth/next';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import slugify from 'slugify';
 
 import NavMenu from '@/components/nav-menu';
 import { createTag } from '@/lib/tags';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const Icon = chakra(FontAwesomeIcon);
 
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-
-  return {
-    props: {
-      user: session.user
-    }
-  };
-}
-
-export default function CreateTag({ user }) {
+export default function CreateTag() {
   const router = useRouter();
   const toast = useToast();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   const [tagData, setTagData] = useState({
     name: '',
@@ -126,85 +117,87 @@ export default function CreateTag({ user }) {
     }
   };
 
-  return (
-    <Box minH='100vh' bgColor='gray.200'>
-      <NavMenu user={user} />
+  if (session) {
+    return (
+      <Box minH='100vh' bgColor='gray.200'>
+        <NavMenu user={user} />
 
-      <Box ml={{ base: 0, md: '300px' }} px='6'>
-        <Flex
-          alignItems='center'
-          minH='20'
-          position={{ md: 'sticky' }}
-          top='0'
-          bgColor='gray.200'
-          zIndex='9999'
-        >
-          <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
-            <BreadcrumbItem>
-              <BreadcrumbLink textDecoration='none' href='/tags'>
-                <Heading size='lg'>Tags</Heading>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbItem isCurrentPage>
-              <BreadcrumbLink>
-                <Heading size='lg'>New Tags</Heading>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-          </Breadcrumb>
-        </Flex>
-
-        <Box p='4' pb='6' bgColor='white' rounded='4' boxShadow='md'>
-          <Formik
-            initialValues={tagData}
-            enableReinitialize={true}
-            onSubmit={async (_values, _actions) => {
-              await handleSubmit();
-            }}
+        <Box ml={{ base: 0, md: '300px' }} px='6'>
+          <Flex
+            alignItems='center'
+            minH='20'
+            position={{ md: 'sticky' }}
+            top='0'
+            bgColor='gray.200'
+            zIndex='9999'
           >
-            {({ isSubmitting }) => (
-              <Form>
-                <Field name='name' validate={validateNameField}>
-                  {({ field, form }) => (
-                    <FormControl pb='8' isInvalid={form.errors.name}>
-                      <FormLabel>Name</FormLabel>
-                      <Input {...field} onChange={handleChange} />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                    </FormControl>
-                  )}
-                </Field>
-                <Field name='slug'>
-                  {({ field }) => (
-                    <FormControl pb='8'>
-                      <FormLabel htmlFor='slug'>Slug</FormLabel>
-                      <Input {...field} onChange={handleChange} />
-                    </FormControl>
-                  )}
-                </Field>
-                <Field name='isInternal'>
-                  {({ field }) => (
-                    <FormControl pb='8'>
-                      <Checkbox
-                        {...field}
-                        onChange={handleChange}
-                        isChecked={tagData.isInternal}
-                      >
-                        Internal Tag
-                      </Checkbox>
-                    </FormControl>
-                  )}
-                </Field>
-                <Button
-                  colorScheme='blue'
-                  isLoading={isSubmitting}
-                  type='submit'
-                >
-                  Save
-                </Button>
-              </Form>
-            )}
-          </Formik>
+            <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
+              <BreadcrumbItem>
+                <BreadcrumbLink textDecoration='none' href='/tags'>
+                  <Heading size='lg'>Tags</Heading>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbItem isCurrentPage>
+                <BreadcrumbLink>
+                  <Heading size='lg'>New Tags</Heading>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            </Breadcrumb>
+          </Flex>
+
+          <Box p='4' pb='6' bgColor='white' rounded='4' boxShadow='md'>
+            <Formik
+              initialValues={tagData}
+              enableReinitialize={true}
+              onSubmit={async (_values, _actions) => {
+                await handleSubmit();
+              }}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <Field name='name' validate={validateNameField}>
+                    {({ field, form }) => (
+                      <FormControl pb='8' isInvalid={form.errors.name}>
+                        <FormLabel>Name</FormLabel>
+                        <Input {...field} onChange={handleChange} />
+                        <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      </FormControl>
+                    )}
+                  </Field>
+                  <Field name='slug'>
+                    {({ field }) => (
+                      <FormControl pb='8'>
+                        <FormLabel htmlFor='slug'>Slug</FormLabel>
+                        <Input {...field} onChange={handleChange} />
+                      </FormControl>
+                    )}
+                  </Field>
+                  <Field name='isInternal'>
+                    {({ field }) => (
+                      <FormControl pb='8'>
+                        <Checkbox
+                          {...field}
+                          onChange={handleChange}
+                          isChecked={tagData.isInternal}
+                        >
+                          Internal Tag
+                        </Checkbox>
+                      </FormControl>
+                    )}
+                  </Field>
+                  <Button
+                    colorScheme='blue'
+                    isLoading={isSubmitting}
+                    type='submit'
+                  >
+                    Save
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          </Box>
         </Box>
       </Box>
-    </Box>
-  );
+    );
+  }
 }
