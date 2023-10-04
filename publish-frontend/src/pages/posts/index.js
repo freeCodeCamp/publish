@@ -2,10 +2,10 @@ import {
   Badge,
   Box,
   Button,
+  Link as ChakraLink,
   Flex,
   Grid,
   Heading,
-  Link as ChakraLink,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -25,8 +25,9 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
-import { useRouter } from 'next/router';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import NavMenu from '@/components/nav-menu';
@@ -37,6 +38,42 @@ import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const Icon = chakra(FontAwesomeIcon);
+
+const filterByPostType = (post, filter) => {
+  if (filter.postType === 'all') {
+    return true;
+  }
+  if (filter.postType === 'draft' && !post.attributes.publishedAt) {
+    return true;
+  }
+  if (filter.postType === 'published' && post.attributes.publishedAt) {
+    return true;
+  }
+  return false;
+};
+
+const filterByAuthor = (post, filter) => {
+  if (filter.author === 'all') {
+    return true;
+  }
+  if (filter.author === post.attributes.author.data.attributes.slug) {
+    return true;
+  }
+  return false;
+};
+
+const filterByTag = (post, filter) => {
+  if (filter.tag === 'all') {
+    return true;
+  }
+  if (
+    post.attributes.tags.data[0] &&
+    filter.tag === post.attributes.tags.data[0].attributes.slug
+  ) {
+    return true;
+  }
+  return false;
+};
 
 const FilterButton = ({ text, ...props }) => {
   return (
@@ -81,6 +118,26 @@ export async function getServerSideProps(context) {
 export default function IndexPage({ posts, users, tags, user }) {
   const router = useRouter();
   const toast = useToast();
+
+  const [filter, setFilter] = useState({
+    postType: 'all',
+    author: 'all',
+    tag: 'all',
+    sortBy: 'newest'
+  });
+  let [filteredPosts, setFilteredPosts] = useState(posts.data);
+
+  useEffect(() => {
+    setFilteredPosts(
+      posts.data.filter(post => {
+        return (
+          filterByPostType(post, filter) &&
+          filterByAuthor(post, filter) &&
+          filterByTag(post, filter)
+        );
+      })
+    );
+  }, [filter, posts.data]);
 
   const newPost = async () => {
     const nonce = uuidv4();
@@ -143,11 +200,18 @@ export default function IndexPage({ posts, users, tags, user }) {
           {isEditor(user) && (
             <>
               <Menu>
-                <FilterButton text='All posts' />
+                <FilterButton text={filter.postType + ' posts'} />
                 <MenuList zIndex={2}>
-                  <MenuOptionGroup defaultValue='all' type='radio'>
+                  <MenuOptionGroup
+                    value={filter.postType}
+                    type='radio'
+                    name='postType'
+                    onChange={value =>
+                      setFilter({ ...filter, postType: value })
+                    }
+                  >
                     <MenuItemOption value='all'>All posts</MenuItemOption>
-                    <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
+                    <MenuItemOption value='draft'>Drafts posts</MenuItemOption>
                     <MenuItemOption value='published'>
                       Published posts
                     </MenuItemOption>
@@ -155,12 +219,18 @@ export default function IndexPage({ posts, users, tags, user }) {
                 </MenuList>
               </Menu>
               <Menu>
-                <FilterButton text='All authors' />
+                <FilterButton
+                  text={filter.author === 'all' ? 'All authors' : filter.author}
+                />
                 <MenuList zIndex={2}>
-                  <MenuOptionGroup defaultValue='all' type='radio'>
+                  <MenuOptionGroup
+                    value={filter.author}
+                    type='radio'
+                    onChange={value => setFilter({ ...filter, author: value })}
+                  >
                     <MenuItemOption value='all'>All authors</MenuItemOption>
                     {users.map(user => (
-                      <MenuItemOption key={user.id} value={user.id}>
+                      <MenuItemOption key={user.id} value={user.slug}>
                         {user.name}
                       </MenuItemOption>
                     ))}
@@ -168,12 +238,18 @@ export default function IndexPage({ posts, users, tags, user }) {
                 </MenuList>
               </Menu>
               <Menu>
-                <FilterButton text='All tags' />
+                <FilterButton
+                  text={filter.tag === 'all' ? 'All tags' : filter.tag}
+                />
                 <MenuList zIndex={2}>
-                  <MenuOptionGroup defaultValue='all' type='radio'>
+                  <MenuOptionGroup
+                    value={filter.tag}
+                    type='radio'
+                    onChange={value => setFilter({ ...filter, tag: value })}
+                  >
                     <MenuItemOption value='all'>All tags</MenuItemOption>
                     {tags.data.map(tag => (
-                      <MenuItemOption key={tag.id} value={tag.id}>
+                      <MenuItemOption key={tag.id} value={tag.attributes.slug}>
                         {tag.attributes.name}
                       </MenuItemOption>
                     ))}
@@ -185,7 +261,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           <Menu>
             <FilterButton text='Sort by: Newest' gridColumnEnd='-1' />
             <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='newest' type='radio'>
+              <MenuOptionGroup value={filter.sortBy} type='radio'>
                 <MenuItemOption value='newest'>Newsest</MenuItemOption>
                 <MenuItemOption value='oldest'>Oldest</MenuItemOption>
                 <MenuItemOption value='recently-updated'>
@@ -207,7 +283,7 @@ export default function IndexPage({ posts, users, tags, user }) {
               </Tr>
             </Thead>
             <Tbody bgColor='white'>
-              {posts.data.map(post => {
+              {filteredPosts.map(post => {
                 const title = post.attributes.title;
                 const name = post.attributes.author.data.attributes.name;
                 const tag = post.attributes.tags.data[0]?.attributes.name;
@@ -245,7 +321,7 @@ export default function IndexPage({ posts, users, tags, user }) {
                           zIndex: '1',
                           width: '100%',
                           height: '100%',
-                          cursor: 'pointer',
+                          cursor: 'pointer'
                         }}
                         href={`/posts/${post.id}`}
                         fontWeight='600'
