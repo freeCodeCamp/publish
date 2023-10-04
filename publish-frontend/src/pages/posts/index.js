@@ -40,13 +40,13 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 const Icon = chakra(FontAwesomeIcon);
 
 const filterByPostType = (post, filter) => {
-  if (filter.postType === 'all') {
+  if (filter.postType === 'All') {
     return true;
   }
-  if (filter.postType === 'draft' && !post.attributes.publishedAt) {
+  if (filter.postType === 'Draft' && !post.attributes.publishedAt) {
     return true;
   }
-  if (filter.postType === 'published' && post.attributes.publishedAt) {
+  if (filter.postType === 'Published' && post.attributes.publishedAt) {
     return true;
   }
   return false;
@@ -100,7 +100,7 @@ const FilterButton = ({ text, ...props }) => {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const [posts, users, tags] = await Promise.all([
+  const [posts, usersData, tagsData] = await Promise.all([
     getPosts(session.user.jwt),
     getUsers(session.user.jwt),
     getTags(session.user.jwt)
@@ -108,24 +108,26 @@ export async function getServerSideProps(context) {
   return {
     props: {
       posts,
-      users,
-      tags,
+      usersData,
+      tagsData,
       user: session.user
     }
   };
 }
 
-export default function IndexPage({ posts, users, tags, user }) {
+export default function IndexPage({ posts, usersData, tagsData, user }) {
   const router = useRouter();
   const toast = useToast();
 
   const [filter, setFilter] = useState({
-    postType: 'all',
+    postType: 'All',
     author: 'all',
     tag: 'all',
     sortBy: 'newest'
   });
   let [filteredPosts, setFilteredPosts] = useState(posts.data);
+  let [currentAuthor, setCurrentAuthor] = useState('all');
+  let [currentTag, setCurrentTag] = useState('all');
 
   useEffect(() => {
     setFilteredPosts(
@@ -137,7 +139,12 @@ export default function IndexPage({ posts, users, tags, user }) {
         );
       })
     );
-  }, [filter, posts.data]);
+    setCurrentAuthor(usersData.find(user => user.slug === filter.author)?.name);
+    setCurrentTag(
+      tagsData.data.find(tag => tag.attributes.slug === filter.tag)?.attributes
+        .name
+    );
+  }, [filter, posts.data, tagsData.data, usersData]);
 
   const newPost = async () => {
     const nonce = uuidv4();
@@ -210,9 +217,9 @@ export default function IndexPage({ posts, users, tags, user }) {
                       setFilter({ ...filter, postType: value })
                     }
                   >
-                    <MenuItemOption value='all'>All posts</MenuItemOption>
-                    <MenuItemOption value='draft'>Drafts posts</MenuItemOption>
-                    <MenuItemOption value='published'>
+                    <MenuItemOption value='All'>All posts</MenuItemOption>
+                    <MenuItemOption value='Draft'>Drafts posts</MenuItemOption>
+                    <MenuItemOption value='Published'>
                       Published posts
                     </MenuItemOption>
                   </MenuOptionGroup>
@@ -220,7 +227,7 @@ export default function IndexPage({ posts, users, tags, user }) {
               </Menu>
               <Menu>
                 <FilterButton
-                  text={filter.author === 'all' ? 'All authors' : filter.author}
+                  text={filter.author === 'all' ? 'All authors' : currentAuthor}
                 />
                 <MenuList zIndex={2}>
                   <MenuOptionGroup
@@ -229,7 +236,7 @@ export default function IndexPage({ posts, users, tags, user }) {
                     onChange={value => setFilter({ ...filter, author: value })}
                   >
                     <MenuItemOption value='all'>All authors</MenuItemOption>
-                    {users.map(user => (
+                    {usersData.map(user => (
                       <MenuItemOption key={user.id} value={user.slug}>
                         {user.name}
                       </MenuItemOption>
@@ -239,7 +246,7 @@ export default function IndexPage({ posts, users, tags, user }) {
               </Menu>
               <Menu>
                 <FilterButton
-                  text={filter.tag === 'all' ? 'All tags' : filter.tag}
+                  text={filter.tag === 'all' ? 'All tags' : currentTag}
                 />
                 <MenuList zIndex={2}>
                   <MenuOptionGroup
@@ -248,7 +255,7 @@ export default function IndexPage({ posts, users, tags, user }) {
                     onChange={value => setFilter({ ...filter, tag: value })}
                   >
                     <MenuItemOption value='all'>All tags</MenuItemOption>
-                    {tags.data.map(tag => (
+                    {tagsData.data.map(tag => (
                       <MenuItemOption key={tag.id} value={tag.attributes.slug}>
                         {tag.attributes.name}
                       </MenuItemOption>
