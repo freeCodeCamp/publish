@@ -176,6 +176,7 @@ export default function IndexPage({
       undefined,
       { shallow: true }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter, posts.data, tagsData.data, usersData]);
 
   const newPost = async () => {
