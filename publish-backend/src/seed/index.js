@@ -91,27 +91,32 @@ async function createSeedTags(strapi) {
   const tagRes1 = await strapi.entityService.create("api::tag.tag", {
     data: {
       name: "HTML",
+      slug: "html",
     },
   });
   const tagRes2 = await strapi.entityService.create("api::tag.tag", {
     data: {
       name: "CSS",
+      slug: "css",
     },
   });
   const tagRes3 = await strapi.entityService.create("api::tag.tag", {
     data: {
       name: "JS",
+      slug: "js",
     },
   });
   const tagRes4 = await strapi.entityService.create("api::tag.tag", {
     data: {
       name: "Python",
+      slug: "python",
     },
   });
   const internalTagRes = await strapi.entityService.create("api::tag.tag", {
     data: {
       name: "Internal",
       visibility: "internal",
+      slug: "internal",
     },
   });
   tagIds = [tagRes1.id, tagRes2.id, tagRes3.id, tagRes4.id];
