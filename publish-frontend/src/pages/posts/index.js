@@ -32,7 +32,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import NavMenu from '@/components/nav-menu';
 import { isEditor } from '@/lib/current-user';
-import { createPost, getPosts } from '@/lib/posts';
+import { createPost, getAllPosts, getUserPosts } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
 import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
@@ -107,7 +107,9 @@ const FilterButton = ({ text, ...props }) => {
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const [posts, usersData, tagsData] = await Promise.all([
-    getPosts(session.user.jwt),
+    isEditor(session.user)
+      ? getAllPosts(session.user.jwt)
+      : getUserPosts(session.user),
     getUsers(session.user.jwt),
     getTags(session.user.jwt)
   ]);
