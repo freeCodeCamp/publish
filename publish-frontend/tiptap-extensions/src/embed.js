@@ -1,15 +1,17 @@
 import TwitterEmbed from '@/components/twitter-embed';
-import { Node, mergeAttributes } from '@tiptap/core';
+import { Node } from '@tiptap/core';
 import { ReactNodeViewRenderer } from '@tiptap/react';
 
 export const Embed = Node.create({
   name: 'twitter-embed',
   group: 'block',
-  atom: true,
-
+  content: 'text*',
   addAttributes() {
     return {
       tweetId: {
+        default: null
+      },
+      storeChildren: {
         default: null
       }
     };
@@ -18,7 +20,7 @@ export const Embed = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'blockquote',
+        tag: 'figure',
         getAttrs: document => {
           const anchorElements = document.getElementsByTagName('a');
           const lastAnchorElement = anchorElements[anchorElements.length - 1];
@@ -30,12 +32,14 @@ export const Embed = Node.create({
           if (tweetId.includes('?')) {
             const tweetIdSplit = tweetId.split('?');
             return {
-              tweetId: tweetIdSplit[0]
+              tweetId: tweetIdSplit[0],
+              storeChildren: document
             };
           }
 
           return {
-            tweetId: tweetId
+            tweetId: tweetId,
+            storeChildren: document
           };
         }
       }
@@ -43,10 +47,23 @@ export const Embed = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      'blockquote',
-      mergeAttributes({ class: 'twitter-embed' }, HTMLAttributes)
-    ];
+    const children = Array.from(HTMLAttributes.storeChildren.children).map(
+      child => {
+        const localAttriubteObject = {};
+
+        Array.from(child.attributes).forEach(attribute => {
+          localAttriubteObject[attribute.name] = attribute.value;
+        });
+
+        return [
+          child.tagName.toLowerCase(),
+          localAttriubteObject,
+          child.innerHTML
+        ];
+      }
+    );
+
+    return ['figure', {}, ...children];
   },
 
   addNodeView() {
