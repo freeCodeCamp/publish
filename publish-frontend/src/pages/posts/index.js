@@ -5,6 +5,7 @@ import {
   Flex,
   Grid,
   Heading,
+  Link as ChakraLink,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -24,6 +25,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import { v4 as uuidv4 } from 'uuid';
 import NavMenu from '@/components/nav-menu';
 import { getPosts } from '@/lib/posts';
@@ -118,6 +120,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           position='sticky'
           top='0'
           bgColor='gray.200'
+          zIndex={2}
         >
           <Heading>Posts</Heading>
           <Spacer />
@@ -215,14 +218,34 @@ export default function IndexPage({ posts, users, tags, user }) {
                   <Tr
                     display='table-row'
                     key={post.id}
-                    cursor='pointer'
                     _hover={{
                       bgColor: 'rgb(243, 244, 246)'
                     }}
-                    onClick={() => router.push(`/posts/${post.id}`)}
+                    position='relative'
                   >
                     <Td>
-                      <Box fontWeight='600'>{title}</Box>
+                      <ChakraLink
+                        background='transparent'
+                        as={NextLink}
+                        display='block'
+                        marginBottom='.25em'
+                        _hover={{
+                          background: 'transparent'
+                        }}
+                        _before={{
+                          content: '""',
+                          position: 'absolute',
+                          inset: '0',
+                          zIndex: '1',
+                          width: '100%',
+                          height: '100%',
+                          cursor: 'pointer',
+                        }}
+                        href={`/posts/${post.id}`}
+                        fontWeight='600'
+                      >
+                        {title}
+                      </ChakraLink>
                       <Box as='span' fontSize='sm' color='gray.500'>
                         By{' '}
                         <Box as='span' fontWeight='500' color='gray.500'>
