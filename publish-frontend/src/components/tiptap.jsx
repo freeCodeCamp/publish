@@ -55,11 +55,11 @@ function ToolBar({ editor }) {
   };
 
   const addTwitterEmbed = () => {
-    const id = window.prompt('Tweet ID');
+    const id = window.prompt('Tweet URL');
 
     if (id) {
       editor.commands.setTwitterEmbed({
-        tweetId: id.toString()
+        tweetId: id
       });
     }
   };
