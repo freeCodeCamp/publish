@@ -13,8 +13,8 @@ const expectedPost = {
 };
 
 const expectedAuthor = {
-  slug: "test-user",
-  name: "Test User",
+  slug: "contributor-user",
+  name: "Contributor User",
   bio: null,
   website: null,
   location: null,
