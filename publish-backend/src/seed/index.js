@@ -57,14 +57,32 @@ async function createSeedUsers(strapi) {
 }
 
 async function createSeedInvitedUsers(strapi) {
+  const contributor = await findRoleId(strapi, "Contributor");
+  const editor = await findRoleId(strapi, "Editor");
   await strapi.entityService.create("api::invited-user.invited-user", {
     data: {
       email: "contributor@user.com",
+      accepted: "true",
+      role: {
+        connect: [contributor],
+      },
     },
   });
   await strapi.entityService.create("api::invited-user.invited-user", {
     data: {
       email: "editor@user.com",
+      accepted: "true",
+      role: {
+        connect: [editor],
+      },
+    },
+  });
+  await strapi.entityService.create("api::invited-user.invited-user", {
+    data: {
+      email: "invited@user.com",
+      role: {
+        connect: [contributor],
+      },
     },
   });
 }

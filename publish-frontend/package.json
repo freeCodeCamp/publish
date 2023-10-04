@@ -20,6 +20,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@nikolovlazar/chakra-ui-prose": "^1.2.1",
+    "@tiptap/extension-character-count": "^2.1.11",
+    "@tiptap/extension-code": "^2.1.11",
     "@tiptap/extension-image": "^2.0.4",
     "@tiptap/extension-link": "^2.1.8",
     "@tiptap/extension-list-item": "^2.0.3",
@@ -32,14 +34,14 @@
     "date-fns": "^2.30.0",
     "formik": "^2.4.4",
     "framer-motion": "^10.13.1",
-    "next": "13.4.19",
+    "next": "13.5.3",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
     "slugify": "^1.6.6",
-    "uuid": "^9.0.1",
-    "tiptap-markdown": "^0.8.2"
+    "tiptap-markdown": "^0.8.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "eslint": "^8.46.0",

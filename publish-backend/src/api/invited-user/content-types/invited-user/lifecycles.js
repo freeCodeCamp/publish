@@ -12,5 +12,18 @@ module.exports = {
       subject: "Invitation Link",
       text: `Here is your invitation link: ${DASHBOARD_URL}/api/auth/signin`,
     });
+
+    // if (process.env.NODE_ENV === "development") {
+    //   const { email, role } = event.params.data;
+
+    //   await strapi.plugins["users-permissions"].services.user.add({
+    //     username: email,
+    //     email: email,
+    //     password: "password",
+    //     role: role,
+    //     provider: "local",
+    //     confirmed: true,
+    //   });
+    // }
   },
 };

@@ -30,6 +30,20 @@ module.exports = {
 
     strapi.db.lifecycles.subscribe({
       models: ["plugin::users-permissions.user"],
+      async beforeCreate(event) {
+        const { email } = event.params.data;
+        const invitedUser = await strapi.db
+          .query("api::invited-user.invited-user")
+          .findOne({
+            populate: true,
+            where: {
+              email: {
+                $eq: email,
+              },
+            },
+          });
+        event.params.data.role = invitedUser.role.id;
+      },
       async afterCreate(event) {
         const { email } = event.result;
         await strapi.db.query("api::invited-user.invited-user").update({

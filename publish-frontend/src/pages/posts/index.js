@@ -5,6 +5,7 @@ import {
   Flex,
   Grid,
   Heading,
+  Link as ChakraLink,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -23,14 +24,16 @@ import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
-import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-
+import NextLink from 'next/link';
+import { v4 as uuidv4 } from 'uuid';
 import NavMenu from '@/components/nav-menu';
 import { getPosts } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
 import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { useToast } from '@chakra-ui/react';
+import { createPost } from '@/lib/posts';
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -43,6 +46,7 @@ const FilterButton = ({ text }) => {
       borderRadius='md'
       fontSize='14px'
       boxShadow='sm'
+      position='unset'
       _hover={{
         boxShadow: 'md'
       }}
@@ -74,6 +78,36 @@ export async function getServerSideProps(context) {
 
 export default function IndexPage({ posts, users, tags, user }) {
   const router = useRouter();
+  const toast = useToast();
+
+  const newPost = async () => {
+    const nonce = uuidv4();
+    const token = user.jwt;
+
+    const data = {
+      data: {
+        title: '(UNTITLED)',
+        slug: nonce,
+        body: '',
+        tags: [],
+        author: [user.id]
+      }
+    };
+
+    try {
+      const res = await createPost(JSON.stringify(data), token);
+
+      router.push(`/posts/${res.data.id}`);
+    } catch (err) {
+      toast({
+        title: 'An error occurred.',
+        description: err.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true
+      });
+    }
+  };
 
   return (
     <Box minH='100vh' bgColor='gray.200'>
@@ -86,11 +120,11 @@ export default function IndexPage({ posts, users, tags, user }) {
           position='sticky'
           top='0'
           bgColor='gray.200'
-          zIndex='9999'
+          zIndex={3}
         >
           <Heading>Posts</Heading>
           <Spacer />
-          <Button colorScheme='blue' as={NextLink} href='/posts/new'>
+          <Button colorScheme='blue' onClick={newPost}>
             New Post
           </Button>
         </Flex>
@@ -106,7 +140,7 @@ export default function IndexPage({ posts, users, tags, user }) {
         >
           <Menu>
             <FilterButton text='All posts' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All posts</MenuItemOption>
                 <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
@@ -118,7 +152,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           </Menu>
           <Menu>
             <FilterButton text='All authors' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All authors</MenuItemOption>
                 {users.map(user => (
@@ -131,7 +165,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           </Menu>
           <Menu>
             <FilterButton text='All tags' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='all' type='radio'>
                 <MenuItemOption value='all'>All tags</MenuItemOption>
                 {tags.data.map(tag => (
@@ -144,7 +178,7 @@ export default function IndexPage({ posts, users, tags, user }) {
           </Menu>
           <Menu>
             <FilterButton text='Sort by: Newest' />
-            <MenuList>
+            <MenuList zIndex={2}>
               <MenuOptionGroup defaultValue='newest' type='radio'>
                 <MenuItemOption value='newest'>Newsest</MenuItemOption>
                 <MenuItemOption value='oldest'>Oldest</MenuItemOption>
@@ -184,14 +218,34 @@ export default function IndexPage({ posts, users, tags, user }) {
                   <Tr
                     display='table-row'
                     key={post.id}
-                    cursor='pointer'
                     _hover={{
                       bgColor: 'rgb(243, 244, 246)'
                     }}
-                    onClick={() => router.push(`/posts/${post.id}`)}
+                    position='relative'
                   >
                     <Td>
-                      <Box fontWeight='600'>{title}</Box>
+                      <ChakraLink
+                        background='transparent'
+                        as={NextLink}
+                        display='block'
+                        marginBottom='.25em'
+                        _hover={{
+                          background: 'transparent'
+                        }}
+                        _before={{
+                          content: '""',
+                          position: 'absolute',
+                          inset: '0',
+                          zIndex: '1',
+                          width: '100%',
+                          height: '100%',
+                          cursor: 'pointer',
+                        }}
+                        href={`/posts/${post.id}`}
+                        fontWeight='600'
+                      >
+                        {title}
+                      </ChakraLink>
                       <Box as='span' fontSize='sm' color='gray.500'>
                         By{' '}
                         <Box as='span' fontWeight='500' color='gray.500'>

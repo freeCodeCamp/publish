@@ -7,20 +7,16 @@ import {
   DrawerContent,
   DrawerOverlay,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   IconButton,
   Img,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
   Spacer,
   chakra,
-  useDisclosure,
-  useToast
+  useDisclosure
 } from '@chakra-ui/react';
 import {
   faArrowRightFromBracket,
@@ -34,47 +30,32 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { signOut } from 'next-auth/react';
-import { useState } from 'react';
 
 import { isEditor } from '@/lib/current-user';
-import { inviteUser } from '@/lib/invite-user';
 
 const Icon = chakra(FontAwesomeIcon);
 
 const NavMenuLink = ({ text, link, icon }) => {
   return (
-    <Box
-      color='black'
-      p='0.5rem 2rem'
-      fontWeight='400'
-      m='2px 5px'
-      _hover={{
-        bgColor: 'rgb(243, 244, 246)',
-        borderRadius: '5px'
-      }}
-    >
-      <a href={link}>
+    <a href={link}>
+      <Box
+        color='black'
+        p='0.5rem 2rem'
+        fontWeight='400'
+        m='2px 5px'
+        _hover={{
+          bgColor: 'rgb(243, 244, 246)',
+          borderRadius: '5px'
+        }}
+      >
         <Icon icon={icon} fixedWidth mr='0.5rem' />
         {text}
-      </a>
-    </Box>
+      </Box>
+    </a>
   );
 };
 
 const NavMenuContent = ({ user, onClose, ...rest }) => {
-  const [inviteEmail, setInviteEmail] = useState('');
-  const toast = useToast();
-
-  const invite = async () => {
-    const status = await inviteUser(inviteEmail, user.jwt);
-    toast({
-      title: status ? 'User invited' : 'Error inviting user',
-      status: status ? 'success' : 'error',
-      duration: 5000,
-      isClosable: true
-    });
-  };
-
   return (
     <Flex
       flexDirection='column'
@@ -118,31 +99,17 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
         </Flex>
 
         <Box>
-          <NavMenuLink text='Posts' icon={faFileLines} link='#' />
+          <NavMenuLink text='Posts' icon={faFileLines} link='/posts' />
           {isEditor(user) && (
             <>
-              <NavMenuLink text='Pages' icon={faNewspaper} link='#' />
-              <NavMenuLink text='Tags' icon={faTags} link='#' />
-              <NavMenuLink text='Staff' icon={faUsers} link='#' />
+              <NavMenuLink text='Pages' icon={faNewspaper} link='/pages' />
+              <NavMenuLink text='Tags' icon={faTags} link='/tags' />
+              <NavMenuLink text='Staff' icon={faUsers} link='/users' />
             </>
           )}
         </Box>
       </Box>
       <Spacer />
-      {/* TODO: Remove this when invite users logic is added to users view */}
-      <Box mx='10px' mb='1rem'>
-        <FormControl isRequired>
-          <FormLabel>Invite User</FormLabel>
-          <Input
-            type='email'
-            placeholder='foo@bar.com'
-            onChange={e => setInviteEmail(e.target.value)}
-          />
-        </FormControl>
-        <Button colorScheme='blue' onClick={invite}>
-          Invite
-        </Button>
-      </Box>
       <Box m='0 5px'>
         <Menu>
           <MenuButton
