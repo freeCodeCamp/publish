@@ -39,6 +39,12 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const Icon = chakra(FontAwesomeIcon);
 
+const sortButtonNames = {
+  newest: 'Newest',
+  oldest: 'Oldest',
+  'recently-updated': 'Recently updated'
+};
+
 const filterByPostType = (post, filter) => {
   if (filter.postType === 'All') {
     return true;
@@ -140,13 +146,34 @@ export default function IndexPage({
   useEffect(() => {
     // Filter posts
     setFilteredPosts(
-      posts.data.filter(post => {
-        return (
-          filterByPostType(post, filter) &&
-          filterByAuthor(post, filter) &&
-          filterByTag(post, filter)
-        );
-      })
+      posts.data
+        .filter(post => {
+          return (
+            filterByPostType(post, filter) &&
+            filterByAuthor(post, filter) &&
+            filterByTag(post, filter)
+          );
+        })
+        .sort((a, b) => {
+          if (filter.sortBy === 'newest') {
+            return (
+              new Date(b.attributes.createdAt) -
+              new Date(a.attributes.createdAt)
+            );
+          }
+          if (filter.sortBy === 'oldest') {
+            return (
+              new Date(a.attributes.createdAt) -
+              new Date(b.attributes.createdAt)
+            );
+          }
+          if (filter.sortBy === 'recently-updated') {
+            return (
+              new Date(b.attributes.updatedAt) -
+              new Date(a.attributes.updatedAt)
+            );
+          }
+        })
     );
     setCurrentAuthor(usersData.find(user => user.slug === filter.author)?.name);
     setCurrentTag(
@@ -299,10 +326,17 @@ export default function IndexPage({
             </>
           )}
           <Menu>
-            <FilterButton text='Sort by: Newest' gridColumnEnd='-1' />
+            <FilterButton
+              text={`Sort by: ${sortButtonNames[filter.sortBy]}`}
+              gridColumnEnd='-1'
+            />
             <MenuList zIndex={2}>
-              <MenuOptionGroup value={filter.sortBy} type='radio'>
-                <MenuItemOption value='newest'>Newsest</MenuItemOption>
+              <MenuOptionGroup
+                value={filter.sortBy}
+                type='radio'
+                onChange={value => setFilter({ ...filter, sortBy: value })}
+              >
+                <MenuItemOption value='newest'>Newest</MenuItemOption>
                 <MenuItemOption value='oldest'>Oldest</MenuItemOption>
                 <MenuItemOption value='recently-updated'>
                   Recently updated
@@ -368,7 +402,12 @@ export default function IndexPage({
                       >
                         {title}
                       </ChakraLink>
-                      <Box as='span' fontSize='sm' color='gray.500'>
+                      <Box
+                        as='span'
+                        fontSize='sm'
+                        color='gray.500'
+                        suppressHydrationWarning
+                      >
                         By{' '}
                         <Box as='span' fontWeight='500' color='gray.500'>
                           {name}
