@@ -21,6 +21,9 @@ export const Embed = Node.create({
     return [
       {
         tag: 'figure',
+        attrs: {
+          class: 'kg-card kg-embed-card'
+        },
         getAttrs: document => {
           const anchorElements = document.getElementsByTagName('a');
           const lastAnchorElement = anchorElements[anchorElements.length - 1];
@@ -47,23 +50,25 @@ export const Embed = Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    const children = Array.from(HTMLAttributes.storeChildren.children).map(
-      child => {
-        const localAttriubteObject = {};
+    const dom = document.createElement('figure');
+    dom.setAttribute('class', 'kg-card kg-embed-card');
 
-        Array.from(child.attributes).forEach(attribute => {
-          localAttriubteObject[attribute.name] = attribute.value;
-        });
+    const contentDOM = document.createElement('blockqoute');
+    contentDOM.setAttribute('class', 'twitter-tweet');
+    contentDOM.setAttribute('data-width', '550');
 
-        return [
-          child.tagName.toLowerCase(),
-          localAttriubteObject,
-          child.innerHTML
-        ];
+    Array.from(HTMLAttributes.storeChildren?.children).forEach(child => {
+      if (child.nodeName !== 'SCRIPT') {
+        contentDOM.appendChild(child);
       }
-    );
+    });
 
-    return ['figure', {}, ...children];
+    dom.appendChild(contentDOM);
+
+    return {
+      dom,
+      contentDOM
+    };
   },
 
   addNodeView() {
