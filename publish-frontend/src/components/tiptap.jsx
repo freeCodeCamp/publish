@@ -254,7 +254,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, content }) => {
+const Tiptap = ({ handleContentChange, _content }) => {
   const editor = useEditor({
     extensions: [
       Embed,
@@ -292,7 +292,8 @@ const Tiptap = ({ handleContentChange, content }) => {
       }),
       CharacterCount.configure({})
     ],
-    content: content ? content : '',
+    content:
+      '<figure class="kg-card kg-embed-card"><blockquote class="twitter-tweet" data-width="550"><p lang="en" dir="ltr">Hey everyone we did it! 🎊 The freeCodeCamp Data Science Pledge Drive exceeded our goal. Total raised: $306,667<br><br>Thank you to all 2,519 of you donors. And to <a href="https://twitter.com/darrellsilver?ref_src=twsrc%5Etfw">@darrellsilver</a> for his matching donation of $150K.<br><br>Here&#39;s how we&#39;ve started putting this to use:  <a href="https://t.co/kClO5ND4lg">https://t.co/kClO5ND4lg</a> <a href="https://t.co/bD9mffFjsO">pic.twitter.com/bD9mffFjsO</a></p>&mdash; Quincy Larson (@ossia) <a href="https://twitter.com/ossia/status/1415658657950232580?ref_src=twsrc%5Etfw">July 15, 2021</a></blockquote>n<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></figure>',
     autofocus: true,
     editorProps: {
       attributes: {
@@ -301,6 +302,7 @@ const Tiptap = ({ handleContentChange, content }) => {
     },
     onUpdate: async ({ editor }) => {
       handleContentChange(editor.getHTML());
+      console.log(editor.getHTML());
     }
   });
 

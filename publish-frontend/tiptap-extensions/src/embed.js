@@ -18,13 +18,35 @@ export const Embed = Node.create({
   parseHTML() {
     return [
       {
-        tag: 'twitter-embed'
+        tag: 'blockquote',
+        getAttrs: document => {
+          const anchorElements = document.getElementsByTagName('a');
+          const lastAnchorElement = anchorElements[anchorElements.length - 1];
+          const href = lastAnchorElement.getAttribute('href');
+
+          const endOfTweetPath = href.split('/');
+          const tweetId = endOfTweetPath[endOfTweetPath.length - 1];
+
+          if (tweetId.includes('?')) {
+            const tweetIdSplit = tweetId.split('?');
+            return {
+              tweetId: tweetIdSplit[0]
+            };
+          }
+
+          return {
+            tweetId: tweetId
+          };
+        }
       }
     ];
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['twitter-embed', mergeAttributes(HTMLAttributes)];
+    return [
+      'blockquote',
+      mergeAttributes({ class: 'twitter-embed' }, HTMLAttributes)
+    ];
   },
 
   addNodeView() {
