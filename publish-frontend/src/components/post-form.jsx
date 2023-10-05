@@ -61,6 +61,7 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [featureImage, setFeatureImage] = useState('');
   const [content, setContent] = useState(post?.attributes.body || '');
 
+  const [tagsList, setTagsList] = useState(tags);
   const [isAddingTag, setIsAddingTag] = useState(false);
 
   useEffect(() => {
@@ -179,7 +180,10 @@ const PostForm = ({ tags, user, authors, post }) => {
     };
 
     try {
-      await createTag(token, data);
+      const res = await createTag(token, data);
+
+      setTagsList([...tagsList, res.data]);
+
       toast({
         title: 'Tag Created.',
         description: "We've created your tag for you.",
@@ -392,7 +396,7 @@ const PostForm = ({ tags, user, authors, post }) => {
               w='100%'
               marginTop='1rem'
             >
-              {tags.map(tag => (
+              {tagsList.map(tag => (
                 <option key={tag.id} value={tag.attributes.name}>
                   {tag.attributes.name}
                 </option>
