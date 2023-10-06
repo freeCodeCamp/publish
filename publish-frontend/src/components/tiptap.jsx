@@ -7,8 +7,7 @@ import {
   faListOl,
   faLink,
   faListUl,
-  faQuoteLeft,
-  faStrikethrough
+  faQuoteLeft
 } from '@fortawesome/free-solid-svg-icons';
 import {
   Box,
@@ -88,15 +87,6 @@ function ToolBar({ editor }) {
         aria-label='Add italic text'
         leftIcon={<FontAwesomeIcon icon={faItalic} />}
         onClick={() => editor.chain().focus().toggleItalic().run()}
-      />
-      <Button
-        variant='ghost'
-        iconSpacing={0}
-        p={2}
-        title='Add strikethrough text'
-        aria-label='Add strikethrough text'
-        leftIcon={<FontAwesomeIcon icon={faStrikethrough} />}
-        onClick={() => editor.chain().focus().toggleStrike().run()}
       />
       <Button
         variant='ghost'
