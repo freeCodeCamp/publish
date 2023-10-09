@@ -316,6 +316,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                   borderBottom='1px solid'
                   borderColor='gray.200'
                   cursor='pointer'
+                  onClick={() => router.push(`/users/${user.id}`)}
                 >
                   <Flex alignItems='center' pr='2'>
                     <Avatar size='sm' mr='4' />

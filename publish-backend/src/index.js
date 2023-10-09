@@ -42,7 +42,9 @@ module.exports = {
               },
             },
           });
-        event.params.data.role = invitedUser.role.id;
+        if (invitedUser) {
+          event.params.data.role = invitedUser.role.id;
+        }
       },
       async afterCreate(event) {
         const { email } = event.result;
@@ -54,6 +56,47 @@ module.exports = {
           },
           data: {
             accepted: true,
+          },
+        });
+      },
+      async beforeUpdate(event) {
+        const { id } = event.params.where;
+        const { email: newEmail } = event.params.data;
+        const { email: oldEmail } = await strapi.entityService.findOne(
+          "plugin::users-permissions.user",
+          id
+        );
+        event.state = {
+          oldEmail,
+          newEmail,
+        };
+      },
+      async afterUpdate(event) {
+        const { oldEmail, newEmail } = event.state;
+        if (oldEmail !== newEmail) {
+          await strapi.db.query("api::invited-user.invited-user").update({
+            where: {
+              email: {
+                $eq: oldEmail,
+              },
+            },
+            data: {
+              email: newEmail,
+            },
+          });
+        }
+      },
+      async beforeDelete(event) {
+        const { id } = event.params.where;
+        const { email } = await strapi.entityService.findOne(
+          "plugin::users-permissions.user",
+          id
+        );
+        await strapi.db.query("api::invited-user.invited-user").delete({
+          where: {
+            email: {
+              $eq: email,
+            },
           },
         });
       },
