@@ -120,6 +120,20 @@
           "sortable": true
         }
       },
+      "scheduled_at": {
+        "edit": {
+          "label": "scheduled_at",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "scheduled_at",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -223,6 +237,10 @@
         [
           {
             "name": "author",
+            "size": 6
+          },
+          {
+            "name": "scheduled_at",
             "size": 6
           }
         ]

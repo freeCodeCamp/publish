@@ -28,6 +28,15 @@
       "action": "api::post.post.findOne"
     },
     {
+      "action": "api::post.post.publish"
+    },
+    {
+      "action": "api::post.post.schedule"
+    },
+    {
+      "action": "api::post.post.unpublish"
+    },
+    {
       "action": "api::post.post.update"
     },
     {
