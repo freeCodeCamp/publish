@@ -126,3 +126,19 @@ Note: Seeding the database works only on a fresh setup of the containers.
     panel beforehand, Next.js app will fail to get JWT token from Strapi. This
     is a
     [known issue in Strapi plugin](https://github.com/strapi/strapi/issues/12907).
+
+## How to run the apps with Docker
+
+### publish-frontend (Next.js)
+
+The following command builds and runs the app in production mode.
+```
+# To build the docker image
+make build-production
+
+# To start the docker container
+make start-production
+
+# To stop the docker container
+make stop-production
+```
