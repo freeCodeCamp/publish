@@ -391,6 +391,7 @@ const PostForm = ({ tags, user, authors, post }) => {
               onChange={addTag}
               w='100%'
               marginTop='1rem'
+              value=''
             >
               {tags.map(tag => (
                 <option key={tag.id} value={tag.attributes.name}>
