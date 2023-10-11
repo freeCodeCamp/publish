@@ -311,7 +311,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                         w='15%'
                         margin={{ base: '0 0 1rem 0' }}
                       >
-                        Submit
+                        Done
                       </Button>
                     </Stack>
                   </Form>
