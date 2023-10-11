@@ -2,10 +2,10 @@ import {
   Badge,
   Box,
   Button,
+  Link as ChakraLink,
   Flex,
   Grid,
   Heading,
-  Link as ChakraLink,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -18,26 +18,70 @@ import {
   Th,
   Thead,
   Tr,
-  chakra
+  chakra,
+  useToast
 } from '@chakra-ui/react';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
-import { useRouter } from 'next/router';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+
 import NavMenu from '@/components/nav-menu';
-import { getPosts } from '@/lib/posts';
+import { isEditor } from '@/lib/current-user';
+import { createPost, getAllPosts, getUserPosts } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
 import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { useToast } from '@chakra-ui/react';
-import { createPost } from '@/lib/posts';
 
 const Icon = chakra(FontAwesomeIcon);
 
-const FilterButton = ({ text }) => {
+const sortButtonNames = {
+  newest: 'Newest',
+  oldest: 'Oldest',
+  'recently-updated': 'Recently updated'
+};
+
+const filterByPostType = (post, filter) => {
+  if (filter.postType === 'All') {
+    return true;
+  }
+  if (filter.postType === 'Draft' && !post.attributes.publishedAt) {
+    return true;
+  }
+  if (filter.postType === 'Published' && post.attributes.publishedAt) {
+    return true;
+  }
+  return false;
+};
+
+const filterByAuthor = (post, filter) => {
+  if (filter.author === 'all') {
+    return true;
+  }
+  if (filter.author === post.attributes.author.data.attributes.slug) {
+    return true;
+  }
+  return false;
+};
+
+const filterByTag = (post, filter) => {
+  if (filter.tag === 'all') {
+    return true;
+  }
+  if (
+    post.attributes.tags.data[0] &&
+    filter.tag === post.attributes.tags.data[0].attributes.slug
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const FilterButton = ({ text, ...props }) => {
   return (
     <MenuButton
       as={Button}
@@ -53,6 +97,7 @@ const FilterButton = ({ text }) => {
       _active={{
         bgColor: 'white'
       }}
+      {...props}
     >
       {text}
     </MenuButton>
@@ -61,24 +106,107 @@ const FilterButton = ({ text }) => {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const [posts, users, tags] = await Promise.all([
-    getPosts(session.user.jwt),
+  const [posts, usersData, tagsData] = await Promise.all([
+    isEditor(session.user)
+      ? getAllPosts(session.user.jwt)
+      : getUserPosts(session.user),
     getUsers(session.user.jwt),
     getTags(session.user.jwt)
   ]);
+
   return {
     props: {
       posts,
-      users,
-      tags,
-      user: session.user
+      usersData,
+      tagsData,
+      user: session.user,
+      queryParams: context.query
     }
   };
 }
 
-export default function IndexPage({ posts, users, tags, user }) {
+export default function IndexPage({
+  posts,
+  usersData,
+  tagsData,
+  user,
+  queryParams
+}) {
   const router = useRouter();
   const toast = useToast();
+
+  const [filter, setFilter] = useState({
+    postType: queryParams?.postType || 'All',
+    author: queryParams?.author || 'all',
+    tag: queryParams?.tag || 'all',
+    sortBy: queryParams?.sortBy || 'newest'
+  });
+  let [filteredPosts, setFilteredPosts] = useState(posts.data);
+  let [currentAuthor, setCurrentAuthor] = useState('all');
+  let [currentTag, setCurrentTag] = useState('all');
+
+  useEffect(() => {
+    // Filter posts
+    setFilteredPosts(
+      posts.data
+        .filter(post => {
+          return (
+            filterByPostType(post, filter) &&
+            filterByAuthor(post, filter) &&
+            filterByTag(post, filter)
+          );
+        })
+        .sort((a, b) => {
+          if (filter.sortBy === 'newest') {
+            return (
+              new Date(b.attributes.createdAt) -
+              new Date(a.attributes.createdAt)
+            );
+          }
+          if (filter.sortBy === 'oldest') {
+            return (
+              new Date(a.attributes.createdAt) -
+              new Date(b.attributes.createdAt)
+            );
+          }
+          if (filter.sortBy === 'recently-updated') {
+            return (
+              new Date(b.attributes.updatedAt) -
+              new Date(a.attributes.updatedAt)
+            );
+          }
+        })
+    );
+    setCurrentAuthor(usersData.find(user => user.slug === filter.author)?.name);
+    setCurrentTag(
+      tagsData.data.find(tag => tag.attributes.slug === filter.tag)?.attributes
+        .name
+    );
+
+    // Update URL query params without reloading the page
+    const queryParams = {};
+    if (filter.postType !== 'All') {
+      queryParams.postType = filter.postType;
+    }
+    if (filter.author !== 'all') {
+      queryParams.author = filter.author;
+    }
+    if (filter.tag !== 'all') {
+      queryParams.tag = filter.tag;
+    }
+    if (filter.sortBy !== 'newest') {
+      queryParams.sortBy = filter.sortBy;
+    }
+    router.replace(
+      {
+        pathname: '/posts',
+        query: queryParams
+      },
+      undefined,
+      { shallow: true }
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter, posts.data, tagsData.data, usersData]);
 
   const newPost = async () => {
     const nonce = uuidv4();
@@ -138,38 +266,61 @@ export default function IndexPage({ posts, users, tags, user }) {
             lg: '1fr 1fr 1fr 1fr'
           }}
         >
+          {isEditor(user) && (
+            <>
+              <Menu>
+                <FilterButton text={filter.postType + ' posts'} />
+                <MenuList zIndex={2}>
+                  <MenuOptionGroup
+                    value={filter.postType}
+                    type='radio'
+                    name='postType'
+                    onChange={value =>
+                      setFilter({ ...filter, postType: value })
+                    }
+                  >
+                    <MenuItemOption value='All'>All posts</MenuItemOption>
+                    <MenuItemOption value='Draft'>Drafts posts</MenuItemOption>
+                    <MenuItemOption value='Published'>
+                      Published posts
+                    </MenuItemOption>
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+              <Menu>
+                <FilterButton
+                  text={filter.author === 'all' ? 'All authors' : currentAuthor}
+                />
+                <MenuList zIndex={2}>
+                  <MenuOptionGroup
+                    value={filter.author}
+                    type='radio'
+                    onChange={value => setFilter({ ...filter, author: value })}
+                  >
+                    <MenuItemOption value='all'>All authors</MenuItemOption>
+                    {usersData.map(user => (
+                      <MenuItemOption key={user.id} value={user.slug}>
+                        {user.name}
+                      </MenuItemOption>
+                    ))}
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
+            </>
+          )}
           <Menu>
-            <FilterButton text='All posts' />
+            <FilterButton
+              text={filter.tag === 'all' ? 'All tags' : currentTag}
+            />
             <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All posts</MenuItemOption>
-                <MenuItemOption value='drafts'>Drafts posts</MenuItemOption>
-                <MenuItemOption value='published'>
-                  Published posts
-                </MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='All authors' />
-            <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='all' type='radio'>
-                <MenuItemOption value='all'>All authors</MenuItemOption>
-                {users.map(user => (
-                  <MenuItemOption key={user.id} value={user.id}>
-                    {user.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text='All tags' />
-            <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='all' type='radio'>
+              <MenuOptionGroup
+                value={filter.tag}
+                type='radio'
+                onChange={value => setFilter({ ...filter, tag: value })}
+              >
                 <MenuItemOption value='all'>All tags</MenuItemOption>
-                {tags.data.map(tag => (
-                  <MenuItemOption key={tag.id} value={tag.id}>
+                {tagsData.data.map(tag => (
+                  <MenuItemOption key={tag.id} value={tag.attributes.slug}>
                     {tag.attributes.name}
                   </MenuItemOption>
                 ))}
@@ -177,10 +328,14 @@ export default function IndexPage({ posts, users, tags, user }) {
             </MenuList>
           </Menu>
           <Menu>
-            <FilterButton text='Sort by: Newest' />
+            <FilterButton text={`Sort by: ${sortButtonNames[filter.sortBy]}`} />
             <MenuList zIndex={2}>
-              <MenuOptionGroup defaultValue='newest' type='radio'>
-                <MenuItemOption value='newest'>Newsest</MenuItemOption>
+              <MenuOptionGroup
+                value={filter.sortBy}
+                type='radio'
+                onChange={value => setFilter({ ...filter, sortBy: value })}
+              >
+                <MenuItemOption value='newest'>Newest</MenuItemOption>
                 <MenuItemOption value='oldest'>Oldest</MenuItemOption>
                 <MenuItemOption value='recently-updated'>
                   Recently updated
@@ -201,7 +356,7 @@ export default function IndexPage({ posts, users, tags, user }) {
               </Tr>
             </Thead>
             <Tbody bgColor='white'>
-              {posts.data.map(post => {
+              {filteredPosts.map(post => {
                 const title = post.attributes.title;
                 const name = post.attributes.author.data.attributes.name;
                 const tag = post.attributes.tags.data[0]?.attributes.name;
@@ -239,14 +394,19 @@ export default function IndexPage({ posts, users, tags, user }) {
                           zIndex: '1',
                           width: '100%',
                           height: '100%',
-                          cursor: 'pointer',
+                          cursor: 'pointer'
                         }}
                         href={`/posts/${post.id}`}
                         fontWeight='600'
                       >
                         {title}
                       </ChakraLink>
-                      <Box as='span' fontSize='sm' color='gray.500'>
+                      <Box
+                        as='span'
+                        fontSize='sm'
+                        color='gray.500'
+                        suppressHydrationWarning
+                      >
                         By{' '}
                         <Box as='span' fontWeight='500' color='gray.500'>
                           {name}
