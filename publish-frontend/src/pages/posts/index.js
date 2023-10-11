@@ -223,7 +223,7 @@ export default function IndexPage({
     };
 
     try {
-      const res = await createPost(JSON.stringify(data), token);
+      const res = await createPost(data, token);
 
       router.push(`/posts/${res.data.id}`);
     } catch (err) {
