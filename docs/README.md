@@ -131,14 +131,22 @@ Note: Seeding the database works only on a fresh setup of the containers.
 
 ### publish-frontend (Next.js)
 
-The following command builds and runs the app in production mode.
+The following commands build and run the app in production mode.
+
+To build the docker image
 ```
-# To build the docker image
 make build-production
+```
 
-# To start the docker container
+To start the docker container
+(Replace `***`` with the values you want to set for the environment variables)
+```
+NEXTAUTH_SECRET=*** AUTH0_CLIENT_ID=*** AUTH0_CLIENT_SECRET=*** \
+NEXT_PUBLIC_STRAPI_BACKEND_URL=*** NEXTAUTH_URL=*** AUTH0_DOMAIN=*** \
 make start-production
+```
 
-# To stop the docker container
+To stop the docker container
+```
 make stop-production
 ```
