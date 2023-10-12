@@ -5,7 +5,7 @@ RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev l
 # Run the app in production mode
 ENV NODE_ENV=production
 # Prevent Strapi loading default .env file
-ENV ENV_PATH=.env.dockerbuild
+ENV ENV_PATH=.env.empty
 
 WORKDIR /opt/
 COPY package.json package-lock.json ./
@@ -22,7 +22,7 @@ RUN apk add --no-cache vips-dev
 # Run the app in production mode
 ENV NODE_ENV=production
 # Prevent Strapi loading default .env file
-ENV ENV_PATH=.env.dockerbuild
+ENV ENV_PATH=.env.empty
 
 WORKDIR /opt/
 COPY --from=build /opt/node_modules ./node_modules

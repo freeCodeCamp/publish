@@ -107,6 +107,7 @@ coverage
 ############################
 
 .env*
+!.env.empty
 !.env.example
 license.txt
 exports
