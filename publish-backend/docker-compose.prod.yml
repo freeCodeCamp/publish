@@ -25,7 +25,7 @@ services:
       - STRAPI_PLUGIN_I18N_INIT_LOCALE_CODE
       - SEED_DATA
       - DASHBOARD_URL
-      - NODEMAILER_HOST
+      - NODEMAILER_HOST=mailhog
     volumes:
       - ./config:/opt/app/config
       - ./src:/opt/app/src
