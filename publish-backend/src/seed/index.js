@@ -1,4 +1,8 @@
 const { faker } = require("@faker-js/faker");
+const fs = require("fs");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+
 
 let userIds = []; // For now first user will be contributor and second will be editor
 let tagIds = [];
@@ -90,34 +94,40 @@ async function createSeedInvitedUsers(strapi) {
 }
 
 async function createSeedTags(strapi) {
-  const tagRes1 = await strapi.entityService.create("api::tag.tag", {
-    data: {
-      name: "HTML",
-    },
-  });
-  const tagRes2 = await strapi.entityService.create("api::tag.tag", {
-    data: {
-      name: "CSS",
-    },
-  });
-  const tagRes3 = await strapi.entityService.create("api::tag.tag", {
-    data: {
-      name: "JS",
-    },
-  });
-  const tagRes4 = await strapi.entityService.create("api::tag.tag", {
-    data: {
-      name: "Python",
-    },
-  });
-  const internalTagRes = await strapi.entityService.create("api::tag.tag", {
-    data: {
-      name: "Internal",
-      visibility: "internal",
-    },
-  });
-  tagIds = [tagRes1.id, tagRes2.id, tagRes3.id, tagRes4.id];
-  internalTagId = internalTagRes.id;
+  // read tags json
+  const file = fs.readFileSync(path.resolve(__dirname, './tags.json'), "utf8");
+
+  // parse JSON string to JSON object
+  const tags = JSON.parse(file)["tags"];
+
+  for (const tag of tags) {
+    try {
+      await strapi.entityService.create("api::tag.tag", {
+        data: {
+          name: tag.name,
+          slug: tag.slug,
+          visibility: tag.visibility,
+        },
+      });
+    } catch (e) {
+      const nonce = uuidv4();
+
+      if(e.message.includes("This attribute must be unique")) {
+        await strapi.entityService.create("api::tag.tag", {
+          data: {
+            name: tag.name,
+            slug: nonce,
+            visibility: tag.visibility,
+          },
+        });
+      }
+
+      break;
+    }
+  }
+
+
+  tagIds = [0, 1, 2, 3 ,4];
 }
 
 async function createSeedPosts(strapi) {
@@ -160,7 +170,7 @@ async function createSeedPosts(strapi) {
     data: {
       title: "Internal post",
       author: { connect: [userIds[1]] },
-      tags: { connect: [internalTagId] },
+      tags: { connect: [1] },
       body: "I'm an internal post and meant to be hidden",
       publishedAt: new Date(),
     },
@@ -184,15 +194,15 @@ async function generateSeedData(strapi) {
     }
   );
 
-  if (dataExists.length > 0) {
-    console.log("Seed data already exists, skipping...");
-    return;
-  }
+  // if (dataExists.length > 0) {
+  //   console.log("Seed data already exists, skipping...");
+  //   return;
+  // }
   console.log("Creating seed data...");
 
-  await createSeedUsers(strapi);
-  await createSeedInvitedUsers(strapi);
-  await createSeedTags(strapi);
+  // await createSeedUsers(strapi);
+  // await createSeedInvitedUsers(strapi);
+  // await createSeedTags(strapi);
   await createSeedPosts(strapi);
 }
 
