@@ -1,7 +1,7 @@
 version: '3'
 services:
-  publish-backend-production:
-    container_name: publish-backend-production
+  strapi-production:
+    container_name: strapi-production
     build:
       context: .
       dockerfile: Dockerfile.prod
@@ -16,7 +16,7 @@ services:
       - TRANSFER_TOKEN_SALT
       - JWT_SECRET
       - DATABASE_CLIENT
-      - DATABASE_HOST=publish-backend-productionDB
+      - DATABASE_HOST=db-production
       - DATABASE_PORT
       - DATABASE_NAME
       - DATABASE_USERNAME
@@ -38,11 +38,11 @@ services:
     networks:
       - publish-backend-production
     depends_on:
-      - publish-backend-productionDB
-      - mailhog
+      - db-production
+      - mailhog-production
 
-  publish-backend-productionDB:
-    container_name: publish-backend-productionDB
+  db-production:
+    container_name: db-production
     platform: linux/amd64 #for platform error on Apple M1 chips
     restart: unless-stopped
     image: postgres:14-alpine
@@ -59,9 +59,9 @@ services:
     networks:
       - publish-backend-production
 
-  mailhog:
+  mailhog-production:
     image: mailhog/mailhog
-    container_name: "mailhog"
+    container_name: "mailhog-production"
     platform: linux/amd64
     logging:
       driver: none
@@ -71,18 +71,18 @@ services:
     networks:
       - publish-backend-production
 
-  publish-backend-productionAdminer:
-    container_name: publish-backend-productionAdminer
+  adminer-production:
+    container_name: adminer-production
     image: adminer
     restart: unless-stopped
     ports:
       - '9090:8080'
     environment:
-      - ADMINER_DEFAULT_SERVER=publish-backend-productionDB
+      - ADMINER_DEFAULT_SERVER=db-production
     networks:
       - publish-backend-production
     depends_on:
-      - publish-backend-productionDB
+      - db-production
 
 volumes:
   publish-backend-production-data:
