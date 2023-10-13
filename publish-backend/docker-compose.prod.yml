@@ -31,7 +31,6 @@ services:
       - ./src:/opt/app/src
       - ./package.json:/opt/package.json
       - ./package-lock.json:/opt/package-lock.json
-      # - ./.env:/opt/app/.env
       - ./public/uploads:/opt/app/public/uploads
     ports:
       - '1337:1337'
@@ -52,7 +51,6 @@ services:
       POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - publish-backend-production-data:/var/lib/postgresql/data/ #using a volume
-      #- ./data:/var/lib/postgresql/data/ # if you want to use a bind folder
 
     ports:
       - '5432:5432'
