@@ -126,3 +126,32 @@ Note: Seeding the database works only on a fresh setup of the containers.
     panel beforehand, Next.js app will fail to get JWT token from Strapi. This
     is a
     [known issue in Strapi plugin](https://github.com/strapi/strapi/issues/12907).
+
+## How to run the apps with Docker
+
+### publish-frontend (Next.js)
+
+The following commands build and run the app in production mode.
+
+To build the docker image:
+```
+docker compose -f docker/production/docker-compose.yml build
+```
+
+To start the docker container:
+(Replace `***` with the values you want to set for the environment variables)
+```
+NEXTAUTH_SECRET=*** AUTH0_CLIENT_ID=*** AUTH0_CLIENT_SECRET=*** \
+NEXT_PUBLIC_STRAPI_BACKEND_URL=*** NEXTAUTH_URL=*** AUTH0_DOMAIN=*** \
+docker compose -f docker/production/docker-compose.yml up -d
+```
+
+Alternatively, using .env file:
+```
+docker compose --env-file .env -f docker/production/docker-compose.yml up -d
+```
+
+To stop the docker container:
+```
+docker compose -f docker/production/docker-compose.yml down
+```

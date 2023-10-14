@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "@strapi/plugin-documentation": "^4.11.5",
-    "@strapi/plugin-i18n": "4.14.3",
-    "@strapi/plugin-users-permissions": "4.14.3",
+    "@strapi/plugin-i18n": "4.14.4",
+    "@strapi/plugin-users-permissions": "4.14.4",
     "@strapi/provider-email-nodemailer": "^4.12.4",
-    "@strapi/strapi": "4.14.3",
+    "@strapi/strapi": "4.14.4",
     "nanoid": "^3.3.6",
     "pg": "^8.11.2",
     "strapi-plugin-config-sync": "^1.1.2"
