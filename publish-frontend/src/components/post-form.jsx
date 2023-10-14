@@ -41,9 +41,11 @@ import NextLink from 'next/link';
 import Link from 'next/link';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
+import { useRouter } from 'next/router';
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
+  const router = useRouter();
 
   const { isOpen, onClose, onOpen } = useDisclosure();
 
@@ -61,7 +63,9 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [featureImage, setFeatureImage] = useState('');
   const [content, setContent] = useState(post?.attributes.body || '');
 
+  const [tagsList, setTagsList] = useState(tags);
   const [isAddingTag, setIsAddingTag] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
     if (post) {
@@ -111,6 +115,8 @@ const PostForm = ({ tags, user, authors, post }) => {
         duration: 5000,
         isClosable: true
       });
+
+      setUnsavedChanges(false);
     } catch (error) {
       toast({
         title: 'An error occurred.',
@@ -137,6 +143,37 @@ const PostForm = ({ tags, user, authors, post }) => {
     };
   }, [handleSubmit]);
 
+  // prompt the user if they try and leave with unsaved changes
+  useEffect(() => {
+    const warningText =
+      'You have unsaved changes - are you sure you wish to leave this page?';
+
+    // handle the user closing the window
+
+    const handleWindowClose = event => {
+      if (!unsavedChanges) return;
+      event.preventDefault();
+      return (event.returnValue = warningText);
+    };
+
+    // handle the user navigating to a new page via next/router
+
+    const handleRouteChange = () => {
+      if (!unsavedChanges) return;
+      if (window.confirm(warningText)) return;
+      router.events.emit('routeChangeError');
+      throw 'routeChange aborted.';
+    };
+
+    window.addEventListener('beforeunload', handleWindowClose);
+    router.events.on('routeChangeStart', handleRouteChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleWindowClose);
+      router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [unsavedChanges, router.events]);
+
   function handleFileInputChange(event) {
     const file = event.target.files[0];
     setFeatureImage(URL.createObjectURL(file));
@@ -144,6 +181,10 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   function handleContentChange(content) {
     setContent(content);
+
+    if (!unsavedChanges) {
+      setUnsavedChanges(true);
+    }
   }
 
   function addTag(event) {
@@ -161,6 +202,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       setClientTags(newTags);
       setClientTagsId(newTagsInt);
+      setUnsavedChanges(true);
     }
   }
 
@@ -179,7 +221,10 @@ const PostForm = ({ tags, user, authors, post }) => {
     };
 
     try {
-      await createTag(token, data);
+      const res = await createTag(token, data);
+
+      setTagsList([...tagsList, res.data]);
+
       toast({
         title: 'Tag Created.',
         description: "We've created your tag for you.",
@@ -240,6 +285,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                   setTitle(values.title);
                   setIsEditingTitle(false);
                   actions.setSubmitting(false);
+                  setUnsavedChanges(true);
                 }}
               >
                 {props => (
@@ -265,7 +311,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                         w='15%'
                         margin={{ base: '0 0 1rem 0' }}
                       >
-                        Submit
+                        Done
                       </Button>
                     </Stack>
                   </Form>
@@ -393,7 +439,7 @@ const PostForm = ({ tags, user, authors, post }) => {
               marginTop='1rem'
               value=''
             >
-              {tags.map(tag => (
+              {tagsList.map(tag => (
                 <option key={tag.id} value={tag.attributes.name}>
                   {tag.attributes.name}
                 </option>
@@ -418,6 +464,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                         setIsAddingTag(false);
                         handleTagSubmit(values.tagName);
                         actions.setSubmitting(false);
+                        setUnsavedChanges(true);
                       }}
                     >
                       {props => (
@@ -501,7 +548,10 @@ const PostForm = ({ tags, user, authors, post }) => {
                 placeholder='Post Url'
                 value={postUrl}
                 id='slug'
-                onChange={e => setPostUrl(e.target.value)}
+                onChange={e => {
+                  setPostUrl(e.target.value);
+                  setUnsavedChanges(true);
+                }}
                 w='100%'
                 marginTop='1rem'
                 variant='outline'
