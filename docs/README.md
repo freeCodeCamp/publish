@@ -127,7 +127,7 @@ Note: Seeding the database works only on a fresh setup of the containers.
     is a
     [known issue in Strapi plugin](https://github.com/strapi/strapi/issues/12907).
 
-## How to run the apps with Docker
+## How to run the apps in production mode with Docker
 
 ### publish-backend (Strapi)
 
@@ -179,8 +179,6 @@ npm run cs import
 - (If you want to access endpoints that uses API token) In Settings > API Tokens, generate API tokens
 
 ### publish-frontend (Next.js)
-
-The following commands build and run the app in production mode.
 
 To build the docker image:
 ```
