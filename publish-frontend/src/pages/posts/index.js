@@ -108,10 +108,25 @@ export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const [posts, usersData, tagsData] = await Promise.all([
     isEditor(session.user)
-      ? getAllPosts(session.user.jwt)
-      : getUserPosts(session.user),
-    getUsers(session.user.jwt),
-    getTags(session.user.jwt)
+      ? getAllPosts(session.user.jwt, {
+          publicationState: 'preview',
+          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+          populate: ['author', 'tags']
+        })
+      : getUserPosts(session.user.jwt, {
+          publicationState: 'preview',
+          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+          populate: ['author', 'tags'],
+          filters: {
+            author: session.user.id
+          }
+        }),
+    getUsers(session.user.jwt, {
+      fields: ['id', 'name', 'slug']
+    }),
+    getTags(session.user.jwt, {
+      fields: ['id', 'name', 'slug']
+    })
   ]);
 
   return {
@@ -291,7 +306,7 @@ export default function IndexPage({
                 <FilterButton
                   text={filter.author === 'all' ? 'All authors' : currentAuthor}
                 />
-                <MenuList zIndex={2}>
+                <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
                   <MenuOptionGroup
                     value={filter.author}
                     type='radio'
@@ -312,7 +327,7 @@ export default function IndexPage({
             <FilterButton
               text={filter.tag === 'all' ? 'All tags' : currentTag}
             />
-            <MenuList zIndex={2}>
+            <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
               <MenuOptionGroup
                 value={filter.tag}
                 type='radio'

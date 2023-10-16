@@ -24,7 +24,13 @@ import { useEffect } from 'react';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const tags = await getTags(session.user.jwt);
+  const tags = await getTags(session.user.jwt, {
+    populate: {
+      posts: {
+        count: true
+      }
+    }
+  });
   const publicTags = tags.data.filter(
     tag => tag.attributes.visibility === 'public'
   );
@@ -32,6 +38,8 @@ export async function getServerSideProps(context) {
     tag => tag.attributes.visibility === 'internal'
   );
   let isInternal = false;
+
+  console.log(tags.data.slice(0, 10));
 
   if (context.query.type) {
     isInternal = true;
@@ -53,7 +61,7 @@ const TagsTableBody = (tags, router) => {
       {tags.map(tag => {
         const name = tag.attributes.name;
         const slug = tag.attributes.slug;
-        const noOfPosts = tag.attributes.posts.data.length;
+        const noOfPosts = tag.attributes.posts.data.attributes.count;
         return (
           <Tr
             display='table-row'

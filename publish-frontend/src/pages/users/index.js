@@ -41,9 +41,16 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const allUsers = await getUsers(session.user.jwt);
+  const allUsers = await getUsers(session.user.jwt, {
+    populate: 'role'
+  });
   const rolesData = await getRoles(session.user.jwt);
-  const invitedUsers = await getInvitedUsers(session.user.jwt);
+  const invitedUsers = await getInvitedUsers(session.user.jwt, {
+    populate: 'role',
+    filters: {
+      accepted: false
+    }
+  });
 
   const roles = rolesData.roles.reduce(
     (acc, role) => ({ ...acc, [role.name]: role.id }),

@@ -1,9 +1,13 @@
+import qs from 'qs';
+
 // Tag API calls
 
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function getTags(token) {
-  const endpoint = `${api_root}/tags?populate=*`;
+export async function getTags(token, queryParams) {
+  const endpoint = `${api_root}/tags?${qs.stringify(queryParams, {
+    encodeValuesOnly: true
+  })}`;
 
   const options = {
     method: 'GET',
@@ -51,7 +55,14 @@ export async function createTag(token, data) {
 }
 
 export async function getTag(token, tagId) {
-  const endpoint = `${api_root}/tags/${tagId}?populate=*`;
+  const endpoint = `${api_root}/tags/${tagId}?${qs.stringify(
+    {
+      populate: '*'
+    },
+    {
+      encodeValuesOnly: true
+    }
+  )}`;
 
   const options = {
     method: 'GET',
@@ -72,7 +83,14 @@ export async function getTag(token, tagId) {
 }
 
 export async function updateTag(token, tagId, data) {
-  const endpoint = `${api_root}/tags/${tagId}?populate=*`;
+  const endpoint = `${api_root}/tags/${tagId}?${qs.stringify(
+    {
+      populate: '*'
+    },
+    {
+      encodeValuesOnly: true
+    }
+  )}`;
 
   const options = {
     method: 'PUT',
