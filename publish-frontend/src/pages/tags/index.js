@@ -39,8 +39,6 @@ export async function getServerSideProps(context) {
   );
   let isInternal = false;
 
-  console.log(tags.data.slice(0, 10));
-
   if (context.query.type) {
     isInternal = true;
   }
