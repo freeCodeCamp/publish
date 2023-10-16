@@ -14,7 +14,6 @@
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.1.0",
     "@strapi/plugin-documentation": "^4.11.5",
     "@strapi/plugin-i18n": "4.14.4",
     "@strapi/plugin-users-permissions": "4.14.4",
@@ -36,6 +35,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@faker-js/faker": "^8.2.0",
     "better-sqlite3": "8.7.0",
     "eslint": "^8.49.0",
     "eslint-config-prettier": "^9.0.0",

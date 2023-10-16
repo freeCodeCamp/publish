@@ -1,6 +1,8 @@
 "use strict";
 
-const { generateSeedData } = require("./seed");
+if (process.env.NODE_ENV === "development") {
+  const { generateSeedData } = require("./seed");
+}
 
 module.exports = {
   /**
