@@ -46,4 +46,11 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
     }
     return true;
   },
+
+  generateUniqueId() {
+    // Generate 8-digit hex string
+    const randomNum = Math.floor(Math.random() * 4294967295);
+    const hexString = randomNum.toString(16);
+    return hexString.padStart(8, "0");
+  },
 }));

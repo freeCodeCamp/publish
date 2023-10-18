@@ -84,6 +84,17 @@
         }
       },
       "type": "datetime"
+    },
+    "unique_id": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "maxLength": 8,
+      "unique": true,
+      "required": false
     }
   }
 }

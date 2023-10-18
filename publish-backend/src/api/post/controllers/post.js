@@ -29,6 +29,9 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       delete ctx.request.body.data.scheduled_at;
     }
 
+    // prevent updating the unique ID
+    delete ctx.request.body.data.unique_id;
+
     // call the default core action with modified data
     return await super.update(ctx);
   },
