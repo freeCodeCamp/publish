@@ -180,6 +180,24 @@ describe("post", () => {
         "publishedAt must be a past date"
       );
     });
+
+    it("should not change unique_id", async () => {
+      // get unique_id from database
+      const post = await getPost("test-slug");
+      const postCopy = { data: { ...post.data } };
+      postCopy.data.unique_id = "000000";
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(postCopy));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.unique_id).toEqual(post.unique_id);
+    });
   });
   describe("GET /posts/uid/:unique_id", () => {
     it("should find post by unique_id", async () => {
@@ -247,19 +265,6 @@ describe("post", () => {
         );
 
       expect(response.status).toBe(403);
-    });
-
-    it("should not change unique_id", async () => {
-      const response = await request(strapi.server.httpServer)
-        .post("/api/posts")
-        .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${editorJWT}`)
-        .send(JSON.stringify(postToCreate));
-
-      expect(response.status).toBe(200);
-      const responsePost = response.body.data.attributes;
-
-      expect(responsePost.unique_id).toMatch(/^[0-9a-f]{8}$/);
     });
   });
   describe("PATCH /posts/:id/publish", () => {
