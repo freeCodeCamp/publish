@@ -17,14 +17,44 @@ export async function getPosts(page = 1, token) {
     const res = await fetch(endpoint, options);
 
     if (!res.ok) {
-      console.error('getPosts responded with error. Status: ', res.status);
-      throw new Error(`getPosts responded with error. Status: ${res.status}`);
+      console.error('getAllPosts responded with error. Status: ', res.status);
+      throw new Error(
+        `getAllPosts responded with error. Status: ${res.status}`
+      );
     }
 
     return res.json();
   } catch (error) {
-    console.error('getPosts Failed. Error: ', error);
-    throw new Error(`getPosts Failed. Error: ${error}`);
+    console.error('getAllPosts Failed. Error: ', error);
+    throw new Error(`getAllPosts Failed. Error: ${error}`);
+  }
+}
+
+export async function getUserPosts(user) {
+  const endpoint = `${api_root}/posts?publicationState=preview&filters[author]=${user.id}&populate=*`;
+
+  const options = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${user.jwt}`
+    }
+  };
+
+  try {
+    const res = await fetch(endpoint, options);
+
+    if (!res.ok) {
+      console.error('getUserPosts responded with error. Status: ', res.status);
+      throw new Error(
+        `getUserPosts responded with error. Status: ${res.status}`
+      );
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error('getUserPosts Failed. Error: ', error);
+    throw new Error(`getUserPosts Failed. Error: ${error}`);
   }
 }
 
