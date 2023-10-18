@@ -12,7 +12,6 @@ import {
   MenuList,
   MenuOptionGroup,
   Spacer,
-  Spinner,
   Table,
   Tbody,
   Td,
@@ -28,9 +27,8 @@ import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import InfiniteScroll from 'react-infinite-scroll-component';
 
 import NavMenu from '@/components/nav-menu';
 import { isEditor } from '@/lib/current-user';
@@ -46,42 +44,6 @@ const sortButtonNames = {
   newest: 'Newest',
   oldest: 'Oldest',
   'recently-updated': 'Recently updated'
-};
-
-const filterByPostType = (post, filter) => {
-  if (filter.postType === 'All') {
-    return true;
-  }
-  if (filter.postType === 'Draft' && !post.attributes.publishedAt) {
-    return true;
-  }
-  if (filter.postType === 'Published' && post.attributes.publishedAt) {
-    return true;
-  }
-  return false;
-};
-
-const filterByAuthor = (post, filter) => {
-  if (filter.author === 'all') {
-    return true;
-  }
-  if (filter.author === post.attributes.author.data.attributes.slug) {
-    return true;
-  }
-  return false;
-};
-
-const filterByTag = (post, filter) => {
-  if (filter.tag === 'all') {
-    return true;
-  }
-  if (
-    post.attributes.tags.data[0] &&
-    filter.tag === post.attributes.tags.data[0].attributes.slug
-  ) {
-    return true;
-  }
-  return false;
 };
 
 const FilterButton = ({ text, ...props }) => {
@@ -109,6 +71,7 @@ const FilterButton = ({ text, ...props }) => {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
+  console.log(context.query)
   const [posts, usersData, tagsData] = await Promise.all([
     isEditor(session.user)
       ? getAllPosts(session.user.jwt, {
@@ -118,7 +81,7 @@ export async function getServerSideProps(context) {
         pagination: {
           page: context.query.page || 1,
           pageSize: 6
-        }
+        },
       })
       : getUserPosts(session.user.jwt, {
         publicationState: 'preview',
@@ -165,83 +128,35 @@ export default function IndexPage({
   const router = useRouter();
   const toast = useToast();
 
-  const [filter, setFilter] = useState({
-    postType: queryParams?.postType || 'All',
-    author: queryParams?.author || 'all',
-    tag: queryParams?.tag || 'all',
-    sortBy: queryParams?.sortBy || 'newest'
+  const [filterText, setFilterText] = useState({
+    postType: queryParams.postType || 'All',
+    author: queryParams.author || 'All',
+    tag: queryParams.tag || 'All',
   });
 
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  let [currentAuthor, setCurrentAuthor] = useState('all');
-  let [currentTag, setCurrentTag] = useState('all');
-  // let [currPage, setCurrPage] = useState(1);
-  // let [hasMorePages, setHasMorePages] = useState(
-  //   posts.meta.pagination.page < posts.meta.pagination.pageCount
-  // );
+  const handleFilter = (filterType, value) => {
+    const params = {...queryParams};
 
-  // useEffect(() => {
-  //   // Filter posts
-  //   setFilteredPosts(
-  //     postsData
-  //       .filter(post => {
-  //         return (
-  //           filterByPostType(post, filter) &&
-  //           filterByAuthor(post, filter) &&
-  //           filterByTag(post, filter)
-  //         );
-  //       })
-  //       .sort((a, b) => {
-  //         if (filter.sortBy === 'newest') {
-  //           return (
-  //             new Date(b.attributes.createdAt) -
-  //             new Date(a.attributes.createdAt)
-  //           );
-  //         }
-  //         if (filter.sortBy === 'oldest') {
-  //           return (
-  //             new Date(a.attributes.createdAt) -
-  //             new Date(b.attributes.createdAt)
-  //           );
-  //         }
-  //         if (filter.sortBy === 'recently-updated') {
-  //           return (
-  //             new Date(b.attributes.updatedAt) -
-  //             new Date(a.attributes.updatedAt)
-  //           );
-  //         }
-  //       })
-  //   );
-  //   setCurrentAuthor(usersData.find(user => user.slug === filter.author)?.name);
-  //   setCurrentTag(
-  //     tagsData.data.find(tag => tag.attributes.slug === filter.tag)?.attributes
-  //       .name
-  //   );
 
-  //   // Update URL query params without reloading the page
-  //   const queryParams = {};
-  //   if (filter.postType !== 'All') {
-  //     queryParams.postType = filter.postType;
-  //   }
-  //   if (filter.author !== 'all') {
-  //     queryParams.author = filter.author;
-  //   }
-  //   if (filter.tag !== 'all') {
-  //     queryParams.tag = filter.tag;
-  //   }
-  //   if (filter.sortBy !== 'newest') {
-  //     queryParams.sortBy = filter.sortBy;
-  //   }
-  //   router.replace(
-  //     {
-  //       pathname: '/posts',
-  //       query: queryParams
-  //     },
-  //     undefined,
-  //     { shallow: true }
-  //   );
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [filter, tagsData.data, usersData, postsData]);
+    if(filterType === 'author') {
+      params.author = value;
+
+    }
+
+    if(filterType === 'postType') {
+      params.postType = value;
+    }
+
+    if(filterType === 'tag') {
+      params.tag = value;
+    }
+
+    router.replace({
+      pathname: router.pathname,
+      query: params,
+    });
+  }
+
 
   const newPost = async () => {
     const nonce = uuidv4();
@@ -304,14 +219,14 @@ export default function IndexPage({
           {isEditor(user) && (
             <>
               <Menu>
-                <FilterButton text={filter.postType + ' posts'} />
+                <FilterButton text={'Filter by Post'} />
                 <MenuList zIndex={2}>
                   <MenuOptionGroup
-                    value={filter.postType}
+                    value=''
                     type='radio'
                     name='postType'
                     onChange={value =>
-                      setFilter({ ...filter, postType: value })
+                      handleFilter('postType', value)
                     }
                   >
                     <MenuItemOption value='All'>All posts</MenuItemOption>
@@ -322,15 +237,15 @@ export default function IndexPage({
                   </MenuOptionGroup>
                 </MenuList>
               </Menu>
-              {/* <Menu>
+              <Menu>
                 <FilterButton
-                  text={filter.author === 'all' ? 'All authors' : currentAuthor}
+                  text={'Filter by Author'}
                 />
                 <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
                   <MenuOptionGroup
-                    value={filter.author}
+                    value={''}
                     type='radio'
-                    onChange={value => setFilter({ ...filter, author: value })}
+                    onChange={value => handleFilter('author', value)}
                   >
                     <MenuItemOption value='all'>All authors</MenuItemOption>
                     {usersData.map(user => (
@@ -340,18 +255,18 @@ export default function IndexPage({
                     ))}
                   </MenuOptionGroup>
                 </MenuList>
-              </Menu> */}
+              </Menu>
             </>
           )}
           <Menu>
             <FilterButton
-              text={filter.tag === 'all' ? 'All tags' : currentTag}
+              text={'Filter by Tag'}
             />
             <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
               <MenuOptionGroup
-                value={filter.tag}
+                value={''}
                 type='radio'
-                onChange={value => setFilter({ ...filter, tag: value })}
+                onChange={value => handleFilter('tag', value)}
               >
                 <MenuItemOption value='all'>All tags</MenuItemOption>
                 {tagsData.data.map(tag => (
@@ -362,8 +277,8 @@ export default function IndexPage({
               </MenuOptionGroup>
             </MenuList>
           </Menu>
-          <Menu>
-            <FilterButton text={`Sort by: ${sortButtonNames[filter.sortBy]}`} />
+          {/* <Menu>
+            <FilterButton text={`Sort by:`} />
             <MenuList zIndex={2}>
               <MenuOptionGroup
                 value={filter.sortBy}
@@ -377,7 +292,7 @@ export default function IndexPage({
                 </MenuItemOption>
               </MenuOptionGroup>
             </MenuList>
-          </Menu>
+          </Menu> */}
         </Grid>
 
         <Box pb='10'>
