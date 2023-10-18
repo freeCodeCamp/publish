@@ -5,6 +5,7 @@ import qs from 'qs';
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getAllPosts(token, queryParams) {
+
   const endpoint = `${api_root}/posts?${qs.stringify(queryParams, {
     encodeValuesOnly: true
   })}`;

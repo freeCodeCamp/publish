@@ -38,6 +38,7 @@ import { createPost, getAllPosts, getUserPosts } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
 import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import Pagination from '@/components/pagination';
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -111,26 +112,26 @@ export async function getServerSideProps(context) {
   const [posts, usersData, tagsData] = await Promise.all([
     isEditor(session.user)
       ? getAllPosts(session.user.jwt, {
-          publicationState: 'preview',
-          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
-          populate: ['author', 'tags'],
-          pagination: {
-            page: 1,
-            pageSize: 25
-          }
-        })
+        publicationState: 'preview',
+        fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+        populate: ['author', 'tags'],
+        pagination: {
+          page: context.query.page || 1,
+          pageSize: 6
+        }
+      })
       : getUserPosts(session.user.jwt, {
-          publicationState: 'preview',
-          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
-          populate: ['author', 'tags'],
-          filters: {
-            author: session.user.id
-          },
-          pagination: {
-            page: 1,
-            pageSize: 25
-          }
-        }),
+        publicationState: 'preview',
+        fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+        populate: ['author', 'tags'],
+        filters: {
+          author: session.user.id
+        },
+        pagination: {
+          page: context.query.page || 1,
+          pageSize: 6
+        }
+      }),
     getUsers(session.user.jwt, {
       fields: ['id', 'name', 'slug']
     }),
@@ -139,13 +140,16 @@ export async function getServerSideProps(context) {
     })
   ]);
 
+  console.log(posts)
+
   return {
     props: {
       posts,
       usersData,
       tagsData,
       user: session.user,
-      queryParams: context.query
+      queryParams: context.query,
+      pagination: posts.meta,
     }
   };
 }
@@ -155,7 +159,8 @@ export default function IndexPage({
   usersData,
   tagsData,
   user,
-  queryParams
+  queryParams,
+  pagination,
 }) {
   const router = useRouter();
   const toast = useToast();
@@ -166,78 +171,77 @@ export default function IndexPage({
     tag: queryParams?.tag || 'all',
     sortBy: queryParams?.sortBy || 'newest'
   });
-  let [postsData, setPostsData] = useState(posts.data);
-  let [filteredPosts, setFilteredPosts] = useState(postsData);
+
   // eslint-disable-next-line unused-imports/no-unused-vars
   let [currentAuthor, setCurrentAuthor] = useState('all');
   let [currentTag, setCurrentTag] = useState('all');
-  let [currPage, setCurrPage] = useState(1);
-  let [hasMorePages, setHasMorePages] = useState(
-    posts.meta.pagination.page < posts.meta.pagination.pageCount
-  );
+  // let [currPage, setCurrPage] = useState(1);
+  // let [hasMorePages, setHasMorePages] = useState(
+  //   posts.meta.pagination.page < posts.meta.pagination.pageCount
+  // );
 
-  useEffect(() => {
-    // Filter posts
-    setFilteredPosts(
-      postsData
-        .filter(post => {
-          return (
-            filterByPostType(post, filter) &&
-            filterByAuthor(post, filter) &&
-            filterByTag(post, filter)
-          );
-        })
-        .sort((a, b) => {
-          if (filter.sortBy === 'newest') {
-            return (
-              new Date(b.attributes.createdAt) -
-              new Date(a.attributes.createdAt)
-            );
-          }
-          if (filter.sortBy === 'oldest') {
-            return (
-              new Date(a.attributes.createdAt) -
-              new Date(b.attributes.createdAt)
-            );
-          }
-          if (filter.sortBy === 'recently-updated') {
-            return (
-              new Date(b.attributes.updatedAt) -
-              new Date(a.attributes.updatedAt)
-            );
-          }
-        })
-    );
-    setCurrentAuthor(usersData.find(user => user.slug === filter.author)?.name);
-    setCurrentTag(
-      tagsData.data.find(tag => tag.attributes.slug === filter.tag)?.attributes
-        .name
-    );
+  // useEffect(() => {
+  //   // Filter posts
+  //   setFilteredPosts(
+  //     postsData
+  //       .filter(post => {
+  //         return (
+  //           filterByPostType(post, filter) &&
+  //           filterByAuthor(post, filter) &&
+  //           filterByTag(post, filter)
+  //         );
+  //       })
+  //       .sort((a, b) => {
+  //         if (filter.sortBy === 'newest') {
+  //           return (
+  //             new Date(b.attributes.createdAt) -
+  //             new Date(a.attributes.createdAt)
+  //           );
+  //         }
+  //         if (filter.sortBy === 'oldest') {
+  //           return (
+  //             new Date(a.attributes.createdAt) -
+  //             new Date(b.attributes.createdAt)
+  //           );
+  //         }
+  //         if (filter.sortBy === 'recently-updated') {
+  //           return (
+  //             new Date(b.attributes.updatedAt) -
+  //             new Date(a.attributes.updatedAt)
+  //           );
+  //         }
+  //       })
+  //   );
+  //   setCurrentAuthor(usersData.find(user => user.slug === filter.author)?.name);
+  //   setCurrentTag(
+  //     tagsData.data.find(tag => tag.attributes.slug === filter.tag)?.attributes
+  //       .name
+  //   );
 
-    // Update URL query params without reloading the page
-    const queryParams = {};
-    if (filter.postType !== 'All') {
-      queryParams.postType = filter.postType;
-    }
-    if (filter.author !== 'all') {
-      queryParams.author = filter.author;
-    }
-    if (filter.tag !== 'all') {
-      queryParams.tag = filter.tag;
-    }
-    if (filter.sortBy !== 'newest') {
-      queryParams.sortBy = filter.sortBy;
-    }
-    router.replace(
-      {
-        pathname: '/posts',
-        query: queryParams
-      },
-      undefined,
-      { shallow: true }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, tagsData.data, usersData, postsData]);
+  //   // Update URL query params without reloading the page
+  //   const queryParams = {};
+  //   if (filter.postType !== 'All') {
+  //     queryParams.postType = filter.postType;
+  //   }
+  //   if (filter.author !== 'all') {
+  //     queryParams.author = filter.author;
+  //   }
+  //   if (filter.tag !== 'all') {
+  //     queryParams.tag = filter.tag;
+  //   }
+  //   if (filter.sortBy !== 'newest') {
+  //     queryParams.sortBy = filter.sortBy;
+  //   }
+  //   router.replace(
+  //     {
+  //       pathname: '/posts',
+  //       query: queryParams
+  //     },
+  //     undefined,
+  //     { shallow: true }
+  //   );
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [filter, tagsData.data, usersData, postsData]);
 
   const newPost = async () => {
     const nonce = uuidv4();
@@ -266,98 +270,6 @@ export default function IndexPage({
         isClosable: true
       });
     }
-  };
-
-  const fetchNextPagePosts = async () => {
-    if (isEditor(user)) {
-      const newPosts = await getAllPosts(user.jwt, {
-        publicationState: 'preview',
-        fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
-        populate: ['author', 'tags'],
-        pagination: {
-          page: currPage + 1,
-          pageSize: 25
-        }
-      });
-      setPostsData(postsData.concat(newPosts.data));
-      setFilteredPosts(
-        postsData
-          .filter(post => {
-            return (
-              filterByPostType(post, filter) &&
-              filterByAuthor(post, filter) &&
-              filterByTag(post, filter)
-            );
-          })
-          .sort((a, b) => {
-            if (filter.sortBy === 'newest') {
-              return (
-                new Date(b.attributes.createdAt) -
-                new Date(a.attributes.createdAt)
-              );
-            }
-            if (filter.sortBy === 'oldest') {
-              return (
-                new Date(a.attributes.createdAt) -
-                new Date(b.attributes.createdAt)
-              );
-            }
-            if (filter.sortBy === 'recently-updated') {
-              return (
-                new Date(b.attributes.updatedAt) -
-                new Date(a.attributes.updatedAt)
-              );
-            }
-          })
-      );
-    } else {
-      const newPosts = await getUserPosts(user.jwt, {
-        publicationState: 'preview',
-        fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
-        populate: ['author', 'tags'],
-        filters: {
-          author: user.id
-        },
-        pagination: {
-          page: currPage + 1,
-          pageSize: 25
-        }
-      });
-      setPostsData(postsData.concat(newPosts.data));
-      setFilteredPosts(
-        postsData
-          .filter(post => {
-            return (
-              filterByPostType(post, filter) &&
-              filterByAuthor(post, filter) &&
-              filterByTag(post, filter)
-            );
-          })
-          .sort((a, b) => {
-            if (filter.sortBy === 'newest') {
-              return (
-                new Date(b.attributes.createdAt) -
-                new Date(a.attributes.createdAt)
-              );
-            }
-            if (filter.sortBy === 'oldest') {
-              return (
-                new Date(a.attributes.createdAt) -
-                new Date(b.attributes.createdAt)
-              );
-            }
-            if (filter.sortBy === 'recently-updated') {
-              return (
-                new Date(b.attributes.updatedAt) -
-                new Date(a.attributes.updatedAt)
-              );
-            }
-          })
-      );
-    }
-
-    setCurrPage(currPage + 1);
-    setHasMorePages(currPage < posts.meta.pagination.pageCount);
   };
 
   return (
@@ -469,101 +381,101 @@ export default function IndexPage({
         </Grid>
 
         <Box pb='10'>
-          <InfiniteScroll
-            dataLength={filteredPosts.length}
-            next={fetchNextPagePosts}
-            hasMore={hasMorePages}
-            loader={<Spinner />}
-            endMessage={<p>{"That's all folks"}</p>}
-          >
-            <Table boxShadow='md' borderWidth='1px'>
-              <Thead bgColor='rgb(243, 244, 246)'>
-                <Tr>
-                  <Th>Title</Th>
-                  <Th w='140px' display={{ base: 'none', sm: 'table-cell' }}>
-                    Status
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody bgColor='white'>
-                {filteredPosts.map(post => {
-                  const title = post.attributes.title;
-                  const name = post.attributes.author.data.attributes.name;
-                  const tag = post.attributes.tags.data[0]?.attributes.name;
-                  const relativeUpdatedAt = intlFormatDistance(
-                    new Date(post.attributes.updatedAt),
-                    new Date()
-                  );
-                  const status = post.attributes.publishedAt ? (
-                    <Badge>Published</Badge>
-                  ) : (
-                    <Badge colorScheme='pink'>Draft</Badge>
-                  );
-                  return (
-                    <Tr
-                      display='table-row'
-                      key={post.id}
-                      _hover={{
-                        bgColor: 'rgb(243, 244, 246)'
-                      }}
-                      position='relative'
-                    >
-                      <Td>
-                        <ChakraLink
-                          background='transparent'
-                          as={NextLink}
-                          display='block'
-                          marginBottom='.25em'
-                          _hover={{
-                            background: 'transparent'
-                          }}
-                          _before={{
-                            content: '""',
-                            position: 'absolute',
-                            inset: '0',
-                            zIndex: '1',
-                            width: '100%',
-                            height: '100%',
-                            cursor: 'pointer'
-                          }}
-                          href={`/posts/${post.id}`}
-                          fontWeight='600'
-                        >
-                          {title}
-                        </ChakraLink>
-                        <Box
-                          as='span'
-                          fontSize='sm'
-                          color='gray.500'
-                          suppressHydrationWarning
-                        >
-                          By{' '}
-                          <Box as='span' fontWeight='500' color='gray.500'>
-                            {name}
-                          </Box>{' '}
-                          {tag && (
-                            <>
-                              in{' '}
-                              <Box as='span' fontWeight='500' color='gray.500'>
-                                {tag}
-                              </Box>{' '}
-                            </>
-                          )}
-                          • {relativeUpdatedAt}
-                        </Box>
-                        <Box display={{ base: 'block', sm: 'none' }} pt='4px'>
-                          {status}
-                        </Box>
-                      </Td>
-                      <Td display={{ base: 'none', sm: 'table-cell' }}>
+          <Table boxShadow='md' borderWidth='1px'>
+            <Thead bgColor='rgb(243, 244, 246)'>
+              <Tr>
+                <Th>Title</Th>
+                <Th w='140px' display={{ base: 'none', sm: 'table-cell' }}>
+                  Status
+                </Th>
+              </Tr>
+            </Thead>
+            <Tbody bgColor='white'>
+              {posts.data.map(post => {
+                const title = post.attributes.title;
+                const name = post.attributes.author.data.attributes.name;
+                const tag = post.attributes.tags.data[0]?.attributes.name;
+                const relativeUpdatedAt = intlFormatDistance(
+                  new Date(post.attributes.updatedAt),
+                  new Date()
+                );
+                const status = post.attributes.publishedAt ? (
+                  <Badge>Published</Badge>
+                ) : (
+                  <Badge colorScheme='pink'>Draft</Badge>
+                );
+                return (
+                  <Tr
+                    display='table-row'
+                    key={post.id}
+                    _hover={{
+                      bgColor: 'rgb(243, 244, 246)'
+                    }}
+                    position='relative'
+                  >
+                    <Td>
+                      <ChakraLink
+                        background='transparent'
+                        as={NextLink}
+                        display='block'
+                        marginBottom='.25em'
+                        _hover={{
+                          background: 'transparent'
+                        }}
+                        _before={{
+                          content: '""',
+                          position: 'absolute',
+                          inset: '0',
+                          zIndex: '1',
+                          width: '100%',
+                          height: '100%',
+                          cursor: 'pointer'
+                        }}
+                        href={`/posts/${post.id}`}
+                        fontWeight='600'
+                      >
+                        {title}
+                      </ChakraLink>
+                      <Box
+                        as='span'
+                        fontSize='sm'
+                        color='gray.500'
+                        suppressHydrationWarning
+                      >
+                        By{' '}
+                        <Box as='span' fontWeight='500' color='gray.500'>
+                          {name}
+                        </Box>{' '}
+                        {tag && (
+                          <>
+                            in{' '}
+                            <Box as='span' fontWeight='500' color='gray.500'>
+                              {tag}
+                            </Box>{' '}
+                          </>
+                        )}
+                        • {relativeUpdatedAt}
+                      </Box>
+                      <Box display={{ base: 'block', sm: 'none' }} pt='4px'>
                         {status}
-                      </Td>
-                    </Tr>
-                  );
-                })}
-              </Tbody>
-            </Table>
-          </InfiniteScroll>
+                      </Box>
+                    </Td>
+                    <Td display={{ base: 'none', sm: 'table-cell' }}>
+                      {status}
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+          <Box
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            mt='4'
+          >
+            <Pagination pagInfo={pagination} endpoint={'posts'} />
+          </Box>
         </Box>
       </Box>
     </Box>
