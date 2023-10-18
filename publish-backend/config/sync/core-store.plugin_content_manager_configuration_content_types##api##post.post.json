@@ -134,6 +134,20 @@
           "sortable": true
         }
       },
+      "unique_id": {
+        "edit": {
+          "label": "unique_id",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "unique_id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -241,6 +255,12 @@
           },
           {
             "name": "scheduled_at",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "unique_id",
             "size": 6
           }
         ]

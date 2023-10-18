@@ -34,6 +34,20 @@
           "sortable": true
         }
       },
+      "actionParameters": {
+        "edit": {
+          "label": "actionParameters",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "actionParameters",
+          "searchable": false,
+          "sortable": false
+        }
+      },
       "subject": {
         "edit": {
           "label": "subject",
@@ -184,6 +198,12 @@
           {
             "name": "role",
             "size": 6
+          }
+        ],
+        [
+          {
+            "name": "actionParameters",
+            "size": 12
           }
         ]
       ]
