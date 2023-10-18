@@ -181,6 +181,25 @@ describe("post", () => {
       );
     });
   });
+  describe("GET /posts/uid/:unique_id", () => {
+    it("should find post by unique_id", async () => {
+      // get unique_id from database
+      const post = await getPost("test-slug");
+
+      // find the post by unique_id through API
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/uid/${post.unique_id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.unique_id).toEqual(post.unique_id);
+      expect(responsePost.slug).toEqual("test-slug");
+    });
+  });
   describe("PATCH /posts/:id/schedule", () => {
     it("should schedule publishing a post", async () => {
       // find a post to update

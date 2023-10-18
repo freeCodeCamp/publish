@@ -28,6 +28,9 @@
       "action": "api::post.post.findOne"
     },
     {
+      "action": "api::post.post.findOneByUniqueId"
+    },
+    {
       "action": "api::post.post.publish"
     },
     {

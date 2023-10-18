@@ -1,6 +1,15 @@
 module.exports = {
   routes: [
     {
+      method: "GET",
+      path: "/posts/uid/:unique_id",
+      handler: "post.findOneByUniqueId",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
       method: "PATCH",
       path: "/posts/:id/schedule",
       handler: "post.schedule",

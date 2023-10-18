@@ -10,8 +10,22 @@ const isEditor = (ctx) => {
   return ctx.state.user.role.name === "Editor";
 };
 
-
 module.exports = createCoreController("api::post.post", ({ strapi }) => ({
+  async findOneByUniqueId(ctx) {
+    try {
+      // find id from unique_id
+      const postId = await strapi
+        .service("api::post.post")
+        .findIdByUniqueId(ctx.request.params.unique_id);
+
+      ctx.request.params.id = postId;
+
+      // pass it onto default findOne controller
+      return await super.findOne(ctx);
+    } catch (err) {
+      ctx.body = err;
+    }
+  },
   async create(ctx) {
     if (!isEditor(ctx)) {
       // don't allow publishing or scheduling posts
