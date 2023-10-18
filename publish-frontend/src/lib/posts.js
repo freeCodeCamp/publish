@@ -30,8 +30,8 @@ export async function getPosts(page = 1, token) {
   }
 }
 
-export async function getUserPosts(user) {
-  const endpoint = `${api_root}/posts?publicationState=preview&filters[author]=${user.id}&populate=*`;
+export async function getUserPosts(page = 1, user) {
+  const endpoint = `${api_root}/posts?publicationState=preview&filters[author]=${user.id}&populate=*&pagination[page]=${page}&pagination[pageSize]=10`;
 
   const options = {
     method: 'GET',
