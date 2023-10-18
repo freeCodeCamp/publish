@@ -27,7 +27,6 @@ import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import {useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import NavMenu from '@/components/nav-menu';
@@ -40,11 +39,11 @@ import Pagination from '@/components/pagination';
 
 const Icon = chakra(FontAwesomeIcon);
 
-const sortButtonNames = {
-  newest: 'Newest',
-  oldest: 'Oldest',
-  'recently-updated': 'Recently updated'
-};
+// const sortButtonNames = {
+//   newest: 'Newest',
+//   oldest: 'Oldest',
+//   'recently-updated': 'Recently updated'
+// };
 
 const FilterButton = ({ text, ...props }) => {
   return (
@@ -71,30 +70,57 @@ const FilterButton = ({ text, ...props }) => {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  console.log(context.query)
+
+  // handle filtering posts on Strapi side (not NextJS side)
+
+  const queryHandler = queries => {
+    const filterQuery = {};
+
+    for (const [key, value] of Object.entries(queries)) {
+      if (key === 'author') {
+        filterQuery[key] = {
+          slug: {
+            $eq: value
+          }
+        };
+      }
+
+      if (key === 'tags') {
+        filterQuery[key] = {
+          slug: {
+            $in: value
+          }
+        };
+      }
+    }
+
+    return filterQuery;
+  };
   const [posts, usersData, tagsData] = await Promise.all([
     isEditor(session.user)
       ? getAllPosts(session.user.jwt, {
-        publicationState: 'preview',
-        fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
-        populate: ['author', 'tags'],
-        pagination: {
-          page: context.query.page || 1,
-          pageSize: 6
-        },
-      })
+          publicationState: 'preview',
+          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+          populate: ['author', 'tags'],
+          pagination: {
+            page: context.query.page || 1,
+            pageSize: 6
+          },
+          filters: {
+            ...queryHandler(context.query)
+          }
+        })
       : getUserPosts(session.user.jwt, {
-        publicationState: 'preview',
-        fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
-        populate: ['author', 'tags'],
-        filters: {
-          author: session.user.id
-        },
-        pagination: {
-          page: context.query.page || 1,
-          pageSize: 6
-        }
-      }),
+          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+          populate: ['author', 'tags'],
+          filters: {
+            author: session.user.id
+          },
+          pagination: {
+            page: context.query.page || 1,
+            pageSize: 6
+          }
+        }),
     getUsers(session.user.jwt, {
       fields: ['id', 'name', 'slug']
     }),
@@ -103,8 +129,6 @@ export async function getServerSideProps(context) {
     })
   ]);
 
-  console.log(posts)
-
   return {
     props: {
       posts,
@@ -112,7 +136,7 @@ export async function getServerSideProps(context) {
       tagsData,
       user: session.user,
       queryParams: context.query,
-      pagination: posts.meta,
+      pagination: posts.meta
     }
   };
 }
@@ -123,40 +147,23 @@ export default function IndexPage({
   tagsData,
   user,
   queryParams,
-  pagination,
+  pagination
 }) {
   const router = useRouter();
   const toast = useToast();
 
-  const [filterText, setFilterText] = useState({
-    postType: queryParams.postType || 'All',
-    author: queryParams.author || 'All',
-    tag: queryParams.tag || 'All',
-  });
+  // handle filtering posts on NextJS side (not Strapi side)
 
   const handleFilter = (filterType, value) => {
-    const params = {...queryParams};
+    const params = { ...queryParams };
 
-
-    if(filterType === 'author') {
-      params.author = value;
-
-    }
-
-    if(filterType === 'postType') {
-      params.postType = value;
-    }
-
-    if(filterType === 'tag') {
-      params.tag = value;
-    }
+    params[filterType] = value;
 
     router.replace({
       pathname: router.pathname,
-      query: params,
+      query: params
     });
-  }
-
+  };
 
   const newPost = async () => {
     const nonce = uuidv4();
@@ -225,12 +232,12 @@ export default function IndexPage({
                     value=''
                     type='radio'
                     name='postType'
-                    onChange={value =>
-                      handleFilter('postType', value)
-                    }
+                    onChange={value => handleFilter('postType', value)}
                   >
-                    <MenuItemOption value='All'>All posts</MenuItemOption>
-                    <MenuItemOption value='Draft'>Drafts posts</MenuItemOption>
+                    <MenuItemOption value='Preview'>All posts</MenuItemOption>
+                    <MenuItemOption value='Preview'>
+                      Drafts posts
+                    </MenuItemOption>
                     <MenuItemOption value='Published'>
                       Published posts
                     </MenuItemOption>
@@ -238,9 +245,7 @@ export default function IndexPage({
                 </MenuList>
               </Menu>
               <Menu>
-                <FilterButton
-                  text={'Filter by Author'}
-                />
+                <FilterButton text={'Filter by Author'} />
                 <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
                   <MenuOptionGroup
                     value={''}
@@ -259,14 +264,12 @@ export default function IndexPage({
             </>
           )}
           <Menu>
-            <FilterButton
-              text={'Filter by Tag'}
-            />
+            <FilterButton text={'Filter by Tag'} />
             <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
               <MenuOptionGroup
                 value={''}
                 type='radio'
-                onChange={value => handleFilter('tag', value)}
+                onChange={value => handleFilter('tags', value)}
               >
                 <MenuItemOption value='all'>All tags</MenuItemOption>
                 {tagsData.data.map(tag => (
