@@ -12,7 +12,7 @@ const Pagination = ({ pagInfo, endpoint }) => {
     <>
       <Button
         size='sm'
-        disabled={page === 1}
+        isDisabled={page === 1}
         onClick={() => router.push(`/${endpoint}?page=${page - 1}`)}
       >
         {'<'}
@@ -30,7 +30,7 @@ const Pagination = ({ pagInfo, endpoint }) => {
       </Box>
       <Button
         size='sm'
-        disabled={page === pageCount}
+        isDisabled={page === pageCount}
         onClick={() => router.push(`/${endpoint}?page=${page + 1}`)}
       >
         {'>'}
