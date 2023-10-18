@@ -29,6 +29,9 @@ export async function getServerSideProps(context) {
       posts: {
         count: true
       }
+    },
+    pagination: {
+      limit: -1
     }
   });
   const publicTags = tags.data.filter(
