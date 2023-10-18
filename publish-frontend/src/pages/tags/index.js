@@ -10,6 +10,7 @@ import {
   Th,
   Thead,
   Tr,
+  Text,
   useRadio,
   useRadioGroup
 } from '@chakra-ui/react';
@@ -24,7 +25,8 @@ import { useEffect } from 'react';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const tags = await getTags(session.user.jwt);
+  const tags = await getTags(session.user.jwt, context.query.page);
+
   const publicTags = tags.data.filter(
     tag => tag.attributes.visibility === 'public'
   );
@@ -42,7 +44,8 @@ export async function getServerSideProps(context) {
       publicTags,
       internalTags,
       isInternal,
-      user: session.user
+      user: session.user,
+      pagination: tags.meta
     }
   };
 }
@@ -53,7 +56,7 @@ const TagsTableBody = (tags, router) => {
       {tags.map(tag => {
         const name = tag.attributes.name;
         const slug = tag.attributes.slug;
-        const noOfPosts = tag.attributes.posts.data.length;
+        const noOfPosts = tag.attributes.posts.data.length ?? 0;
         return (
           <Tr
             display='table-row'
@@ -119,10 +122,47 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
   );
 };
 
+const PaginationWidget = ({ pagInfo, router }) => {
+  const {
+    pagination: { page, pageCount }
+  } = pagInfo;
+
+  return (
+    <>
+      <Button
+        size='sm'
+        disabled={page === 1}
+        onClick={() => router.push(`/tags?page=${page - 1}`)}
+      >
+        {'<'}
+      </Button>
+      <Box
+        fontSize='sm'
+        fontWeight='600'
+        display='flex'
+        alignItems='center'
+        mx='2'
+      >
+        <Text>
+          {page} of {pageCount}
+        </Text>
+      </Box>
+      <Button
+        size='sm'
+        disabled={page === pageCount}
+        onClick={() => router.push(`/tags?page=${page + 1}`)}
+      >
+        {'>'}
+      </Button>
+    </>
+  );
+};
+
 export default function TagsIndex({
   publicTags,
   internalTags,
   isInternal,
+  pagination,
   user
 }) {
   const router = useRouter();
@@ -133,7 +173,9 @@ export default function TagsIndex({
 
   useEffect(() => {
     if (value === 'internal') {
-      router.replace('/tags?type=internal', undefined, { shallow: true });
+      router.replace('/tags?type=internal&page=1', undefined, {
+        shallow: true
+      });
     } else {
       router.replace('/tags', undefined, { shallow: true });
     }
@@ -208,6 +250,9 @@ export default function TagsIndex({
               ? TagsTableBody(publicTags, router)
               : TagsTableBody(internalTags, router)}
           </Table>
+          <Box mt='4' display='flex' justifyContent='center'>
+            <PaginationWidget pagInfo={pagination} router={router} />
+          </Box>
         </Box>
       </Box>
     </Box>
