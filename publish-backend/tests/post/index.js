@@ -74,7 +74,7 @@ describe("post", () => {
     });
 
     it("should not set publishedAt to future date", async () => {
-      const postToCreateCopy = { ...postToCreate };
+      const postToCreateCopy = { data: { ...postToCreate.data } };
       const now = new Date();
       const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
       postToCreateCopy.data.publishedAt = oneHourFromNow;
@@ -89,6 +89,19 @@ describe("post", () => {
       expect(response.body.error.message).toBe(
         "publishedAt must be a past date"
       );
+    });
+
+    it("should auto generate unique_id", async () => {
+      const response = await request(strapi.server.httpServer)
+        .post("/api/posts")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(postToCreate));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.unique_id).toMatch(/^[0-9a-f]{8}$/);
     });
   });
   describe("PUT /posts/:id", () => {
@@ -215,6 +228,19 @@ describe("post", () => {
         );
 
       expect(response.status).toBe(403);
+    });
+
+    it("should not change unique_id", async () => {
+      const response = await request(strapi.server.httpServer)
+        .post("/api/posts")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(postToCreate));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.unique_id).toMatch(/^[0-9a-f]{8}$/);
     });
   });
   describe("PATCH /posts/:id/publish", () => {
