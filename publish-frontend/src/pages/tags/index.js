@@ -238,7 +238,7 @@ export default function TagsIndex({
             <Thead bgColor='rgb(243, 244, 246)'>
               <Tr>
                 <Th>Tag</Th>
-                <Th w='20%' display={{ base: 'none', sm: 'table-cell' }}>
+                <Th w='30%' display={{ base: 'none', sm: 'table-cell' }}>
                   Slug
                 </Th>
                 <Th w='20%' display={{ base: 'none', sm: 'table-cell' }}>

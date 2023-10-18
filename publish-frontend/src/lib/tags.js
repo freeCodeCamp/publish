@@ -3,8 +3,7 @@
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getTags(token, page = 1) {
-  const endpoint = `${api_root}/tags/?populate=*&pagination[page]=${page}&pagination[pageSize]=15`;
-  console.log('endpoint: ', endpoint);
+  const endpoint = `${api_root}/tags/?populate=*&pagination[page]=${page}&pagination[pageSize]=10`;
   const options = {
     method: 'GET',
     headers: {
