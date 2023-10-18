@@ -25,7 +25,7 @@ const Pagination = ({ pagInfo, endpoint }) => {
         mx='2'
       >
         <Text>
-          {page} of {pageCount}
+          {pageCount > 0 ? page : '0'} of {pageCount}
         </Text>
       </Box>
       <Button
