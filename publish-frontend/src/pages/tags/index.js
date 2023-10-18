@@ -10,7 +10,6 @@ import {
   Th,
   Thead,
   Tr,
-  Text,
   useRadio,
   useRadioGroup
 } from '@chakra-ui/react';
@@ -22,6 +21,7 @@ import NavMenu from '@/components/nav-menu';
 import { getTags } from '@/lib/tags';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { useEffect } from 'react';
+import Pagination from '@/components/pagination';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -122,42 +122,6 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
   );
 };
 
-const PaginationWidget = ({ pagInfo, router }) => {
-  const {
-    pagination: { page, pageCount }
-  } = pagInfo;
-
-  return (
-    <>
-      <Button
-        size='sm'
-        disabled={page === 1}
-        onClick={() => router.push(`/tags?page=${page - 1}`)}
-      >
-        {'<'}
-      </Button>
-      <Box
-        fontSize='sm'
-        fontWeight='600'
-        display='flex'
-        alignItems='center'
-        mx='2'
-      >
-        <Text>
-          {page} of {pageCount}
-        </Text>
-      </Box>
-      <Button
-        size='sm'
-        disabled={page === pageCount}
-        onClick={() => router.push(`/tags?page=${page + 1}`)}
-      >
-        {'>'}
-      </Button>
-    </>
-  );
-};
-
 export default function TagsIndex({
   publicTags,
   internalTags,
@@ -251,7 +215,7 @@ export default function TagsIndex({
               : TagsTableBody(internalTags, router)}
           </Table>
           <Box mt='4' display='flex' justifyContent='center'>
-            <PaginationWidget pagInfo={pagination} router={router} />
+            <Pagination pagInfo={pagination} endpoint={'tags'} />
           </Box>
         </Box>
       </Box>

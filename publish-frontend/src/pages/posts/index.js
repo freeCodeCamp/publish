@@ -34,6 +34,7 @@ import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { useToast } from '@chakra-ui/react';
 import { createPost } from '@/lib/posts';
+import Pagination from '@/components/pagination';
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -62,21 +63,23 @@ const FilterButton = ({ text }) => {
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const [posts, users, tags] = await Promise.all([
-    getPosts(session.user.jwt),
+    getPosts(context.query.page, session.user.jwt),
     getUsers(session.user.jwt),
     getTags(session.user.jwt)
   ]);
+
   return {
     props: {
       posts,
       users,
       tags,
-      user: session.user
+      user: session.user,
+      pagination: posts.meta
     }
   };
 }
 
-export default function IndexPage({ posts, users, tags, user }) {
+export default function IndexPage({ posts, users, tags, user, pagination }) {
   const router = useRouter();
   const toast = useToast();
 
@@ -239,7 +242,7 @@ export default function IndexPage({ posts, users, tags, user }) {
                           zIndex: '1',
                           width: '100%',
                           height: '100%',
-                          cursor: 'pointer',
+                          cursor: 'pointer'
                         }}
                         href={`/posts/${post.id}`}
                         fontWeight='600'
@@ -273,6 +276,9 @@ export default function IndexPage({ posts, users, tags, user }) {
               })}
             </Tbody>
           </Table>
+          <Box mt='4' display='flex' justifyContent='center'>
+            <Pagination pagInfo={pagination} endpoint={'posts'} />
+          </Box>
         </Box>
       </Box>
     </Box>

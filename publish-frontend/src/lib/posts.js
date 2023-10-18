@@ -2,8 +2,8 @@
 
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function getPosts(token) {
-  const endpoint = `${api_root}/posts?publicationState=preview&populate=*`;
+export async function getPosts(page = 1, token) {
+  const endpoint = `${api_root}/posts?publicationState=preview&populate=*&pagination[page]=${page}&pagination[pageSize]=10`;
 
   const options = {
     method: 'GET',
