@@ -10,6 +10,12 @@ const { createCoreService } = require("@strapi/strapi").factories;
 
 module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   async create(reqBody = {}) {
+    if (process.env.DATA_MIGRATION === "true") {
+      reqBody.data.createdAt = reqBody.data.created_at;
+      reqBody.data.updatedAt = reqBody.data.updated_at;
+      delete reqBody.data.created_at;
+      delete reqBody.data.updated_at;
+    }
     return strapi.entityService.create("api::post.post", reqBody);
   },
 
