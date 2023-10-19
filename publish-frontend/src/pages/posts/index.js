@@ -77,6 +77,20 @@ export async function getServerSideProps(context) {
     const filterQuery = {};
 
     for (const [key, value] of Object.entries(queries)) {
+      if (key === 'publishedAt') {
+        if (value === 'Preview') {
+          filterQuery[key] = {
+            $notNull: false
+          };
+        }
+
+        if (value === 'Published') {
+          filterQuery[key] = {
+            $notNull: true
+          };
+        }
+      }
+
       if (key === 'author') {
         filterQuery[key] = {
           slug: {
@@ -91,6 +105,13 @@ export async function getServerSideProps(context) {
             $in: value
           }
         };
+      }
+
+      // remove the all the all values after assigning it to filterQuery
+      // semantically leaves the tags set to all in the URL but doesn't
+      // filter by it and leaves it out.
+      if (value === 'all' && Object.keys(filterQuery).includes(key)) {
+        delete filterQuery[key];
       }
     }
 
@@ -232,9 +253,9 @@ export default function IndexPage({
                     value=''
                     type='radio'
                     name='postType'
-                    onChange={value => handleFilter('postType', value)}
+                    onChange={value => handleFilter('publishedAt', value)}
                   >
-                    <MenuItemOption value='Preview'>All posts</MenuItemOption>
+                    <MenuItemOption value='All'>All posts</MenuItemOption>
                     <MenuItemOption value='Preview'>
                       Drafts posts
                     </MenuItemOption>
