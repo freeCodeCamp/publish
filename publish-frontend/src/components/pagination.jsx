@@ -2,18 +2,26 @@ import { Box, Button, Text } from '@chakra-ui/react';
 import React from 'react';
 import { useRouter } from 'next/router';
 
-const Pagination = ({ pagInfo, endpoint }) => {
+const Pagination = ({ pagination, endpoint, queryParams }) => {
   const router = useRouter();
   const {
     pagination: { page, pageCount }
-  } = pagInfo;
+  } = pagination;
+
+  // remove page from query params
+  delete queryParams.page;
 
   return (
     <>
       <Button
         size='sm'
         isDisabled={page === 1}
-        onClick={() => router.replace(`/${endpoint}?page=${page - 1}`)}
+        onClick={() =>
+          router.replace({
+            pathname: `/${endpoint}`,
+            query: { page: page - 1, ...queryParams }
+          })
+        }
       >
         {'<'}
       </Button>
@@ -31,7 +39,12 @@ const Pagination = ({ pagInfo, endpoint }) => {
       <Button
         size='sm'
         isDisabled={page === pageCount}
-        onClick={() => router.replace(`/${endpoint}?page=${page + 1}`)}
+        onClick={() =>
+          router.replace({
+            pathname: `/${endpoint}`,
+            query: { page: page + 1, ...queryParams }
+          })
+        }
       >
         {'>'}
       </Button>

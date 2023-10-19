@@ -107,7 +107,7 @@ export async function getServerSideProps(context) {
         };
       }
 
-      // remove the all the all values after assigning it to filterQuery
+      // remove all the all values after assigning it to filterQuery
       // semantically leaves the tags set to all in the URL but doesn't
       // filter by it and leaves it out.
       if (value === 'all' && Object.keys(filterQuery).includes(key)) {
@@ -135,7 +135,8 @@ export async function getServerSideProps(context) {
           fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
           populate: ['author', 'tags'],
           filters: {
-            author: session.user.id
+            author: session.user.id,
+            ...queryHandler(context.query)
           },
           pagination: {
             page: context.query.page || 1,
@@ -413,7 +414,11 @@ export default function IndexPage({
             alignItems='center'
             mt='4'
           >
-            <Pagination pagInfo={pagination} endpoint={'posts'} />
+            <Pagination
+              pagination={pagination}
+              endpoint={'posts'}
+              queryParams={queryParams}
+            />
           </Box>
         </Box>
       </Box>
