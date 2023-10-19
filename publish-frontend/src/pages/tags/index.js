@@ -21,6 +21,7 @@ import NavMenu from '@/components/nav-menu';
 import { getTags } from '@/lib/tags';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { useEffect } from 'react';
+import Pagination from '@/components/pagination';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -31,7 +32,7 @@ export async function getServerSideProps(context) {
       }
     },
     pagination: {
-      limit: -1
+      page: context.query.page || 1
     }
   });
   const publicTags = tags.data.filter(
@@ -51,7 +52,8 @@ export async function getServerSideProps(context) {
       publicTags,
       internalTags,
       isInternal,
-      user: session.user
+      user: session.user,
+      pagination: tags.meta
     }
   };
 }
@@ -132,6 +134,7 @@ export default function TagsIndex({
   publicTags,
   internalTags,
   isInternal,
+  pagination,
   user
 }) {
   const router = useRouter();
@@ -142,9 +145,11 @@ export default function TagsIndex({
 
   useEffect(() => {
     if (value === 'internal') {
-      router.replace('/tags?type=internal', undefined, { shallow: true });
+      router.replace('/tags?type=internal&page=1', undefined, {
+        shallow: true
+      });
     } else {
-      router.replace('/tags', undefined, { shallow: true });
+      router.replace('/tags?page=1', undefined, { shallow: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
@@ -217,6 +222,18 @@ export default function TagsIndex({
               ? TagsTableBody(publicTags, router)
               : TagsTableBody(internalTags, router)}
           </Table>
+          <Box
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            mt='4'
+          >
+            <Pagination
+              pagination={pagination}
+              endpoint={'tags'}
+              queryParams={{}}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>
