@@ -20,7 +20,6 @@ import { useRouter } from 'next/router';
 import NavMenu from '@/components/nav-menu';
 import { getTags } from '@/lib/tags';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { useEffect } from 'react';
 import Pagination from '@/components/pagination';
 
 export async function getServerSideProps(context) {
@@ -31,27 +30,20 @@ export async function getServerSideProps(context) {
         count: true
       }
     },
+    filters: {
+      visibility: {
+        $eq: context.query.visibility || 'public'
+      }
+    },
     pagination: {
       page: context.query.page || 1
     }
   });
-  const publicTags = tags.data.filter(
-    tag => tag.attributes.visibility === 'public'
-  );
-  const internalTags = tags.data.filter(
-    tag => tag.attributes.visibility === 'internal'
-  );
-  let isInternal = false;
-
-  if (context.query.type) {
-    isInternal = true;
-  }
 
   return {
     props: {
-      publicTags,
-      internalTags,
-      isInternal,
+      tags: tags.data,
+      isInternal: context.query.visibility === 'internal',
       user: session.user,
       pagination: tags.meta
     }
@@ -130,34 +122,25 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
   );
 };
 
-export default function TagsIndex({
-  publicTags,
-  internalTags,
-  isInternal,
-  pagination,
-  user
-}) {
+export default function TagsIndex({ tags, isInternal, pagination, user }) {
   const router = useRouter();
 
-  const { value, getRadioProps, getRootProps } = useRadioGroup({
-    defaultValue: !isInternal ? 'public' : 'internal'
-  });
+  console.log(tags);
 
-  useEffect(() => {
-    if (value === 'internal') {
-      router.replace('/tags?type=internal&page=1', undefined, {
-        shallow: true
-      });
-    } else {
-      router.replace('/tags?page=1', undefined, { shallow: true });
+  const { getRadioProps, getRootProps } = useRadioGroup({
+    defaultValue: isInternal ? 'internal' : 'public',
+    onChange: value => {
+      if (value === 'public') {
+        router.push('/tags?visibility=public&page=1');
+      } else {
+        router.push('/tags?visibility=internal&page=1');
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  });
 
   return (
     <Box minH='100vh' bgColor='gray.200'>
       <NavMenu user={user} />
-
       <Box ml={{ base: 0, md: '300px' }} px='6'>
         <Flex
           alignItems='center'
@@ -218,9 +201,7 @@ export default function TagsIndex({
                 </Th>
               </Tr>
             </Thead>
-            {value === 'public'
-              ? TagsTableBody(publicTags, router)
-              : TagsTableBody(internalTags, router)}
+            {TagsTableBody(tags, router)}
           </Table>
           <Box
             display='flex'
