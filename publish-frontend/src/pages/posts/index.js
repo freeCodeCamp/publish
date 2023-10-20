@@ -25,7 +25,7 @@ import {
   AutoCompleteItem,
   AutoCompleteList
 } from '@choc-ui/chakra-autocomplete';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
@@ -154,10 +154,24 @@ export default function IndexPage({
   const toast = useToast();
 
   const [searchedTags, setSearchedTags] = useState([]);
-  // const [hasSearchedTags, setHasSearchedTags] = useState(false);
+  const [hasSearchedTags, setHasSearchedTags] = useState(false);
 
   const [searchedAuthors, setSearchedAuthors] = useState([]);
-  // const [hasSearchedAuthors, setHasSearchedAuthors] = useState(false);
+  const [hasSearchedAuthors, setHasSearchedAuthors] = useState(false);
+
+  const [hasUsedPostDropdown, setHasUsedPostDropdown] = useState(false);
+
+  const [postInputText, setPostInputText] = useState(
+    queryParams.publishedAt && queryParams.publishedAt != 'all'
+      ? queryParams.publishedAt
+      : ''
+  );
+  const [tagInputText, setTagInputText] = useState(
+    queryParams.tags && queryParams.tags !== 'all' ? queryParams.tags : ''
+  );
+  const [authorInputText, setAuthorInputText] = useState(
+    queryParams.author && queryParams.author !== 'all' ? queryParams.author : ''
+  );
 
   // handle filtering posts on NextJS side (not Strapi side)
 
@@ -168,6 +182,14 @@ export default function IndexPage({
 
     if (filterType === 'tags' && value !== 'all') {
       setHasSearchedTags(true);
+    }
+
+    if (filterType === 'author' && value !== 'all') {
+      setHasSearchedAuthors(true);
+    }
+
+    if (filterType === 'publishedAt' && value !== 'all') {
+      setHasUsedPostDropdown(true);
     }
 
     router.replace({
@@ -185,7 +207,6 @@ export default function IndexPage({
       );
 
       setSearchedTags(newtags);
-      setHasSearchedTags(true);
     }
 
     if (filterType == 'author') {
@@ -194,10 +215,8 @@ export default function IndexPage({
       );
 
       setSearchedAuthors(newUsers);
-      setHasSearchedAuthors(true);
     }
   };
-
   const newPost = async () => {
     const nonce = uuidv4();
     const token = user.jwt;
@@ -265,25 +284,39 @@ export default function IndexPage({
                       <AutoCompleteInput
                         variant='outline'
                         placeholder='Filter by Post'
+                        value={postInputText}
                         backgroundColor='white'
-                        id='post-filter'
                       />
                       <InputRightElement>
-                        <Icon icon={faChevronDown} fixedWidth />
+                        <Icon
+                          icon={hasUsedPostDropdown ? faClose : faChevronDown}
+                          onClick={() => {
+                            handleFilter('publishedAt', 'all');
+                            setPostInputText('');
+                            setHasUsedPostDropdown(false);
+                          }}
+                          fixedWidth
+                        />
                       </InputRightElement>
                     </InputGroup>
                     <AutoCompleteList>
                       <AutoCompleteItem
                         value='Published'
                         textTransform='capitalize'
-                        onClick={() => handleFilter('publishedAt', 'Published')}
+                        onClick={() => {
+                          handleFilter('publishedAt', 'Published');
+                          setPostInputText('Published');
+                        }}
                       >
                         Published
                       </AutoCompleteItem>
                       <AutoCompleteItem
                         value='Draft'
                         textTransform='capitalize'
-                        onClick={() => handleFilter('publishedAt', 'Preview')}
+                        onClick={() => {
+                          handleFilter('publishedAt', 'Preview');
+                          setPostInputText('Draft');
+                        }}
                       >
                         Draft
                       </AutoCompleteItem>
@@ -293,19 +326,29 @@ export default function IndexPage({
               </FormControl>
 
               <FormControl w='70'>
-                <AutoComplete openOnFocus>
+                <AutoComplete openOnFocus restoreOnBlurIfEmpty={false}>
                   <>
                     <InputGroup>
                       <AutoCompleteInput
                         variant='outline'
                         placeholder='Filter by Author'
+                        value={authorInputText}
                         backgroundColor='white'
-                        onChange={event =>
-                          handleShallowFilter('author', event.target.value)
-                        }
+                        onChange={event => {
+                          handleShallowFilter('author', event.target.value);
+                          setAuthorInputText(event.target.value);
+                        }}
                       />
                       <InputRightElement>
-                        <Icon icon={faChevronDown} fixedWidth />
+                        <Icon
+                          icon={hasSearchedAuthors ? faClose : faChevronDown}
+                          onClick={() => {
+                            setHasSearchedAuthors(false);
+                            handleFilter('author', 'all');
+                            setAuthorInputText('');
+                          }}
+                          fixedWidth
+                        />
                       </InputRightElement>
                     </InputGroup>
                     <AutoCompleteList>
@@ -319,7 +362,10 @@ export default function IndexPage({
                             key={`option-${author.id}`}
                             value={author.name}
                             textTransform='capitalize'
-                            onClick={() => handleFilter('author', author.name)}
+                            onClick={() => {
+                              handleFilter('author', author.name);
+                              setAuthorInputText(author.name);
+                            }}
                           >
                             {author.name}
                           </AutoCompleteItem>
@@ -331,19 +377,29 @@ export default function IndexPage({
             </>
           )}
           <FormControl w='70'>
-            <AutoComplete openOnFocus>
+            <AutoComplete openOnFocus restoreOnBlurIfEmpty={false}>
               <>
                 <InputGroup>
                   <AutoCompleteInput
                     variant='outline'
                     placeholder='Filter by Tag'
+                    value={tagInputText}
                     backgroundColor='white'
-                    onChange={event =>
-                      handleShallowFilter('tags', event.target.value)
-                    }
+                    onChange={event => {
+                      handleShallowFilter('tags', event.target.value);
+                      setTagInputText(event.target.value);
+                    }}
                   />
                   <InputRightElement>
-                    <Icon icon={faChevronDown} fixedWidth />
+                    <Icon
+                      icon={hasSearchedTags ? faClose : faChevronDown}
+                      fixedWidth
+                      onClick={() => {
+                        setHasSearchedTags(false);
+                        handleFilter('tags', 'all');
+                        setTagInputText('');
+                      }}
+                    />
                   </InputRightElement>
                 </InputGroup>
                 <AutoCompleteList>
@@ -354,9 +410,10 @@ export default function IndexPage({
                         key={`option-${tag.id}`}
                         value={tag.attributes.name}
                         textTransform='capitalize'
-                        onClick={() =>
-                          handleFilter('tags', tag.attributes.slug)
-                        }
+                        onClick={() => {
+                          handleFilter('tags', tag.attributes.slug);
+                          setTagInputText(tag.attributes.name);
+                        }}
                       >
                         {tag.attributes.name}
                       </AutoCompleteItem>
