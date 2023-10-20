@@ -22,7 +22,8 @@ import {
   useToast,
   FormControl,
   InputRightElement,
-  InputGroup
+  InputGroup,
+  Stack
 } from '@chakra-ui/react';
 import {
   AutoComplete,
@@ -179,6 +180,7 @@ export default function IndexPage({
   const toast = useToast();
 
   const [searchedTags, setSearchedTags] = useState([]);
+  const [hasSearchedTags, setHasSearchedTags] = useState(false);
 
   // handle filtering posts on NextJS side (not Strapi side)
 
@@ -186,6 +188,10 @@ export default function IndexPage({
     const params = { ...queryParams };
 
     params[filterType] = value;
+
+    if (filterType === 'tags' && value !== 'all') {
+      setHasSearchedTags(true);
+    }
 
     router.replace({
       pathname: router.pathname,
@@ -205,7 +211,6 @@ export default function IndexPage({
           }
         }
       });
-
       setSearchedTags(tags);
     }
   };
@@ -308,39 +313,54 @@ export default function IndexPage({
               </Menu>
             </>
           )}
-          <FormControl w='70'>
-            <AutoComplete openOnFocus>
-              <>
-                <InputGroup>
-                  <AutoCompleteInput
-                    variant='filled'
-                    placeholder='Search...'
-                    onChange={event =>
-                      handleShallowFilter('tags', event.target.value)
-                    }
-                  />
-                  <InputRightElement>
-                    <Icon icon={faChevronDown} fixedWidth />
-                  </InputRightElement>
-                </InputGroup>
-                <AutoCompleteList>
-                  {(searchedTags.data?.length > 0
-                    ? searchedTags
-                    : tagsData
-                  ).data.map(tag => (
-                    <AutoCompleteItem
-                      key={`option-${tag.id}`}
-                      value={tag.attributes.name}
-                      textTransform='capitalize'
-                      onClick={() => handleFilter('tags', tag.attributes.slug)}
-                    >
-                      {tag.attributes.name}
-                    </AutoCompleteItem>
-                  ))}
-                </AutoCompleteList>
-              </>
-            </AutoComplete>
-          </FormControl>
+          <Stack direction={'row'}>
+            <FormControl w='70'>
+              <AutoComplete openOnFocus>
+                <>
+                  <InputGroup>
+                    <AutoCompleteInput
+                      variant='filled'
+                      placeholder='Filter by Tag'
+                      onChange={event =>
+                        handleShallowFilter('tags', event.target.value)
+                      }
+                    />
+                    <InputRightElement>
+                      <Icon icon={faChevronDown} fixedWidth />
+                    </InputRightElement>
+                  </InputGroup>
+                  <AutoCompleteList>
+                    {(searchedTags.data?.length > 0
+                      ? searchedTags
+                      : tagsData
+                    ).data.map(tag => (
+                      <AutoCompleteItem
+                        key={`option-${tag.id}`}
+                        value={tag.attributes.name}
+                        textTransform='capitalize'
+                        onClick={() =>
+                          handleFilter('tags', tag.attributes.slug)
+                        }
+                      >
+                        {tag.attributes.name}
+                      </AutoCompleteItem>
+                    ))}
+                  </AutoCompleteList>
+                </>
+              </AutoComplete>
+            </FormControl>
+            {hasSearchedTags && (
+              <Button
+                colorScheme='red'
+                onClick={() => {
+                  handleFilter('tags', 'all');
+                  setHasSearchedTags(false);
+                }}
+              >
+                Remove
+              </Button>
+            )}
+          </Stack>
 
           {/* <Menu>
             <FilterButton text={`Sort by:`} />
