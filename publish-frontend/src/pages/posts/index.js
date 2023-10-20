@@ -6,11 +6,6 @@ import {
   Flex,
   Grid,
   Heading,
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
   Spacer,
   Table,
   Tbody,
@@ -22,8 +17,7 @@ import {
   useToast,
   FormControl,
   InputRightElement,
-  InputGroup,
-  Stack
+  InputGroup
 } from '@chakra-ui/react';
 import {
   AutoComplete,
@@ -50,29 +44,6 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Pagination from '@/components/pagination';
 
 const Icon = chakra(FontAwesomeIcon);
-
-const FilterButton = ({ text, ...props }) => {
-  return (
-    <MenuButton
-      as={Button}
-      rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-      bgColor='white'
-      borderRadius='md'
-      fontSize='14px'
-      boxShadow='sm'
-      position='unset'
-      _hover={{
-        boxShadow: 'md'
-      }}
-      _active={{
-        bgColor: 'white'
-      }}
-      {...props}
-    >
-      {text}
-    </MenuButton>
-  );
-};
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -183,10 +154,10 @@ export default function IndexPage({
   const toast = useToast();
 
   const [searchedTags, setSearchedTags] = useState([]);
-  const [hasSearchedTags, setHasSearchedTags] = useState(false);
+  // const [hasSearchedTags, setHasSearchedTags] = useState(false);
 
   const [searchedAuthors, setSearchedAuthors] = useState([]);
-  const [hasSearchedAuthors, setHasSearchedAuthors] = useState(false);
+  // const [hasSearchedAuthors, setHasSearchedAuthors] = useState(false);
 
   // handle filtering posts on NextJS side (not Strapi side)
 
@@ -214,14 +185,13 @@ export default function IndexPage({
       );
 
       setSearchedTags(newtags);
+      setHasSearchedTags(true);
     }
 
     if (filterType == 'author') {
       const newUsers = usersData.filter(user =>
         user.name.toLowerCase().startsWith(value.toLowerCase())
       );
-
-      console.log(newUsers);
 
       setSearchedAuthors(newUsers);
       setHasSearchedAuthors(true);
@@ -288,124 +258,113 @@ export default function IndexPage({
         >
           {isEditor(user) && (
             <>
-              <Menu>
-                <FilterButton text={'Filter by Post'} />
-                <MenuList zIndex={2}>
-                  <MenuOptionGroup
-                    value=''
-                    type='radio'
-                    name='postType'
-                    onChange={value => handleFilter('publishedAt', value)}
-                  >
-                    <MenuItemOption value='All'>All posts</MenuItemOption>
-                    <MenuItemOption value='Preview'>
-                      Drafts posts
-                    </MenuItemOption>
-                    <MenuItemOption value='Published'>
-                      Published posts
-                    </MenuItemOption>
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
-              <Stack direction={'row'} gap={'0'}>
-                <FormControl w='70'>
-                  <AutoComplete openOnFocus>
-                    <>
-                      <InputGroup>
-                        <AutoCompleteInput
-                          variant='filled'
-                          placeholder='Filter by Author'
-                          onChange={event =>
-                            handleShallowFilter('author', event.target.value)
-                          }
-                        />
-                        <InputRightElement>
-                          <Icon icon={faChevronDown} fixedWidth />
-                        </InputRightElement>
-                      </InputGroup>
-                      <AutoCompleteList>
-                        {(searchedAuthors.length > 0
-                          ? searchedAuthors
-                          : usersData
-                        )
-                          .slice(0, 25)
-                          .map(author => (
-                            <AutoCompleteItem
-                              key={`option-${author.id}`}
-                              value={author.name}
-                              textTransform='capitalize'
-                              onClick={() =>
-                                handleFilter('author', author.name)
-                              }
-                            >
-                              {author.name}
-                            </AutoCompleteItem>
-                          ))}
-                      </AutoCompleteList>
-                    </>
-                  </AutoComplete>
-                </FormControl>
-                {hasSearchedAuthors && (
-                  <Button
-                    colorScheme='red'
-                    onClick={() => {
-                      handleFilter('author', 'all');
-                      setHasSearchedAuthors(false);
-                    }}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </Stack>
+              <FormControl w='70'>
+                <AutoComplete openOnFocus>
+                  <>
+                    <InputGroup>
+                      <AutoCompleteInput
+                        variant='outline'
+                        placeholder='Filter by Post'
+                        backgroundColor='white'
+                        id='post-filter'
+                      />
+                      <InputRightElement>
+                        <Icon icon={faChevronDown} fixedWidth />
+                      </InputRightElement>
+                    </InputGroup>
+                    <AutoCompleteList>
+                      <AutoCompleteItem
+                        value='Published'
+                        textTransform='capitalize'
+                        onClick={() => handleFilter('publishedAt', 'Published')}
+                      >
+                        Published
+                      </AutoCompleteItem>
+                      <AutoCompleteItem
+                        value='Draft'
+                        textTransform='capitalize'
+                        onClick={() => handleFilter('publishedAt', 'Preview')}
+                      >
+                        Draft
+                      </AutoCompleteItem>
+                    </AutoCompleteList>
+                  </>
+                </AutoComplete>
+              </FormControl>
+
+              <FormControl w='70'>
+                <AutoComplete openOnFocus>
+                  <>
+                    <InputGroup>
+                      <AutoCompleteInput
+                        variant='outline'
+                        placeholder='Filter by Author'
+                        backgroundColor='white'
+                        onChange={event =>
+                          handleShallowFilter('author', event.target.value)
+                        }
+                      />
+                      <InputRightElement>
+                        <Icon icon={faChevronDown} fixedWidth />
+                      </InputRightElement>
+                    </InputGroup>
+                    <AutoCompleteList>
+                      {(searchedAuthors.length > 0
+                        ? searchedAuthors
+                        : usersData
+                      )
+                        .slice(0, 25)
+                        .map(author => (
+                          <AutoCompleteItem
+                            key={`option-${author.id}`}
+                            value={author.name}
+                            textTransform='capitalize'
+                            onClick={() => handleFilter('author', author.name)}
+                          >
+                            {author.name}
+                          </AutoCompleteItem>
+                        ))}
+                    </AutoCompleteList>
+                  </>
+                </AutoComplete>
+              </FormControl>
             </>
           )}
-          <Stack direction={'row'}>
-            <FormControl w='70'>
-              <AutoComplete openOnFocus>
-                <>
-                  <InputGroup>
-                    <AutoCompleteInput
-                      variant='filled'
-                      placeholder='Filter by Tag'
-                      onChange={event =>
-                        handleShallowFilter('tags', event.target.value)
-                      }
-                    />
-                    <InputRightElement>
-                      <Icon icon={faChevronDown} fixedWidth />
-                    </InputRightElement>
-                  </InputGroup>
-                  <AutoCompleteList>
-                    {(searchedTags.length > 0 ? searchedTags : tagsData.data)
-                      .slice(0, 25)
-                      .map(tag => (
-                        <AutoCompleteItem
-                          key={`option-${tag.id}`}
-                          value={tag.attributes.name}
-                          textTransform='capitalize'
-                          onClick={() =>
-                            handleFilter('tags', tag.attributes.slug)
-                          }
-                        >
-                          {tag.attributes.name}
-                        </AutoCompleteItem>
-                      ))}
-                  </AutoCompleteList>
-                </>
-              </AutoComplete>
-            </FormControl>
-            {hasSearchedTags && (
-              <Button
-                colorScheme='red'
-                onClick={() => {
-                  handleFilter('tags', 'all');
-                  setHasSearchedTags(false);
-                }}
-              >
-                Remove
-              </Button>
-            )}
-          </Stack>
+          <FormControl w='70'>
+            <AutoComplete openOnFocus>
+              <>
+                <InputGroup>
+                  <AutoCompleteInput
+                    variant='outline'
+                    placeholder='Filter by Tag'
+                    backgroundColor='white'
+                    onChange={event =>
+                      handleShallowFilter('tags', event.target.value)
+                    }
+                  />
+                  <InputRightElement>
+                    <Icon icon={faChevronDown} fixedWidth />
+                  </InputRightElement>
+                </InputGroup>
+                <AutoCompleteList>
+                  {(searchedTags.length > 0 ? searchedTags : tagsData.data)
+                    .slice(0, 25)
+                    .map(tag => (
+                      <AutoCompleteItem
+                        key={`option-${tag.id}`}
+                        value={tag.attributes.name}
+                        textTransform='capitalize'
+                        onClick={() =>
+                          handleFilter('tags', tag.attributes.slug)
+                        }
+                      >
+                        {tag.attributes.name}
+                      </AutoCompleteItem>
+                    ))}
+                </AutoCompleteList>
+              </>
+            </AutoComplete>
+          </FormControl>
 
           {/* <Menu>
             <FilterButton text={`Sort by:`} />
