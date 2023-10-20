@@ -422,23 +422,6 @@ export default function IndexPage({
               </>
             </AutoComplete>
           </FormControl>
-
-          {/* <Menu>
-            <FilterButton text={`Sort by:`} />
-            <MenuList zIndex={2}>
-              <MenuOptionGroup
-                value={filter.sortBy}
-                type='radio'
-                onChange={value => setFilter({ ...filter, sortBy: value })}
-              >
-                <MenuItemOption value='newest'>Newest</MenuItemOption>
-                <MenuItemOption value='oldest'>Oldest</MenuItemOption>
-                <MenuItemOption value='recently-updated'>
-                  Recently updated
-                </MenuItemOption>
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu> */}
         </Grid>
 
         <Box pb='10'>
