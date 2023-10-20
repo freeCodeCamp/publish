@@ -19,8 +19,17 @@ import {
   Thead,
   Tr,
   chakra,
-  useToast
+  useToast,
+  FormControl,
+  InputRightElement,
+  InputGroup
 } from '@chakra-ui/react';
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList
+} from '@choc-ui/chakra-autocomplete';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
@@ -28,6 +37,8 @@ import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
+
+import { useState } from 'react';
 
 import NavMenu from '@/components/nav-menu';
 import { isEditor } from '@/lib/current-user';
@@ -38,12 +49,6 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import Pagination from '@/components/pagination';
 
 const Icon = chakra(FontAwesomeIcon);
-
-// const sortButtonNames = {
-//   newest: 'Newest',
-//   oldest: 'Oldest',
-//   'recently-updated': 'Recently updated'
-// };
 
 const FilterButton = ({ text, ...props }) => {
   return (
@@ -70,7 +75,6 @@ const FilterButton = ({ text, ...props }) => {
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-
   // handle filtering posts on Strapi side (not NextJS side)
 
   const queryHandler = queries => {
@@ -174,6 +178,8 @@ export default function IndexPage({
   const router = useRouter();
   const toast = useToast();
 
+  const [searchedTags, setSearchedTags] = useState([]);
+
   // handle filtering posts on NextJS side (not Strapi side)
 
   const handleFilter = (filterType, value) => {
@@ -185,6 +191,23 @@ export default function IndexPage({
       pathname: router.pathname,
       query: params
     });
+  };
+
+  // handle filtering tags and authors in searchbar
+
+  const handleShallowFilter = async (filterType, value) => {
+    if (filterType == 'tags') {
+      const tags = await getTags(user.jwt, {
+        fields: ['id', 'name', 'slug'],
+        filters: {
+          name: {
+            $startsWith: value
+          }
+        }
+      });
+
+      setSearchedTags(tags);
+    }
   };
 
   const newPost = async () => {
@@ -285,23 +308,40 @@ export default function IndexPage({
               </Menu>
             </>
           )}
-          <Menu>
-            <FilterButton text={'Filter by Tag'} />
-            <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
-              <MenuOptionGroup
-                value={''}
-                type='radio'
-                onChange={value => handleFilter('tags', value)}
-              >
-                <MenuItemOption value='all'>All tags</MenuItemOption>
-                {tagsData.data.map(tag => (
-                  <MenuItemOption key={tag.id} value={tag.attributes.slug}>
-                    {tag.attributes.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
+          <FormControl w='70'>
+            <AutoComplete openOnFocus>
+              <>
+                <InputGroup>
+                  <AutoCompleteInput
+                    variant='filled'
+                    placeholder='Search...'
+                    onChange={event =>
+                      handleShallowFilter('tags', event.target.value)
+                    }
+                  />
+                  <InputRightElement>
+                    <Icon icon={faChevronDown} fixedWidth />
+                  </InputRightElement>
+                </InputGroup>
+                <AutoCompleteList>
+                  {(searchedTags.data?.length > 0
+                    ? searchedTags
+                    : tagsData
+                  ).data.map(tag => (
+                    <AutoCompleteItem
+                      key={`option-${tag.id}`}
+                      value={tag.attributes.name}
+                      textTransform='capitalize'
+                      onClick={() => handleFilter('tags', tag.attributes.slug)}
+                    >
+                      {tag.attributes.name}
+                    </AutoCompleteItem>
+                  ))}
+                </AutoCompleteList>
+              </>
+            </AutoComplete>
+          </FormControl>
+
           {/* <Menu>
             <FilterButton text={`Sort by:`} />
             <MenuList zIndex={2}>
