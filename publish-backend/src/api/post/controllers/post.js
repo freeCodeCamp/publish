@@ -1,15 +1,14 @@
-'use strict';
+"use strict";
 
 /**
  * post controller
  */
 
-const { createCoreController } = require('@strapi/strapi').factories;
+const { createCoreController } = require("@strapi/strapi").factories;
 
 const isEditor = (ctx) => {
   return ctx.state.user.role.name === "Editor";
 };
-
 
 module.exports = createCoreController("api::post.post", ({ strapi }) => ({
   async create(ctx) {
@@ -61,6 +60,42 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       const response = await strapi
         .service("api::post.post")
         .unpublish(ctx.request.params.id);
+      ctx.body = this.transformResponse(response);
+    } catch (err) {
+      ctx.body = err;
+    }
+  },
+  async checkAndPublish(ctx) {
+    try {
+      const draftPostToPublish = await strapi.entityService.findMany(
+        "api::post.post",
+        {
+          filters: {
+            publishedAt: {
+              $null: true,
+            },
+            scheduled_at: {
+              $lt: new Date(),
+            },
+          },
+        }
+      );
+
+      await Promise.all(
+        draftPostToPublish.map((post) => {
+          return strapi.entityService.update("api::post.post", post.id, {
+            data: {
+              publishedAt: new Date(),
+            },
+          });
+        })
+      );
+
+      const response = {
+        count: draftPostToPublish.length,
+        data: draftPostToPublish.map((post) => post.title),
+      };
+
       ctx.body = this.transformResponse(response);
     } catch (err) {
       ctx.body = err;

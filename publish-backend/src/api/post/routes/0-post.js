@@ -27,5 +27,14 @@ module.exports = {
         middlewares: [],
       },
     },
+    {
+      method: "GET",
+      path: "/posts/check-and-publish",
+      handler: "post.checkAndPublish",
+      config: {
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };
