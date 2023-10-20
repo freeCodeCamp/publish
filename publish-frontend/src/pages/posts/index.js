@@ -201,7 +201,7 @@ export default function IndexPage({
         fields: ['id', 'name', 'slug'],
         filters: {
           name: {
-            $startsWith: value
+            $startsWithi: value
           }
         }
       });
