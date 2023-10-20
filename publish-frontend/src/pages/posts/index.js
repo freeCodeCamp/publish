@@ -152,7 +152,10 @@ export async function getServerSideProps(context) {
       fields: ['id', 'name', 'slug']
     }),
     getTags(session.user.jwt, {
-      fields: ['id', 'name', 'slug']
+      fields: ['id', 'name', 'slug'],
+      pagination: {
+        limit: -1
+      }
     })
   ]);
 
@@ -206,30 +209,21 @@ export default function IndexPage({
 
   const handleShallowFilter = async (filterType, value) => {
     if (filterType == 'tags') {
-      const tags = await getTags(user.jwt, {
-        fields: ['id', 'name', 'slug'],
-        filters: {
-          name: {
-            $startsWithi: value
-          }
-        }
-      });
-      setSearchedTags(tags);
+      const newtags = tagsData.data.filter(tag =>
+        tag.attributes.name.toLowerCase().startsWith(value.toLowerCase())
+      );
+
+      setSearchedTags(newtags);
     }
 
     if (filterType == 'author') {
-      const users = await getUsers(user.jwt, {
-        fields: ['id', 'name', 'slug'],
-        filters: {
-          name: {
-            $startsWithi: value
-          }
-        }
-      });
+      const newUsers = usersData.filter(user =>
+        user.name.toLowerCase().startsWith(value.toLowerCase())
+      );
 
-      console.log(users);
+      console.log(newUsers);
 
-      setSearchedAuthors(users);
+      setSearchedAuthors(newUsers);
       setHasSearchedAuthors(true);
     }
   };
@@ -333,16 +327,20 @@ export default function IndexPage({
                         {(searchedAuthors.length > 0
                           ? searchedAuthors
                           : usersData
-                        ).map(author => (
-                          <AutoCompleteItem
-                            key={`option-${author.id}`}
-                            value={author.name}
-                            textTransform='capitalize'
-                            onClick={() => handleFilter('author', author.name)}
-                          >
-                            {author.name}
-                          </AutoCompleteItem>
-                        ))}
+                        )
+                          .slice(0, 25)
+                          .map(author => (
+                            <AutoCompleteItem
+                              key={`option-${author.id}`}
+                              value={author.name}
+                              textTransform='capitalize'
+                              onClick={() =>
+                                handleFilter('author', author.name)
+                              }
+                            >
+                              {author.name}
+                            </AutoCompleteItem>
+                          ))}
                       </AutoCompleteList>
                     </>
                   </AutoComplete>
@@ -378,21 +376,20 @@ export default function IndexPage({
                     </InputRightElement>
                   </InputGroup>
                   <AutoCompleteList>
-                    {(searchedTags.data?.length > 0
-                      ? searchedTags
-                      : tagsData
-                    ).data.map(tag => (
-                      <AutoCompleteItem
-                        key={`option-${tag.id}`}
-                        value={tag.attributes.name}
-                        textTransform='capitalize'
-                        onClick={() =>
-                          handleFilter('tags', tag.attributes.slug)
-                        }
-                      >
-                        {tag.attributes.name}
-                      </AutoCompleteItem>
-                    ))}
+                    {(searchedTags.length > 0 ? searchedTags : tagsData.data)
+                      .slice(0, 25)
+                      .map(tag => (
+                        <AutoCompleteItem
+                          key={`option-${tag.id}`}
+                          value={tag.attributes.name}
+                          textTransform='capitalize'
+                          onClick={() =>
+                            handleFilter('tags', tag.attributes.slug)
+                          }
+                        >
+                          {tag.attributes.name}
+                        </AutoCompleteItem>
+                      ))}
                   </AutoCompleteList>
                 </>
               </AutoComplete>
