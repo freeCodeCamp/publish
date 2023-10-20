@@ -182,6 +182,9 @@ export default function IndexPage({
   const [searchedTags, setSearchedTags] = useState([]);
   const [hasSearchedTags, setHasSearchedTags] = useState(false);
 
+  const [searchedAuthors, setSearchedAuthors] = useState([]);
+  const [hasSearchedAuthors, setHasSearchedAuthors] = useState(false);
+
   // handle filtering posts on NextJS side (not Strapi side)
 
   const handleFilter = (filterType, value) => {
@@ -212,6 +215,22 @@ export default function IndexPage({
         }
       });
       setSearchedTags(tags);
+    }
+
+    if (filterType == 'author') {
+      const users = await getUsers(user.jwt, {
+        fields: ['id', 'name', 'slug'],
+        filters: {
+          name: {
+            $startsWithi: value
+          }
+        }
+      });
+
+      console.log(users);
+
+      setSearchedAuthors(users);
+      setHasSearchedAuthors(true);
     }
   };
 
@@ -294,23 +313,52 @@ export default function IndexPage({
                   </MenuOptionGroup>
                 </MenuList>
               </Menu>
-              <Menu>
-                <FilterButton text={'Filter by Author'} />
-                <MenuList zIndex={2} maxH='50vh' overflowY='scroll'>
-                  <MenuOptionGroup
-                    value={''}
-                    type='radio'
-                    onChange={value => handleFilter('author', value)}
+              <Stack direction={'row'} gap={'0'}>
+                <FormControl w='70'>
+                  <AutoComplete openOnFocus>
+                    <>
+                      <InputGroup>
+                        <AutoCompleteInput
+                          variant='filled'
+                          placeholder='Filter by Author'
+                          onChange={event =>
+                            handleShallowFilter('author', event.target.value)
+                          }
+                        />
+                        <InputRightElement>
+                          <Icon icon={faChevronDown} fixedWidth />
+                        </InputRightElement>
+                      </InputGroup>
+                      <AutoCompleteList>
+                        {(searchedAuthors.length > 0
+                          ? searchedAuthors
+                          : usersData
+                        ).map(author => (
+                          <AutoCompleteItem
+                            key={`option-${author.id}`}
+                            value={author.name}
+                            textTransform='capitalize'
+                            onClick={() => handleFilter('author', author.name)}
+                          >
+                            {author.name}
+                          </AutoCompleteItem>
+                        ))}
+                      </AutoCompleteList>
+                    </>
+                  </AutoComplete>
+                </FormControl>
+                {hasSearchedAuthors && (
+                  <Button
+                    colorScheme='red'
+                    onClick={() => {
+                      handleFilter('author', 'all');
+                      setHasSearchedAuthors(false);
+                    }}
                   >
-                    <MenuItemOption value='all'>All authors</MenuItemOption>
-                    {usersData.map(user => (
-                      <MenuItemOption key={user.id} value={user.slug}>
-                        {user.name}
-                      </MenuItemOption>
-                    ))}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
+                    Remove
+                  </Button>
+                )}
+              </Stack>
             </>
           )}
           <Stack direction={'row'}>
