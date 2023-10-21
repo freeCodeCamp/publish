@@ -36,9 +36,8 @@ import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { v4 as uuidv4 } from 'uuid';
-
 import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import NavMenu from '@/components/nav-menu';
 import Pagination from '@/components/pagination';
@@ -49,6 +48,12 @@ import { getUsers } from '@/lib/users';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 const Icon = chakra(FontAwesomeIcon);
+
+const sortButtonNames = {
+  newest: 'Newest',
+  oldest: 'Oldest',
+  updated: 'Recently updated'
+};
 
 const postButtonText = {
   all: 'All posts',
@@ -105,18 +110,29 @@ export async function getServerSideProps(context) {
     return filterQuery;
   };
 
+  const sortHandler = sortBy => {
+    if (sortBy === 'oldest') {
+      return ['createdAt'];
+    } else if (sortBy === 'updated') {
+      return ['updatedAt:desc'];
+    } else {
+      return ['createdAt:desc'];
+    }
+  };
+
   const [posts, usersData, tagsData] = await Promise.all([
     isEditor(session.user)
       ? getAllPosts(session.user.jwt, {
           publicationState: 'preview',
           fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
           populate: ['author', 'tags'],
+          filters: {
+            ...queryHandler(context.query)
+          },
+          sort: sortHandler(context.query.sortBy),
           pagination: {
             page: context.query.page || 1,
             pageSize: 6
-          },
-          filters: {
-            ...queryHandler(context.query)
           }
         })
       : getUserPosts(session.user.jwt, {
@@ -126,6 +142,7 @@ export async function getServerSideProps(context) {
             author: session.user.id,
             ...queryHandler(context.query)
           },
+          sort: sortHandler(context.query.sortBy),
           pagination: {
             page: context.query.page || 1,
             pageSize: 6
@@ -161,8 +178,7 @@ const FilterButton = ({ text, ...props }) => {
       rightIcon={<Icon icon={faChevronDown} fixedWidth />}
       bgColor='white'
       borderRadius='md'
-      fontSize='md'
-      fontWeight='normal'
+      fontSize='14px'
       pl='20px'
       pr='10px'
       textAlign='left'
@@ -203,6 +219,7 @@ export default function IndexPage({
   );
 
   const [postType, setPostType] = useState(queryParams?.publishedAt || 'all');
+  const [sortBy, setSortBy] = useState(queryParams?.sortBy || 'newest');
   const [tagInputText, setTagInputText] = useState(
     queryParams.tags && queryParams.tags !== 'all'
       ? selectedTagName(queryParams.tags)
@@ -255,6 +272,15 @@ export default function IndexPage({
     if (filterType === 'publishedAt') {
       setPostType(value);
       if (value === 'all') {
+        delete params[filterType];
+      } else {
+        params[filterType] = value;
+      }
+    }
+
+    if (filterType === 'sortBy') {
+      setSortBy(value);
+      if (value === 'newest') {
         delete params[filterType];
       } else {
         params[filterType] = value;
@@ -382,6 +408,8 @@ export default function IndexPage({
                       placeholder='Filter by Author'
                       value={authorInputText}
                       backgroundColor='white'
+                      fontSize='14px'
+                      fontWeight='600'
                       onChange={event =>
                         handleShallowFilter('author', event.target.value)
                       }
@@ -423,6 +451,8 @@ export default function IndexPage({
                   placeholder='Filter by Tag'
                   value={tagInputText}
                   backgroundColor='white'
+                  fontSize='14px'
+                  fontWeight='600'
                   onChange={event => {
                     handleShallowFilter('tags', event.target.value);
                   }}
@@ -450,6 +480,22 @@ export default function IndexPage({
               </AutoCompleteList>
             </AutoComplete>
           </FormControl>
+          <Menu>
+            <FilterButton text={`Sort by: ${sortButtonNames[sortBy]}`} />
+            <MenuList zIndex={2}>
+              <MenuOptionGroup
+                value={sortBy}
+                type='radio'
+                onChange={value => handleFilter('sortBy', value)}
+              >
+                <MenuItemOption value='newest'>Newest</MenuItemOption>
+                <MenuItemOption value='oldest'>Oldest</MenuItemOption>
+                <MenuItemOption value='updated'>
+                  Recently updated
+                </MenuItemOption>
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
         </Grid>
 
         <Box pb='10'>
