@@ -161,7 +161,11 @@ const FilterButton = ({ text, ...props }) => {
       rightIcon={<Icon icon={faChevronDown} fixedWidth />}
       bgColor='white'
       borderRadius='md'
-      fontSize='14px'
+      fontSize='md'
+      fontWeight='normal'
+      pl='20px'
+      pr='10px'
+      textAlign='left'
       boxShadow='sm'
       position='unset'
       _hover={{
