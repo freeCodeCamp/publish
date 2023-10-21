@@ -441,7 +441,7 @@ export default function IndexPage({
                   .map(tag => (
                     <AutoCompleteItem
                       key={`option-${tag.id}`}
-                      value={tag.attributes.name}
+                      value={tag.attributes.slug}
                       textTransform='capitalize'
                     >
                       {tag.attributes.name}
