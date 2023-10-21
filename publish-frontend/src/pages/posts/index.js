@@ -202,8 +202,7 @@ export default function IndexPage({
     queryParams.author && queryParams.author !== 'all' ? queryParams.author : ''
   );
 
-  // handle filtering posts on NextJS side (not Strapi side)
-
+  // handle filtering tags and authors in searchbar
   const handleFilter = (filterType, value) => {
     const params = { ...queryParams };
 
@@ -223,8 +222,7 @@ export default function IndexPage({
     });
   };
 
-  // handle filtering tags and authors in searchbar
-
+  // handle filtering posts on NextJS side (not Strapi side)
   const handleShallowFilter = async (filterType, value) => {
     if (filterType == 'tags') {
       const newtags = tagsData.data.filter(tag =>
