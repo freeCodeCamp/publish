@@ -17,12 +17,12 @@ export async function getInvitedUsers(token, queryParams) {
   );
 
   try {
+    const data = await res.json();
     if (!res.ok) {
       throw new Error(
         data.message || `Something went wrong. Status: ${res.status}`
       );
     }
-    const data = await res.json();
 
     return data;
   } catch (error) {
