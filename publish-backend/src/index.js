@@ -1,7 +1,5 @@
 "use strict";
 
-const { generateSeedData } = require("./seed");
-
 module.exports = {
   /**
    * An asynchronous register function that runs before
@@ -24,6 +22,7 @@ module.exports = {
       process.env.SEED_DATA === "true"
     ) {
       console.log("Seeding database...");
+      const { generateSeedData } = require("./seed");
       await generateSeedData(strapi);
       console.log("Seeding database complete!");
     }

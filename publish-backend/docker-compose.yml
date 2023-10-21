@@ -1,7 +1,7 @@
 version: "3"
 services:
   strapi:
-    container_name: strapi
+    container_name: strapi-development
     build: .
     image: strapi:latest
     restart: unless-stopped

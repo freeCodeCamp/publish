@@ -127,11 +127,58 @@ Note: Seeding the database works only on a fresh setup of the containers.
     is a
     [known issue in Strapi plugin](https://github.com/strapi/strapi/issues/12907).
 
-## How to run the apps with Docker
+## How to run the apps in production mode with Docker
+
+### publish-backend (Strapi)
+
+To build the docker image:
+
+```
+docker compose -f docker-compose.prod.yml build
+```
+
+To start the docker container:
+(Replace `***` with the values you want to set for the environment variables.)
+```
+VARIABLE1_NAME=*** VARIABLE2_NAME=*** ... \
+docker compose -f docker-compose.prod.yml up -d
+```
+
+Alternatively, using .env file:
+(Replace .env with the path to the .env file you want to use)
+```
+docker compose --env-file .env -f docker-compose.prod.yml up -d
+```
+Refer to `.env.example` for the list of environment variables.
+
+To stop the docker container:
+```
+docker compose -f docker-compose.prod.yml down
+```
+
+#### Initial setup
+
+The app requires some configurations for full functionality.
+
+- Import config
+```
+# Go into the strapi-production container
+docker exec -it strapi-production sh
+
+# Import config
+npm run cs import
+```
+
+- Visit admin panel and create the first admin account
+
+- In Content Manager, create `Invited User` entry for the first user. This will allow the first user on the frontend app to login using Auth0. Set the following values:
+  - email: valid email you can login using Auth0
+  - role: choose "Editor" (unless you can't invite other users)
+  - accepted: false
+- In Settings > Providers, enable `auth0`.
+- (If you want to access endpoints that uses API token) In Settings > API Tokens, generate API tokens
 
 ### publish-frontend (Next.js)
-
-The following commands build and run the app in production mode.
 
 To build the docker image:
 ```
