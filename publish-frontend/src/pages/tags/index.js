@@ -125,8 +125,6 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
 export default function TagsIndex({ tags, isInternal, pagination, user }) {
   const router = useRouter();
 
-  console.log(tags);
-
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: isInternal ? 'internal' : 'public',
     onChange: value => {
