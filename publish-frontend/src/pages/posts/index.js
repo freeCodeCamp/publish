@@ -365,7 +365,13 @@ export default function IndexPage({
               </Menu>
 
               <FormControl w='70'>
-                <AutoComplete openOnFocus restoreOnBlurIfEmpty={false}>
+                <AutoComplete
+                  openOnFocus
+                  restoreOnBlurIfEmpty={false}
+                  onSelectOption={({ item }) =>
+                    handleFilter('author', item.value)
+                  }
+                >
                   <InputGroup>
                     <AutoCompleteInput
                       variant='outline'
@@ -392,7 +398,6 @@ export default function IndexPage({
                           key={`option-${author.id}`}
                           value={author.slug}
                           textTransform='capitalize'
-                          onClick={() => handleFilter('author', author.slug)}
                         >
                           {author.name}
                         </AutoCompleteItem>
@@ -403,7 +408,11 @@ export default function IndexPage({
             </>
           )}
           <FormControl w='70'>
-            <AutoComplete openOnFocus restoreOnBlurIfEmpty={false}>
+            <AutoComplete
+              openOnFocus
+              restoreOnBlurIfEmpty={false}
+              onSelectOption={({ item }) => handleFilter('tags', item.value)}
+            >
               <InputGroup>
                 <AutoCompleteInput
                   variant='outline'
@@ -430,7 +439,6 @@ export default function IndexPage({
                       key={`option-${tag.id}`}
                       value={tag.attributes.name}
                       textTransform='capitalize'
-                      onClick={() => handleFilter('tags', tag.attributes.slug)}
                     >
                       {tag.attributes.name}
                     </AutoCompleteItem>
