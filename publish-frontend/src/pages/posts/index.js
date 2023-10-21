@@ -189,18 +189,36 @@ export default function IndexPage({
   const toast = useToast();
 
   const [searchedTags, setSearchedTags] = useState([]);
-  const [hasSearchedTags, setHasSearchedTags] = useState(false);
+  const [hasSearchedTags, setHasSearchedTags] = useState(
+    queryParams?.tags ? true : false
+  );
 
   const [searchedAuthors, setSearchedAuthors] = useState([]);
-  const [hasSearchedAuthors, setHasSearchedAuthors] = useState(false);
+  const [hasSearchedAuthors, setHasSearchedAuthors] = useState(
+    queryParams?.author ? true : false
+  );
 
   const [postType, setPostType] = useState(queryParams?.publishedAt || 'all');
   const [tagInputText, setTagInputText] = useState(
-    queryParams.tags && queryParams.tags !== 'all' ? queryParams.tags : ''
+    queryParams.tags && queryParams.tags !== 'all'
+      ? selectedTagName(queryParams.tags)
+      : ''
   );
   const [authorInputText, setAuthorInputText] = useState(
-    queryParams.author && queryParams.author !== 'all' ? queryParams.author : ''
+    queryParams.author && queryParams.author !== 'all'
+      ? selectedAuthorName(queryParams.author)
+      : ''
   );
+
+  function selectedTagName(tagSlug) {
+    const tag = tagsData.data.find(tag => tag.attributes.slug === tagSlug);
+    return tag.attributes.name;
+  }
+
+  function selectedAuthorName(authorSlug) {
+    const author = usersData.find(user => user.slug === authorSlug);
+    return author.name;
+  }
 
   // handle filtering tags and authors in searchbar
   const handleFilter = (filterType, value) => {
@@ -213,7 +231,7 @@ export default function IndexPage({
         delete params[filterType];
       } else {
         setHasSearchedTags(true);
-        setTagInputText(value);
+        setTagInputText(selectedTagName(value));
         params[filterType] = value;
       }
     }
@@ -225,7 +243,7 @@ export default function IndexPage({
         delete params[filterType];
       } else {
         setHasSearchedAuthors(true);
-        setAuthorInputText(value);
+        setAuthorInputText(selectedAuthorName(value));
         params[filterType] = value;
       }
     }
@@ -253,6 +271,7 @@ export default function IndexPage({
       );
 
       setSearchedTags(newtags);
+      setTagInputText(value);
     }
 
     if (filterType == 'author') {
@@ -261,6 +280,7 @@ export default function IndexPage({
       );
 
       setSearchedAuthors(newUsers);
+      setAuthorInputText(value);
     }
   };
 
@@ -370,9 +390,9 @@ export default function IndexPage({
                       .map(author => (
                         <AutoCompleteItem
                           key={`option-${author.id}`}
-                          value={author.name}
+                          value={author.slug}
                           textTransform='capitalize'
-                          onClick={() => handleFilter('author', author.name)}
+                          onClick={() => handleFilter('author', author.slug)}
                         >
                           {author.name}
                         </AutoCompleteItem>
