@@ -206,14 +206,37 @@ export default function IndexPage({
   const handleFilter = (filterType, value) => {
     const params = { ...queryParams };
 
-    params[filterType] = value;
-
-    if (filterType === 'tags' && value !== 'all') {
-      setHasSearchedTags(true);
+    if (filterType === 'tags') {
+      if (value === 'all') {
+        setHasSearchedTags(false);
+        setTagInputText('');
+        delete params[filterType];
+      } else {
+        setHasSearchedTags(true);
+        setTagInputText(value);
+        params[filterType] = value;
+      }
     }
 
-    if (filterType === 'author' && value !== 'all') {
-      setHasSearchedAuthors(true);
+    if (filterType === 'author') {
+      if (value === 'all') {
+        setHasSearchedAuthors(false);
+        setAuthorInputText('');
+        delete params[filterType];
+      } else {
+        setHasSearchedAuthors(true);
+        setAuthorInputText(value);
+        params[filterType] = value;
+      }
+    }
+
+    if (filterType === 'publishedAt') {
+      setPostType(value);
+      if (value === 'all') {
+        delete params[filterType];
+      } else {
+        params[filterType] = value;
+      }
     }
 
     router.replace({
@@ -309,7 +332,6 @@ export default function IndexPage({
                     type='radio'
                     name='postType'
                     onChange={value => {
-                      setPostType(value);
                       handleFilter('publishedAt', value);
                     }}
                   >
@@ -330,19 +352,14 @@ export default function IndexPage({
                       placeholder='Filter by Author'
                       value={authorInputText}
                       backgroundColor='white'
-                      onChange={event => {
-                        handleShallowFilter('author', event.target.value);
-                        setAuthorInputText(event.target.value);
-                      }}
+                      onChange={event =>
+                        handleShallowFilter('author', event.target.value)
+                      }
                     />
                     <InputRightElement>
                       <Icon
                         icon={hasSearchedAuthors ? faClose : faChevronDown}
-                        onClick={() => {
-                          setHasSearchedAuthors(false);
-                          handleFilter('author', 'all');
-                          setAuthorInputText('');
-                        }}
+                        onClick={() => handleFilter('author', 'all')}
                         fixedWidth
                       />
                     </InputRightElement>
@@ -355,10 +372,7 @@ export default function IndexPage({
                           key={`option-${author.id}`}
                           value={author.name}
                           textTransform='capitalize'
-                          onClick={() => {
-                            handleFilter('author', author.name);
-                            setAuthorInputText(author.name);
-                          }}
+                          onClick={() => handleFilter('author', author.name)}
                         >
                           {author.name}
                         </AutoCompleteItem>
@@ -378,18 +392,13 @@ export default function IndexPage({
                   backgroundColor='white'
                   onChange={event => {
                     handleShallowFilter('tags', event.target.value);
-                    setTagInputText(event.target.value);
                   }}
                 />
                 <InputRightElement>
                   <Icon
                     icon={hasSearchedTags ? faClose : faChevronDown}
                     fixedWidth
-                    onClick={() => {
-                      setHasSearchedTags(false);
-                      handleFilter('tags', 'all');
-                      setTagInputText('');
-                    }}
+                    onClick={() => handleFilter('tags', 'all')}
                   />
                 </InputRightElement>
               </InputGroup>
@@ -401,10 +410,7 @@ export default function IndexPage({
                       key={`option-${tag.id}`}
                       value={tag.attributes.name}
                       textTransform='capitalize'
-                      onClick={() => {
-                        handleFilter('tags', tag.attributes.slug);
-                        setTagInputText(tag.attributes.name);
-                      }}
+                      onClick={() => handleFilter('tags', tag.attributes.slug)}
                     >
                       {tag.attributes.name}
                     </AutoCompleteItem>
