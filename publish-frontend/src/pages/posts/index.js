@@ -132,7 +132,7 @@ export async function getServerSideProps(context) {
           sort: sortHandler(context.query.sortBy),
           pagination: {
             page: context.query.page || 1,
-            pageSize: 6
+            pageSize: context.query.pageSize || 5
           }
         })
       : getUserPosts(session.user.jwt, {
@@ -145,7 +145,7 @@ export async function getServerSideProps(context) {
           sort: sortHandler(context.query.sortBy),
           pagination: {
             page: context.query.page || 1,
-            pageSize: 6
+            pageSize: context.query.pageSize || 5
           }
         }),
     getUsers(session.user.jwt, {
@@ -231,6 +231,10 @@ export default function IndexPage({
       : ''
   );
 
+  const [resultsPerPage, setResultsPerPage] = useState(
+    queryParams.pageSize || '5'
+  );
+
   function selectedTagName(tagSlug) {
     const tag = tagsData.data.find(tag => tag.attributes.slug === tagSlug);
     return tag.attributes.name;
@@ -285,6 +289,12 @@ export default function IndexPage({
       } else {
         params[filterType] = value;
       }
+    }
+
+    if (filterType === 'resultsPerPage') {
+      setResultsPerPage(value);
+      params['page'] = 1;
+      params['pageSize'] = value;
     }
 
     router.replace({
@@ -586,18 +596,33 @@ export default function IndexPage({
               })}
             </Tbody>
           </Table>
-          <Box
-            display='flex'
-            justifyContent='center'
-            alignItems='center'
-            mt='4'
-          >
-            <Pagination
-              pagination={pagination}
-              endpoint={'posts'}
-              queryParams={queryParams}
-            />
-          </Box>
+          <Flex flexDirection={'row'} mt={'4'}>
+            <Box display='flex' alignItems='center' mx='auto'>
+              <Pagination
+                pagination={pagination}
+                endpoint={'posts'}
+                queryParams={queryParams}
+              />
+            </Box>
+            <Menu ml='auto'>
+              <FilterButton text={resultsPerPage} />
+              <MenuList>
+                <MenuOptionGroup
+                  value={resultsPerPage}
+                  type='radio'
+                  name='resultsPerPage'
+                  onChange={value => {
+                    handleFilter('resultsPerPage', value);
+                  }}
+                >
+                  <MenuItemOption value='5'>5</MenuItemOption>
+                  <MenuItemOption value='10'>10</MenuItemOption>
+                  <MenuItemOption value='25'>25</MenuItemOption>
+                  <MenuItemOption value='50'>50</MenuItemOption>
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+          </Flex>
         </Box>
       </Box>
     </Box>
