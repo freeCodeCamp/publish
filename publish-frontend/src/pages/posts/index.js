@@ -98,13 +98,6 @@ export async function getServerSideProps(context) {
           }
         };
       }
-
-      // remove all the all values after assigning it to filterQuery
-      // semantically leaves the tags set to all in the URL but doesn't
-      // filter by it and leaves it out.
-      if (value === 'all' && Object.keys(filterQuery).includes(key)) {
-        delete filterQuery[key];
-      }
     }
 
     return filterQuery;
