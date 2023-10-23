@@ -95,7 +95,7 @@ describe("post", () => {
       const response = await request(strapi.server.httpServer)
         .post("/api/posts")
         .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${editorJWT}`)
+        .set("Authorization", `Bearer ${contributorJWT}`)
         .send(JSON.stringify(postToCreate));
 
       expect(response.status).toBe(200);
@@ -191,7 +191,7 @@ describe("post", () => {
       const response = await request(strapi.server.httpServer)
         .put(`/api/posts/${post.id}`)
         .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${editorJWT}`)
+        .set("Authorization", `Bearer ${contributorJWT}`)
         .send(JSON.stringify(postCopy));
 
       expect(response.status).toBe(200);
@@ -209,7 +209,7 @@ describe("post", () => {
       const response = await request(strapi.server.httpServer)
         .get(`/api/posts/uid/${post.slug_id}`)
         .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${editorJWT}`)
+        .set("Authorization", `Bearer ${contributorJWT}`)
         .send();
 
       expect(response.status).toBe(200);

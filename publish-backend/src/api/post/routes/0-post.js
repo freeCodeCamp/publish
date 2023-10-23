@@ -3,7 +3,7 @@ module.exports = {
     {
       method: "GET",
       path: "/posts/uid/:slug_id",
-      handler: "post.findOneByUniqueId",
+      handler: "post.findOneBySlugId",
       config: {
         policies: [],
         middlewares: [],

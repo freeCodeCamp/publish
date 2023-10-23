@@ -8,7 +8,7 @@ module.exports = {
         .service("api::post.post")
         .validatePublishedAt(new Date(data.publishedAt));
     }
-    data.slug_id = strapi.service("api::post.post").generateUniqueId();
+    data.slug_id = strapi.service("api::post.post").generateSlugId();
   },
   beforeUpdate(event) {
     const {

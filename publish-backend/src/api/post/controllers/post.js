@@ -11,12 +11,12 @@ const isEditor = (ctx) => {
 };
 
 module.exports = createCoreController("api::post.post", ({ strapi }) => ({
-  async findOneByUniqueId(ctx) {
+  async findOneBySlugId(ctx) {
     try {
       // find id from slug_id
       const postId = await strapi
         .service("api::post.post")
-        .findIdByUniqueId(ctx.request.params.slug_id);
+        .findIdBySlugId(ctx.request.params.slug_id);
 
       ctx.request.params.id = postId;
 
