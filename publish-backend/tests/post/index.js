@@ -101,7 +101,8 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      expect(responsePost.slug_id).toMatch(/^[0-9a-f]{8}$/);
+      // slug_id should consist of 8 characters from the lowercase letters and numbers
+      expect(responsePost.slug_id).toMatch(/^[0-9a-z]{8}$/);
     });
   });
   describe("PUT /posts/:id", () => {

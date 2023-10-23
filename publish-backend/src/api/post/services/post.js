@@ -1,6 +1,7 @@
 'use strict';
 
 const { ValidationError } = require("@strapi/utils").errors;
+const { customAlphabet } = require("nanoid");
 
 /**
  * post service
@@ -59,9 +60,8 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
   },
 
   generateUniqueId() {
-    // Generate 8-digit hex string
-    const randomNum = Math.floor(Math.random() * 4294967295);
-    const hexString = randomNum.toString(16);
-    return hexString.padStart(8, "0");
+    const alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
+    const nanoid = customAlphabet(alphabet, 8);
+    return nanoid();
   },
 }));
