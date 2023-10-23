@@ -128,7 +128,7 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             }}
           >
             <Flex>
-              <Avatar size='sm' mr='8px' my='auto' />
+              <Avatar size='sm' mr='8px' my='auto' src={user?.image} />
               <Flex flexDirection='column' alignItems='flex-start'>
                 <Box fontWeight='600' lineHeight='1.1em' pb='3px'>
                   {user.name}
