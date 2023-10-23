@@ -134,16 +134,16 @@
           "sortable": true
         }
       },
-      "unique_id": {
+      "slug_id": {
         "edit": {
-          "label": "unique_id",
+          "label": "slug_id",
           "description": "",
           "placeholder": "",
           "visible": true,
           "editable": true
         },
         "list": {
-          "label": "unique_id",
+          "label": "slug_id",
           "searchable": true,
           "sortable": true
         }
@@ -260,7 +260,7 @@
         ],
         [
           {
-            "name": "unique_id",
+            "name": "slug_id",
             "size": 6
           }
         ]

@@ -85,7 +85,7 @@
       },
       "type": "datetime"
     },
-    "unique_id": {
+    "slug_id": {
       "pluginOptions": {
         "i18n": {
           "localized": true

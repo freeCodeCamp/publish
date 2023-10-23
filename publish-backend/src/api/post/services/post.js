@@ -9,12 +9,12 @@ const { ValidationError } = require("@strapi/utils").errors;
 const { createCoreService } = require("@strapi/strapi").factories;
 
 module.exports = createCoreService("api::post.post", ({ strapi }) => ({
-  // finds id from unique_id
+  // finds id from slug_id
   // returns null if not found
-  async findIdByUniqueId(unique_id) {
-    // Have to use findMany instead of fineOne to search by unique_id
+  async findIdByUniqueId(slug_id) {
+    // Have to use findMany instead of fineOne to search by slug_id
     const postIds = await strapi.entityService.findMany("api::post.post", {
-      filters: { unique_id: unique_id },
+      filters: { slug_id: slug_id },
       fields: ["id"],
     });
     return postIds.length > 0 ? postIds[0].id : null;

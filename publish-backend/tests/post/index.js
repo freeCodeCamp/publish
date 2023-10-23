@@ -91,7 +91,7 @@ describe("post", () => {
       );
     });
 
-    it("should auto generate unique_id", async () => {
+    it("should auto generate slug_id", async () => {
       const response = await request(strapi.server.httpServer)
         .post("/api/posts")
         .set("Content-Type", "application/json")
@@ -101,7 +101,7 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      expect(responsePost.unique_id).toMatch(/^[0-9a-f]{8}$/);
+      expect(responsePost.slug_id).toMatch(/^[0-9a-f]{8}$/);
     });
   });
   describe("PUT /posts/:id", () => {
@@ -181,11 +181,11 @@ describe("post", () => {
       );
     });
 
-    it("should not change unique_id", async () => {
-      // get unique_id from database
+    it("should not change slug_id", async () => {
+      // get slug_id from database
       const post = await getPost("test-slug");
       const postCopy = { data: { ...post.data } };
-      postCopy.data.unique_id = "000000";
+      postCopy.data.slug_id = "000000";
 
       const response = await request(strapi.server.httpServer)
         .put(`/api/posts/${post.id}`)
@@ -196,17 +196,17 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      expect(responsePost.unique_id).toEqual(post.unique_id);
+      expect(responsePost.slug_id).toEqual(post.slug_id);
     });
   });
-  describe("GET /posts/uid/:unique_id", () => {
-    it("should find post by unique_id", async () => {
-      // get unique_id from database
+  describe("GET /posts/uid/:slug_id", () => {
+    it("should find post by slug_id", async () => {
+      // get slug_id from database
       const post = await getPost("test-slug");
 
-      // find the post by unique_id through API
+      // find the post by slug_id through API
       const response = await request(strapi.server.httpServer)
-        .get(`/api/posts/uid/${post.unique_id}`)
+        .get(`/api/posts/uid/${post.slug_id}`)
         .set("Content-Type", "application/json")
         .set("Authorization", `Bearer ${editorJWT}`)
         .send();
@@ -214,7 +214,7 @@ describe("post", () => {
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      expect(responsePost.unique_id).toEqual(post.unique_id);
+      expect(responsePost.slug_id).toEqual(post.slug_id);
       expect(responsePost.slug).toEqual("test-slug");
     });
   });

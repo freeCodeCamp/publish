@@ -13,10 +13,10 @@ const isEditor = (ctx) => {
 module.exports = createCoreController("api::post.post", ({ strapi }) => ({
   async findOneByUniqueId(ctx) {
     try {
-      // find id from unique_id
+      // find id from slug_id
       const postId = await strapi
         .service("api::post.post")
-        .findIdByUniqueId(ctx.request.params.unique_id);
+        .findIdByUniqueId(ctx.request.params.slug_id);
 
       ctx.request.params.id = postId;
 
@@ -44,7 +44,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
     }
 
     // prevent updating the unique ID
-    delete ctx.request.body.data.unique_id;
+    delete ctx.request.body.data.slug_id;
 
     // call the default core action with modified data
     return await super.update(ctx);

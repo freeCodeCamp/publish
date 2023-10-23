@@ -2,7 +2,7 @@ module.exports = {
   routes: [
     {
       method: "GET",
-      path: "/posts/uid/:unique_id",
+      path: "/posts/uid/:slug_id",
       handler: "post.findOneByUniqueId",
       config: {
         policies: [],
