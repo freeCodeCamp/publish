@@ -44,6 +44,9 @@ module.exports = {
         if (invitedUser) {
           event.params.data.role = invitedUser.role.id;
         }
+        if (process.env.DATA_MIGRATION === "true") {
+          event.params.data.password = "";
+        }
       },
       async afterCreate(event) {
         const { email } = event.result;

@@ -79,7 +79,7 @@ export const authOptions = {
 
         // Fetch user role data from /api/users/me?populate=role
         const res2 = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=role`,
+          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=*`,
           {
             headers: {
               Authorization: `Bearer ${token.jwt}`
@@ -93,6 +93,11 @@ export const authOptions = {
           token.name = userData?.username || null;
           token.userRole = userData?.role?.name || null;
           token.id = userData?.id || null;
+          if (userData.profile_image !== null) {
+            token.image =
+              process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL +
+              userData.profile_image.url;
+          }
         }
       }
       // The returned value will be encrypted, and it is stored in a cookie.
@@ -103,10 +108,13 @@ export const authOptions = {
     // The session callback is called whenever a session is checked.
     async session({ session, token }) {
       // Decrypt the token in the cookie and return needed values
+      delete session.user.image;
       session.user.jwt = token.jwt; // JWT token to access the Strapi API
       session.user.role = token.userRole;
       session.user.id = token.id;
-      session.user.image = null; // NOTE: This is temporary until we figure out how to get the image from Strapi
+      if ('image' in token) {
+        session.user.image = token.image;
+      }
       return session;
     }
   },

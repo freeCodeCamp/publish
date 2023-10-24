@@ -1,21 +1,28 @@
+import qs from 'qs';
+
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function getInvitedUsers(token) {
-  const res = await fetch(`${api_root}/invited-users?populate=*`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+export async function getInvitedUsers(token, queryParams) {
+  const res = await fetch(
+    `${api_root}/invited-users?${qs.stringify(queryParams, {
+      encodeValuesOnly: true
+    })}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
     }
-  });
+  );
 
   try {
+    const data = await res.json();
     if (!res.ok) {
       throw new Error(
         data.message || `Something went wrong. Status: ${res.status}`
       );
     }
-    const data = await res.json();
 
     return data;
   } catch (error) {
@@ -51,7 +58,18 @@ export async function inviteUser(token, data) {
 }
 
 export async function invitedUserExists(token, email) {
-  const endpoint = `${api_root}/invited-users?filters[email][$eqi]=${email}`;
+  const endpoint = `${api_root}/invited-users?${qs.stringify(
+    {
+      filters: {
+        email: {
+          $eqi: email
+        }
+      }
+    },
+    {
+      encodeValuesOnly: true
+    }
+  )}`;
 
   const options = {
     method: 'GET',
