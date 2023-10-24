@@ -61,7 +61,8 @@
           "excerpt",
           "tags",
           "author",
-          "scheduled_at"
+          "scheduled_at",
+          "ghost_id"
         ],
         "locales": [
           "en"
@@ -104,7 +105,8 @@
           "excerpt",
           "tags",
           "author",
-          "scheduled_at"
+          "scheduled_at",
+          "ghost_id"
         ],
         "locales": [
           "en"
@@ -125,7 +127,8 @@
           "excerpt",
           "tags",
           "author",
-          "scheduled_at"
+          "scheduled_at",
+          "ghost_id"
         ],
         "locales": [
           "en"
@@ -142,7 +145,8 @@
           "name",
           "slug",
           "posts",
-          "visibility"
+          "visibility",
+          "ghost_id"
         ]
       },
       "conditions": [],
@@ -163,7 +167,8 @@
           "name",
           "slug",
           "posts",
-          "visibility"
+          "visibility",
+          "ghost_id"
         ]
       },
       "conditions": [],
@@ -177,7 +182,8 @@
           "name",
           "slug",
           "posts",
-          "visibility"
+          "visibility",
+          "ghost_id"
         ]
       },
       "conditions": [],
@@ -424,7 +430,8 @@
           "twitter",
           "status",
           "last_seen",
-          "posts"
+          "posts",
+          "ghost_id"
         ]
       },
       "conditions": [],
@@ -461,7 +468,8 @@
           "twitter",
           "status",
           "last_seen",
-          "posts"
+          "posts",
+          "ghost_id"
         ]
       },
       "conditions": [],
@@ -491,7 +499,8 @@
           "twitter",
           "status",
           "last_seen",
-          "posts"
+          "posts",
+          "ghost_id"
         ]
       },
       "conditions": [],

@@ -84,6 +84,14 @@
         }
       },
       "type": "datetime"
+    },
+    "ghost_id": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string"
     }
   }
 }

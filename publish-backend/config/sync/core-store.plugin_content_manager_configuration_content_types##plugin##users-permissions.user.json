@@ -302,6 +302,20 @@
           "sortable": false
         }
       },
+      "ghost_id": {
+        "edit": {
+          "label": "ghost_id",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "ghost_id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -455,6 +469,10 @@
         [
           {
             "name": "posts",
+            "size": 6
+          },
+          {
+            "name": "ghost_id",
             "size": 6
           }
         ]
