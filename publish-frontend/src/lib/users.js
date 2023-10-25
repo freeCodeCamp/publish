@@ -1,8 +1,12 @@
+import qs from 'qs';
+
 // Users & Permissions API calls
 
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
-export async function getMe(token) {
-  const endpoint = `${api_root}/users/me?populate=*`;
+export async function getMe(token, queryParams) {
+  const endpoint = `${api_root}/users/me?${qs.stringify(queryParams, {
+    encodeValuesOnly: true
+  })}`;
 
   const options = {
     method: 'GET',
@@ -39,8 +43,10 @@ export async function updateMe(token, data) {
   return res.json();
 }
 
-export async function getUsers(token) {
-  const endpoint = `${api_root}/users?populate=*`;
+export async function getUsers(token, queryParams) {
+  const endpoint = `${api_root}/users?${qs.stringify(queryParams, {
+    encodeValuesOnly: true
+  })}`;
 
   const options = {
     method: 'GET',
@@ -59,7 +65,18 @@ export async function getUsers(token) {
 }
 
 export async function userExists(token, email) {
-  const endpoint = `${api_root}/users?filters[email][$eqi]=${email}`;
+  const endpoint = `${api_root}/users?${qs.stringify(
+    {
+      filters: {
+        email: {
+          $eqi: email
+        }
+      }
+    },
+    {
+      encodeValuesOnly: true
+    }
+  )}`;
 
   const options = {
     method: 'GET',
@@ -80,7 +97,14 @@ export async function userExists(token, email) {
 }
 
 export async function getUser(token, userId) {
-  const endpoint = `${api_root}/users/${userId}?populate=role`;
+  const endpoint = `${api_root}/users/${userId}?${qs.stringify(
+    {
+      populate: ['role']
+    },
+    {
+      encodeValuesOnly: true
+    }
+  )}`;
 
   const options = {
     method: 'GET',

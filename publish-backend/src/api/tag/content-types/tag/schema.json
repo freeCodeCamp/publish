@@ -33,6 +33,9 @@
       ],
       "default": "public",
       "required": true
+    },
+    "ghost_id": {
+      "type": "string"
     }
   }
 }

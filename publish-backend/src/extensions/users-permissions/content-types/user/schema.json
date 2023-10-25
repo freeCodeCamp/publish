@@ -120,6 +120,9 @@
       "relation": "oneToMany",
       "target": "api::post.post",
       "mappedBy": "author"
+    },
+    "ghost_id": {
+      "type": "string"
     }
   }
 }

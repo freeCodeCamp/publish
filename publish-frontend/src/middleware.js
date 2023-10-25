@@ -36,8 +36,6 @@ export default withAuth(req => {
     }
   }
   if (req.nextUrl.pathname.startsWith('/tags')) {
-    const { id } = params(req.url);
-    console.log('id', id);
     if (req.nextauth.token.userRole !== 'Editor') {
       return NextResponse.redirect(new URL('/posts', req.url));
     }

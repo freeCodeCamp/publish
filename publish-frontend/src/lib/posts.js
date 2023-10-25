@@ -1,9 +1,14 @@
+import qs from 'qs';
+
 // Post API calls
 
 const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
-export async function getAllPosts(token) {
-  const endpoint = `${api_root}/posts?publicationState=preview&populate=*`;
+export async function getAllPosts(token, queryParams) {
+
+  const endpoint = `${api_root}/posts?${qs.stringify(queryParams, {
+    encodeValuesOnly: true
+  })}`;
 
   const options = {
     method: 'GET',
@@ -30,14 +35,16 @@ export async function getAllPosts(token) {
   }
 }
 
-export async function getUserPosts(user) {
-  const endpoint = `${api_root}/posts?publicationState=preview&filters[author]=${user.id}&populate=*`;
+export async function getUserPosts(token, queryParams) {
+  const endpoint = `${api_root}/posts?${qs.stringify(queryParams, {
+    encodeValuesOnly: true
+  })}`;
 
   const options = {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${user.jwt}`
+      Authorization: `Bearer ${token}`
     }
   };
 

@@ -7,6 +7,9 @@
 const { createCoreController } = require("@strapi/strapi").factories;
 
 const isEditor = (ctx) => {
+  if (process.env.DATA_MIGRATION === "true") {
+    return true;
+  }
   return ctx.state.user.role.name === "Editor";
 };
 

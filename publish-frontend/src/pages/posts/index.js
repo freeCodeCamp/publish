@@ -4,8 +4,11 @@ import {
   Button,
   Link as ChakraLink,
   Flex,
+  FormControl,
   Grid,
   Heading,
+  InputGroup,
+  InputRightElement,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -21,16 +24,23 @@ import {
   chakra,
   useToast
 } from '@chakra-ui/react';
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList
+} from '@choc-ui/chakra-autocomplete';
+import { faChevronDown, faClose } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import intlFormatDistance from 'date-fns/intlFormatDistance';
 import { getServerSession } from 'next-auth/next';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import NavMenu from '@/components/nav-menu';
+import Pagination from '@/components/pagination';
 import { isEditor } from '@/lib/current-user';
 import { createPost, getAllPosts, getUserPosts } from '@/lib/posts';
 import { getTags } from '@/lib/tags';
@@ -42,44 +52,117 @@ const Icon = chakra(FontAwesomeIcon);
 const sortButtonNames = {
   newest: 'Newest',
   oldest: 'Oldest',
-  'recently-updated': 'Recently updated'
+  updated: 'Recently updated'
 };
 
-const filterByPostType = (post, filter) => {
-  if (filter.postType === 'All') {
-    return true;
-  }
-  if (filter.postType === 'Draft' && !post.attributes.publishedAt) {
-    return true;
-  }
-  if (filter.postType === 'Published' && post.attributes.publishedAt) {
-    return true;
-  }
-  return false;
+const postButtonText = {
+  all: 'All posts',
+  draft: 'Drafts posts',
+  published: 'Published posts'
 };
 
-const filterByAuthor = (post, filter) => {
-  if (filter.author === 'all') {
-    return true;
-  }
-  if (filter.author === post.attributes.author.data.attributes.slug) {
-    return true;
-  }
-  return false;
-};
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions);
 
-const filterByTag = (post, filter) => {
-  if (filter.tag === 'all') {
-    return true;
-  }
-  if (
-    post.attributes.tags.data[0] &&
-    filter.tag === post.attributes.tags.data[0].attributes.slug
-  ) {
-    return true;
-  }
-  return false;
-};
+  // handle filtering posts on Strapi side (not NextJS side)
+  const queryHandler = queries => {
+    const filterQuery = {};
+
+    for (const [key, value] of Object.entries(queries)) {
+      if (key === 'publishedAt') {
+        if (value === 'draft') {
+          filterQuery[key] = {
+            $notNull: false
+          };
+        }
+
+        if (value === 'published') {
+          filterQuery[key] = {
+            $notNull: true
+          };
+        }
+      }
+
+      if (key === 'author') {
+        filterQuery[key] = {
+          slug: {
+            $eq: value
+          }
+        };
+      }
+
+      if (key === 'tags') {
+        filterQuery[key] = {
+          slug: {
+            $in: value
+          }
+        };
+      }
+    }
+
+    return filterQuery;
+  };
+
+  const sortHandler = sortBy => {
+    if (sortBy === 'oldest') {
+      return ['createdAt'];
+    } else if (sortBy === 'updated') {
+      return ['updatedAt:desc'];
+    } else {
+      return ['createdAt:desc'];
+    }
+  };
+
+  const [posts, usersData, tagsData] = await Promise.all([
+    isEditor(session.user)
+      ? getAllPosts(session.user.jwt, {
+          publicationState: 'preview',
+          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+          populate: ['author', 'tags'],
+          filters: {
+            ...queryHandler(context.query)
+          },
+          sort: sortHandler(context.query.sortBy),
+          pagination: {
+            page: context.query.page || 1,
+            pageSize: context.query.pageSize || 5
+          }
+        })
+      : getUserPosts(session.user.jwt, {
+          fields: ['id', 'title', 'slug', 'publishedAt', 'updatedAt'],
+          populate: ['author', 'tags'],
+          filters: {
+            author: session.user.id,
+            ...queryHandler(context.query)
+          },
+          sort: sortHandler(context.query.sortBy),
+          pagination: {
+            page: context.query.page || 1,
+            pageSize: context.query.pageSize || 5
+          }
+        }),
+    getUsers(session.user.jwt, {
+      fields: ['id', 'name', 'slug']
+    }),
+    getTags(session.user.jwt, {
+      fields: ['id', 'name', 'slug'],
+      pagination: {
+        limit: -1
+      }
+    })
+  ]);
+
+  return {
+    props: {
+      posts,
+      usersData,
+      tagsData,
+      user: session.user,
+      queryParams: context.query,
+      pagination: posts.meta
+    }
+  };
+}
 
 const FilterButton = ({ text, ...props }) => {
   return (
@@ -89,6 +172,9 @@ const FilterButton = ({ text, ...props }) => {
       bgColor='white'
       borderRadius='md'
       fontSize='14px'
+      pl='20px'
+      pr='10px'
+      textAlign='left'
       boxShadow='sm'
       position='unset'
       _hover={{
@@ -104,109 +190,132 @@ const FilterButton = ({ text, ...props }) => {
   );
 };
 
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions);
-  const [posts, usersData, tagsData] = await Promise.all([
-    isEditor(session.user)
-      ? getAllPosts(session.user.jwt)
-      : getUserPosts(session.user),
-    getUsers(session.user.jwt),
-    getTags(session.user.jwt)
-  ]);
-
-  return {
-    props: {
-      posts,
-      usersData,
-      tagsData,
-      user: session.user,
-      queryParams: context.query
-    }
-  };
-}
-
 export default function IndexPage({
   posts,
   usersData,
   tagsData,
   user,
-  queryParams
+  queryParams,
+  pagination
 }) {
   const router = useRouter();
   const toast = useToast();
 
-  const [filter, setFilter] = useState({
-    postType: queryParams?.postType || 'All',
-    author: queryParams?.author || 'all',
-    tag: queryParams?.tag || 'all',
-    sortBy: queryParams?.sortBy || 'newest'
-  });
-  let [filteredPosts, setFilteredPosts] = useState(posts.data);
-  let [currentAuthor, setCurrentAuthor] = useState('all');
-  let [currentTag, setCurrentTag] = useState('all');
+  const [searchedTags, setSearchedTags] = useState([]);
+  const [hasSearchedTags, setHasSearchedTags] = useState(
+    queryParams?.tags ? true : false
+  );
 
-  useEffect(() => {
-    // Filter posts
-    setFilteredPosts(
-      posts.data
-        .filter(post => {
-          return (
-            filterByPostType(post, filter) &&
-            filterByAuthor(post, filter) &&
-            filterByTag(post, filter)
-          );
-        })
-        .sort((a, b) => {
-          if (filter.sortBy === 'newest') {
-            return (
-              new Date(b.attributes.createdAt) -
-              new Date(a.attributes.createdAt)
-            );
-          }
-          if (filter.sortBy === 'oldest') {
-            return (
-              new Date(a.attributes.createdAt) -
-              new Date(b.attributes.createdAt)
-            );
-          }
-          if (filter.sortBy === 'recently-updated') {
-            return (
-              new Date(b.attributes.updatedAt) -
-              new Date(a.attributes.updatedAt)
-            );
-          }
-        })
-    );
-    setCurrentAuthor(usersData.find(user => user.slug === filter.author)?.name);
-    setCurrentTag(
-      tagsData.data.find(tag => tag.attributes.slug === filter.tag)?.attributes
-        .name
-    );
+  const [searchedAuthors, setSearchedAuthors] = useState([]);
+  const [hasSearchedAuthors, setHasSearchedAuthors] = useState(
+    queryParams?.author ? true : false
+  );
 
-    // Update URL query params without reloading the page
-    const queryParams = {};
-    if (filter.postType !== 'All') {
-      queryParams.postType = filter.postType;
+  const [postType, setPostType] = useState(queryParams?.publishedAt || 'all');
+  const [sortBy, setSortBy] = useState(queryParams?.sortBy || 'newest');
+  const [tagInputText, setTagInputText] = useState(
+    queryParams.tags && queryParams.tags !== 'all'
+      ? selectedTagName(queryParams.tags)
+      : ''
+  );
+  const [authorInputText, setAuthorInputText] = useState(
+    queryParams.author && queryParams.author !== 'all'
+      ? selectedAuthorName(queryParams.author)
+      : ''
+  );
+
+  const [resultsPerPage, setResultsPerPage] = useState(
+    queryParams.pageSize || '5'
+  );
+
+  function selectedTagName(tagSlug) {
+    const tag = tagsData.data.find(tag => tag.attributes.slug === tagSlug);
+    return tag.attributes.name;
+  }
+
+  function selectedAuthorName(authorSlug) {
+    const author = usersData.find(user => user.slug === authorSlug);
+    return author.name;
+  }
+
+  // handle filtering tags and authors in searchbar
+  const handleFilter = (filterType, value) => {
+    const params = { ...queryParams };
+
+    if (filterType === 'tags') {
+      if (value === 'all') {
+        setHasSearchedTags(false);
+        setTagInputText('');
+        delete params[filterType];
+      } else {
+        setHasSearchedTags(true);
+        setTagInputText(selectedTagName(value));
+        params[filterType] = value;
+      }
     }
-    if (filter.author !== 'all') {
-      queryParams.author = filter.author;
+
+    if (filterType === 'author') {
+      if (value === 'all') {
+        setHasSearchedAuthors(false);
+        setAuthorInputText('');
+        delete params[filterType];
+      } else {
+        setHasSearchedAuthors(true);
+        setAuthorInputText(selectedAuthorName(value));
+        params[filterType] = value;
+      }
     }
-    if (filter.tag !== 'all') {
-      queryParams.tag = filter.tag;
+
+    if (filterType === 'publishedAt') {
+      setPostType(value);
+      if (value === 'all') {
+        delete params[filterType];
+      } else {
+        params[filterType] = value;
+      }
     }
-    if (filter.sortBy !== 'newest') {
-      queryParams.sortBy = filter.sortBy;
+
+    if (filterType === 'sortBy') {
+      setSortBy(value);
+      if (value === 'newest') {
+        delete params[filterType];
+      } else {
+        params[filterType] = value;
+      }
     }
-    router.replace(
-      {
-        pathname: '/posts',
-        query: queryParams
-      },
-      undefined,
-      { shallow: true }
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter, posts.data, tagsData.data, usersData]);
+
+    if (filterType === 'resultsPerPage') {
+      setResultsPerPage(value);
+      params['page'] = 1;
+      params['pageSize'] = value;
+    }
+
+    router.replace({
+      pathname: router.pathname,
+      query: params
+    });
+  };
+
+  // handle filtering posts on NextJS side (not Strapi side)
+  const handleShallowFilter = async (filterType, value) => {
+    if (filterType == 'tags') {
+      const newtags = tagsData.data.filter(tag =>
+        tag.attributes.name.toLowerCase().startsWith(value.toLowerCase())
+      );
+
+      setSearchedTags(newtags);
+      setTagInputText(value);
+    }
+
+    if (filterType == 'author') {
+      const newUsers = usersData.filter(user =>
+        user.name.toLowerCase().startsWith(value.toLowerCase())
+      );
+
+      setSearchedAuthors(newUsers);
+      setAuthorInputText(value);
+    }
+  };
 
   const newPost = async () => {
     const nonce = uuidv4();
@@ -269,75 +378,122 @@ export default function IndexPage({
           {isEditor(user) && (
             <>
               <Menu>
-                <FilterButton text={filter.postType + ' posts'} />
+                <FilterButton text={postButtonText[postType]} />
                 <MenuList zIndex={2}>
                   <MenuOptionGroup
-                    value={filter.postType}
+                    value={postType}
                     type='radio'
                     name='postType'
-                    onChange={value =>
-                      setFilter({ ...filter, postType: value })
-                    }
+                    onChange={value => {
+                      handleFilter('publishedAt', value);
+                    }}
                   >
-                    <MenuItemOption value='All'>All posts</MenuItemOption>
-                    <MenuItemOption value='Draft'>Drafts posts</MenuItemOption>
-                    <MenuItemOption value='Published'>
+                    <MenuItemOption value='all'>All posts</MenuItemOption>
+                    <MenuItemOption value='draft'>Drafts posts</MenuItemOption>
+                    <MenuItemOption value='published'>
                       Published posts
                     </MenuItemOption>
                   </MenuOptionGroup>
                 </MenuList>
               </Menu>
-              <Menu>
-                <FilterButton
-                  text={filter.author === 'all' ? 'All authors' : currentAuthor}
-                />
-                <MenuList zIndex={2}>
-                  <MenuOptionGroup
-                    value={filter.author}
-                    type='radio'
-                    onChange={value => setFilter({ ...filter, author: value })}
-                  >
-                    <MenuItemOption value='all'>All authors</MenuItemOption>
-                    {usersData.map(user => (
-                      <MenuItemOption key={user.id} value={user.slug}>
-                        {user.name}
-                      </MenuItemOption>
-                    ))}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
+
+              <FormControl w='70'>
+                <AutoComplete
+                  openOnFocus
+                  restoreOnBlurIfEmpty={false}
+                  onSelectOption={({ item }) =>
+                    handleFilter('author', item.value)
+                  }
+                >
+                  <InputGroup>
+                    <AutoCompleteInput
+                      variant='outline'
+                      placeholder='Filter by Author'
+                      value={authorInputText}
+                      backgroundColor='white'
+                      fontSize='14px'
+                      fontWeight='600'
+                      onChange={event =>
+                        handleShallowFilter('author', event.target.value)
+                      }
+                    />
+                    <InputRightElement>
+                      <Icon
+                        icon={hasSearchedAuthors ? faClose : faChevronDown}
+                        onClick={() => handleFilter('author', 'all')}
+                        fixedWidth
+                      />
+                    </InputRightElement>
+                  </InputGroup>
+                  <AutoCompleteList>
+                    {(searchedAuthors.length > 0 ? searchedAuthors : usersData)
+                      .slice(0, 25)
+                      .map(author => (
+                        <AutoCompleteItem
+                          key={`option-${author.id}`}
+                          value={author.slug}
+                          textTransform='capitalize'
+                        >
+                          {author.name}
+                        </AutoCompleteItem>
+                      ))}
+                  </AutoCompleteList>
+                </AutoComplete>
+              </FormControl>
             </>
           )}
+          <FormControl w='70'>
+            <AutoComplete
+              openOnFocus
+              restoreOnBlurIfEmpty={false}
+              onSelectOption={({ item }) => handleFilter('tags', item.value)}
+            >
+              <InputGroup>
+                <AutoCompleteInput
+                  variant='outline'
+                  placeholder='Filter by Tag'
+                  value={tagInputText}
+                  backgroundColor='white'
+                  fontSize='14px'
+                  fontWeight='600'
+                  onChange={event => {
+                    handleShallowFilter('tags', event.target.value);
+                  }}
+                />
+                <InputRightElement>
+                  <Icon
+                    icon={hasSearchedTags ? faClose : faChevronDown}
+                    fixedWidth
+                    onClick={() => handleFilter('tags', 'all')}
+                  />
+                </InputRightElement>
+              </InputGroup>
+              <AutoCompleteList>
+                {(searchedTags.length > 0 ? searchedTags : tagsData.data)
+                  .slice(0, 25)
+                  .map(tag => (
+                    <AutoCompleteItem
+                      key={`option-${tag.id}`}
+                      value={tag.attributes.slug}
+                      textTransform='capitalize'
+                    >
+                      {tag.attributes.name}
+                    </AutoCompleteItem>
+                  ))}
+              </AutoCompleteList>
+            </AutoComplete>
+          </FormControl>
           <Menu>
-            <FilterButton
-              text={filter.tag === 'all' ? 'All tags' : currentTag}
-            />
+            <FilterButton text={`Sort by: ${sortButtonNames[sortBy]}`} />
             <MenuList zIndex={2}>
               <MenuOptionGroup
-                value={filter.tag}
+                value={sortBy}
                 type='radio'
-                onChange={value => setFilter({ ...filter, tag: value })}
-              >
-                <MenuItemOption value='all'>All tags</MenuItemOption>
-                {tagsData.data.map(tag => (
-                  <MenuItemOption key={tag.id} value={tag.attributes.slug}>
-                    {tag.attributes.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
-          <Menu>
-            <FilterButton text={`Sort by: ${sortButtonNames[filter.sortBy]}`} />
-            <MenuList zIndex={2}>
-              <MenuOptionGroup
-                value={filter.sortBy}
-                type='radio'
-                onChange={value => setFilter({ ...filter, sortBy: value })}
+                onChange={value => handleFilter('sortBy', value)}
               >
                 <MenuItemOption value='newest'>Newest</MenuItemOption>
                 <MenuItemOption value='oldest'>Oldest</MenuItemOption>
-                <MenuItemOption value='recently-updated'>
+                <MenuItemOption value='updated'>
                   Recently updated
                 </MenuItemOption>
               </MenuOptionGroup>
@@ -356,7 +512,7 @@ export default function IndexPage({
               </Tr>
             </Thead>
             <Tbody bgColor='white'>
-              {filteredPosts.map(post => {
+              {posts.data.map(post => {
                 const title = post.attributes.title;
                 const name = post.attributes.author.data.attributes.name;
                 const tag = post.attributes.tags.data[0]?.attributes.name;
@@ -433,6 +589,33 @@ export default function IndexPage({
               })}
             </Tbody>
           </Table>
+          <Flex flexDirection={'row'} mt={'4'}>
+            <Box display='flex' alignItems='center' mx='auto'>
+              <Pagination
+                pagination={pagination}
+                endpoint={'posts'}
+                queryParams={queryParams}
+              />
+            </Box>
+            <Menu ml='auto'>
+              <FilterButton text={resultsPerPage} />
+              <MenuList>
+                <MenuOptionGroup
+                  value={resultsPerPage}
+                  type='radio'
+                  name='resultsPerPage'
+                  onChange={value => {
+                    handleFilter('resultsPerPage', value);
+                  }}
+                >
+                  <MenuItemOption value='5'>5</MenuItemOption>
+                  <MenuItemOption value='10'>10</MenuItemOption>
+                  <MenuItemOption value='25'>25</MenuItemOption>
+                  <MenuItemOption value='50'>50</MenuItemOption>
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+          </Flex>
         </Box>
       </Box>
     </Box>

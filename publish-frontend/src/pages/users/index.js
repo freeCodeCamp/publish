@@ -41,9 +41,16 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const allUsers = await getUsers(session.user.jwt);
+  const allUsers = await getUsers(session.user.jwt, {
+    populate: ['role', 'profile_image']
+  });
   const rolesData = await getRoles(session.user.jwt);
-  const invitedUsers = await getInvitedUsers(session.user.jwt);
+  const invitedUsers = await getInvitedUsers(session.user.jwt, {
+    populate: 'role',
+    filters: {
+      accepted: false
+    }
+  });
 
   const roles = rolesData.roles.reduce(
     (acc, role) => ({ ...acc, [role.name]: role.id }),
@@ -304,6 +311,11 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
             {allUsers.map(user => {
               const userEmail = user.email;
               const userRole = user.role.name;
+              const profileImage =
+                user.profile_image !== null
+                  ? process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL +
+                    user.profile_image.url
+                  : '';
               return (
                 <Flex
                   key={user.id}
@@ -319,7 +331,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                   onClick={() => router.push(`/users/${user.id}`)}
                 >
                   <Flex alignItems='center' pr='2'>
-                    <Avatar size='sm' mr='4' />
+                    <Avatar size='sm' mr='4' src={profileImage} />
                     <Text fontWeight='600'>{userEmail}</Text>
                   </Flex>
                   <Badge
