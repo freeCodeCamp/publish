@@ -8,11 +8,16 @@ import { getServerSession } from 'next-auth/next';
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const { postId } = context.params;
-  const { data: tags } = await getTags(session.user.jwt);
+  const { data: tags } = await getTags(session.user.jwt, {
+    fields: ['id', 'name', 'slug'],
+    pagination: {
+      limit: -1
+    }
+  });
+
+  console.log('tags', tags);
   const { data: post } = await getPost(postId, session.user.jwt);
   const authors = await getUsers(session.user.jwt);
-
-  console.log(post.attributes.author);
 
   return {
     props: { tags, post, authors, user: session.user }

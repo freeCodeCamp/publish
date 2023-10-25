@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faChevronDown,
   faChevronLeft,
   faEdit,
   faGear
@@ -32,7 +33,10 @@ import {
   DrawerBody,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent
+  DrawerContent,
+  InputGroup,
+  InputRightElement,
+  Icon
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { updatePost } from '@/lib/posts';
@@ -42,6 +46,13 @@ import Link from 'next/link';
 import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
 import { useRouter } from 'next/router';
+
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList
+} from '@choc-ui/chakra-autocomplete';
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
@@ -53,8 +64,12 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [postId, setPostId] = useState(post?.id);
 
+  // tags from the post itself
   const [clientTags, setClientTags] = useState([]);
   const [clientTagsId, setClientTagsId] = useState([]);
+
+  // tags from the server
+  const [tagsList, setTagsList] = useState(tags);
 
   const [author, setAuthor] = useState('');
 
@@ -63,7 +78,6 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [featureImage, setFeatureImage] = useState('');
   const [content, setContent] = useState(post?.attributes.body || '');
 
-  const [tagsList, setTagsList] = useState(tags);
   const [isAddingTag, setIsAddingTag] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
@@ -187,9 +201,9 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   }
 
-  function addTag(event) {
-    if (!clientTags.includes(event.target.value)) {
-      const newTags = [...clientTags, event.target.value];
+  function addTag(tagName) {
+    if (!clientTags.includes(tagName)) {
+      const newTags = [...clientTags, tagName];
 
       const newTagsInt = [];
       newTags.forEach(tag => {
@@ -242,6 +256,18 @@ const PostForm = ({ tags, user, authors, post }) => {
       });
     }
   }
+
+  const handleTagSearch = value => {
+    const searchedTags = tags.filter(tag =>
+      tag.attributes.name.toLowerCase().startsWith(value.toLowerCase())
+    );
+
+    if (searchedTags.length > 0) {
+      setTagsList(searchedTags);
+    } else {
+      setTagsList(tags);
+    }
+  };
 
   return (
     <>
@@ -424,6 +450,15 @@ const PostForm = ({ tags, user, authors, post }) => {
                       onClick={() => {
                         const newTags = clientTags.filter(t => t !== tag);
                         setClientTags(newTags);
+
+                        // remove id from clientTagsId with the index of the tag
+                        const newTagsId = clientTagsId.filter(
+                          (_value, index) => {
+                            return index !== clientTags.indexOf(tag);
+                          }
+                        );
+
+                        setClientTagsId(newTagsId);
                       }}
                     />
                   </Tag>
@@ -432,19 +467,41 @@ const PostForm = ({ tags, user, authors, post }) => {
             </Box>
             <Spacer h='1rem' />
             <Text fontSize='xl'>Tags</Text>
-            <Select
-              placeholder='Select option'
-              onChange={addTag}
-              w='100%'
-              marginTop='1rem'
-              value=''
+            <AutoComplete
+              openOnFocus
+              restoreOnBlurIfEmpty={false}
+              onSelectOption={() => {}}
             >
-              {tagsList.map(tag => (
-                <option key={tag.id} value={tag.attributes.name}>
-                  {tag.attributes.name}
-                </option>
-              ))}
-            </Select>
+              <InputGroup>
+                <AutoCompleteInput
+                  variant='outline'
+                  placeholder='Filter by Tag'
+                  backgroundColor='white'
+                  fontSize='14px'
+                  fontWeight='600'
+                  onChange={event => {
+                    handleTagSearch(event.target.value);
+                  }}
+                />
+                <InputRightElement>
+                  <Icon icon={faChevronDown} fixedWidth />
+                </InputRightElement>
+              </InputGroup>
+              <AutoCompleteList>
+                {tagsList.slice(0, 25).map(tag => (
+                  <AutoCompleteItem
+                    key={tag.id}
+                    value={tag.attributes.name}
+                    textTransform='capitalize'
+                    onClick={() => {
+                      addTag(tag.attributes.name);
+                    }}
+                  >
+                    {tag.attributes.name}
+                  </AutoCompleteItem>
+                ))}
+              </AutoCompleteList>
+            </AutoComplete>
             {isEditor(user) && (
               <>
                 {!isAddingTag ? (
