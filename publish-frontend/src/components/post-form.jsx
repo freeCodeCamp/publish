@@ -59,11 +59,9 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [postId, setPostId] = useState(post?.id);
 
-  // tags from the post itself
-  const [clientTags, setClientTags] = useState([]);
-  const [clientTagsId, setClientTagsId] = useState([]);
+  const [postTags, setPostTags] = useState([]);
+  const [postTagsId, setPostTag] = useState([]);
 
-  // tags from the server
   const [tagsList, setTagsList] = useState(tags);
   const [searchedTags, setSearchedTags] = useState([]);
 
@@ -90,8 +88,8 @@ const PostForm = ({ tags, user, authors, post }) => {
       const tagNames = tags.data.map(tag => tag.attributes.name);
       const tagIds = tags.data.map(tag => tag.id);
 
-      setClientTags(tagNames);
-      setClientTagsId(tagIds);
+      setPostTags(tagNames);
+      setPostTag(tagIds);
       setPostUrl(slug ?? '');
       setAuthorName(post.attributes.author.data.attributes.name);
     }
@@ -112,7 +110,7 @@ const PostForm = ({ tags, user, authors, post }) => {
           }
         ),
         body: content,
-        tags: clientTagsId,
+        tags: postTagsId,
         author: [author != '' ? author : user.id],
         locale: 'en'
       }
@@ -138,7 +136,7 @@ const PostForm = ({ tags, user, authors, post }) => {
         isClosable: true
       });
     }
-  }, [toast, postId, title, postUrl, content, clientTagsId, author, user]);
+  }, [toast, postId, title, postUrl, content, postTagsId, author, user]);
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -200,8 +198,8 @@ const PostForm = ({ tags, user, authors, post }) => {
   }
 
   function addTag(tagName) {
-    if (!clientTags.includes(tagName)) {
-      const newTags = [...clientTags, tagName];
+    if (!postTags.includes(tagName)) {
+      const newTags = [...postTags, tagName];
 
       const newTagsInt = [];
       newTags.forEach(tag => {
@@ -212,8 +210,8 @@ const PostForm = ({ tags, user, authors, post }) => {
         });
       });
 
-      setClientTags(newTags);
-      setClientTagsId(newTagsInt);
+      setPostTags(newTags);
+      setPostTag(newTagsInt);
       setUnsavedChanges(true);
     }
   }
@@ -431,7 +429,7 @@ const PostForm = ({ tags, user, authors, post }) => {
             <Spacer h='1rem' />
             <Box id='tag-container' display='flex' flexWrap='wrap'>
               <Wrap spacing={2}>
-                {clientTags.map(tag => (
+                {postTags.map(tag => (
                   <Tag
                     key={tag}
                     size='lg'
@@ -442,17 +440,15 @@ const PostForm = ({ tags, user, authors, post }) => {
                     <TagLabel>{tag}</TagLabel>
                     <TagCloseButton
                       onClick={() => {
-                        const newTags = clientTags.filter(t => t !== tag);
-                        setClientTags(newTags);
+                        const newTags = postTags.filter(t => t !== tag);
+                        setPostTags(newTags);
 
-                        // remove id from clientTagsId with the index of the tag
-                        const newTagsId = clientTagsId.filter(
-                          (_value, index) => {
-                            return index !== clientTags.indexOf(tag);
-                          }
-                        );
+                        // remove id from postTagsId with the index of the tag
+                        const newTagsId = postTagsId.filter((_value, index) => {
+                          return index !== postTags.indexOf(tag);
+                        });
 
-                        setClientTagsId(newTagsId);
+                        setPostTag(newTagsId);
                       }}
                     />
                   </Tag>

@@ -16,7 +16,9 @@ export async function getServerSideProps(context) {
   });
 
   const { data: post } = await getPost(postId, session.user.jwt);
-  const authors = await getUsers(session.user.jwt);
+  const authors = await getUsers(session.user.jwt, {
+    fields: ['id', 'name', 'slug']
+  });
 
   return {
     props: { tags, post, authors, user: session.user }
