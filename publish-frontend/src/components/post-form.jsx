@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChevronDown,
   faChevronLeft,
   faEdit,
   faGear
@@ -32,10 +31,7 @@ import {
   DrawerBody,
   DrawerHeader,
   DrawerOverlay,
-  DrawerContent,
-  InputGroup,
-  InputRightElement,
-  Icon
+  DrawerContent
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { updatePost } from '@/lib/posts';
@@ -470,21 +466,16 @@ const PostForm = ({ tags, user, authors, post }) => {
               restoreOnBlurIfEmpty={false}
               onSelectOption={() => {}}
             >
-              <InputGroup>
-                <AutoCompleteInput
-                  variant='outline'
-                  placeholder='Filter by Tag'
-                  backgroundColor='white'
-                  fontSize='14px'
-                  fontWeight='600'
-                  onChange={event => {
-                    handleTagSearch(event.target.value);
-                  }}
-                />
-                <InputRightElement>
-                  <Icon icon={faChevronDown} fixedWidth />
-                </InputRightElement>
-              </InputGroup>
+              <AutoCompleteInput
+                variant='outline'
+                placeholder='Filter by Tag'
+                backgroundColor='white'
+                fontSize='14px'
+                fontWeight='600'
+                onChange={event => {
+                  handleTagSearch(event.target.value);
+                }}
+              />
               <AutoCompleteList>
                 {(searchedTags.length > 0 ? searchedTags : tagsList)
                   .slice(0, 25)
@@ -575,22 +566,17 @@ const PostForm = ({ tags, user, authors, post }) => {
                 <Spacer h='1rem' />
                 <Text fontSize='xl'>Author</Text>
                 <AutoComplete openOnFocus>
-                  <InputGroup>
-                    <AutoCompleteInput
-                      variant='outline'
-                      placeholder='Filter by Author'
-                      backgroundColor='white'
-                      fontSize='14px'
-                      value={authorName}
-                      fontWeight='600'
-                      onChange={event => {
-                        setAuthorName(event.target.value);
-                      }}
-                    />
-                    <InputRightElement>
-                      <Icon icon={faChevronDown} fixedWidth />
-                    </InputRightElement>
-                  </InputGroup>
+                  <AutoCompleteInput
+                    variant='outline'
+                    placeholder='Filter by Author'
+                    backgroundColor='white'
+                    fontSize='14px'
+                    value={authorName}
+                    fontWeight='600'
+                    onChange={event => {
+                      setAuthorName(event.target.value);
+                    }}
+                  />
                   <AutoCompleteList>
                     {authors.slice(0, 25).map(author => (
                       <AutoCompleteItem
