@@ -209,7 +209,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       const newTagsInt = [];
       newTags.forEach(tag => {
-        tags.forEach(t => {
+        tagsList.forEach(t => {
           if (tag === t.attributes.name) {
             newTagsInt.push(t.id);
           }
