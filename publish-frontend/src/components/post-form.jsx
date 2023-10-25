@@ -69,6 +69,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   // tags from the server
   const [tagsList, setTagsList] = useState(tags);
+  const [searchedTags, setSearchedTags] = useState([]);
 
   const [author, setAuthor] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -237,8 +238,8 @@ const PostForm = ({ tags, user, authors, post }) => {
 
     try {
       const res = await createTag(token, data);
-
-      setTagsList([...tagsList, res.data]);
+      setTagsList([...tags, res.data]);
+      setSearchedTags([]);
 
       toast({
         title: 'Tag Created.',
@@ -259,15 +260,11 @@ const PostForm = ({ tags, user, authors, post }) => {
   }
 
   const handleTagSearch = value => {
-    const searchedTags = tags.filter(tag =>
+    const searchedTags = tagsList.filter(tag =>
       tag.attributes.name.toLowerCase().startsWith(value.toLowerCase())
     );
 
-    if (searchedTags.length > 0) {
-      setTagsList(searchedTags);
-    } else {
-      setTagsList(tags);
-    }
+    setSearchedTags(searchedTags);
   };
 
   return (
@@ -489,18 +486,20 @@ const PostForm = ({ tags, user, authors, post }) => {
                 </InputRightElement>
               </InputGroup>
               <AutoCompleteList>
-                {tagsList.slice(0, 25).map(tag => (
-                  <AutoCompleteItem
-                    key={tag.id}
-                    value={tag.attributes.name}
-                    textTransform='capitalize'
-                    onClick={() => {
-                      addTag(tag.attributes.name);
-                    }}
-                  >
-                    {tag.attributes.name}
-                  </AutoCompleteItem>
-                ))}
+                {(searchedTags.length > 0 ? searchedTags : tagsList)
+                  .slice(0, 25)
+                  .map(tag => (
+                    <AutoCompleteItem
+                      key={tag.id}
+                      value={tag.attributes.name}
+                      textTransform='capitalize'
+                      onClick={() => {
+                        addTag(tag.attributes.name);
+                      }}
+                    >
+                      {tag.attributes.name}
+                    </AutoCompleteItem>
+                  ))}
               </AutoCompleteList>
             </AutoComplete>
             {isEditor(user) && (
