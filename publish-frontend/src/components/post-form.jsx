@@ -15,7 +15,6 @@ import {
   Box,
   Button,
   Text,
-  Select,
   Input,
   Spacer,
   Stack,
@@ -72,6 +71,7 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [tagsList, setTagsList] = useState(tags);
 
   const [author, setAuthor] = useState('');
+  const [authorName, setAuthorName] = useState('');
 
   const [postUrl, setPostUrl] = useState('');
 
@@ -96,6 +96,7 @@ const PostForm = ({ tags, user, authors, post }) => {
       setClientTags(tagNames);
       setClientTagsId(tagIds);
       setPostUrl(slug ?? '');
+      setAuthorName(post.attributes.author.data.attributes.name);
     }
   }, [post]);
 
@@ -574,19 +575,39 @@ const PostForm = ({ tags, user, authors, post }) => {
               <>
                 <Spacer h='1rem' />
                 <Text fontSize='xl'>Author</Text>
-                <Select
-                  placeholder='Select option'
-                  w='100%'
-                  marginTop='1rem'
-                  defaultValue={post ? post.attributes.author.data.id : user.id}
-                  onChange={e => setAuthor(e.target.value)}
-                >
-                  {authors.map(author => (
-                    <option key={author.id} value={author.id}>
-                      {author.username}
-                    </option>
-                  ))}
-                </Select>
+                <AutoComplete openOnFocus>
+                  <InputGroup>
+                    <AutoCompleteInput
+                      variant='outline'
+                      placeholder='Filter by Author'
+                      backgroundColor='white'
+                      fontSize='14px'
+                      value={authorName}
+                      fontWeight='600'
+                      onChange={event => {
+                        setAuthorName(event.target.value);
+                      }}
+                    />
+                    <InputRightElement>
+                      <Icon icon={faChevronDown} fixedWidth />
+                    </InputRightElement>
+                  </InputGroup>
+                  <AutoCompleteList>
+                    {authors.slice(0, 25).map(author => (
+                      <AutoCompleteItem
+                        key={author.id}
+                        value={author.slug}
+                        textTransform='capitalize'
+                        onClick={() => {
+                          setAuthor(author.id);
+                          setAuthorName(author.name);
+                        }}
+                      >
+                        {author.name}
+                      </AutoCompleteItem>
+                    ))}
+                  </AutoCompleteList>
+                </AutoComplete>
                 <Spacer h='1rem' />
               </>
             )}

@@ -15,7 +15,6 @@ export async function getServerSideProps(context) {
     }
   });
 
-  console.log('tags', tags);
   const { data: post } = await getPost(postId, session.user.jwt);
   const authors = await getUsers(session.user.jwt);
 
