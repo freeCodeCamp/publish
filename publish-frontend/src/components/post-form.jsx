@@ -60,7 +60,8 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [postId, setPostId] = useState(post?.id);
 
   const [postTags, setPostTags] = useState([]);
-  const [postTagsId, setPostTag] = useState([]);
+  const [postTagSlug, setPostTagSlug] = useState([]);
+  const [postTagsId, setPostTagId] = useState([]);
 
   const [tagsList, setTagsList] = useState(tags);
   const [searchedTags, setSearchedTags] = useState([]);
@@ -87,9 +88,12 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       const tagNames = tags.data.map(tag => tag.attributes.name);
       const tagIds = tags.data.map(tag => tag.id);
+      const tagSlugs = tags.data.map(tag => tag.attributes.slug);
 
       setPostTags(tagNames);
-      setPostTag(tagIds);
+      setPostTagId(tagIds);
+      setPostTagSlug(tagSlugs);
+
       setPostUrl(slug ?? '');
       setAuthorName(post.attributes.author.data.attributes.name);
     }
@@ -197,21 +201,24 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   }
 
-  function addTag(tagName) {
-    if (!postTags.includes(tagName)) {
+  function addTag(tagName, tagSlug) {
+    if (!postTagSlug.includes(tagSlug)) {
       const newTags = [...postTags, tagName];
+      const newTagSlugs = [...postTagSlug, tagSlug];
 
-      const newTagsInt = [];
+      const newTagsId = [];
       newTags.forEach(tag => {
         tagsList.forEach(t => {
           if (tag === t.attributes.name) {
-            newTagsInt.push(t.id);
+            newTagsId.push(t.id);
           }
         });
       });
 
       setPostTags(newTags);
-      setPostTag(newTagsInt);
+      setPostTagId(newTagsId);
+      setPostTagSlug(newTagSlugs);
+
       setUnsavedChanges(true);
     }
   }
@@ -448,7 +455,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                           return index !== postTags.indexOf(tag);
                         });
 
-                        setPostTag(newTagsId);
+                        setPostTagId(newTagsId);
                       }}
                     />
                   </Tag>
@@ -481,7 +488,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                       value={tag.attributes.name}
                       textTransform='capitalize'
                       onClick={() => {
-                        addTag(tag.attributes.name);
+                        addTag(tag.attributes.name, tag.attributes.slug);
                       }}
                     >
                       {tag.attributes.name}
