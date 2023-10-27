@@ -17,16 +17,6 @@ module.exports = {
    * run jobs, or perform some special logic.
    */
   async bootstrap({ strapi }) {
-    if (
-      process.env.NODE_ENV === "development" &&
-      process.env.SEED_DATA === "true"
-    ) {
-      console.log("Seeding database...");
-      const { generateSeedData } = require("./seed");
-      await generateSeedData(strapi);
-      console.log("Seeding database complete!");
-    }
-
     strapi.db.lifecycles.subscribe({
       models: ["plugin::users-permissions.user"],
       async beforeCreate(event) {
@@ -66,7 +56,7 @@ module.exports = {
         const { email: newEmail } = event.params.data;
         const { email: oldEmail } = await strapi.entityService.findOne(
           "plugin::users-permissions.user",
-          id
+          id,
         );
         event.state = {
           oldEmail,
@@ -92,7 +82,7 @@ module.exports = {
         const { id } = event.params.where;
         const { email } = await strapi.entityService.findOne(
           "plugin::users-permissions.user",
-          id
+          id,
         );
         await strapi.db.query("api::invited-user.invited-user").delete({
           where: {

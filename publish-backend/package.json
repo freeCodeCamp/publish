@@ -9,6 +9,7 @@
     "build": "strapi build",
     "lint": "eslint .",
     "strapi": "strapi",
+    "seed": "node ./scripts/seed.js",
     "cs": "config-sync",
     "test": "jest --forceExit",
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
