@@ -63,7 +63,7 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [postTagSlug, setPostTagSlug] = useState([]);
   const [postTagsId, setPostTagId] = useState([]);
 
-  const [postInputText, setPostInputText] = useState('');
+  const [postTagInputText, setPostTagInputText] = useState('');
 
   const [tagsList, setTagsList] = useState(tags);
   const [searchedTags, setSearchedTags] = useState([]);
@@ -469,23 +469,21 @@ const PostForm = ({ tags, user, authors, post }) => {
             <AutoComplete
               openOnFocus
               restoreOnBlurIfEmpty={false}
-              onChange={value => {
-                setPostInputText(value);
-              }}
               onSelectOption={list => {
                 addTag(list.item.value, list.item.label);
-                setPostInputText('');
+                setPostTagInputText('');
               }}
             >
               <AutoCompleteInput
                 variant='outline'
                 placeholder='Filter by Tag'
                 backgroundColor='white'
-                value={postInputText}
+                value={postTagInputText}
                 fontSize='14px'
                 fontWeight='600'
                 onChange={event => {
                   handleTagSearch(event.target.value);
+                  setPostTagInputText(event.target.value);
                 }}
               />
               <AutoCompleteList>
@@ -501,7 +499,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                       textTransform='capitalize'
                       onClick={() => {
                         addTag(tag.attributes.name, tag.attributes.slug);
-                        setPostInputText('');
+                        setPostTagInputText('');
                       }}
                     >
                       {tag.attributes.name}
