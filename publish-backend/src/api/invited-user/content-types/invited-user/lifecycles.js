@@ -7,7 +7,7 @@ module.exports = {
         ? "http://localhost:3000"
         : process.env.DASHBOARD_URL;
 
-    if (process.env.SEEDING_DATA !== "true") {
+    if (global.SEEDING_DATA !== "true") {
       await strapi.plugins.email.services.email.send({
         to: event.result.email,
         from: "support@freecodecamp.org",

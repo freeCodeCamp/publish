@@ -9,7 +9,7 @@ const seed = async () => {
   }
   console.log("Seeding database...");
   // SEEDING_DATA is set to prevent the sending of emails during seeding.
-  process.env.SEEDING_DATA = "true";
+  global.SEEDING_DATA = "true";
   await generateSeedData(app);
   console.log("Seeding database complete!");
   process.exit(0);
