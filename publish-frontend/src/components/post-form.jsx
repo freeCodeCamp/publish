@@ -63,6 +63,8 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [postTagSlug, setPostTagSlug] = useState([]);
   const [postTagsId, setPostTagId] = useState([]);
 
+  const [postInputText, setPostInputText] = useState('');
+
   const [tagsList, setTagsList] = useState(tags);
   const [searchedTags, setSearchedTags] = useState([]);
 
@@ -467,12 +469,19 @@ const PostForm = ({ tags, user, authors, post }) => {
             <AutoComplete
               openOnFocus
               restoreOnBlurIfEmpty={false}
-              onSelectOption={() => {}}
+              onChange={value => {
+                setPostInputText(value);
+              }}
+              onSelectOption={list => {
+                addTag(list.item.value, list.item.label);
+                setPostInputText('');
+              }}
             >
               <AutoCompleteInput
                 variant='outline'
                 placeholder='Filter by Tag'
                 backgroundColor='white'
+                value={postInputText}
                 fontSize='14px'
                 fontWeight='600'
                 onChange={event => {
@@ -486,9 +495,13 @@ const PostForm = ({ tags, user, authors, post }) => {
                     <AutoCompleteItem
                       key={tag.id}
                       value={tag.attributes.name}
+                      // this gives is the opportunity to add the tag to the post
+                      // by setting the label to the slug
+                      label={tag.attributes.slug}
                       textTransform='capitalize'
                       onClick={() => {
                         addTag(tag.attributes.name, tag.attributes.slug);
+                        setPostInputText('');
                       }}
                     >
                       {tag.attributes.name}
@@ -568,7 +581,14 @@ const PostForm = ({ tags, user, authors, post }) => {
               <>
                 <Spacer h='1rem' />
                 <Text fontSize='xl'>Author</Text>
-                <AutoComplete openOnFocus>
+                <AutoComplete
+                  openOnFocus
+                  onSelectOption={list => {
+                    setAuthor(list.item.value);
+                    setAuthorName(list.item.label);
+                    setUnsavedChanges(true);
+                  }}
+                >
                   <AutoCompleteInput
                     variant='outline'
                     placeholder='Filter by Author'
@@ -578,13 +598,15 @@ const PostForm = ({ tags, user, authors, post }) => {
                     fontWeight='600'
                     onChange={event => {
                       setAuthorName(event.target.value);
+                      setUnsavedChanges(true);
                     }}
                   />
                   <AutoCompleteList>
                     {authors.slice(0, 25).map(author => (
                       <AutoCompleteItem
                         key={author.id}
-                        value={author.slug}
+                        value={author.id}
+                        label={author.name}
                         textTransform='capitalize'
                         onClick={() => {
                           setAuthor(author.id);
