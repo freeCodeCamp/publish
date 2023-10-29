@@ -87,6 +87,18 @@ const setupFixtures = async () => {
           connect: [1, 2],
         },
       },
+      {
+        title: "Editor's draft post",
+        body: "<p>This is a post by editor user.</p>",
+        slug: "editors-draft-post",
+        publishedAt: null,
+        author: {
+          connect: [2],
+        },
+        tags: {
+          connect: [1, 2],
+        },
+      },
     ],
   };
 
