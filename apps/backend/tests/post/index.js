@@ -39,6 +39,19 @@ afterEach(async () => {
 });
 
 describe("post", () => {
+  describe("GET /posts/:id", () => {
+    it("should prevent contributors viewing other user's post", async () => {
+      const post = await getPost("editors-draft-post");
+
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
+    });
+  });
   describe("POST /posts", () => {
     it("should create post including publishedAt and scheduled_at for editors", async () => {
       const response = await request(strapi.server.httpServer)
