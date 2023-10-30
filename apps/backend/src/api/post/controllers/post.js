@@ -10,6 +10,23 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
   const helpers = strapi.service("api::helpers.helpers");
 
   return {
+    async find(ctx) {
+      if (helpers.isEditor(ctx) || helpers.isAPIToken(ctx)) {
+        // allow access to all posts
+        return await super.find(ctx);
+      } else {
+        // return only current user's posts
+        const filters = ctx.query.filters || {};
+        if (filters.author) {
+          delete filters.author;
+        }
+        filters.author = [ctx.state.user.id];
+        ctx.query.filters = filters;
+
+        // call the default core action with modified ctx
+        return await super.find(ctx);
+      }
+    },
     async create(ctx) {
       if (!helpers.isEditor(ctx)) {
         // don't allow publishing or scheduling posts

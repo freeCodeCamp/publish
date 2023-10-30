@@ -39,6 +39,24 @@ afterEach(async () => {
 });
 
 describe("post", () => {
+  describe("GET /posts", () => {
+    it("should return only the current user's posts for contributors", async () => {
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts?populate=author`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      // check that all posts belong to the current user
+      const user = await getUser("contributor-user");
+      expect(
+        response.body.data.every(
+          (post) => post.attributes.author.data.id === user.id,
+        ),
+      ).toBe(true);
+    });
+  });
   describe("GET /posts/:id", () => {
     it("should prevent contributors viewing other user's post", async () => {
       const post = await getPost("editors-draft-post");
