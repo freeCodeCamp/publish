@@ -5,7 +5,8 @@
     "turbo": "^1.10.16"
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint": "turbo lint"
   },
   "workspaces": [
     "publish-backend",
