@@ -16,6 +16,8 @@
     },
     "clean": {
       "cache": false
-    }
+    },
+    "seed": { "cache": false },
+    "init": { "cache": false }
   }
 }
