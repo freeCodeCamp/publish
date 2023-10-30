@@ -12,7 +12,8 @@
     "lint:prettier": "prettier --check .",
     "strapi": "strapi",
     "seed": "node ./scripts/seed.js",
-    "init": "config-sync import --yes",
+    "cs": "config-sync",
+    "init": "cs import --yes",
     "test": "jest --forceExit",
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
