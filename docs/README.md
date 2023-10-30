@@ -56,10 +56,15 @@ cp publish-frontend/sample.env publish-frontend/.env
 
 Follow the instructions in the `.env` files to setup the secrets.
 
+Install dependencies.
+
+```sh
+npm i
+```
+
 Import strapi config and create seed data.
 
 ```sh
-turbo init
 turbo seed
 ```
 
