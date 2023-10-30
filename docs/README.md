@@ -24,33 +24,59 @@ This repository contains 3 separate apps:
 
 1. Clone this repository
 
-### Run publish-backend (Strapi) app
+### Setup prerequisites
 
-1. Change directory to `publish-backend` directory
-2. Create a copy of the `.env.example` file and name it `.env`
-3. Run `npm install`
-4. Run `docker compose up` to start the app (including the db, so you can import config and create seed data).
-5. Run `npm run cs import`.
-   This will import config from `config/sync/*` files into the database.
-6. Run `npm run seed`.
-   This will seed the database with sample data. Note: this should only be done once.
-7. Visit http://localhost:1337/admin to access the admin panel
-8. You will be prompted to create an Admin account if there is no account in your local environment yet. Create an account here.
+Prerequisites:
+
+- PostgreSQL
+- mailhog (optional)
+- Turborepo
+
+We recommend mailhog for testing emails when developing locally, but it's optional.
+
+If you're managing PostgreSQL manually (and don't need mailhog), you can skip
+this section. Otherwise:
+
+```sh
+cd tools
+docker compose up -d
+cd ..
+```
+
+Follow the npm-specific Turborepo [installation instructions](https://turbo.build/repo/docs/installing)
+
+### Run initial setup
+
+Copy the sample env files.
+
+```sh
+cp publish-backend/sample.env publish-backend/.env
+cp publish-frontend/sample.env publish-frontend/.env
+```
+
+Follow the instructions in the `.env` files to setup the secrets.
+
+Import strapi config and create seed data.
+
+```sh
+turbo init
+turbo seed
+```
+
+### Run the apps
+
+```sh
+turbo develop
+```
+
+To setup your strapi admin account, visit http://localhost:1337/admin and follow the instructions.
 
 Note: This is an account to login to the admin panel. It's different from the
 account to login to the frontend app.
 
-You will see the seeded data in the admin panel and you can use the seeded users to login in the Next.js app. Email and password of the seeded users are in `src/seed/index.js` file. One account of each role(Contributor and Editor) is seeded.
+Once this is complete you will see the seeded data in the admin panel and you can use the seeded users to login in the Next.js app. Email and password of the seeded users are in `src/seed/index.js` file. One account of each role(Contributor and Editor) is seeded.
 
-### Run publish-frontend (Next.js) app
-
-1. In another terminal, go to `publish-frontend` directory
-2. Create a copy of the `sample.env.local` file and name it `.env.local`. Add
-   required values.
-3. Run `npm install`
-4. Make sure the backend Strapi app is running in another terminal. Then start
-   the frontend Next.js app by running `npm run dev`.
-5. Visit http://localhost:3000/ to access the authoring site
+Go to http://localhost:3000/ to see the frontend app and login with a seeded user.
 
 ### Run publish-11ty-test (11ty) app
 
