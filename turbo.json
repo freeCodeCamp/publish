@@ -17,7 +17,7 @@
     "clean": {
       "cache": false
     },
-    "seed": { "cache": false },
+    "seed": { "cache": false, "dependsOn": ["init"] },
     "init": { "cache": false }
   }
 }
