@@ -19,5 +19,5 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Run lint
-        run: npx turbo lint
+        run: npm run lint
 
