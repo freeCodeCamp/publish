@@ -26,7 +26,6 @@ RUN apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips
 COPY --from=prune /app/out/json/ .
 RUN npm install
 COPY --from=prune /app/out/full .
-COPY turbo.json turbo.json
 # Force use of installed turbo
 RUN npx -no turbo run build --filter=publish-backend...
 # Remove all node_modules folders so we can copy the entire output of this
