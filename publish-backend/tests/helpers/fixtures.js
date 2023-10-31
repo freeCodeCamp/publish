@@ -45,6 +45,8 @@ const setupFixtures = async () => {
         body: "<p>test body</p>",
         slug: "test-slug",
         publishedAt: new Date("2023-08-30T00:00:00.000Z"),
+        code_injection_head:
+          '<script> const fCCOriginalPost = "https://www.freecodecamp.org/news/about/"; </script>',
         author: {
           connect: [1],
         },

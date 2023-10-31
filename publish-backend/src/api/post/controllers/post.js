@@ -19,6 +19,9 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       // don't allow publishing or scheduling posts
       delete ctx.request.body.data.publishedAt;
       delete ctx.request.body.data.scheduled_at;
+      // don't allow code injection
+      delete ctx.request.body.data.codeinjection_head;
+      delete ctx.request.body.data.codeinjection_foot;
     }
 
     // call the default core action with modified data
@@ -29,6 +32,9 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
       // don't allow publishing or scheduling posts
       delete ctx.request.body.data.publishedAt;
       delete ctx.request.body.data.scheduled_at;
+      // don't allow code injection
+      delete ctx.request.body.data.codeinjection_head;
+      delete ctx.request.body.data.codeinjection_foot;
     }
 
     // call the default core action with modified data

@@ -51,19 +51,25 @@ describe("post", () => {
       const responsePost = response.body.data.attributes;
 
       expect(responsePost.publishedAt).toEqual(
-        postToCreate.data.publishedAt.toISOString()
+        postToCreate.data.publishedAt.toISOString(),
       );
       expect(responsePost.scheduled_at).toEqual(
-        postToCreate.data.publishedAt.toISOString()
+        postToCreate.data.publishedAt.toISOString(),
       );
     });
 
-    it("should create post excluding publishedAt and scheduled_at for contributors", async () => {
+    it("should create post excluding restricted fields for contributors", async () => {
+      const postToCreateCopy = { ...postToCreate };
+      postToCreateCopy.data.codeinjection_head =
+        "<script>alert('test')</script>";
+      postToCreateCopy.data.codeinjection_foot =
+        "<script>alert('test')</script>";
+
       const response = await request(strapi.server.httpServer)
         .post("/api/posts")
         .set("Content-Type", "application/json")
         .set("Authorization", `Bearer ${contributorJWT}`)
-        .send(JSON.stringify(postToCreate));
+        .send(JSON.stringify(postToCreateCopy));
 
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
@@ -71,6 +77,8 @@ describe("post", () => {
       // Should not set publishedAt and scheduled_at for contributors
       expect(responsePost.publishedAt).toBeNull();
       expect(responsePost.scheduled_at).toBeNull();
+      expect(responsePost.codeinjection_head).toBeNull();
+      expect(responsePost.codeinjection_foot).toBeNull();
     });
 
     it("should not set publishedAt to future date", async () => {
@@ -87,7 +95,7 @@ describe("post", () => {
 
       expect(response.status).toBe(400);
       expect(response.body.error.message).toBe(
-        "publishedAt must be a past date"
+        "publishedAt must be a past date",
       );
     });
   });
@@ -112,14 +120,14 @@ describe("post", () => {
       const responsePost = response.body.data.attributes;
 
       expect(responsePost.publishedAt).toEqual(
-        newData.data.publishedAt.toISOString()
+        newData.data.publishedAt.toISOString(),
       );
       expect(responsePost.scheduled_at).toEqual(
-        newData.data.scheduled_at.toISOString()
+        newData.data.scheduled_at.toISOString(),
       );
     });
 
-    it("should update post excluding publishedAt and scheduled_at for contributors", async () => {
+    it("should update post excluding restricted fields for contributors", async () => {
       // find a post to update
       const post = await getPost("test-slug");
 
@@ -132,16 +140,20 @@ describe("post", () => {
             data: {
               publishedAt: new Date(),
               scheduled_at: new Date(),
+              codeinjection_head: "<script>alert('test')</script>",
+              codeinjection_foot: "<script>alert('test')</script>",
             },
-          })
+          }),
         );
 
       expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
-      // Should not update publishedAt and scheduled_at through this endpoint
+      // Should not update restricted fields through this endpoint
       expect(responsePost.publishedAt).toEqual(post.publishedAt);
       expect(responsePost.scheduled_at).toEqual(post.scheduled_at);
+      expect(responsePost.codeinjection_head).toEqual(post.codeinjection_head);
+      expect(responsePost.codeinjection_foot).toEqual(post.codeinjection_foot);
     });
 
     it("should not set publishedAt to future date", async () => {
@@ -164,7 +176,7 @@ describe("post", () => {
 
       expect(response.status).toBe(400);
       expect(response.body.error.message).toBe(
-        "publishedAt must be a past date"
+        "publishedAt must be a past date",
       );
     });
   });
@@ -185,7 +197,7 @@ describe("post", () => {
             data: {
               scheduled_at: oneHourFromNow,
             },
-          })
+          }),
         );
 
       expect(response.status).toBe(200);
@@ -211,7 +223,7 @@ describe("post", () => {
             data: {
               scheduled_at: oneHourFromNow,
             },
-          })
+          }),
         );
 
       expect(response.status).toBe(403);
