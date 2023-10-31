@@ -27,41 +27,20 @@ This repository contains 3 separate apps:
 ### Run publish-backend (Strapi) app
 
 1. Change directory to `publish-backend` directory
-
 2. Create a copy of the `.env.example` file and name it `.env`
-
 3. Run `npm install`
-
-4. Run `docker compose up`
-
-5. In another terminal, go to `publish-backend` and run `npm run cs import`.
+4. Run `docker compose up` to start the app (including the db, so you can import config and create seed data).
+5. Run `npm run cs import`.
    This will import config from `config/sync/*` files into the database.
-
-6. Visit http://localhost:1337/admin to access the admin panel
-
-7. You will be prompted to create an Admin account if there is no account in
-   your local environment yet. Create an account here.
+6. Run `npm run seed`.
+   This will seed the database with sample data. Note: this should only be done once.
+7. Visit http://localhost:1337/admin to access the admin panel
+8. You will be prompted to create an Admin account if there is no account in your local environment yet. Create an account here.
 
 Note: This is an account to login to the admin panel. It's different from the
 account to login to the frontend app.
 
-8. Stop the docker container by running `docker compose down`
-
-Note: Seeding the database works only on a fresh setup of the containers.
-
-9. Change the `SEED_DATA` value in `.env` file to `true`
-
-10. Run `docker compose up` again
-
-11. If you see `Seeding database complete!` message in the terminal, stop the
-    docker container by running `docker compose down`.
-
-12. Change the `SEED_DATA` value in `.env` file back to `false`
-
-13. Run `docker compose up` again to start the app. You will see the seeded
-    data and you can use the seeded users to login in the Next.js app. Email
-    and password of the seeded users are in `src/seed/index.js` file. One 
-    account of each role(Contributor and Editor) is seeded.
+You will see the seeded data in the admin panel and you can use the seeded users to login in the Next.js app. Email and password of the seeded users are in `src/seed/index.js` file. One account of each role(Contributor and Editor) is seeded.
 
 ### Run publish-frontend (Next.js) app
 
@@ -139,6 +118,7 @@ docker compose -f docker-compose.prod.yml build
 
 To start the docker container:
 (Replace `***` with the values you want to set for the environment variables.)
+
 ```
 VARIABLE1_NAME=*** VARIABLE2_NAME=*** ... \
 docker compose -f docker-compose.prod.yml up -d
@@ -146,12 +126,15 @@ docker compose -f docker-compose.prod.yml up -d
 
 Alternatively, using .env file:
 (Replace .env with the path to the .env file you want to use)
+
 ```
 docker compose --env-file .env -f docker-compose.prod.yml up -d
 ```
+
 Refer to `.env.example` for the list of environment variables.
 
 To stop the docker container:
+
 ```
 docker compose -f docker-compose.prod.yml down
 ```
@@ -161,6 +144,7 @@ docker compose -f docker-compose.prod.yml down
 The app requires some configurations for full functionality.
 
 - Import config
+
 ```
 # Go into the strapi-production container
 docker exec -it strapi-production sh
@@ -181,12 +165,14 @@ npm run cs import
 ### publish-frontend (Next.js)
 
 To build the docker image:
+
 ```
 docker compose -f docker/production/docker-compose.yml build
 ```
 
 To start the docker container:
 (Replace `***` with the values you want to set for the environment variables)
+
 ```
 NEXTAUTH_SECRET=*** AUTH0_CLIENT_ID=*** AUTH0_CLIENT_SECRET=*** \
 NEXT_PUBLIC_STRAPI_BACKEND_URL=*** NEXTAUTH_URL=*** AUTH0_DOMAIN=*** \
@@ -194,11 +180,13 @@ docker compose -f docker/production/docker-compose.yml up -d
 ```
 
 Alternatively, using .env file:
+
 ```
 docker compose --env-file .env -f docker/production/docker-compose.yml up -d
 ```
 
 To stop the docker container:
+
 ```
 docker compose -f docker/production/docker-compose.yml down
 ```

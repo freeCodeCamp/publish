@@ -14,7 +14,6 @@ import {
   Box,
   Button,
   Text,
-  Select,
   Input,
   Spacer,
   Stack,
@@ -43,6 +42,13 @@ import { isEditor } from '@/lib/current-user';
 import { createTag } from '@/lib/tags';
 import { useRouter } from 'next/router';
 
+import {
+  AutoComplete,
+  AutoCompleteInput,
+  AutoCompleteItem,
+  AutoCompleteList
+} from '@choc-ui/chakra-autocomplete';
+
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
@@ -53,17 +59,23 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [postId, setPostId] = useState(post?.id);
 
-  const [clientTags, setClientTags] = useState([]);
-  const [clientTagsId, setClientTagsId] = useState([]);
+  const [postTags, setPostTags] = useState([]);
+  const [postTagSlug, setPostTagSlug] = useState([]);
+  const [postTagsId, setPostTagId] = useState([]);
+
+  const [postTagInputText, setPostTagInputText] = useState('');
+
+  const [tagsList, setTagsList] = useState(tags);
+  const [searchedTags, setSearchedTags] = useState([]);
 
   const [author, setAuthor] = useState('');
+  const [authorName, setAuthorName] = useState('');
 
   const [postUrl, setPostUrl] = useState('');
 
   const [featureImage, setFeatureImage] = useState('');
   const [content, setContent] = useState(post?.attributes.body || '');
 
-  const [tagsList, setTagsList] = useState(tags);
   const [isAddingTag, setIsAddingTag] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
@@ -78,10 +90,14 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       const tagNames = tags.data.map(tag => tag.attributes.name);
       const tagIds = tags.data.map(tag => tag.id);
+      const tagSlugs = tags.data.map(tag => tag.attributes.slug);
 
-      setClientTags(tagNames);
-      setClientTagsId(tagIds);
+      setPostTags(tagNames);
+      setPostTagId(tagIds);
+      setPostTagSlug(tagSlugs);
+
       setPostUrl(slug ?? '');
+      setAuthorName(post.attributes.author.data.attributes.name);
     }
   }, [post]);
 
@@ -100,7 +116,7 @@ const PostForm = ({ tags, user, authors, post }) => {
           }
         ),
         body: content,
-        tags: clientTagsId,
+        tags: postTagsId,
         author: [author != '' ? author : user.id],
         locale: 'en'
       }
@@ -126,7 +142,7 @@ const PostForm = ({ tags, user, authors, post }) => {
         isClosable: true
       });
     }
-  }, [toast, postId, title, postUrl, content, clientTagsId, author, user]);
+  }, [toast, postId, title, postUrl, content, postTagsId, author, user]);
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -187,21 +203,24 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   }
 
-  function addTag(event) {
-    if (!clientTags.includes(event.target.value)) {
-      const newTags = [...clientTags, event.target.value];
+  function addTag(tagName, tagSlug) {
+    if (!postTagSlug.includes(tagSlug)) {
+      const newTags = [...postTags, tagName];
+      const newTagSlugs = [...postTagSlug, tagSlug];
 
-      const newTagsInt = [];
+      const newTagsId = [];
       newTags.forEach(tag => {
-        tags.forEach(t => {
+        tagsList.forEach(t => {
           if (tag === t.attributes.name) {
-            newTagsInt.push(t.id);
+            newTagsId.push(t.id);
           }
         });
       });
 
-      setClientTags(newTags);
-      setClientTagsId(newTagsInt);
+      setPostTags(newTags);
+      setPostTagId(newTagsId);
+      setPostTagSlug(newTagSlugs);
+
       setUnsavedChanges(true);
     }
   }
@@ -222,8 +241,8 @@ const PostForm = ({ tags, user, authors, post }) => {
 
     try {
       const res = await createTag(token, data);
-
-      setTagsList([...tagsList, res.data]);
+      setTagsList([...tags, res.data]);
+      setSearchedTags([]);
 
       toast({
         title: 'Tag Created.',
@@ -242,6 +261,14 @@ const PostForm = ({ tags, user, authors, post }) => {
       });
     }
   }
+
+  const handleTagSearch = value => {
+    const searchedTags = tagsList.filter(tag =>
+      tag.attributes.name.toLowerCase().startsWith(value.toLowerCase())
+    );
+
+    setSearchedTags(searchedTags);
+  };
 
   return (
     <>
@@ -411,7 +438,7 @@ const PostForm = ({ tags, user, authors, post }) => {
             <Spacer h='1rem' />
             <Box id='tag-container' display='flex' flexWrap='wrap'>
               <Wrap spacing={2}>
-                {clientTags.map(tag => (
+                {postTags.map(tag => (
                   <Tag
                     key={tag}
                     size='lg'
@@ -422,8 +449,15 @@ const PostForm = ({ tags, user, authors, post }) => {
                     <TagLabel>{tag}</TagLabel>
                     <TagCloseButton
                       onClick={() => {
-                        const newTags = clientTags.filter(t => t !== tag);
-                        setClientTags(newTags);
+                        const newTags = postTags.filter(t => t !== tag);
+                        setPostTags(newTags);
+
+                        // remove id from postTagsId with the index of the tag
+                        const newTagsId = postTagsId.filter((_value, index) => {
+                          return index !== postTags.indexOf(tag);
+                        });
+
+                        setPostTagId(newTagsId);
                       }}
                     />
                   </Tag>
@@ -432,19 +466,47 @@ const PostForm = ({ tags, user, authors, post }) => {
             </Box>
             <Spacer h='1rem' />
             <Text fontSize='xl'>Tags</Text>
-            <Select
-              placeholder='Select option'
-              onChange={addTag}
-              w='100%'
-              marginTop='1rem'
-              value=''
+            <AutoComplete
+              openOnFocus
+              restoreOnBlurIfEmpty={false}
+              onSelectOption={list => {
+                addTag(list.item.value, list.item.label);
+                setPostTagInputText('');
+              }}
             >
-              {tagsList.map(tag => (
-                <option key={tag.id} value={tag.attributes.name}>
-                  {tag.attributes.name}
-                </option>
-              ))}
-            </Select>
+              <AutoCompleteInput
+                variant='outline'
+                placeholder='Filter by Tag'
+                backgroundColor='white'
+                value={postTagInputText}
+                fontSize='14px'
+                fontWeight='600'
+                onChange={event => {
+                  handleTagSearch(event.target.value);
+                  setPostTagInputText(event.target.value);
+                }}
+              />
+              <AutoCompleteList>
+                {(searchedTags.length > 0 ? searchedTags : tagsList)
+                  .slice(0, 25)
+                  .map(tag => (
+                    <AutoCompleteItem
+                      key={tag.id}
+                      value={tag.attributes.name}
+                      // this gives is the opportunity to add the tag to the post
+                      // by setting the label to the slug
+                      label={tag.attributes.slug}
+                      textTransform='capitalize'
+                      onClick={() => {
+                        addTag(tag.attributes.name, tag.attributes.slug);
+                        setPostTagInputText('');
+                      }}
+                    >
+                      {tag.attributes.name}
+                    </AutoCompleteItem>
+                  ))}
+              </AutoCompleteList>
+            </AutoComplete>
             {isEditor(user) && (
               <>
                 {!isAddingTag ? (
@@ -517,19 +579,43 @@ const PostForm = ({ tags, user, authors, post }) => {
               <>
                 <Spacer h='1rem' />
                 <Text fontSize='xl'>Author</Text>
-                <Select
-                  placeholder='Select option'
-                  w='100%'
-                  marginTop='1rem'
-                  defaultValue={post ? post.attributes.author.data.id : user.id}
-                  onChange={e => setAuthor(e.target.value)}
+                <AutoComplete
+                  openOnFocus
+                  onSelectOption={list => {
+                    setAuthor(list.item.value);
+                    setAuthorName(list.item.label);
+                    setUnsavedChanges(true);
+                  }}
                 >
-                  {authors.map(author => (
-                    <option key={author.id} value={author.id}>
-                      {author.username}
-                    </option>
-                  ))}
-                </Select>
+                  <AutoCompleteInput
+                    variant='outline'
+                    placeholder='Filter by Author'
+                    backgroundColor='white'
+                    fontSize='14px'
+                    value={authorName}
+                    fontWeight='600'
+                    onChange={event => {
+                      setAuthorName(event.target.value);
+                      setUnsavedChanges(true);
+                    }}
+                  />
+                  <AutoCompleteList>
+                    {authors.slice(0, 25).map(author => (
+                      <AutoCompleteItem
+                        key={author.id}
+                        value={author.id}
+                        label={author.name}
+                        textTransform='capitalize'
+                        onClick={() => {
+                          setAuthor(author.id);
+                          setAuthorName(author.name);
+                        }}
+                      >
+                        {author.name}
+                      </AutoCompleteItem>
+                    ))}
+                  </AutoCompleteList>
+                </AutoComplete>
                 <Spacer h='1rem' />
               </>
             )}
