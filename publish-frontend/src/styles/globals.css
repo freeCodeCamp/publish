@@ -16,7 +16,7 @@
 }
 
 .code {
-  background-color: #EDF2F7;
+  background-color: #edf2f7;
   border-radius: 0.25em;
   box-decoration-break: clone;
   color: #616161;
@@ -24,8 +24,9 @@
   padding: 0.25em;
 }
 
-.code::before, .code::after {
-  color: #9E9E9E;
+.code::before,
+.code::after {
+  color: #9e9e9e;
   content: '' !important;
 }
 
