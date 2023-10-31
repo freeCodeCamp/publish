@@ -25,7 +25,7 @@ module.exports = ({ env }) => {
           cipher: env("DATABASE_SSL_CIPHER", undefined),
           rejectUnauthorized: env.bool(
             "DATABASE_SSL_REJECT_UNAUTHORIZED",
-            true
+            true,
           ),
         },
       },
@@ -49,7 +49,7 @@ module.exports = ({ env }) => {
           cipher: env("DATABASE_SSL_CIPHER", undefined),
           rejectUnauthorized: env.bool(
             "DATABASE_SSL_REJECT_UNAUTHORIZED",
-            true
+            true,
           ),
         },
       },
@@ -74,7 +74,7 @@ module.exports = ({ env }) => {
           cipher: env("DATABASE_SSL_CIPHER", undefined),
           rejectUnauthorized: env.bool(
             "DATABASE_SSL_REJECT_UNAUTHORIZED",
-            true
+            true,
           ),
         },
         schema: env("DATABASE_SCHEMA", "public"),
@@ -89,7 +89,7 @@ module.exports = ({ env }) => {
         filename: path.join(
           __dirname,
           "..",
-          env("DATABASE_FILENAME", "data.db")
+          env("DATABASE_FILENAME", "data.db"),
         ),
       },
       useNullAsDefault: true,

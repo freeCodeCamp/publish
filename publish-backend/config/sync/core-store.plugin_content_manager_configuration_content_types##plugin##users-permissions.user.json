@@ -376,13 +376,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "username",
-        "email",
-        "confirmed",
-        "role"
-      ],
+      "list": ["id", "username", "email", "confirmed", "role"],
       "edit": [
         [
           {

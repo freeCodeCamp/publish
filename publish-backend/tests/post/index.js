@@ -51,10 +51,10 @@ describe("post", () => {
       const responsePost = response.body.data.attributes;
 
       expect(responsePost.publishedAt).toEqual(
-        postToCreate.data.publishedAt.toISOString()
+        postToCreate.data.publishedAt.toISOString(),
       );
       expect(responsePost.scheduled_at).toEqual(
-        postToCreate.data.publishedAt.toISOString()
+        postToCreate.data.publishedAt.toISOString(),
       );
     });
 
@@ -87,7 +87,7 @@ describe("post", () => {
 
       expect(response.status).toBe(400);
       expect(response.body.error.message).toBe(
-        "publishedAt must be a past date"
+        "publishedAt must be a past date",
       );
     });
   });
@@ -112,10 +112,10 @@ describe("post", () => {
       const responsePost = response.body.data.attributes;
 
       expect(responsePost.publishedAt).toEqual(
-        newData.data.publishedAt.toISOString()
+        newData.data.publishedAt.toISOString(),
       );
       expect(responsePost.scheduled_at).toEqual(
-        newData.data.scheduled_at.toISOString()
+        newData.data.scheduled_at.toISOString(),
       );
     });
 
@@ -133,7 +133,7 @@ describe("post", () => {
               publishedAt: new Date(),
               scheduled_at: new Date(),
             },
-          })
+          }),
         );
 
       expect(response.status).toBe(200);
@@ -164,7 +164,7 @@ describe("post", () => {
 
       expect(response.status).toBe(400);
       expect(response.body.error.message).toBe(
-        "publishedAt must be a past date"
+        "publishedAt must be a past date",
       );
     });
   });
@@ -185,7 +185,7 @@ describe("post", () => {
             data: {
               scheduled_at: oneHourFromNow,
             },
-          })
+          }),
         );
 
       expect(response.status).toBe(200);
@@ -211,7 +211,7 @@ describe("post", () => {
             data: {
               scheduled_at: oneHourFromNow,
             },
-          })
+          }),
         );
 
       expect(response.status).toBe(403);

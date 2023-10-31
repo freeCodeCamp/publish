@@ -141,13 +141,7 @@
           }
         ]
       ],
-      "list": [
-        "email",
-        "role",
-        "accepted",
-        "createdAt",
-        "createdBy"
-      ]
+      "list": ["email", "role", "accepted", "createdAt", "createdBy"]
     }
   },
   "type": "object",

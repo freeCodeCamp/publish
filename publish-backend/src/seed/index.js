@@ -36,7 +36,7 @@ async function createSeedUsers(strapi) {
           connect: [contributor],
         },
       },
-    }
+    },
   );
   const userRes2 = await strapi.entityService.create(
     "plugin::users-permissions.user",
@@ -53,7 +53,7 @@ async function createSeedUsers(strapi) {
           connect: [editor],
         },
       },
-    }
+    },
   );
   userIds = [userRes1.id, userRes2.id];
 }
@@ -186,7 +186,7 @@ async function generateSeedData(strapi) {
           },
         ],
       },
-    }
+    },
   );
 
   if (dataExists.length > 0) {

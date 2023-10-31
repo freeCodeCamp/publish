@@ -1,9 +1,9 @@
-'use strict';
+"use strict";
 
 /**
  * invited-user service
  */
 
-const { createCoreService } = require('@strapi/strapi').factories;
+const { createCoreService } = require("@strapi/strapi").factories;
 
-module.exports = createCoreService('api::invited-user.invited-user');
+module.exports = createCoreService("api::invited-user.invited-user");

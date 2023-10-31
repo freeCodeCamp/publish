@@ -81,13 +81,13 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
               $lt: new Date(),
             },
           },
-        }
+        },
       );
 
       await Promise.all(
         draftPostToPublish.map((post) => {
           return strapi.service("api::post.post").publish(post.id);
-        })
+        }),
       );
 
       const response = {

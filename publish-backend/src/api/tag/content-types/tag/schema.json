@@ -27,10 +27,7 @@
     },
     "visibility": {
       "type": "enumeration",
-      "enum": [
-        "public",
-        "internal"
-      ],
+      "enum": ["public", "internal"],
       "default": "public",
       "required": true
     },
