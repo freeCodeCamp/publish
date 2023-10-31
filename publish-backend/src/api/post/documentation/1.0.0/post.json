@@ -63,9 +63,7 @@
           }
         }
       },
-      "tags": [
-        "Post"
-      ],
+      "tags": ["Post"],
       "parameters": [
         {
           "name": "sort",
@@ -234,9 +232,7 @@
           }
         }
       },
-      "tags": [
-        "Post"
-      ],
+      "tags": ["Post"],
       "parameters": [],
       "operationId": "post/posts",
       "requestBody": {
@@ -315,9 +311,7 @@
           }
         }
       },
-      "tags": [
-        "Post"
-      ],
+      "tags": ["Post"],
       "parameters": [
         {
           "name": "id",
@@ -395,9 +389,7 @@
           }
         }
       },
-      "tags": [
-        "Post"
-      ],
+      "tags": ["Post"],
       "parameters": [
         {
           "name": "id",
@@ -486,9 +478,7 @@
           }
         }
       },
-      "tags": [
-        "Post"
-      ],
+      "tags": ["Post"],
       "parameters": [
         {
           "name": "id",
@@ -568,9 +558,7 @@
           }
         }
       },
-      "tags": [
-        "Post"
-      ],
+      "tags": ["Post"],
       "parameters": [
         {
           "name": "id",

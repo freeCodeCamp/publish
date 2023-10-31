@@ -90,7 +90,7 @@ describe("custom-post", () => {
       // Check post data structure
       const responsePost = findPostByTitle(
         response.body.posts,
-        expectedPost.title
+        expectedPost.title,
       );
       expect(responsePost).toEqual(expect.objectContaining(expectedPost));
 
@@ -112,17 +112,17 @@ describe("custom-post", () => {
       // Check post data structure
       const responsePost = findPostByTitle(
         response.body.posts,
-        expectedPost.title
+        expectedPost.title,
       );
       expect(responsePost).toEqual(expect.objectContaining(expectedPost));
 
       // Check author and tag data structure
       expect(responsePost.authors[0]).toEqual(
-        expect.objectContaining(expectedAuthor)
+        expect.objectContaining(expectedAuthor),
       );
       expect(responsePost.authors[0]).not.toHaveProperty(hiddenAuthorKeys);
       expect(responsePost.tags[0]).toEqual(
-        expect.objectContaining(expectedTag)
+        expect.objectContaining(expectedTag),
       );
     });
   });
@@ -163,11 +163,11 @@ describe("custom-post", () => {
 
       // Check author and tag data structure
       expect(responsePost.authors[0]).toEqual(
-        expect.objectContaining(expectedAuthor)
+        expect.objectContaining(expectedAuthor),
       );
       expect(responsePost.authors[0]).not.toHaveProperty(hiddenAuthorKeys);
       expect(responsePost.tags[0]).toEqual(
-        expect.objectContaining(expectedTag)
+        expect.objectContaining(expectedTag),
       );
     });
   });
@@ -195,7 +195,7 @@ describe("custom-post", () => {
     it("should return post with authors and tags", async () => {
       const response = await request(strapi.server.httpServer)
         .get(
-          `/api/content/posts/slug/${expectedPost.slug}?include=authors,tags`
+          `/api/content/posts/slug/${expectedPost.slug}?include=authors,tags`,
         )
         .set("accept", "application/json")
         .set("Authorization", `Bearer ${token}`);
@@ -210,11 +210,11 @@ describe("custom-post", () => {
 
       // Check author and tag data structure
       expect(responsePost.authors[0]).toEqual(
-        expect.objectContaining(expectedAuthor)
+        expect.objectContaining(expectedAuthor),
       );
       expect(responsePost.authors[0]).not.toHaveProperty(hiddenAuthorKeys);
       expect(responsePost.tags[0]).toEqual(
-        expect.objectContaining(expectedTag)
+        expect.objectContaining(expectedTag),
       );
     });
 

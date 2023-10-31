@@ -31,7 +31,7 @@ module.exports = ({ env }) => ({
     config: {
       provider: "nodemailer",
       providerOptions: {
-        host: env('NODEMAILER_HOST', "localhost"),
+        host: env("NODEMAILER_HOST", "localhost"),
         secure: false,
         port: 1025,
         auth: {

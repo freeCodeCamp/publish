@@ -165,12 +165,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "action",
-        "subject",
-        "role"
-      ],
+      "list": ["id", "action", "subject", "role"],
       "edit": [
         [
           {

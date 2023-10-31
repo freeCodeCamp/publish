@@ -167,12 +167,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "name",
-        "pathId",
-        "parent"
-      ],
+      "list": ["id", "name", "pathId", "parent"],
       "edit": [
         [
           {

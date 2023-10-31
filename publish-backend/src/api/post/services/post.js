@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 const { ValidationError } = require("@strapi/utils").errors;
 

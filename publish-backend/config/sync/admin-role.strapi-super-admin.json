@@ -8,11 +8,7 @@
       "actionParameters": {},
       "subject": "api::invited-user.invited-user",
       "properties": {
-        "fields": [
-          "email",
-          "accepted",
-          "role"
-        ]
+        "fields": ["email", "accepted", "role"]
       },
       "conditions": []
     },
@@ -28,11 +24,7 @@
       "actionParameters": {},
       "subject": "api::invited-user.invited-user",
       "properties": {
-        "fields": [
-          "email",
-          "accepted",
-          "role"
-        ]
+        "fields": ["email", "accepted", "role"]
       },
       "conditions": []
     },
@@ -41,11 +33,7 @@
       "actionParameters": {},
       "subject": "api::invited-user.invited-user",
       "properties": {
-        "fields": [
-          "email",
-          "accepted",
-          "role"
-        ]
+        "fields": ["email", "accepted", "role"]
       },
       "conditions": []
     },
@@ -67,9 +55,7 @@
           "codeinjection_head",
           "codeinjection_foot"
         ],
-        "locales": [
-          "en"
-        ]
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -78,9 +64,7 @@
       "actionParameters": {},
       "subject": "api::post.post",
       "properties": {
-        "locales": [
-          "en"
-        ]
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -89,9 +73,7 @@
       "actionParameters": {},
       "subject": "api::post.post",
       "properties": {
-        "locales": [
-          "en"
-        ]
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -113,9 +95,7 @@
           "codeinjection_head",
           "codeinjection_foot"
         ],
-        "locales": [
-          "en"
-        ]
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -137,9 +117,7 @@
           "codeinjection_head",
           "codeinjection_foot"
         ],
-        "locales": [
-          "en"
-        ]
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -148,13 +126,7 @@
       "actionParameters": {},
       "subject": "api::tag.tag",
       "properties": {
-        "fields": [
-          "name",
-          "slug",
-          "posts",
-          "visibility",
-          "ghost_id"
-        ]
+        "fields": ["name", "slug", "posts", "visibility", "ghost_id"]
       },
       "conditions": []
     },
@@ -170,13 +142,7 @@
       "actionParameters": {},
       "subject": "api::tag.tag",
       "properties": {
-        "fields": [
-          "name",
-          "slug",
-          "posts",
-          "visibility",
-          "ghost_id"
-        ]
+        "fields": ["name", "slug", "posts", "visibility", "ghost_id"]
       },
       "conditions": []
     },
@@ -185,13 +151,7 @@
       "actionParameters": {},
       "subject": "api::tag.tag",
       "properties": {
-        "fields": [
-          "name",
-          "slug",
-          "posts",
-          "visibility",
-          "ghost_id"
-        ]
+        "fields": ["name", "slug", "posts", "visibility", "ghost_id"]
       },
       "conditions": []
     },

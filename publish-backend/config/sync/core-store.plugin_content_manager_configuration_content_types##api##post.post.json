@@ -236,13 +236,7 @@
       }
     },
     "layouts": {
-      "list": [
-        "id",
-        "title",
-        "createdAt",
-        "updatedAt",
-        "author"
-      ],
+      "list": ["id", "title", "createdAt", "updatedAt", "author"],
       "edit": [
         [
           {
