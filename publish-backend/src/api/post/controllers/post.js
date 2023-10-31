@@ -86,11 +86,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => ({
 
       await Promise.all(
         draftPostToPublish.map((post) => {
-          return strapi.entityService.update("api::post.post", post.id, {
-            data: {
-              publishedAt: new Date(),
-            },
-          });
+          return strapi.service("api::post.post").publish(post.id);
         })
       );
 
