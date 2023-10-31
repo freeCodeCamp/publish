@@ -18,6 +18,8 @@ RUN npm i -g turbo@$(jq -r .devDependencies.turbo package.json)
 RUN turbo prune publish-frontend --docker
 
 FROM base as build
+ARG NEXT_PUBLIC_STRAPI_BACKEND_URL=http://localhost:1337
+ENV NEXT_PUBLIC_STRAPI_BACKEND_URL=$NEXT_PUBLIC_STRAPI_BACKEND_URL
 # First install dependencies (as they change less often)
 COPY --from=prune /app/out/json/ .
 RUN npm install
