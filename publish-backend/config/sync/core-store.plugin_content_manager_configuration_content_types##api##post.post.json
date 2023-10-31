@@ -148,6 +148,34 @@
           "sortable": true
         }
       },
+      "codeinjection_head": {
+        "edit": {
+          "label": "codeinjection_head",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "codeinjection_head",
+          "searchable": true,
+          "sortable": true
+        }
+      },
+      "codeinjection_foot": {
+        "edit": {
+          "label": "codeinjection_foot",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "codeinjection_foot",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -261,6 +289,16 @@
         [
           {
             "name": "ghost_id",
+            "size": 6
+          },
+          {
+            "name": "codeinjection_head",
+            "size": 6
+          }
+        ],
+        [
+          {
+            "name": "codeinjection_foot",
             "size": 6
           }
         ]

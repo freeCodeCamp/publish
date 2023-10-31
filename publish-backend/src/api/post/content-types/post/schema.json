@@ -92,6 +92,22 @@
         }
       },
       "type": "string"
+    },
+    "codeinjection_head": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "text"
+    },
+    "codeinjection_foot": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "text"
     }
   }
 }
