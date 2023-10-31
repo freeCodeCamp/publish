@@ -60,9 +60,9 @@ describe("post", () => {
 
     it("should create post excluding restricted fields for contributors", async () => {
       const postToCreateCopy = { ...postToCreate };
-      postToCreateCopy.data.code_injection_head =
+      postToCreateCopy.data.codeinjection_head =
         "<script>alert('test')</script>";
-      postToCreateCopy.data.code_injection_foot =
+      postToCreateCopy.data.codeinjection_foot =
         "<script>alert('test')</script>";
 
       const response = await request(strapi.server.httpServer)
@@ -77,8 +77,8 @@ describe("post", () => {
       // Should not set publishedAt and scheduled_at for contributors
       expect(responsePost.publishedAt).toBeNull();
       expect(responsePost.scheduled_at).toBeNull();
-      expect(responsePost.code_injection_head).toBeUndefined();
-      expect(responsePost.code_injection_foot).toBeUndefined();
+      expect(responsePost.codeinjection_head).toBeNull();
+      expect(responsePost.codeinjection_foot).toBeNull();
     });
 
     it("should not set publishedAt to future date", async () => {
@@ -140,8 +140,8 @@ describe("post", () => {
             data: {
               publishedAt: new Date(),
               scheduled_at: new Date(),
-              code_injection_head: "<script>alert('test')</script>",
-              code_injection_foot: "<script>alert('test')</script>",
+              codeinjection_head: "<script>alert('test')</script>",
+              codeinjection_foot: "<script>alert('test')</script>",
             },
           }),
         );
@@ -152,12 +152,8 @@ describe("post", () => {
       // Should not update restricted fields through this endpoint
       expect(responsePost.publishedAt).toEqual(post.publishedAt);
       expect(responsePost.scheduled_at).toEqual(post.scheduled_at);
-      expect(responsePost.code_injection_head).toEqual(
-        post.code_injection_head,
-      );
-      expect(responsePost.code_injection_foot).toEqual(
-        post.code_injection_foot,
-      );
+      expect(responsePost.codeinjection_head).toEqual(post.codeinjection_head);
+      expect(responsePost.codeinjection_foot).toEqual(post.codeinjection_foot);
     });
 
     it("should not set publishedAt to future date", async () => {
