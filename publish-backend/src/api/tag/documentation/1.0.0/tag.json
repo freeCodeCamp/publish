@@ -63,7 +63,9 @@
           }
         }
       },
-      "tags": ["Tag"],
+      "tags": [
+        "Tag"
+      ],
       "parameters": [
         {
           "name": "sort",
@@ -232,7 +234,9 @@
           }
         }
       },
-      "tags": ["Tag"],
+      "tags": [
+        "Tag"
+      ],
       "parameters": [],
       "operationId": "post/tags",
       "requestBody": {
@@ -311,7 +315,9 @@
           }
         }
       },
-      "tags": ["Tag"],
+      "tags": [
+        "Tag"
+      ],
       "parameters": [
         {
           "name": "id",
@@ -389,7 +395,9 @@
           }
         }
       },
-      "tags": ["Tag"],
+      "tags": [
+        "Tag"
+      ],
       "parameters": [
         {
           "name": "id",
@@ -478,7 +486,9 @@
           }
         }
       },
-      "tags": ["Tag"],
+      "tags": [
+        "Tag"
+      ],
       "parameters": [
         {
           "name": "id",
