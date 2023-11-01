@@ -32,8 +32,6 @@ RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
 
 # Creating final production image
 FROM base AS runner
-# See: https://docs.strapi.io/dev-docs/installation/docker#production-environments
-RUN apk add --no-cache vips-dev
 # Run the app in production mode
 ENV NODE_ENV=production
 COPY --from=install --chown=node:node /app .
