@@ -1,0 +1,23 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "build": {
+      "outputs": [".next/**", "!.next/cache/**", "build/**"],
+      "dotEnv": [".env.local", ".env"]
+    },
+    "start": {
+      "dependsOn": ["build"]
+    },
+    "test": {},
+    "lint": {},
+    "develop": {
+      "cache": false,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "seed": { "cache": false, "dependsOn": ["init"] },
+    "init": { "cache": false }
+  }
+}

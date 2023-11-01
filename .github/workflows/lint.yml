@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  lint-frontend:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -15,25 +15,9 @@ jobs:
         uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2
         with:
           node-version: "18.x"
+          cache: "npm"
       - name: Install dependencies
-        working-directory: ./publish-frontend
-        run: npm install
+        run: npm ci
       - name: Run lint
-        working-directory: ./publish-frontend
         run: npm run lint
 
-  lint-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
-      - name: Set up Node.js
-        uses: actions/setup-node@7c12f8017d5436eb855f1ed4399f037a36fbd9e8 # v2
-        with:
-          node-version: "18.x"
-      - name: Install dependencies
-        working-directory: ./publish-backend
-        run: npm install
-      - name: Run lint
-        working-directory: ./publish-backend
-        run: npm run lint

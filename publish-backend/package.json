@@ -1,5 +1,5 @@
 {
-  "name": "my-project",
+  "name": "publish-backend",
   "private": true,
   "version": "0.1.0",
   "description": "A Strapi application",
@@ -13,6 +13,7 @@
     "strapi": "strapi",
     "seed": "node ./scripts/seed.js",
     "cs": "config-sync",
+    "init": "cs import --yes",
     "test": "jest --forceExit",
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
