@@ -6,7 +6,10 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "lint": "turbo lint --continue"
+    "lint": "turbo lint --continue",
+    "seed": "turbo seed",
+    "develop": "turbo develop",
+    "run-tools": "cd tools && docker compose up -d && cd .."
   },
   "workspaces": [
     "apps/*"

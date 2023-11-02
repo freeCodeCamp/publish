@@ -32,10 +32,6 @@
   "strapi": {
     "uuid": "1efcc92e-6a66-407d-94c3-476c26671efd"
   },
-  "engines": {
-    "node": ">=14.19.1 <=18.x.x",
-    "npm": ">=6.0.0"
-  },
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",
