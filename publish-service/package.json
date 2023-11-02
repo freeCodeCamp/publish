@@ -6,7 +6,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "nodemon src/index.ts # don't create a develop script unless you want turbo develop to start it",
-    "start": "NODE_ENV=production node prod/index.js"
+    "start": "NODE_ENV=production node prod/index.js",
+    "prettier-check": "prettier --check .",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

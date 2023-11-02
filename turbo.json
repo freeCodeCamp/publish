@@ -9,8 +9,9 @@
       "dependsOn": ["build"]
     },
     "test": {},
-    "lint": { "dependsOn": ["prettier-check", "eslint"] },
+    "lint": { "dependsOn": ["prettier-check", "eslint", "type-check"] },
     "prettier-check": {},
+    "type-check": {},
     "eslint": {},
     "develop": {
       "cache": false,
