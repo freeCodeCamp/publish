@@ -12,18 +12,18 @@ import {
   Heading,
   Input,
   chakra,
-  useToast
-} from '@chakra-ui/react';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Field, Form, Formik } from 'formik';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
-import slugify from 'slugify';
+  useToast,
+} from "@chakra-ui/react";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Field, Form, Formik } from "formik";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import slugify from "slugify";
 
-import NavMenu from '@/components/nav-menu';
-import { createTag } from '@/lib/tags';
+import NavMenu from "@/components/nav-menu";
+import { createTag } from "@/lib/tags";
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -34,29 +34,29 @@ export default function CreateTag() {
   const user = session?.user;
 
   const [tagData, setTagData] = useState({
-    name: '',
-    slug: '',
-    isInternal: false
+    name: "",
+    slug: "",
+    isInternal: false,
   });
   const [customSlug, setCustomSlug] = useState(false);
 
-  const validateNameField = value => {
+  const validateNameField = (value) => {
     let error;
 
     if (!value) {
-      error = 'You must specify a name for the tag.';
+      error = "You must specify a name for the tag.";
     }
 
     return error;
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value, checked } = event.target;
-    if (name === 'name') {
+    if (name === "name") {
       if (customSlug) {
         setTagData({
           ...tagData,
-          [name]: value
+          [name]: value,
         });
       } else {
         setTagData({
@@ -64,20 +64,20 @@ export default function CreateTag() {
           [name]: value,
           slug: slugify(value, {
             lower: true,
-            strict: true
-          })
+            strict: true,
+          }),
         });
       }
-    } else if (name === 'slug') {
+    } else if (name === "slug") {
       setCustomSlug(true);
       setTagData({
         ...tagData,
-        [name]: value
+        [name]: value,
       });
     } else {
       setTagData({
         ...tagData,
-        [name]: checked
+        [name]: checked,
       });
     }
   };
@@ -89,63 +89,63 @@ export default function CreateTag() {
         name: tagData.name,
         slug: slugify(tagData.slug, {
           lower: true,
-          strict: true
+          strict: true,
         }),
         posts: [],
-        visibility: tagData.isInternal ? 'internal' : 'public'
-      }
+        visibility: tagData.isInternal ? "internal" : "public",
+      },
     };
 
     try {
       await createTag(token, data);
       toast({
-        title: 'Tag Created.',
-        status: 'success',
+        title: "Tag Created.",
+        status: "success",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
-      router.push('/tags');
+      router.push("/tags");
     } catch (error) {
       console.log(error);
       toast({
-        title: 'An error occurred.',
+        title: "An error occurred.",
         description: error.message,
-        status: 'error',
+        status: "error",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
     }
   };
 
   if (session) {
     return (
-      <Box minH='100vh' bgColor='gray.200'>
+      <Box minH="100vh" bgColor="gray.200">
         <NavMenu user={user} />
 
-        <Box ml={{ base: 0, md: '300px' }} px='6'>
+        <Box ml={{ base: 0, md: "300px" }} px="6">
           <Flex
-            alignItems='center'
-            minH='20'
-            position={{ md: 'sticky' }}
-            top='0'
-            bgColor='gray.200'
-            zIndex='9999'
+            alignItems="center"
+            minH="20"
+            position={{ md: "sticky" }}
+            top="0"
+            bgColor="gray.200"
+            zIndex="9999"
           >
             <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
               <BreadcrumbItem>
-                <BreadcrumbLink textDecoration='none' href='/tags'>
-                  <Heading size='lg'>Tags</Heading>
+                <BreadcrumbLink textDecoration="none" href="/tags">
+                  <Heading size="lg">Tags</Heading>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbItem isCurrentPage>
                 <BreadcrumbLink>
-                  <Heading size='lg'>New Tags</Heading>
+                  <Heading size="lg">New Tags</Heading>
                 </BreadcrumbLink>
               </BreadcrumbItem>
             </Breadcrumb>
           </Flex>
 
-          <Box p='4' pb='6' bgColor='white' rounded='4' boxShadow='md'>
+          <Box p="4" pb="6" bgColor="white" rounded="4" boxShadow="md">
             <Formik
               initialValues={tagData}
               enableReinitialize={true}
@@ -155,26 +155,26 @@ export default function CreateTag() {
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <Field name='name' validate={validateNameField}>
+                  <Field name="name" validate={validateNameField}>
                     {({ field, form }) => (
-                      <FormControl pb='8' isInvalid={form.errors.name}>
+                      <FormControl pb="8" isInvalid={form.errors.name}>
                         <FormLabel>Name</FormLabel>
                         <Input {...field} onChange={handleChange} />
                         <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                       </FormControl>
                     )}
                   </Field>
-                  <Field name='slug'>
+                  <Field name="slug">
                     {({ field }) => (
-                      <FormControl pb='8'>
-                        <FormLabel htmlFor='slug'>Slug</FormLabel>
+                      <FormControl pb="8">
+                        <FormLabel htmlFor="slug">Slug</FormLabel>
                         <Input {...field} onChange={handleChange} />
                       </FormControl>
                     )}
                   </Field>
-                  <Field name='isInternal'>
+                  <Field name="isInternal">
                     {({ field }) => (
-                      <FormControl pb='8'>
+                      <FormControl pb="8">
                         <Checkbox
                           {...field}
                           onChange={handleChange}
@@ -186,9 +186,9 @@ export default function CreateTag() {
                     )}
                   </Field>
                   <Button
-                    colorScheme='blue'
+                    colorScheme="blue"
                     isLoading={isSubmitting}
-                    type='submit'
+                    type="submit"
                   >
                     Save
                   </Button>
