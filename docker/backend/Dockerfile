@@ -11,7 +11,7 @@ COPY . .
 RUN apk add --no-cache jq
 RUN npm i -g turbo@$(jq -r .devDependencies.turbo package.json)
 # Since prune --docker provides a truncated package-lock, we cannot use npm ci.
-RUN turbo prune publish-backend --docker
+RUN turbo prune backend --docker
 
 FROM base AS install
 COPY --from=prune /app/out/json/ .
@@ -27,7 +27,7 @@ COPY --from=prune /app/out/json/ .
 RUN npm install
 COPY --from=prune /app/out/full .
 # Force use of installed turbo
-RUN npx -no turbo run build --filter=publish-backend...
+RUN npx -no turbo run build --filter=backend...
 # Remove all node_modules folders so we can copy the entire output of this
 # stage. The depedencies are copied from the install stage.
 RUN find . -name "node_modules" -type d -prune -exec rm -rf '{}' +
@@ -42,5 +42,5 @@ COPY --from=install --chown=node:node /app .
 COPY --from=build --chown=node:node /app .
 USER node
 EXPOSE 1337
-WORKDIR /app/publish-backend
+WORKDIR /app/apps/backend
 CMD ["npm", "run", "start"]

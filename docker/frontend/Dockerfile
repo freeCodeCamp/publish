@@ -15,7 +15,7 @@ COPY . .
 RUN apk add --no-cache jq
 RUN npm i -g turbo@$(jq -r .devDependencies.turbo package.json)
 # Since prune --docker provides a truncated package-lock, we cannot use npm ci.
-RUN turbo prune publish-frontend --docker
+RUN turbo prune frontend --docker
 
 FROM base as build
 ARG NEXT_PUBLIC_STRAPI_BACKEND_URL=http://localhost:1337
@@ -25,7 +25,7 @@ COPY --from=prune /app/out/json/ .
 RUN npm install
 COPY --from=prune /app/out/full .
 # Force use of installed turbo
-RUN npx -no turbo run build --filter=publish-frontend...
+RUN npx -no turbo run build --filter=frontend...
 
 # Creating final production image
 FROM base AS runner
@@ -33,12 +33,12 @@ FROM base AS runner
 ENV NODE_ENV=production
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=build --chown=node:node /app/publish-frontend/.next/standalone ./
-COPY --from=build /app/publish-frontend/public ./publish-frontend/public
-COPY --from=build --chown=node:node /app/publish-frontend/.next/static ./publish-frontend/.next/static
+COPY --from=build --chown=node:node /app/apps/frontend/.next/standalone ./
+COPY --from=build /app/apps/frontend/public ./apps/frontend/public
+COPY --from=build --chown=node:node /app/apps/frontend/.next/static ./apps/frontend/.next/static
 USER node
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
-WORKDIR /app/publish-frontend
+WORKDIR /app/apps/frontend
 CMD ["node", "server.js"]

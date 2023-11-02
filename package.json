@@ -9,8 +9,6 @@
     "lint": "turbo lint --continue"
   },
   "workspaces": [
-    "publish-backend",
-    "publish-frontend",
-    "publish-service"
+    "apps/*"
   ]
 }
