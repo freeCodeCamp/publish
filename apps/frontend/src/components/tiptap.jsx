@@ -126,7 +126,7 @@ function ToolBar({ editor }) {
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
         />
-        <MenuList listStyleType={'none'}>
+        <MenuList>
           <MenuItem
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 1 }).run()
@@ -212,7 +212,7 @@ function ToolBar({ editor }) {
           leftIcon={<FontAwesomeIcon icon={faCode} />}
           variant="ghost"
         />
-        <MenuList listStyleType={'none'}>
+        <MenuList>
           <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
           <MenuItem>Twitter</MenuItem>
         </MenuList>
