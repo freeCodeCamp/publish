@@ -120,6 +120,7 @@ build
 # Documentation plugin
 ############################
 src/extensions/documentation
+src/api/*/documentation
 
 ############################
 # Docker
