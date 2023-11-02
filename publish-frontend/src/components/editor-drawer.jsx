@@ -44,6 +44,7 @@ const EditorDrawer = ({
   user,
   post,
   postUrl,
+  postTagId,
   title,
   handleUnsavedChanges,
   handlePostTagId,
@@ -260,7 +261,7 @@ const EditorDrawer = ({
                         setPostTags(newTags);
 
                         // remove id from postTagsId with the index of the tag
-                        const newTagsId = postTagsId.filter((_value, index) => {
+                        const newTagsId = postTagId.filter((_value, index) => {
                           return index !== postTags.indexOf(tag);
                         });
 

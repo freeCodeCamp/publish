@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChevronLeft,
   faEdit,
-  faGear
 } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
 import slugify from 'slugify';
@@ -18,7 +17,6 @@ import {
   Stack,
   FormControl,
   FormErrorMessage,
-  IconButton,
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { updatePost } from '@/lib/posts';
@@ -42,18 +40,19 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [content, setContent] = useState(post?.attributes.body || '');
 
-
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
     if (post) {
-      const { title, body, slug } = post.attributes;
+      const { title, body, slug, tags } = post.attributes;
+      const tagIds = tags.data.map(tag => tag.id);
 
       setTitle(title);
       setContent(body);
 
       setPostUrl(slug ?? '');
       setPostId(post.id);
+      setPostTagId(tagIds);
     }
   }, [post]);
 
@@ -72,7 +71,7 @@ const PostForm = ({ tags, user, authors, post }) => {
   }
 
   const handlePostTagId = (value) => {
-    setPostTagId(value)
+    setPostTagId([...value])
     setUnsavedChanges(true);
   }
 
@@ -122,7 +121,7 @@ const PostForm = ({ tags, user, authors, post }) => {
         isClosable: true
       });
     }
-  }, [toast, title, postUrl, content, user]);
+  }, [toast, title, postUrl, postTagId, content, author, postId, user]);
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -180,8 +179,6 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   }
 
-
-
   return (
     <>
       <Flex>
@@ -202,6 +199,7 @@ const PostForm = ({ tags, user, authors, post }) => {
               authors={authors}
               user={user}
               post={post}
+              postTagId={postTagId}
               title={title}
               postUrl={postUrl}
               handleTitleChange={handleTitleChange}
