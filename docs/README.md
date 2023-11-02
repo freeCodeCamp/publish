@@ -100,18 +100,6 @@ role(Contributor and Editor) is seeded.
 Go to http://localhost:3000/ to see the frontend app and login with a seeded
 user.
 
-### Run publish-11ty-test (11ty) app
-
-1. In another terminal, go to `publish-11ty-test` directory
-2. Run `yarn install`
-3. Make sure the backend Strapi app is running in another terminal. Then run
-   `yarn serve` to build the static site and serve it.
-4. Visit http://localhost:8080/ to see the user-facing site
-
-- If you made changes to the contents saved in the backend database, you will
-  need to re-build the static site by running `yarn serve` again to see the
-  changes.
-
 ## Notes
 
 ### backend (Strapi)
