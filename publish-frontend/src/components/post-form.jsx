@@ -1,105 +1,81 @@
 import { useCallback, useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
+import EditorDrawer from '@/components/editor-drawer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faChevronLeft,
-  faEdit,
-  faGear
-} from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
 import slugify from 'slugify';
 import {
   Flex,
-  Img,
   Box,
   Button,
   Text,
   Input,
-  Spacer,
   Stack,
-  Wrap,
-  Tag,
   FormControl,
-  Divider,
-  FormErrorMessage,
-  TagLabel,
-  TagCloseButton,
-  CloseButton,
-  useDisclosure,
-  IconButton,
-  Drawer,
-  DrawerBody,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent
+  FormErrorMessage
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import Link from 'next/link';
-import { isEditor } from '@/lib/current-user';
-import { createTag } from '@/lib/tags';
 import { useRouter } from 'next/router';
-
-import {
-  AutoComplete,
-  AutoCompleteInput,
-  AutoCompleteItem,
-  AutoCompleteList
-} from '@choc-ui/chakra-autocomplete';
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
 
-  const { isOpen, onClose, onOpen } = useDisclosure();
-
   const [title, setTitle] = useState('(UNTITLED)');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [postId, setPostId] = useState(post?.id);
-
-  const [postTags, setPostTags] = useState([]);
-  const [postTagSlug, setPostTagSlug] = useState([]);
-  const [postTagsId, setPostTagId] = useState([]);
-
-  const [postTagInputText, setPostTagInputText] = useState('');
-
-  const [tagsList, setTagsList] = useState(tags);
-  const [searchedTags, setSearchedTags] = useState([]);
 
   const [author, setAuthor] = useState('');
-  const [authorName, setAuthorName] = useState('');
 
   const [postUrl, setPostUrl] = useState('');
+  const [postId, setPostId] = useState('');
 
-  const [featureImage, setFeatureImage] = useState('');
+  const [postTagId, setPostTagId] = useState([]);
+
   const [content, setContent] = useState(post?.attributes.body || '');
 
-  const [isAddingTag, setIsAddingTag] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
     if (post) {
-      const { title, body, tags, slug } = post.attributes;
-      const { id } = post;
+      const { title, body, slug, tags } = post.attributes;
+      const tagIds = tags.data.map(tag => tag.id);
 
       setTitle(title);
       setContent(body);
-      setPostId(id);
-
-      const tagNames = tags.data.map(tag => tag.attributes.name);
-      const tagIds = tags.data.map(tag => tag.id);
-      const tagSlugs = tags.data.map(tag => tag.attributes.slug);
-
-      setPostTags(tagNames);
-      setPostTagId(tagIds);
-      setPostTagSlug(tagSlugs);
 
       setPostUrl(slug ?? '');
-      setAuthorName(post.attributes.author.data.attributes.name);
+      setPostId(post.id);
+      setPostTagId(tagIds);
     }
   }, [post]);
+
+  const handlePostUrlChange = value => {
+    setPostUrl(value);
+    setUnsavedChanges(true);
+  };
+
+  const handleTitleChange = event => {
+    setTitle(event.target.value);
+    setUnsavedChanges(true);
+  };
+
+  const handleUnsavedChanges = () => {
+    setUnsavedChanges(true);
+  };
+
+  const handlePostTagId = value => {
+    setPostTagId([...value]);
+    setUnsavedChanges(true);
+  };
+
+  const handleAuthorChange = author => {
+    setAuthor(author);
+    setUnsavedChanges(true);
+  };
 
   const handleSubmit = useCallback(async () => {
     const nonce = uuidv4();
@@ -116,7 +92,7 @@ const PostForm = ({ tags, user, authors, post }) => {
           }
         ),
         body: content,
-        tags: postTagsId,
+        tags: postTagId,
         author: [author != '' ? author : user.id],
         locale: 'en'
       }
@@ -142,7 +118,7 @@ const PostForm = ({ tags, user, authors, post }) => {
         isClosable: true
       });
     }
-  }, [toast, postId, title, postUrl, content, postTagsId, author, user]);
+  }, [toast, title, postUrl, postTagId, content, author, postId, user]);
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -190,11 +166,6 @@ const PostForm = ({ tags, user, authors, post }) => {
     };
   }, [unsavedChanges, router.events]);
 
-  function handleFileInputChange(event) {
-    const file = event.target.files[0];
-    setFeatureImage(URL.createObjectURL(file));
-  }
-
   function handleContentChange(content) {
     setContent(content);
 
@@ -202,73 +173,6 @@ const PostForm = ({ tags, user, authors, post }) => {
       setUnsavedChanges(true);
     }
   }
-
-  function addTag(tagName, tagSlug) {
-    if (!postTagSlug.includes(tagSlug)) {
-      const newTags = [...postTags, tagName];
-      const newTagSlugs = [...postTagSlug, tagSlug];
-
-      const newTagsId = [];
-      newTags.forEach(tag => {
-        tagsList.forEach(t => {
-          if (tag === t.attributes.name) {
-            newTagsId.push(t.id);
-          }
-        });
-      });
-
-      setPostTags(newTags);
-      setPostTagId(newTagsId);
-      setPostTagSlug(newTagSlugs);
-
-      setUnsavedChanges(true);
-    }
-  }
-
-  async function handleTagSubmit(tagName) {
-    const token = user.jwt;
-    const data = {
-      data: {
-        name: tagName,
-        slug: slugify(tagName, {
-          lower: true,
-          specialChar: false
-        }),
-        posts: [],
-        visibility: 'public'
-      }
-    };
-
-    try {
-      const res = await createTag(token, data);
-      setTagsList([...tags, res.data]);
-      setSearchedTags([]);
-
-      toast({
-        title: 'Tag Created.',
-        description: "We've created your tag for you.",
-        status: 'success',
-        duration: 5000,
-        isClosable: true
-      });
-    } catch (error) {
-      toast({
-        title: 'An error occurred.',
-        description: error,
-        status: 'error',
-        duration: 5000,
-        isClosable: true
-      });
-    }
-  }
-
-  const handleTagSearch = value => {
-    const searchedTags = tagsList.filter(tag =>
-      tag.attributes.name.toLowerCase().startsWith(value.toLowerCase())
-    );
-
-    setSearchedTags(searchedTags);
-  };
 
   return (
     <>
@@ -285,15 +189,21 @@ const PostForm = ({ tags, user, authors, post }) => {
                 <Text fontSize='2xl'>Posts</Text>
               </Button>
             </Box>
-            <Box>
-              <IconButton
-                marginRight='auto'
-                variant='ghost'
-                onClick={onOpen}
-                aria-label='Open Post Drawer'
-                icon={<FontAwesomeIcon icon={faGear} />}
-              />
-            </Box>
+            <EditorDrawer
+              tags={tags}
+              authors={authors}
+              user={user}
+              post={post}
+              postTagId={postTagId}
+              title={title}
+              postUrl={postUrl}
+              handleTitleChange={handleTitleChange}
+              handlePostUrlChange={handlePostUrlChange}
+              handleAuthorChange={handleAuthorChange}
+              handleUnsavedChanges={handleUnsavedChanges}
+              handlePostTagId={handlePostTagId}
+              handleSubmit={handleSubmit}
+            />
           </Flex>
           <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
             {!isEditingTitle ? (
@@ -356,320 +266,6 @@ const PostForm = ({ tags, user, authors, post }) => {
           </Box>
         </Flex>
       </Flex>
-      <Drawer isOpen={isOpen} placement='right' onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth='1px'>
-            <Flex width='100%' height='75px' justifyContent='space-between'>
-              <Box
-                size='lg'
-                py='1rem'
-                textAlign='center'
-                fontWeight='700'
-                fontSize='20px'
-                display='flex'
-                alignItems='center'
-              >
-                <Img
-                  src=' https://cdn.freecodecamp.org/platform/universal/fcc_puck_500.jpg'
-                  width='32px'
-                  height='32px'
-                  mr='12px'
-                  borderRadius='5px'
-                />
-                freeCodeCamp.org
-              </Box>
-              <CloseButton alignSelf='center' onClick={onClose} />
-            </Flex>
-          </DrawerHeader>
-          <DrawerBody>
-            <Box
-              display='flex'
-              borderWidth='1px'
-              borderRadius='lg'
-              w='100%'
-              h='175px'
-              overflow='hidden'
-              bg='#f1f5f9'
-              justifyContent='center'
-              alignItems='center'
-            >
-              {!featureImage ? (
-                <>
-                  <label htmlFor='feature-image' className='custom-file-upload'>
-                    <button
-                      type='button'
-                      onClick={() =>
-                        document.getElementById('feature-image').click()
-                      }
-                    >
-                      Select Image
-                    </button>
-                  </label>
-                  <input
-                    type='file'
-                    id='feature-image'
-                    accept='image/*'
-                    style={{ display: 'none' }}
-                    onChange={handleFileInputChange}
-                  />{' '}
-                </>
-              ) : (
-                <Img
-                  src={featureImage}
-                  alt='feature'
-                  borderRadius='lg'
-                  objectFit='cover'
-                  w='100%'
-                  h='100%'
-                />
-              )}
-            </Box>
-            <Spacer h='1rem' />
-            {featureImage && (
-              <Button
-                colorScheme='red'
-                w='100%'
-                onClick={() => setFeatureImage(null)}
-              >
-                Delete Image
-              </Button>
-            )}
-            <Spacer h='1rem' />
-            <Box id='tag-container' display='flex' flexWrap='wrap'>
-              <Wrap spacing={2}>
-                {postTags.map(tag => (
-                  <Tag
-                    key={tag}
-                    size='lg'
-                    borderRadius='full'
-                    colorScheme='green'
-                    variant='solid'
-                  >
-                    <TagLabel>{tag}</TagLabel>
-                    <TagCloseButton
-                      onClick={() => {
-                        const newTags = postTags.filter(t => t !== tag);
-                        setPostTags(newTags);
-
-                        // remove id from postTagsId with the index of the tag
-                        const newTagsId = postTagsId.filter((_value, index) => {
-                          return index !== postTags.indexOf(tag);
-                        });
-
-                        setPostTagId(newTagsId);
-                      }}
-                    />
-                  </Tag>
-                ))}
-              </Wrap>
-            </Box>
-            <Spacer h='1rem' />
-            <Text fontSize='xl'>Tags</Text>
-            <AutoComplete
-              openOnFocus
-              restoreOnBlurIfEmpty={false}
-              onSelectOption={list => {
-                addTag(list.item.value, list.item.label);
-                setPostTagInputText('');
-              }}
-            >
-              <AutoCompleteInput
-                variant='outline'
-                placeholder='Filter by Tag'
-                backgroundColor='white'
-                value={postTagInputText}
-                fontSize='14px'
-                fontWeight='600'
-                onChange={event => {
-                  handleTagSearch(event.target.value);
-                  setPostTagInputText(event.target.value);
-                }}
-              />
-              <AutoCompleteList>
-                {(searchedTags.length > 0 ? searchedTags : tagsList)
-                  .slice(0, 25)
-                  .map(tag => (
-                    <AutoCompleteItem
-                      key={tag.id}
-                      value={tag.attributes.name}
-                      // this gives is the opportunity to add the tag to the post
-                      // by setting the label to the slug
-                      label={tag.attributes.slug}
-                      textTransform='capitalize'
-                      onClick={() => {
-                        addTag(tag.attributes.name, tag.attributes.slug);
-                        setPostTagInputText('');
-                      }}
-                    >
-                      {tag.attributes.name}
-                    </AutoCompleteItem>
-                  ))}
-              </AutoCompleteList>
-            </AutoComplete>
-            {isEditor(user) && (
-              <>
-                {!isAddingTag ? (
-                  <Button
-                    colorScheme='blue'
-                    variant='link'
-                    onClick={() => setIsAddingTag(true)}
-                  >
-                    Add new Tag
-                  </Button>
-                ) : (
-                  <>
-                    <Spacer h='1rem' />
-                    <Formik
-                      initialValues={{ tagName: '' }}
-                      onSubmit={(values, actions) => {
-                        setIsAddingTag(false);
-                        handleTagSubmit(values.tagName);
-                        actions.setSubmitting(false);
-                        setUnsavedChanges(true);
-                      }}
-                    >
-                      {props => (
-                        <Form>
-                          <Field name='tagName'>
-                            {({ field, form }) => (
-                              <FormControl
-                                isInvalid={
-                                  form.errors.tagName && form.touched.tagName
-                                }
-                              >
-                                <Input
-                                  {...field}
-                                  placeholder='tag name'
-                                  w='100%'
-                                  required
-                                />
-                                <FormErrorMessage>
-                                  {form.errors.tagName}
-                                </FormErrorMessage>
-                              </FormControl>
-                            )}
-                          </Field>
-                          <Button
-                            colorScheme='blue'
-                            isLoading={props.isSubmitting}
-                            type='submit'
-                            w='100%'
-                            margin={{ base: '1rem 0 0 0' }}
-                          >
-                            Submit
-                          </Button>
-                          <Button
-                            colorScheme='red'
-                            width='100%'
-                            margin={{ base: '1rem 0 0 0' }}
-                            onClick={() => setIsAddingTag(false)}
-                          >
-                            Cancel
-                          </Button>
-                        </Form>
-                      )}
-                    </Formik>
-                  </>
-                )}
-              </>
-            )}
-            <Spacer h='1rem' />
-            {isEditor(user) && (
-              <>
-                <Spacer h='1rem' />
-                <Text fontSize='xl'>Author</Text>
-                <AutoComplete
-                  openOnFocus
-                  onSelectOption={list => {
-                    setAuthor(list.item.value);
-                    setAuthorName(list.item.label);
-                    setUnsavedChanges(true);
-                  }}
-                >
-                  <AutoCompleteInput
-                    variant='outline'
-                    placeholder='Filter by Author'
-                    backgroundColor='white'
-                    fontSize='14px'
-                    value={authorName}
-                    fontWeight='600'
-                    onChange={event => {
-                      setAuthorName(event.target.value);
-                      setUnsavedChanges(true);
-                    }}
-                  />
-                  <AutoCompleteList>
-                    {authors.slice(0, 25).map(author => (
-                      <AutoCompleteItem
-                        key={author.id}
-                        value={author.id}
-                        label={author.name}
-                        textTransform='capitalize'
-                        onClick={() => {
-                          setAuthor(author.id);
-                          setAuthorName(author.name);
-                        }}
-                      >
-                        {author.name}
-                      </AutoCompleteItem>
-                    ))}
-                  </AutoCompleteList>
-                </AutoComplete>
-                <Spacer h='1rem' />
-              </>
-            )}
-            <Spacer h='1rem' />
-            <Text fontSize='xl'>Publish Date</Text>
-            <Spacer h='1rem' />
-            <Box display='flex' flexDirection='row'>
-              <Input type='date' variant='outline' />
-              <Input type='time' variant='outline' />
-            </Box>
-            <Spacer h='1rem' />
-            <Text fontSize='xl'>Post Url</Text>
-            <label>
-              <Input
-                type='text'
-                placeholder='Post Url'
-                value={postUrl}
-                id='slug'
-                onChange={e => {
-                  setPostUrl(e.target.value);
-                  setUnsavedChanges(true);
-                }}
-                w='100%'
-                marginTop='1rem'
-                variant='outline'
-              />
-              <Text fontStyle='italic' fontSize='md'>
-                https://www.freecodecamp.com/news/
-                {slugify(postUrl != '' ? postUrl : title, {
-                  lower: true,
-                  specialChar: false
-                })}
-              </Text>
-            </label>
-            <Spacer h='1rem' />
-            <Divider />
-            <Spacer h='1rem' />
-            <Button colorScheme='blue' w='100%' onClick={() => handleSubmit()}>
-              Save as Draft
-            </Button>
-            <Spacer h='1rem' />
-            <Link
-              href={{
-                pathname: `/posts/preview/${postId}`
-              }}
-              target='_blank'
-            >
-              <Button colorScheme='blue' w='100%' variant='outline'>
-                Preview
-              </Button>
-            </Link>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
     </>
   );
 };
