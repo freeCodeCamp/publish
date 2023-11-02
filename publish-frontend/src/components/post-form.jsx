@@ -202,6 +202,7 @@ const PostForm = ({ tags, user, authors, post }) => {
               handleAuthorChange={handleAuthorChange}
               handleUnsavedChanges={handleUnsavedChanges}
               handlePostTagId={handlePostTagId}
+              handleSubmit={handleSubmit}
             />
           </Flex>
           <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>

@@ -47,7 +47,8 @@ const EditorDrawer = ({
   handleUnsavedChanges,
   handlePostTagId,
   handleAuthorChange,
-  handlePostUrlChange
+  handlePostUrlChange,
+  handleSubmit
 }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [searchedTags, setSearchedTags] = useState([]);
