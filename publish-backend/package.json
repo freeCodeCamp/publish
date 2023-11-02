@@ -12,7 +12,7 @@
     "strapi": "strapi",
     "seed": "node ./scripts/seed.js",
     "cs": "config-sync",
-    "init": "cs import --yes",
+    "init": "npm run cs import --yes",
     "test": "jest --forceExit",
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
