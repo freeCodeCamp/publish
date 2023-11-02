@@ -38,5 +38,5 @@ COPY --from=install --chown=node:node /app .
 COPY --from=build --chown=node:node /app .
 USER node
 EXPOSE 1337
-WORKDIR /app/cron
+WORKDIR /app/apps/cron
 CMD ["npm", "run", "start"]

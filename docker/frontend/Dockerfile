@@ -33,12 +33,12 @@ FROM base AS runner
 ENV NODE_ENV=production
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=build --chown=node:node /app/frontend/.next/standalone ./
-COPY --from=build /app/frontend/public ./frontend/public
-COPY --from=build --chown=node:node /app/frontend/.next/static ./frontend/.next/static
+COPY --from=build --chown=node:node /app/apps/frontend/.next/standalone ./
+COPY --from=build /app/apps/frontend/public ./apps/frontend/public
+COPY --from=build --chown=node:node /app/apps/frontend/.next/static ./apps/frontend/.next/static
 USER node
 EXPOSE 3000
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
-WORKDIR /app/frontend
+WORKDIR /app/apps/frontend
 CMD ["node", "server.js"]
