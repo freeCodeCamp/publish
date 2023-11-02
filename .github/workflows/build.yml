@@ -1,0 +1,70 @@
+name: Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x]
+        site_tlds: ['dev']
+        apps: ['backend', 'frontend', 'cron']
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@1a4442cacd436585916779262731d5b162bc6ec7 # v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Create a tagname
+        id: tagname
+        run: |
+          echo "tagname=$(git rev-parse --short HEAD)-$(date +%Y%m%d)-$(date +%H%M)" >> $GITHUB_ENV
+
+      - name: Build & Tag Images
+        # We pass NEXT_PUBLIC_STRAPI_BACKEND_URL as a build arg to all apps,
+        # even though only the frontend needs it. The other builds will ignore
+        # it.
+        run: |
+          docker build . \
+          --tag registry.digitalocean.com/${{ secrets.DOCR_NAME }}/${{ matrix.site_tlds }}/publish-${{ matrix.apps }}:$tagname \
+          --tag registry.digitalocean.com/${{ secrets.DOCR_NAME }}/${{ matrix.site_tlds }}/publish-${{ matrix.apps }}:latest \
+          --build-arg NEXT_PUBLIC_STRAPI_BACKEND_URL=${{ secrets.NEXT_PUBLIC_STRAPI_BACKEND_URL }} \
+          --file docker/${{ matrix.apps }}/Dockerfile
+
+      # - name: Build the registry test image
+      #   run: |
+      #     cd registry-test
+      #     REGISTRY_NAME=${{ secrets.DOCR_NAME }} TAGNAME_CI=$tagname make build
+      #     cd ..
+
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+
+      - name: Push image to DigitalOcean Container Registry
+        run: |
+          docker push registry.digitalocean.com/${{ secrets.DOCR_NAME }}/${{ matrix.site_tlds }}/publish-${{ matrix.apps }}:$tagname
+          docker push registry.digitalocean.com/${{ secrets.DOCR_NAME }}/${{ matrix.site_tlds }}/publish-${{ matrix.apps }}:latest
+
+      # - name: Push the registry test image
+      #   run: |
+      #     cd registry-test
+      #     REGISTRY_NAME=${{ secrets.DOCR_NAME }} TAGNAME_CI=$tagname make push
+      #     cd ..
+
+      - name: Clean up Self-hosted setup
+        uses: colpal/actions-clean@36e6ca1abd35efe61cb60f912bd7837f67887c8a # tag=v1
+        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
