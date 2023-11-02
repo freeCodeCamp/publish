@@ -1,15 +1,15 @@
-require('dotenv').config();
+require("dotenv").config();
 
 (async () => {
   const res = await fetch(
     `${process.env.STRAPI_URL}/api/posts/check-and-publish`,
     {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.STRAPI_ACCESS_TOKEN}`,
       },
-    }
+    },
   );
 
   const resJson = await res.json();
