@@ -1,15 +1,19 @@
 # Documentation
 
-This repository contains 3 separate apps:
+This repository contains 4 separate apps:
 
-- **publish-backend (Strapi)**
+- **backend (Strapi)**
 
   - Works as a backend CMS that has database and provides web APIs
 
-- **publish-frontend (Next.js)**
+- **frontend (Next.js)**
 
   - Works as a frontend web app where our publication
     authors/editors/translators write articles.
+  
+- **cron (Node.js)**
+
+  - Works as a task scheduler
 
 - **publish-11ty-test (11ty)**
 
@@ -50,8 +54,9 @@ Follow the npm-specific Turborepo [installation instructions](https://turbo.buil
 Copy the sample env files.
 
 ```sh
-cp publish-backend/sample.env publish-backend/.env
-cp publish-frontend/sample.env publish-frontend/.env
+cp apps/backend/sample.env apps/backend/.env
+cp apps/frontend/sample.env apps/frontend/.env
+cp apps/cron/sample.env apps/cron/.env
 ```
 
 Follow the instructions in the `.env` files to setup the secrets.
@@ -97,10 +102,10 @@ Go to http://localhost:3000/ to see the frontend app and login with a seeded use
 
 ## Notes
 
-### publish-backend (Strapi)
+### backend (Strapi)
 
 - The Admin panel will be for developers only. Contributors will write articles
-  on `publish-frontend` (Next.js) app.
+  on `frontend` (Next.js) app.
 
 - You need to run the Strapi app in development mode to modify any Content-Type
   (data structure). If you use `docker compose up` it's configured to do so.
@@ -115,7 +120,7 @@ Go to http://localhost:3000/ to see the frontend app and login with a seeded use
 
 #### How to use Admin Panel
 
-- You can manage authors (users to access publish-frontend app) from
+- You can manage authors (users to access frontend app) from
   `Content Manager > User`
 
 - You can manage admin users (users to access Strapi admin panel) from
@@ -126,12 +131,12 @@ Go to http://localhost:3000/ to see the frontend app and login with a seeded use
 - You can modify what data to expose through API from
   `Settings > USERS & PERMISSIONS PLUGIN > Roles > Public`
 
-### publish-frontend (Next.js)
+### frontend (Next.js)
 
 - We will be using Auth0 as a sign-in method in production
 
-  - You have to create the user on `publish-backend` (Strapi) app **by signing
-    in through the `publish-frontend` (Next.js) app for the first time**. If you
+  - You have to create the user on `backend` (Strapi) app **by signing
+    in through the `frontend` (Next.js) app for the first time**. If you
     manually create the user of the same email address from the Strapi Admin
     panel beforehand, Next.js app will fail to get JWT token from Strapi. This
     is a
@@ -139,7 +144,7 @@ Go to http://localhost:3000/ to see the frontend app and login with a seeded use
 
 ## How to run the apps in production mode with Docker
 
-### publish-backend (Strapi)
+### backend (Strapi)
 
 To build the docker image:
 
@@ -193,7 +198,7 @@ npm run cs import
 - In Settings > Providers, enable `auth0`.
 - (If you want to access endpoints that uses API token) In Settings > API Tokens, generate API tokens
 
-### publish-frontend (Next.js)
+### frontend (Next.js)
 
 To build the docker image:
 
