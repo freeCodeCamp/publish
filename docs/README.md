@@ -10,7 +10,7 @@ This repository contains 4 separate apps:
 
   - Works as a frontend web app where our publication
     authors/editors/translators write articles.
-  
+
 - **cron (Node.js)**
 
   - Works as a task scheduler
@@ -36,7 +36,8 @@ Prerequisites:
 - mailhog (optional)
 - Turborepo
 
-We recommend mailhog for testing emails when developing locally, but it's optional.
+We recommend mailhog for testing emails when developing locally, but it's
+optional.
 
 If you're managing PostgreSQL manually (and don't need mailhog), you can skip
 this section. Otherwise:
@@ -47,7 +48,13 @@ docker compose up -d
 cd ..
 ```
 
-Follow the npm-specific Turborepo [installation instructions](https://turbo.build/repo/docs/installing)
+OR
+
+Alternatively, you can use `npm run run-tools` in the root directory to start up
+these services.
+
+Follow the npm-specific Turborepo
+[installation instructions](https://turbo.build/repo/docs/installing)
 
 ### Run initial setup
 
@@ -64,29 +71,34 @@ Follow the instructions in the `.env` files to setup the secrets.
 Install dependencies.
 
 ```sh
-npm i
+npm ci
 ```
 
 Import strapi config and create seed data.
 
 ```sh
-turbo seed
+npm run seed
 ```
 
 ### Run the apps
 
 ```sh
-turbo develop
+npm run develop
 ```
 
-To setup your strapi admin account, visit http://localhost:1337/admin and follow the instructions.
+To setup your strapi admin account, visit http://localhost:1337/admin and follow
+the instructions.
 
 Note: This is an account to login to the admin panel. It's different from the
 account to login to the frontend app.
 
-Once this is complete you will see the seeded data in the admin panel and you can use the seeded users to login in the Next.js app. Email and password of the seeded users are in `src/seed/index.js` file. One account of each role(Contributor and Editor) is seeded.
+Once this is complete you will see the seeded data in the admin panel and you
+can use the seeded users to login in the Next.js app. Email and password of the
+seeded users are in `src/seed/index.js` file. One account of each
+role(Contributor and Editor) is seeded.
 
-Go to http://localhost:3000/ to see the frontend app and login with a seeded user.
+Go to http://localhost:3000/ to see the frontend app and login with a seeded
+user.
 
 ### Run publish-11ty-test (11ty) app
 
@@ -135,11 +147,10 @@ Go to http://localhost:3000/ to see the frontend app and login with a seeded use
 
 - We will be using Auth0 as a sign-in method in production
 
-  - You have to create the user on `backend` (Strapi) app **by signing
-    in through the `frontend` (Next.js) app for the first time**. If you
-    manually create the user of the same email address from the Strapi Admin
-    panel beforehand, Next.js app will fail to get JWT token from Strapi. This
-    is a
+  - You have to create the user on `backend` (Strapi) app **by signing in
+    through the `frontend` (Next.js) app for the first time**. If you manually
+    create the user of the same email address from the Strapi Admin panel
+    beforehand, Next.js app will fail to get JWT token from Strapi. This is a
     [known issue in Strapi plugin](https://github.com/strapi/strapi/issues/12907).
 
 ## How to run the apps in production mode with Docker
@@ -152,16 +163,16 @@ To build the docker image:
 docker compose -f docker-compose.prod.yml build
 ```
 
-To start the docker container:
-(Replace `***` with the values you want to set for the environment variables.)
+To start the docker container: (Replace `***` with the values you want to set
+for the environment variables.)
 
 ```
 VARIABLE1_NAME=*** VARIABLE2_NAME=*** ... \
 docker compose -f docker-compose.prod.yml up -d
 ```
 
-Alternatively, using .env file:
-(Replace .env with the path to the .env file you want to use)
+Alternatively, using .env file: (Replace .env with the path to the .env file you
+want to use)
 
 ```
 docker compose --env-file .env -f docker-compose.prod.yml up -d
@@ -191,12 +202,15 @@ npm run cs import
 
 - Visit admin panel and create the first admin account
 
-- In Content Manager, create `Invited User` entry for the first user. This will allow the first user on the frontend app to login using Auth0. Set the following values:
+- In Content Manager, create `Invited User` entry for the first user. This will
+  allow the first user on the frontend app to login using Auth0. Set the
+  following values:
   - email: valid email you can login using Auth0
   - role: choose "Editor" (unless you can't invite other users)
   - accepted: false
 - In Settings > Providers, enable `auth0`.
-- (If you want to access endpoints that uses API token) In Settings > API Tokens, generate API tokens
+- (If you want to access endpoints that uses API token) In Settings > API
+  Tokens, generate API tokens
 
 ### frontend (Next.js)
 
@@ -206,8 +220,8 @@ To build the docker image:
 docker compose -f docker/production/docker-compose.yml build
 ```
 
-To start the docker container:
-(Replace `***` with the values you want to set for the environment variables)
+To start the docker container: (Replace `***` with the values you want to set
+for the environment variables)
 
 ```
 NEXTAUTH_SECRET=*** AUTH0_CLIENT_ID=*** AUTH0_CLIENT_SECRET=*** \
