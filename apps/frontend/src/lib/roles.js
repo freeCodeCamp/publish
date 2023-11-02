@@ -4,11 +4,11 @@ export async function getRoles(token) {
   const endpoint = `${api_root}/users-permissions/roles`;
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   try {
@@ -16,7 +16,7 @@ export async function getRoles(token) {
 
     return res.json();
   } catch (error) {
-    console.error('getRoles responded with error. Status: ', res?.body);
+    console.error("getRoles responded with error. Status: ", res?.body);
     throw new Error(`getRoles responded with error. Status: ${res?.body}`);
   }
 }

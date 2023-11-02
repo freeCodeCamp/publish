@@ -1,4 +1,4 @@
-import qs from 'qs';
+import qs from "qs";
 
 // Tag API calls
 
@@ -6,15 +6,15 @@ const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getTags(token, queryParams) {
   const endpoint = `${api_root}/tags?${qs.stringify(queryParams, {
-    encodeValuesOnly: true
+    encodeValuesOnly: true,
   })}`;
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   try {
@@ -22,7 +22,7 @@ export async function getTags(token, queryParams) {
 
     return res.json();
   } catch (error) {
-    console.error('getTags responded with error. Status: ', res?.body);
+    console.error("getTags responded with error. Status: ", res?.body);
     throw new Error(`getTags responded with error. Status: ${res?.body}`);
   }
 }
@@ -31,25 +31,25 @@ export async function createTag(token, data) {
   const endpoint = `${api_root}/tags`;
 
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
 
   try {
     const res = await fetch(endpoint, options);
 
     if (!res.ok) {
-      console.error('createTag responded with error. Status: ', res?.status);
+      console.error("createTag responded with error. Status: ", res?.status);
       throw new Error(`createTag responded with error. Status: ${res?.status}`);
     }
 
     return res.json();
   } catch (error) {
-    console.error('createTag Failed. Error: ', error);
+    console.error("createTag Failed. Error: ", error);
     throw new Error(`createTag Failed. Error: ${error}`);
   }
 }
@@ -57,19 +57,19 @@ export async function createTag(token, data) {
 export async function getTag(token, tagId) {
   const endpoint = `${api_root}/tags/${tagId}?${qs.stringify(
     {
-      populate: '*'
+      populate: "*",
     },
     {
-      encodeValuesOnly: true
-    }
+      encodeValuesOnly: true,
+    },
   )}`;
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   try {
@@ -77,7 +77,7 @@ export async function getTag(token, tagId) {
 
     return res.json();
   } catch (error) {
-    console.error('getTag responded with error. Status: ', res?.body);
+    console.error("getTag responded with error. Status: ", res?.body);
     throw new Error(`getTag responded with error. Status: ${res?.body}`);
   }
 }
@@ -85,20 +85,20 @@ export async function getTag(token, tagId) {
 export async function updateTag(token, tagId, data) {
   const endpoint = `${api_root}/tags/${tagId}?${qs.stringify(
     {
-      populate: '*'
+      populate: "*",
     },
     {
-      encodeValuesOnly: true
-    }
+      encodeValuesOnly: true,
+    },
   )}`;
 
   const options = {
-    method: 'PUT',
+    method: "PUT",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
 
   try {
@@ -106,7 +106,7 @@ export async function updateTag(token, tagId, data) {
 
     return res.json();
   } catch (error) {
-    console.error('updateTag responded with error. Status: ', res?.body);
+    console.error("updateTag responded with error. Status: ", res?.body);
     throw new Error(`updateTag responded with error. Status: ${res?.body}`);
   }
 }
@@ -115,11 +115,11 @@ export async function deleteTag(token, tagId) {
   const endpoint = `${api_root}/tags/${tagId}`;
 
   const options = {
-    method: 'DELETE',
+    method: "DELETE",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   try {
@@ -127,7 +127,7 @@ export async function deleteTag(token, tagId) {
 
     return res.json();
   } catch (error) {
-    console.error('deleteTag responded with error. Status: ', res?.body);
+    console.error("deleteTag responded with error. Status: ", res?.body);
     throw new Error(`deleteTag responded with error. Status: ${res?.body}`);
   }
 }

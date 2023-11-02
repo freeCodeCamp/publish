@@ -1,3 +1,3 @@
 export function isEditor(user) {
-  return user?.role === 'Editor';
+  return user?.role === "Editor";
 }

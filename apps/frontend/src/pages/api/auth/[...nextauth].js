@@ -1,30 +1,30 @@
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import Auth0Provider from 'next-auth/providers/auth0';
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import Auth0Provider from "next-auth/providers/auth0";
 
 export const authOptions = {
   providers: [
-    process.env.NODE_ENV === 'development' &&
+    process.env.NODE_ENV === "development" &&
       CredentialsProvider({
-        name: 'email',
+        name: "email",
         credentials: {
           identifier: {
-            label: 'Email',
-            type: 'email',
-            placeholder: 'foo@bar.com',
-            required: true
+            label: "Email",
+            type: "email",
+            placeholder: "foo@bar.com",
+            required: true,
           },
-          password: { label: 'Password', type: 'password', required: true }
+          password: { label: "Password", type: "password", required: true },
         },
         async authorize(credentials) {
           const { identifier, password } = credentials;
           const res = await fetch(
             `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/local`,
             {
-              method: 'POST',
+              method: "POST",
               body: JSON.stringify({ identifier, password }),
-              headers: { 'Content-Type': 'application/json' }
-            }
+              headers: { "Content-Type": "application/json" },
+            },
           );
           const data = await res.json();
 
@@ -33,13 +33,13 @@ export const authOptions = {
             return user;
           }
           return null;
-        }
+        },
       }),
     Auth0Provider({
       clientId: process.env.AUTH0_CLIENT_ID,
       clientSecret: process.env.AUTH0_CLIENT_SECRET,
-      issuer: process.env.AUTH0_DOMAIN
-    })
+      issuer: process.env.AUTH0_DOMAIN,
+    }),
   ],
 
   // Details: https://next-auth.js.org/configuration/callbacks
@@ -47,7 +47,7 @@ export const authOptions = {
     async signIn({ user }) {
       const { email } = user;
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/invited-users?filters[email][$eq]=${email}`
+        `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/invited-users?filters[email][$eq]=${email}`,
       );
       const { data } = await res.json();
       if (data.length === 0) {
@@ -62,9 +62,9 @@ export const authOptions = {
       if (user && account) {
         // Get JWT token to access the Strapi API
         // Note: This is different from the session JWT that is stored in the cookie at the end of this callback
-        if (account.provider === 'auth0') {
+        if (account.provider === "auth0") {
           const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`
+            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`,
           );
           const data = await res.json();
           // Note: If the email is already registered on Strapi app without using Auth0
@@ -82,9 +82,9 @@ export const authOptions = {
           `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=*`,
           {
             headers: {
-              Authorization: `Bearer ${token.jwt}`
-            }
-          }
+              Authorization: `Bearer ${token.jwt}`,
+            },
+          },
         );
 
         if (res2.ok) {
@@ -112,22 +112,22 @@ export const authOptions = {
       session.user.jwt = token.jwt; // JWT token to access the Strapi API
       session.user.role = token.userRole;
       session.user.id = token.id;
-      if ('image' in token) {
+      if ("image" in token) {
         session.user.image = token.image;
       }
       return session;
-    }
+    },
   },
 
   session: {
     // The default is `"jwt"`, an encrypted JWT (JWE) stored in the session cookie.
     // If you use an `adapter` however, we default it to `"database"` instead.
     // You can still force a JWT session by explicitly defining `"jwt"`.
-    strategy: 'jwt'
+    strategy: "jwt",
   },
 
   // Not providing any secret or NEXTAUTH_SECRET will throw an error in production.
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const auth = (req, res) => NextAuth(req, res, authOptions);
