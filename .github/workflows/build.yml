@@ -7,7 +7,7 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-20.04
-
+    environment: staging # Hardcoded for now. TODO: use a matrix?
     strategy:
       fail-fast: false
       matrix:
