@@ -36,8 +36,6 @@ import slugify from 'slugify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 
-
-
 const EditorDrawer = ({
   tags,
   authors,
@@ -49,9 +47,8 @@ const EditorDrawer = ({
   handleUnsavedChanges,
   handlePostTagId,
   handleAuthorChange,
-  handlePostUrlChange,
+  handlePostUrlChange
 }) => {
-
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [searchedTags, setSearchedTags] = useState([]);
   const [isAddingTag, setIsAddingTag] = useState(false);
@@ -60,17 +57,15 @@ const EditorDrawer = ({
   const [postTags, setPostTags] = useState([]);
   const [postTagSlug, setPostTagSlug] = useState([]);
 
-
   const [tagsList, setTagsList] = useState(tags);
 
   const [authorName, setAuthorName] = useState('');
 
   const [featureImage, setFeatureImage] = useState('');
 
-
   useEffect(() => {
     if (post) {
-      const { body, tags, slug } = post.attributes;
+      const { tags } = post.attributes;
 
       const tagNames = tags.data.map(tag => tag.attributes.name);
       const tagIds = tags.data.map(tag => tag.id);
@@ -84,7 +79,7 @@ const EditorDrawer = ({
     }
   }, [post]);
 
-  const handleFileInputChange = (event) => {
+  const handleFileInputChange = event => {
     const file = event.target.files[0];
     setFeatureImage(URL.createObjectURL(file));
   };
@@ -156,20 +151,18 @@ const EditorDrawer = ({
     setSearchedTags(searchedTags);
   };
 
-
-
-
   return (
     <>
-    <Box>
-      <IconButton
-        marginRight='auto'
-        variant='ghost'
-        onClick={onOpen}
-        aria-label='Open Post Drawer'
-        icon={<FontAwesomeIcon icon={faGear} />} />
-    </Box>
-    <Drawer isOpen={isOpen} placement='right' onClose={onClose}>
+      <Box>
+        <IconButton
+          marginRight='auto'
+          variant='ghost'
+          onClick={onOpen}
+          aria-label='Open Post Drawer'
+          icon={<FontAwesomeIcon icon={faGear} />}
+        />
+      </Box>
+      <Drawer isOpen={isOpen} placement='right' onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth='1px'>
@@ -188,7 +181,8 @@ const EditorDrawer = ({
                   width='32px'
                   height='32px'
                   mr='12px'
-                  borderRadius='5px' />
+                  borderRadius='5px'
+                />
                 freeCodeCamp.org
               </Box>
               <CloseButton alignSelf='center' onClick={onClose} />
@@ -211,7 +205,9 @@ const EditorDrawer = ({
                   <label htmlFor='feature-image' className='custom-file-upload'>
                     <button
                       type='button'
-                      onClick={() => document.getElementById('feature-image').click()}
+                      onClick={() =>
+                        document.getElementById('feature-image').click()
+                      }
                     >
                       Select Image
                     </button>
@@ -221,7 +217,8 @@ const EditorDrawer = ({
                     id='feature-image'
                     accept='image/*'
                     style={{ display: 'none' }}
-                    onChange={handleFileInputChange} />{' '}
+                    onChange={handleFileInputChange}
+                  />{' '}
                 </>
               ) : (
                 <Img
@@ -230,7 +227,8 @@ const EditorDrawer = ({
                   borderRadius='lg'
                   objectFit='cover'
                   w='100%'
-                  h='100%' />
+                  h='100%'
+                />
               )}
             </Box>
             <Spacer h='1rem' />
@@ -266,7 +264,8 @@ const EditorDrawer = ({
                         });
 
                         handlePostTagId(newTagsId);
-                      }} />
+                      }}
+                    />
                   </Tag>
                 ))}
               </Wrap>
@@ -291,7 +290,8 @@ const EditorDrawer = ({
                 onChange={event => {
                   handleTagSearch(event.target.value);
                   setPostTagInputText(event.target.value);
-                }} />
+                }}
+              />
               <AutoCompleteList>
                 {(searchedTags.length > 0 ? searchedTags : tagsList)
                   .slice(0, 25)
@@ -340,13 +340,16 @@ const EditorDrawer = ({
                           <Field name='tagName'>
                             {({ field, form }) => (
                               <FormControl
-                                isInvalid={form.errors.tagName && form.touched.tagName}
+                                isInvalid={
+                                  form.errors.tagName && form.touched.tagName
+                                }
                               >
                                 <Input
                                   {...field}
                                   placeholder='tag name'
                                   w='100%'
-                                  required />
+                                  required
+                                />
                                 <FormErrorMessage>
                                   {form.errors.tagName}
                                 </FormErrorMessage>
@@ -399,7 +402,8 @@ const EditorDrawer = ({
                     onChange={event => {
                       setAuthorName(event.target.value);
                       handleUnsavedChanges();
-                    }} />
+                    }}
+                  />
                   <AutoCompleteList>
                     {authors.slice(0, 25).map(author => (
                       <AutoCompleteItem
@@ -408,7 +412,6 @@ const EditorDrawer = ({
                         label={author.name}
                         textTransform='capitalize'
                         onClick={() => {
-
                           setAuthorName(author.name);
                         }}
                       >
@@ -440,7 +443,8 @@ const EditorDrawer = ({
                 }}
                 w='100%'
                 marginTop='1rem'
-                variant='outline' />
+                variant='outline'
+              />
               <Text fontStyle='italic' fontSize='md'>
                 https://www.freecodecamp.com/news/
                 {slugify(postUrl != '' ? postUrl : title, {
@@ -468,8 +472,9 @@ const EditorDrawer = ({
             </Link>
           </DrawerBody>
         </DrawerContent>
-      </Drawer></>
-  )
-}
+      </Drawer>
+    </>
+  );
+};
 
-export default EditorDrawer
+export default EditorDrawer;

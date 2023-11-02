@@ -2,10 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Tiptap from '@/components/tiptap';
 import EditorDrawer from '@/components/editor-drawer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faChevronLeft,
-  faEdit,
-} from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
 import slugify from 'slugify';
 import {
@@ -16,7 +13,7 @@ import {
   Input,
   Stack,
   FormControl,
-  FormErrorMessage,
+  FormErrorMessage
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 import { updatePost } from '@/lib/posts';
@@ -56,29 +53,29 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   }, [post]);
 
-  const handlePostUrlChange = event => {
-    setPostUrl(event.target.value);
+  const handlePostUrlChange = value => {
+    setPostUrl(value);
     setUnsavedChanges(true);
-  }
+  };
 
   const handleTitleChange = event => {
     setTitle(event.target.value);
     setUnsavedChanges(true);
-  }
+  };
 
   const handleUnsavedChanges = () => {
     setUnsavedChanges(true);
-  }
+  };
 
-  const handlePostTagId = (value) => {
-    setPostTagId([...value])
+  const handlePostTagId = value => {
+    setPostTagId([...value]);
     setUnsavedChanges(true);
-  }
+  };
 
   const handleAuthorChange = author => {
     setAuthor(author);
     setUnsavedChanges(true);
-  }
+  };
 
   const handleSubmit = useCallback(async () => {
     const nonce = uuidv4();
@@ -168,8 +165,6 @@ const PostForm = ({ tags, user, authors, post }) => {
       router.events.off('routeChangeStart', handleRouteChange);
     };
   }, [unsavedChanges, router.events]);
-
-
 
   function handleContentChange(content) {
     setContent(content);
