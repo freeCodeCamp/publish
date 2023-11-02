@@ -7,10 +7,8 @@
     "develop": "npm run dev",
     "build": "next build",
     "start": "next start",
-    "lint": "run-p --continue-on-error --print-label lint:*",
-    "lint:next": "next lint",
-    "lint:prettier": "prettier --check .",
-    "prettier": "prettier --write ."
+    "eslint": "next lint",
+    "prettier-check": "prettier --check ."
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
@@ -54,7 +52,6 @@
     "eslint-config-next": "^13.4.13",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-unused-imports": "^3.0.0",
-    "npm-run-all": "4.1.5",
     "prettier": "^3.0.1"
   }
 }
