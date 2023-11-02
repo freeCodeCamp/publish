@@ -19,19 +19,19 @@ import {
   Input,
   chakra,
   useDisclosure,
-  useToast
-} from '@chakra-ui/react';
-import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Field, Form, Formik } from 'formik';
-import { getServerSession } from 'next-auth/next';
-import { useRouter } from 'next/router';
-import { useRef, useState } from 'react';
-import slugify from 'slugify';
+  useToast,
+} from "@chakra-ui/react";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Field, Form, Formik } from "formik";
+import { getServerSession } from "next-auth/next";
+import { useRouter } from "next/router";
+import { useRef, useState } from "react";
+import slugify from "slugify";
 
-import NavMenu from '@/components/nav-menu';
-import { deleteTag, getTag, updateTag } from '@/lib/tags';
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import NavMenu from "@/components/nav-menu";
+import { deleteTag, getTag, updateTag } from "@/lib/tags";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -42,8 +42,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       tag: tag.data,
-      user: session.user
-    }
+      user: session.user,
+    },
   };
 }
 
@@ -56,30 +56,30 @@ export default function EditTag({ tag, user }) {
   const [tagData, setTagData] = useState({
     name: tag.attributes.name,
     slug: tag.attributes.slug,
-    isInternal: tag.attributes.visibility === 'internal'
+    isInternal: tag.attributes.visibility === "internal",
   });
 
-  const validateNameField = value => {
+  const validateNameField = (value) => {
     let error;
 
     if (!value) {
-      error = 'You must specify a name for the tag.';
+      error = "You must specify a name for the tag.";
     }
 
     return error;
   };
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const { name, value, checked } = event.target;
-    if (name === 'isInternal') {
+    if (name === "isInternal") {
       setTagData({
         ...tagData,
-        [name]: checked
+        [name]: checked,
       });
     } else {
       setTagData({
         ...tagData,
-        [name]: value
+        [name]: value,
       });
     }
   };
@@ -91,29 +91,29 @@ export default function EditTag({ tag, user }) {
         name: tagData.name,
         slug: slugify(tagData.slug, {
           lower: true,
-          strict: true
+          strict: true,
         }),
-        visibility: tagData.isInternal ? 'internal' : 'public'
-      }
+        visibility: tagData.isInternal ? "internal" : "public",
+      },
     };
 
     try {
       await updateTag(token, tag.id, data);
       toast({
-        title: 'Tag Updated.',
-        status: 'success',
+        title: "Tag Updated.",
+        status: "success",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
-      router.push('/tags');
+      router.push("/tags");
     } catch (error) {
       console.log(error);
       toast({
-        title: 'An error occurred.',
+        title: "An error occurred.",
         description: error.message,
-        status: 'error',
+        status: "error",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
     }
   };
@@ -124,52 +124,52 @@ export default function EditTag({ tag, user }) {
     try {
       await deleteTag(token, tag.id);
       toast({
-        title: 'Tag Deleted',
-        status: 'success',
+        title: "Tag Deleted",
+        status: "success",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
-      router.replace('/tags');
+      router.replace("/tags");
     } catch (error) {
       console.log(error);
       toast({
-        title: 'An error occurred.',
+        title: "An error occurred.",
         description: error.message,
-        status: 'error',
+        status: "error",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
     }
   };
 
   return (
-    <Box minH='100vh' bgColor='gray.200'>
+    <Box minH="100vh" bgColor="gray.200">
       <NavMenu user={user} />
 
-      <Box ml={{ base: 0, md: '300px' }} px='6'>
+      <Box ml={{ base: 0, md: "300px" }} px="6">
         <Flex
-          alignItems='center'
-          minH='20'
-          position={{ md: 'sticky' }}
-          top='0'
-          bgColor='gray.200'
-          zIndex='999'
+          alignItems="center"
+          minH="20"
+          position={{ md: "sticky" }}
+          top="0"
+          bgColor="gray.200"
+          zIndex="999"
         >
           <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
             <BreadcrumbItem>
-              <BreadcrumbLink textDecoration='none' href='/tags'>
-                <Heading size='lg'>Tags</Heading>
+              <BreadcrumbLink textDecoration="none" href="/tags">
+                <Heading size="lg">Tags</Heading>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbItem isCurrentPage>
               <BreadcrumbLink>
-                <Heading size='lg'>{tagData.name}</Heading>
+                <Heading size="lg">{tagData.name}</Heading>
               </BreadcrumbLink>
             </BreadcrumbItem>
           </Breadcrumb>
         </Flex>
 
-        <Box p='4' pb='6' bgColor='white' rounded='4' boxShadow='md'>
+        <Box p="4" pb="6" bgColor="white" rounded="4" boxShadow="md">
           <Formik
             initialValues={tagData}
             enableReinitialize={true}
@@ -179,26 +179,26 @@ export default function EditTag({ tag, user }) {
           >
             {({ isSubmitting, setSubmitting }) => (
               <Form>
-                <Field name='name' validate={validateNameField}>
+                <Field name="name" validate={validateNameField}>
                   {({ field, form }) => (
-                    <FormControl pb='8' isInvalid={form.errors.name}>
+                    <FormControl pb="8" isInvalid={form.errors.name}>
                       <FormLabel>Name</FormLabel>
                       <Input {...field} onChange={handleChange} />
                       <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
-                <Field name='slug'>
+                <Field name="slug">
                   {({ field }) => (
-                    <FormControl pb='8'>
-                      <FormLabel htmlFor='slug'>Slug</FormLabel>
+                    <FormControl pb="8">
+                      <FormLabel htmlFor="slug">Slug</FormLabel>
                       <Input {...field} onChange={handleChange} />
                     </FormControl>
                   )}
                 </Field>
-                <Field name='isInternal'>
+                <Field name="isInternal">
                   {({ field }) => (
-                    <FormControl pb='8'>
+                    <FormControl pb="8">
                       <Checkbox
                         {...field}
                         onChange={handleChange}
@@ -210,15 +210,15 @@ export default function EditTag({ tag, user }) {
                   )}
                 </Field>
                 <Button
-                  colorScheme='blue'
+                  colorScheme="blue"
                   isLoading={isSubmitting}
-                  type='submit'
-                  mr='4'
+                  type="submit"
+                  mr="4"
                 >
                   Save
                 </Button>
                 <Button
-                  colorScheme='red'
+                  colorScheme="red"
                   isLoading={isSubmitting}
                   onClick={onOpen}
                 >
@@ -243,7 +243,7 @@ export default function EditTag({ tag, user }) {
                           Cancel
                         </Button>
                         <Button
-                          colorScheme='red'
+                          colorScheme="red"
                           isLoading={isSubmitting}
                           onClick={async () => {
                             setSubmitting(true);

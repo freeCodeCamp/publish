@@ -1,9 +1,9 @@
-import { getMe } from '../lib/users';
-import NavMenu from '@/components/nav-menu';
+import { getMe } from "../lib/users";
+import NavMenu from "@/components/nav-menu";
 // Get session in getServerSideProps
-import { authOptions } from '@/pages/api/auth/[...nextauth]';
-import { getServerSession } from 'next-auth/next';
-import { Flex } from '@chakra-ui/react';
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { getServerSession } from "next-auth/next";
+import { Flex } from "@chakra-ui/react";
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -11,8 +11,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       userData,
-      user: session.user
-    }
+      user: session.user,
+    },
   };
 }
 
@@ -21,7 +21,7 @@ export default function Profile({ userData, user }) {
     <Flex>
       <NavMenu user={user} />
 
-      <main style={{ padding: '0.75rem' }}>
+      <main style={{ padding: "0.75rem" }}>
         <ul>
           <li>
             <strong>Username:</strong> {userData.username}
@@ -51,7 +51,7 @@ export default function Profile({ userData, user }) {
             <strong>role:</strong> {userData.role.name}
           </li>
           <li>
-            <strong>profile_image:</strong>{' '}
+            <strong>profile_image:</strong>{" "}
             {userData.profile_image?.formats.thumbnail.url}
           </li>
         </ul>

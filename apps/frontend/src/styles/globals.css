@@ -27,7 +27,7 @@
 .code::before,
 .code::after {
   color: #9e9e9e;
-  content: '' !important;
+  content: "" !important;
 }
 
 .preview {

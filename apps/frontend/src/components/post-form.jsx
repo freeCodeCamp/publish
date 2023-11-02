@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
-import Tiptap from '@/components/tiptap';
-import EditorDrawer from '@/components/editor-drawer';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
-import { v4 as uuidv4 } from 'uuid';
-import slugify from 'slugify';
+import { useCallback, useEffect, useState } from "react";
+import Tiptap from "@/components/tiptap";
+import EditorDrawer from "@/components/editor-drawer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
+import { v4 as uuidv4 } from "uuid";
+import slugify from "slugify";
 import {
   Flex,
   Box,
@@ -13,52 +13,52 @@ import {
   Input,
   Stack,
   FormControl,
-  FormErrorMessage
-} from '@chakra-ui/react';
-import { Field, Form, Formik } from 'formik';
-import { updatePost } from '@/lib/posts';
-import { useToast } from '@chakra-ui/react';
-import NextLink from 'next/link';
-import { useRouter } from 'next/router';
+  FormErrorMessage,
+} from "@chakra-ui/react";
+import { Field, Form, Formik } from "formik";
+import { updatePost } from "@/lib/posts";
+import { useToast } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
 
-  const [title, setTitle] = useState('(UNTITLED)');
+  const [title, setTitle] = useState("(UNTITLED)");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
 
-  const [author, setAuthor] = useState('');
+  const [author, setAuthor] = useState("");
 
-  const [postUrl, setPostUrl] = useState('');
-  const [postId, setPostId] = useState('');
+  const [postUrl, setPostUrl] = useState("");
+  const [postId, setPostId] = useState("");
 
   const [postTagId, setPostTagId] = useState([]);
 
-  const [content, setContent] = useState(post?.attributes.body || '');
+  const [content, setContent] = useState(post?.attributes.body || "");
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   useEffect(() => {
     if (post) {
       const { title, body, slug, tags } = post.attributes;
-      const tagIds = tags.data.map(tag => tag.id);
+      const tagIds = tags.data.map((tag) => tag.id);
 
       setTitle(title);
       setContent(body);
 
-      setPostUrl(slug ?? '');
+      setPostUrl(slug ?? "");
       setPostId(post.id);
       setPostTagId(tagIds);
     }
   }, [post]);
 
-  const handlePostUrlChange = value => {
+  const handlePostUrlChange = (value) => {
     setPostUrl(value);
     setUnsavedChanges(true);
   };
 
-  const handleTitleChange = event => {
+  const handleTitleChange = (event) => {
     setTitle(event.target.value);
     setUnsavedChanges(true);
   };
@@ -67,12 +67,12 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   };
 
-  const handlePostTagId = value => {
+  const handlePostTagId = (value) => {
     setPostTagId([...value]);
     setUnsavedChanges(true);
   };
 
-  const handleAuthorChange = author => {
+  const handleAuthorChange = (author) => {
     setAuthor(author);
     setUnsavedChanges(true);
   };
@@ -85,64 +85,64 @@ const PostForm = ({ tags, user, authors, post }) => {
       data: {
         title: title,
         slug: slugify(
-          postUrl != '' ? postUrl : title != '(UNTITLED)' ? title : nonce,
+          postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
           {
             lower: true,
-            specialChar: false
-          }
+            specialChar: false,
+          },
         ),
         body: content,
         tags: postTagId,
-        author: [author != '' ? author : user.id],
-        locale: 'en'
-      }
+        author: [author != "" ? author : user.id],
+        locale: "en",
+      },
     };
 
     try {
       await updatePost(postId, data, token);
       toast({
-        title: 'Post Updated.',
+        title: "Post Updated.",
         description: "We've updated your post for you.",
-        status: 'success',
+        status: "success",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
 
       setUnsavedChanges(false);
     } catch (error) {
       toast({
-        title: 'An error occurred.',
+        title: "An error occurred.",
         description: error.message,
-        status: 'error',
+        status: "error",
         duration: 5000,
-        isClosable: true
+        isClosable: true,
       });
     }
   }, [toast, title, postUrl, postTagId, content, author, postId, user]);
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
         event.preventDefault();
         handleSubmit();
       }
     }
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [handleSubmit]);
 
   // prompt the user if they try and leave with unsaved changes
   useEffect(() => {
     const warningText =
-      'You have unsaved changes - are you sure you wish to leave this page?';
+      "You have unsaved changes - are you sure you wish to leave this page?";
 
     // handle the user closing the window
 
-    const handleWindowClose = event => {
+    const handleWindowClose = (event) => {
       if (!unsavedChanges) return;
       event.preventDefault();
       return (event.returnValue = warningText);
@@ -153,16 +153,16 @@ const PostForm = ({ tags, user, authors, post }) => {
     const handleRouteChange = () => {
       if (!unsavedChanges) return;
       if (window.confirm(warningText)) return;
-      router.events.emit('routeChangeError');
-      throw 'routeChange aborted.';
+      router.events.emit("routeChangeError");
+      throw "routeChange aborted.";
     };
 
-    window.addEventListener('beforeunload', handleWindowClose);
-    router.events.on('routeChangeStart', handleRouteChange);
+    window.addEventListener("beforeunload", handleWindowClose);
+    router.events.on("routeChangeStart", handleRouteChange);
 
     return () => {
-      window.removeEventListener('beforeunload', handleWindowClose);
-      router.events.off('routeChangeStart', handleRouteChange);
+      window.removeEventListener("beforeunload", handleWindowClose);
+      router.events.off("routeChangeStart", handleRouteChange);
     };
   }, [unsavedChanges, router.events]);
 
@@ -177,16 +177,16 @@ const PostForm = ({ tags, user, authors, post }) => {
   return (
     <>
       <Flex>
-        <Flex flexDirection='column' mr='1rem' maxWidth='100%' flex='4'>
-          <Flex justifyContent='space-between' m='1rem 0 0 5rem'>
+        <Flex flexDirection="column" mr="1rem" maxWidth="100%" flex="4">
+          <Flex justifyContent="space-between" m="1rem 0 0 5rem">
             <Box>
               <Button
-                variant='link'
+                variant="link"
                 as={NextLink}
-                href='/posts/'
-                leftIcon={<FontAwesomeIcon size='lg' icon={faChevronLeft} />}
+                href="/posts/"
+                leftIcon={<FontAwesomeIcon size="lg" icon={faChevronLeft} />}
               >
-                <Text fontSize='2xl'>Posts</Text>
+                <Text fontSize="2xl">Posts</Text>
               </Button>
             </Box>
             <EditorDrawer
@@ -205,12 +205,12 @@ const PostForm = ({ tags, user, authors, post }) => {
               handleSubmit={handleSubmit}
             />
           </Flex>
-          <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
+          <Flex m="1rem 0 0 5rem" flexDir={{ base: "column", lg: "row" }}>
             {!isEditingTitle ? (
               <>
-                <Stack direction='row' onClick={() => setIsEditingTitle(true)}>
-                  <Text fontSize='2xl'>{title}</Text>
-                  <Text fontSize='2xl'>
+                <Stack direction="row" onClick={() => setIsEditingTitle(true)}>
+                  <Text fontSize="2xl">{title}</Text>
+                  <Text fontSize="2xl">
                     <FontAwesomeIcon icon={faEdit} />
                   </Text>
                 </Stack>
@@ -225,16 +225,16 @@ const PostForm = ({ tags, user, authors, post }) => {
                   setUnsavedChanges(true);
                 }}
               >
-                {props => (
-                  <Form style={{ width: '100%' }}>
-                    <Stack direction={{ base: 'column', lg: 'row' }}>
-                      <Field name='title'>
+                {(props) => (
+                  <Form style={{ width: "100%" }}>
+                    <Stack direction={{ base: "column", lg: "row" }}>
+                      <Field name="title">
                         {({ field, form }) => (
                           <FormControl
-                            w='30%'
+                            w="30%"
                             isInvalid={form.errors.title && form.touched.title}
                           >
-                            <Input {...field} placeholder='title' required />
+                            <Input {...field} placeholder="title" required />
                             <FormErrorMessage>
                               {form.errors.title}
                             </FormErrorMessage>
@@ -242,11 +242,11 @@ const PostForm = ({ tags, user, authors, post }) => {
                         )}
                       </Field>
                       <Button
-                        colorScheme='blue'
+                        colorScheme="blue"
                         isLoading={props.isSubmitting}
-                        type='submit'
-                        w='15%'
-                        margin={{ base: '0 0 1rem 0' }}
+                        type="submit"
+                        w="15%"
+                        margin={{ base: "0 0 1rem 0" }}
                       >
                         Done
                       </Button>
@@ -256,7 +256,7 @@ const PostForm = ({ tags, user, authors, post }) => {
               </Formik>
             )}
           </Flex>
-          <Box p='0 0 0 5rem'>
+          <Box p="0 0 0 5rem">
             <Tiptap
               handleContentChange={handleContentChange}
               content={content}

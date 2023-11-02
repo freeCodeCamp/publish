@@ -1,4 +1,4 @@
-import qs from 'qs';
+import qs from "qs";
 
 // Post API calls
 
@@ -6,60 +6,60 @@ const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
 
 export async function getAllPosts(token, queryParams) {
   const endpoint = `${api_root}/posts?${qs.stringify(queryParams, {
-    encodeValuesOnly: true
+    encodeValuesOnly: true,
   })}`;
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   try {
     const res = await fetch(endpoint, options);
 
     if (!res.ok) {
-      console.error('getAllPosts responded with error. Status: ', res.status);
+      console.error("getAllPosts responded with error. Status: ", res.status);
       throw new Error(
-        `getAllPosts responded with error. Status: ${res.status}`
+        `getAllPosts responded with error. Status: ${res.status}`,
       );
     }
 
     return res.json();
   } catch (error) {
-    console.error('getAllPosts Failed. Error: ', error);
+    console.error("getAllPosts Failed. Error: ", error);
     throw new Error(`getAllPosts Failed. Error: ${error}`);
   }
 }
 
 export async function getUserPosts(token, queryParams) {
   const endpoint = `${api_root}/posts?${qs.stringify(queryParams, {
-    encodeValuesOnly: true
+    encodeValuesOnly: true,
   })}`;
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   try {
     const res = await fetch(endpoint, options);
 
     if (!res.ok) {
-      console.error('getUserPosts responded with error. Status: ', res.status);
+      console.error("getUserPosts responded with error. Status: ", res.status);
       throw new Error(
-        `getUserPosts responded with error. Status: ${res.status}`
+        `getUserPosts responded with error. Status: ${res.status}`,
       );
     }
 
     return res.json();
   } catch (error) {
-    console.error('getUserPosts Failed. Error: ', error);
+    console.error("getUserPosts Failed. Error: ", error);
     throw new Error(`getUserPosts Failed. Error: ${error}`);
   }
 }
@@ -68,11 +68,11 @@ export async function getPost(postId, token) {
   const endpoint = `${api_root}/posts/${postId}?populate=*`;
 
   const options = {
-    method: 'GET',
+    method: "GET",
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
-    }
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   try {
@@ -80,10 +80,10 @@ export async function getPost(postId, token) {
 
     if (!res.ok) {
       console.error(
-        `getPost responded with error. postId: ${postId}, Status: ${res.status}`
+        `getPost responded with error. postId: ${postId}, Status: ${res.status}`,
       );
       throw new Error(
-        `getPost responded with error. postId: ${postId}, Status: ${res.status}`
+        `getPost responded with error. postId: ${postId}, Status: ${res.status}`,
       );
     }
 
@@ -100,19 +100,19 @@ export async function createPost(data, token) {
 
   // Form the request for sending data to the server.
   const options = {
-    method: 'POST',
+    method: "POST",
     // Tell the server we're sending JSON.
     headers: {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-      Authorization: `Bearer ${token}`
+      "Content-Type": "application/json",
+      accept: "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
   // Send the form data to our forms API and get a response.
   const res = await fetch(endpoint, options);
   if (!res.ok) {
-    throw new Error('createPost Failed');
+    throw new Error("createPost Failed");
   }
 
   return res.json();
@@ -124,20 +124,20 @@ export async function updatePost(postId, data, token) {
 
   // Form the request for sending data to the server.
   const options = {
-    method: 'PUT',
+    method: "PUT",
     // Tell the server we're sending JSON.
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
 
   // Send the form data to our forms API and get a response.
   const res = await fetch(endpoint, options);
 
   if (!res.ok) {
-    throw new Error('updatePost Failed');
+    throw new Error("updatePost Failed");
   }
 
   return res.json();
