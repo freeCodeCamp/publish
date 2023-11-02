@@ -25,13 +25,10 @@ import { updatePost } from '@/lib/posts';
 import { useToast } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { useDisclosure } from '@chakra-ui/react';
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
-
-  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const [title, setTitle] = useState('(UNTITLED)');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -40,6 +37,8 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [postUrl, setPostUrl] = useState('');
   const [postId, setPostId] = useState('');
+
+  const [postTagId, setPostTagId] = useState([]);
 
   const [content, setContent] = useState(post?.attributes.body || '');
 
@@ -63,10 +62,24 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   }
 
-const handleTitleChange = event => {
-  setTitle(event.target.value);
-  setUnsavedChanges(true);
-}
+  const handleTitleChange = event => {
+    setTitle(event.target.value);
+    setUnsavedChanges(true);
+  }
+
+  const handleUnsavedChanges = () => {
+    setUnsavedChanges(true);
+  }
+
+  const handlePostTagId = (value) => {
+    setPostTagId(value)
+    setUnsavedChanges(true);
+  }
+
+  const handleAuthorChange = author => {
+    setAuthor(author);
+    setUnsavedChanges(true);
+  }
 
   const handleSubmit = useCallback(async () => {
     const nonce = uuidv4();
@@ -83,7 +96,7 @@ const handleTitleChange = event => {
           }
         ),
         body: content,
-        tags: postTagsId,
+        tags: postTagId,
         author: [author != '' ? author : user.id],
         locale: 'en'
       }
@@ -184,15 +197,19 @@ const handleTitleChange = event => {
                 <Text fontSize='2xl'>Posts</Text>
               </Button>
             </Box>
-            <Box>
-              <IconButton
-                marginRight='auto'
-                variant='ghost'
-                onClick={onOpen}
-                aria-label='Open Post Drawer'
-                icon={<FontAwesomeIcon icon={faGear} />}
-              />
-            </Box>
+            <EditorDrawer
+              tags={tags}
+              authors={authors}
+              user={user}
+              post={post}
+              title={title}
+              postUrl={postUrl}
+              handleTitleChange={handleTitleChange}
+              handlePostUrlChange={handlePostUrlChange}
+              handleAuthorChange={handleAuthorChange}
+              handleUnsavedChanges={handleUnsavedChanges}
+              handlePostTagId={handlePostTagId}
+            />
           </Flex>
           <Flex m='1rem 0 0 5rem' flexDir={{ base: 'column', lg: 'row' }}>
             {!isEditingTitle ? (
@@ -255,16 +272,6 @@ const handleTitleChange = event => {
           </Box>
         </Flex>
       </Flex>
-      <EditorDrawer
-        tags={tags}
-        authors={authors}
-        user={user}
-        post={post}
-        handlePostUrlChange={handlePostUrlChange}
-        postUrl={postUrl}
-        handleTitleChange={handleTitleChange}
-        title={title}
-      />
     </>
   );
 };
