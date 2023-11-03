@@ -17,6 +17,10 @@ jobs:
         image: postgres:14
         ports:
           - 5432:5432
+        env:
+          POSTGRES_USER: strapi
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: strapi
       mailhog:
         image: mailhog/mailhog
         ports:
