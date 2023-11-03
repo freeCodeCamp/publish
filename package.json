@@ -10,7 +10,6 @@
     "prepare": "husky install",
     "lint": "turbo lint --continue",
     "seed": "turbo seed",
-    "start": "turbo start",
     "develop": "turbo develop",
     "run-tools": "cd tools && docker compose up -d && cd .."
   },
