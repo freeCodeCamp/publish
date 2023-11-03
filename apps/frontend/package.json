@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "next build",
     "dev": "next dev",
     "develop": "npm run dev",
-    "build": "next build",
-    "start": "next start",
     "eslint": "next lint",
-    "prettier-check": "prettier --check ."
+    "init": "cp --no-clobber sample.env .env",
+    "prettier-check": "prettier --check .",
+    "start": "next start"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
