@@ -36,7 +36,7 @@ jobs:
     - name: Seed database
       run: npm run seed
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps ${{ matrix.browsers }}
     - name: Run Playwright tests
       run: npx playwright test --project=${{ matrix.browsers }}
     - uses: actions/upload-artifact@v3
