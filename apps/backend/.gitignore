@@ -115,6 +115,9 @@ exports
 dist
 build
 .strapi-updater.json
+# Auto-generated files on startup
+types/generated/*
+.strapi/client/*
 
 ############################
 # Documentation plugin
