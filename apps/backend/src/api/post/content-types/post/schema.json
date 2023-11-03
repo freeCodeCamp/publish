@@ -106,6 +106,16 @@
         }
       },
       "type": "text"
+    },
+    "slug_id": {
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "type": "string",
+      "maxLength": 8,
+      "unique": true
     }
   }
 }

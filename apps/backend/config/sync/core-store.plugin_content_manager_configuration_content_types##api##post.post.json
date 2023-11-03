@@ -176,6 +176,20 @@
           "sortable": true
         }
       },
+      "slug_id": {
+        "edit": {
+          "label": "slug_id",
+          "description": "",
+          "placeholder": "",
+          "visible": true,
+          "editable": true
+        },
+        "list": {
+          "label": "slug_id",
+          "searchable": true,
+          "sortable": true
+        }
+      },
       "createdAt": {
         "edit": {
           "label": "createdAt",
@@ -293,6 +307,10 @@
         [
           {
             "name": "codeinjection_foot",
+            "size": 6
+          },
+          {
+            "name": "slug_id",
             "size": 6
           }
         ]

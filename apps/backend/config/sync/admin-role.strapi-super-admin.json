@@ -53,7 +53,8 @@
           "scheduled_at",
           "ghost_id",
           "codeinjection_head",
-          "codeinjection_foot"
+          "codeinjection_foot",
+          "slug_id"
         ],
         "locales": ["en"]
       },
@@ -93,7 +94,8 @@
           "scheduled_at",
           "ghost_id",
           "codeinjection_head",
-          "codeinjection_foot"
+          "codeinjection_foot",
+          "slug_id"
         ],
         "locales": ["en"]
       },
@@ -115,7 +117,8 @@
           "scheduled_at",
           "ghost_id",
           "codeinjection_head",
-          "codeinjection_foot"
+          "codeinjection_foot",
+          "slug_id"
         ],
         "locales": ["en"]
       },
