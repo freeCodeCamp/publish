@@ -38,7 +38,7 @@ jobs:
     - name: Build apps
       run: npm run build
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps ${{ matrix.browsers }}
+      run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test --project=${{ matrix.browsers }}
     - uses: actions/upload-artifact@v3
