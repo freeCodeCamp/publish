@@ -4,7 +4,7 @@ import Auth0Provider from "next-auth/providers/auth0";
 
 export const authOptions = {
   providers: [
-    process.env.NODE_ENV === "development" &&
+    process.env.EMAIL_PASSWORD_AUTHENTICATION === "true" &&
       CredentialsProvider({
         name: "email",
         credentials: {
