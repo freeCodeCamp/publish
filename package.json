@@ -7,6 +7,7 @@
     "turbo": "1.10.16"
   },
   "scripts": {
+    "build": "turbo build",
     "prepare": "husky install",
     "lint": "turbo lint --continue",
     "seed": "turbo seed",
