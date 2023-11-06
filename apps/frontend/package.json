@@ -7,7 +7,7 @@
     "dev": "next dev",
     "develop": "npm run dev",
     "eslint": "next lint",
-    "init": "shx cp --no-clobber sample.env .env",
+    "init": "shx cp -n sample.env .env",
     "prettier-check": "prettier --check .",
     "start": "next start"
   },
