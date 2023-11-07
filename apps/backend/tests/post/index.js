@@ -78,7 +78,11 @@ describe("post", () => {
       // find the post by slug_id through API
       const response = await request(strapi.server.httpServer)
         .get(`/api/posts/slug_id/${post.slug_id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
 
+      expect(response.status).toBe(200);
       const responsePost = response.body.data.attributes;
 
       expect(responsePost.slug_id).toEqual(post.slug_id);
