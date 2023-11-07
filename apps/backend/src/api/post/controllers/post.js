@@ -22,9 +22,23 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
         }
         filters.author = [ctx.state.user.id];
         ctx.query.filters = filters;
-
         // call the default core action with modified ctx
         return await super.find(ctx);
+      }
+    },
+    async findOneBySlugId(ctx) {
+      try {
+        // find id from slug_id
+        const postId = await strapi
+          .service("api::post.post")
+          .findIdBySlugId(ctx.request.params.slug_id);
+
+        ctx.request.params.id = postId;
+
+        // pass it onto default findOne controller
+        return await super.findOne(ctx);
+      } catch (err) {
+        ctx.body = err;
       }
     },
     async create(ctx) {
@@ -58,6 +72,9 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
         // don't allow changing author
         delete ctx.request.body.data.author;
       }
+
+      // prevent updating the slug ID
+      delete ctx.request.body.data.slug_id;
 
       // call the default core action with modified data
       return await super.update(ctx);

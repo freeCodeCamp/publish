@@ -70,6 +70,38 @@ describe("post", () => {
       expect(response.status).toBe(403);
     });
   });
+  describe("GET /posts/slug_id/:slug_id", () => {
+    it("should find post by slug_id", async () => {
+      // get slug_id from database
+      const post = await getPost("test-slug");
+
+      // find the post by slug_id through API
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/slug_id/${post.slug_id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.slug_id).toEqual(post.slug_id);
+      expect(responsePost.slug).toEqual("test-slug");
+    });
+    it("should prevent contributors viewing other user's post by slug_id", async () => {
+      // get slug_id from database
+      const post = await getPost("editors-draft-post");
+
+      // find the post by slug_id through API
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/slug_id/${post.slug_id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
+    });
+  });
   describe("POST /posts", () => {
     it("should create post including publishedAt and scheduled_at for editors", async () => {
       const response = await request(strapi.server.httpServer)
@@ -113,7 +145,7 @@ describe("post", () => {
     });
 
     it("should not set publishedAt to future date", async () => {
-      const postToCreateCopy = { ...postToCreate };
+      const postToCreateCopy = { data: { ...postToCreate.data } };
       const now = new Date();
       const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
       postToCreateCopy.data.publishedAt = oneHourFromNow;
@@ -151,6 +183,20 @@ describe("post", () => {
         { populate: { author: true } },
       );
       expect(postCreated.author.id).toBe(currentUser.id);
+    });
+
+    it("should auto generate slug_id", async () => {
+      const response = await request(strapi.server.httpServer)
+        .post("/api/posts")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(JSON.stringify(postToCreate));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      // slug_id should consist of 8 characters from the lowercase letters and numbers
+      expect(responsePost.slug_id).toMatch(/^[0-9a-z]{8}$/);
     });
   });
 
@@ -305,6 +351,24 @@ describe("post", () => {
         post.id,
       );
       expect(postAfterRequest.title).toBe(newData.data.title);
+    });
+
+    it("should not change slug_id", async () => {
+      // get slug_id from database
+      const post = await getPost("test-slug");
+      const postCopy = { data: { ...post.data } };
+      postCopy.data.slug_id = "000000";
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(JSON.stringify(postCopy));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.slug_id).toEqual(post.slug_id);
     });
   });
   describe("PATCH /posts/:id/schedule", () => {

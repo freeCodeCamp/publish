@@ -6,6 +6,7 @@
 
 const { createCoreRouter } = require("@strapi/strapi").factories;
 
+// Core routes
 module.exports = createCoreRouter("api::post.post", {
   config: {
     findOne: {
