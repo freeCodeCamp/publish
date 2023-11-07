@@ -12,7 +12,7 @@
     "strapi": "strapi",
     "seed": "node ./scripts/seed.js",
     "cs": "config-sync",
-    "init": "cp --no-clobber sample.env .env && npm run cs import -- --yes",
+    "init": "shx cp -n sample.env .env && npm run cs import -- --yes",
     "test": "jest --forceExit",
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
@@ -46,6 +46,7 @@
     "eslint-plugin-jest": "^27.2.3",
     "jest": "^29.6.4",
     "prettier": "^3.0.3",
+    "shx": "^0.3.4",
     "supertest": "^6.3.3"
   }
 }
