@@ -1,3 +1,7 @@
+// Routes files are loaded in alphabetical order.
+// Using the filename starting with "0-" to load custom routes before core routes.
+
+// Custom routes
 module.exports = {
   routes: [
     {
@@ -5,7 +9,7 @@ module.exports = {
       path: "/posts/slug_id/:slug_id",
       handler: "post.findOneBySlugId",
       config: {
-        policies: [],
+        policies: ["is-own-post-slug-id"],
         middlewares: [],
       },
     },

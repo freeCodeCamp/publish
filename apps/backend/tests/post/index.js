@@ -88,6 +88,19 @@ describe("post", () => {
       expect(responsePost.slug_id).toEqual(post.slug_id);
       expect(responsePost.slug).toEqual("test-slug");
     });
+    it("should prevent contributors viewing other user's post by slug_id", async () => {
+      // get slug_id from database
+      const post = await getPost("editors-draft-post");
+
+      // find the post by slug_id through API
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/slug_id/${post.slug_id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
+    });
   });
   describe("POST /posts", () => {
     it("should create post including publishedAt and scheduled_at for editors", async () => {
