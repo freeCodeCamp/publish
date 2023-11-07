@@ -19,6 +19,9 @@
       "action": "api::post.post.findOne"
     },
     {
+      "action": "api::post.post.findOneBySlugId"
+    },
+    {
       "action": "api::post.post.update"
     },
     {
