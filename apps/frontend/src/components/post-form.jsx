@@ -29,12 +29,15 @@ import {
 import { Field, Form, Formik } from "formik";
 import { updatePost } from "@/lib/posts";
 import { useToast } from "@chakra-ui/react";
+import { useDisclosure } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
+
+  const { onClose, onOpen, isOpen } = useDisclosure();
 
   const [title, setTitle] = useState("(UNTITLED)");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -201,8 +204,9 @@ const PostForm = ({ tags, user, authors, post }) => {
               </Button>
             </Box>
             <Box ml="auto">
-              <Menu>
+              <Menu isOpen={isOpen} onClose={onClose}>
                 <MenuButton
+                  onClick={onOpen}
                   as={Button}
                   colorScheme="blue"
                   variant={"ghost"}
@@ -268,6 +272,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                       color="gray.500"
                       fontWeight={"400"}
                       size="sm"
+                      onClick={onClose}
                     >
                       Cancel
                     </Button>
