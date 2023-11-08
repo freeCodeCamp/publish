@@ -25,6 +25,8 @@ import {
   RadioGroup,
   Radio,
   Spacer,
+  InputGroup,
+  InputRightAddon,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { updatePost } from "@/lib/posts";
@@ -99,14 +101,6 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   };
 
-  const handleSchedule = () => {
-    if (scheduledDate == "" || scheduledTime == "") {
-      return null;
-    } else {
-      return scheduledDate + "T" + scheduledTime + ":00.000Z";
-    }
-  };
-
   const handleSubmit = useCallback(
     async (shouldPublish = null) => {
       const nonce = uuidv4();
@@ -127,6 +121,14 @@ const PostForm = ({ tags, user, authors, post }) => {
           author: [author != "" ? author : user.id],
           locale: "en",
         },
+      };
+
+      const handleSchedule = () => {
+        if (scheduledDate == "" || scheduledTime == "") {
+          return null;
+        } else {
+          return scheduledDate + "T" + scheduledTime + ":00.000Z";
+        }
       };
 
       if (shouldPublish) {
@@ -160,7 +162,20 @@ const PostForm = ({ tags, user, authors, post }) => {
         });
       }
     },
-    [toast, title, postUrl, postTagId, content, author, postId, user],
+    [
+      toast,
+      title,
+      postUrl,
+      postTagId,
+      content,
+      author,
+      postId,
+      user,
+      isScheduledAndDateValid,
+      scheduleOption,
+      scheduledDate,
+      scheduledTime,
+    ],
   );
 
   useEffect(() => {
@@ -298,11 +313,19 @@ const PostForm = ({ tags, user, authors, post }) => {
                           size="sm"
                           onChange={(e) => setScheduledDate(e.target.value)}
                         />
-                        <Input
-                          type={"time"}
-                          size="sm"
-                          onChange={(e) => setScheduledTime(e.target.value)}
-                        />
+                        <InputGroup size="sm">
+                          <Input
+                            type={"time"}
+                            className="time-input"
+                            size="sm"
+                            onChange={(e) => setScheduledTime(e.target.value)}
+                          />
+                          <InputRightAddon>
+                            <Text fontSize={"sm"} time>
+                              UTC
+                            </Text>
+                          </InputRightAddon>
+                        </InputGroup>
                       </Stack>
                       <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
                         Set automatic future publish date
