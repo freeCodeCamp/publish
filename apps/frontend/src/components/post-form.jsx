@@ -258,7 +258,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                 >
                   Publish
                 </MenuButton>
-                <MenuList w={"300px"}>
+                <MenuList w={"350px"}>
                   <Box m={"0.75rem"}>
                     <Text fontSize="lg" color="gray.500">
                       Ready to publish your post?
