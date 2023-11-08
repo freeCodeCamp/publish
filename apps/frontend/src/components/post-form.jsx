@@ -237,7 +237,6 @@ const PostForm = ({ tags, user, authors, post }) => {
                 <MenuButton
                   onClick={onOpen}
                   as={Button}
-                  colorScheme="blue"
                   variant={"ghost"}
                   disabled={!unsavedChanges}
                   rightIcon={<FontAwesomeIcon icon={faChevronDown} />}
