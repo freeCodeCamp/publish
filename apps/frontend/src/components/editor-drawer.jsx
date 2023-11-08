@@ -425,13 +425,6 @@ const EditorDrawer = ({
               </>
             )}
             <Spacer h="1rem" />
-            <Text fontSize="xl">Publish Date</Text>
-            <Spacer h="1rem" />
-            <Box display="flex" flexDirection="row">
-              <Input type="date" variant="outline" />
-              <Input type="time" variant="outline" />
-            </Box>
-            <Spacer h="1rem" />
             <Text fontSize="xl">Post Url</Text>
             <label>
               <Input
