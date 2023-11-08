@@ -6,104 +6,144 @@
 
 const { createCoreController } = require("@strapi/strapi").factories;
 
-const isEditor = (ctx) => {
-  if (process.env.DATA_MIGRATION === "true") {
-    return true;
-  }
-  return ctx.state.user.role.name === "Editor";
-};
+module.exports = createCoreController("api::post.post", ({ strapi }) => {
+  const helpers = strapi.service("api::helpers.helpers");
 
-module.exports = createCoreController("api::post.post", ({ strapi }) => ({
-  async create(ctx) {
-    if (!isEditor(ctx)) {
-      // don't allow publishing or scheduling posts
-      delete ctx.request.body.data.publishedAt;
-      delete ctx.request.body.data.scheduled_at;
-      // don't allow code injection
-      delete ctx.request.body.data.codeinjection_head;
-      delete ctx.request.body.data.codeinjection_foot;
-    }
+  return {
+    async find(ctx) {
+      if (helpers.isEditor(ctx) || helpers.isAPIToken(ctx)) {
+        // allow access to all posts
+        return await super.find(ctx);
+      } else {
+        // return only current user's posts
+        const filters = ctx.query.filters || {};
+        if (filters.author) {
+          delete filters.author;
+        }
+        filters.author = [ctx.state.user.id];
+        ctx.query.filters = filters;
+        // call the default core action with modified ctx
+        return await super.find(ctx);
+      }
+    },
+    async findOneBySlugId(ctx) {
+      try {
+        // find id from slug_id
+        const postId = await strapi
+          .service("api::post.post")
+          .findIdBySlugId(ctx.request.params.slug_id);
 
-    // call the default core action with modified data
-    return await super.create(ctx);
-  },
-  async update(ctx) {
-    if (!isEditor(ctx)) {
-      // don't allow publishing or scheduling posts
-      delete ctx.request.body.data.publishedAt;
-      delete ctx.request.body.data.scheduled_at;
-      // don't allow code injection
-      delete ctx.request.body.data.codeinjection_head;
-      delete ctx.request.body.data.codeinjection_foot;
-    }
+        ctx.request.params.id = postId;
 
-    // call the default core action with modified data
-    return await super.update(ctx);
-  },
-  async schedule(ctx) {
-    try {
-      const response = await strapi
-        .service("api::post.post")
-        .schedule(ctx.request.params.id, ctx.request.body);
+        // pass it onto default findOne controller
+        return await super.findOne(ctx);
+      } catch (err) {
+        ctx.body = err;
+      }
+    },
+    async create(ctx) {
+      if (!helpers.isEditor(ctx)) {
+        // don't allow publishing or scheduling posts
+        delete ctx.request.body.data.publishedAt;
+        delete ctx.request.body.data.scheduled_at;
 
-      // this.transformResponse in controller transforms the response object
-      // into { data: { id: 1, attributes: {...} } } format
-      // to comply with other default endpoints
-      ctx.body = this.transformResponse(response);
-    } catch (err) {
-      ctx.body = err;
-    }
-  },
-  async publish(ctx) {
-    try {
-      const response = await strapi
-        .service("api::post.post")
-        .publish(ctx.request.params.id);
-      ctx.body = this.transformResponse(response);
-    } catch (err) {
-      ctx.body = err;
-    }
-  },
-  async unpublish(ctx) {
-    try {
-      const response = await strapi
-        .service("api::post.post")
-        .unpublish(ctx.request.params.id);
-      ctx.body = this.transformResponse(response);
-    } catch (err) {
-      ctx.body = err;
-    }
-  },
-  async checkAndPublish(ctx) {
-    try {
-      const draftPostToPublish = await strapi.entityService.findMany(
-        "api::post.post",
-        {
-          filters: {
-            publishedAt: {
-              $null: true,
-            },
-            scheduled_at: {
-              $lt: new Date(),
+        // don't allow code injection
+        delete ctx.request.body.data.codeinjection_head;
+        delete ctx.request.body.data.codeinjection_foot;
+
+        // force set author to current user
+        delete ctx.request.body.data.author;
+        ctx.request.body.data.author = [ctx.state.user.id];
+      }
+
+      // call the default core action with modified data
+      return await super.create(ctx);
+    },
+    async update(ctx) {
+      if (!helpers.isEditor(ctx)) {
+        // don't allow publishing or scheduling posts
+        delete ctx.request.body.data.publishedAt;
+        delete ctx.request.body.data.scheduled_at;
+
+        // don't allow code injection
+        delete ctx.request.body.data.codeinjection_head;
+        delete ctx.request.body.data.codeinjection_foot;
+
+        // don't allow changing author
+        delete ctx.request.body.data.author;
+      }
+
+      // prevent updating the slug ID
+      delete ctx.request.body.data.slug_id;
+
+      // call the default core action with modified data
+      return await super.update(ctx);
+    },
+    async schedule(ctx) {
+      try {
+        const response = await strapi
+          .service("api::post.post")
+          .schedule(ctx.request.params.id, ctx.request.body);
+
+        // this.transformResponse in controller transforms the response object
+        // into { data: { id: 1, attributes: {...} } } format
+        // to comply with other default endpoints
+        ctx.body = this.transformResponse(response);
+      } catch (err) {
+        ctx.body = err;
+      }
+    },
+    async publish(ctx) {
+      try {
+        const response = await strapi
+          .service("api::post.post")
+          .publish(ctx.request.params.id);
+        ctx.body = this.transformResponse(response);
+      } catch (err) {
+        ctx.body = err;
+      }
+    },
+    async unpublish(ctx) {
+      try {
+        const response = await strapi
+          .service("api::post.post")
+          .unpublish(ctx.request.params.id);
+        ctx.body = this.transformResponse(response);
+      } catch (err) {
+        ctx.body = err;
+      }
+    },
+    async checkAndPublish(ctx) {
+      try {
+        const draftPostToPublish = await strapi.entityService.findMany(
+          "api::post.post",
+          {
+            filters: {
+              publishedAt: {
+                $null: true,
+              },
+              scheduled_at: {
+                $lt: new Date(),
+              },
             },
           },
-        },
-      );
+        );
 
-      await Promise.all(
-        draftPostToPublish.map((post) => {
-          return strapi.service("api::post.post").publish(post.id);
-        }),
-      );
+        await Promise.all(
+          draftPostToPublish.map((post) => {
+            return strapi.service("api::post.post").publish(post.id);
+          }),
+        );
 
-      const response = {
-        count: draftPostToPublish.length,
-        data: draftPostToPublish.map((post) => post.title),
-      };
+        const response = {
+          count: draftPostToPublish.length,
+          data: draftPostToPublish.map((post) => post.title),
+        };
 
-      ctx.body = this.transformResponse(response);
-    } catch (err) {
-      ctx.body = err;
-    }
-  },
-}));
+        ctx.body = this.transformResponse(response);
+      } catch (err) {
+        ctx.body = err;
+      }
+    },
+  };
+});

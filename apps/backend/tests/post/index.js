@@ -39,6 +39,69 @@ afterEach(async () => {
 });
 
 describe("post", () => {
+  describe("GET /posts", () => {
+    it("should return only the current user's posts for contributors", async () => {
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts?populate=author`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      // check that all posts belong to the current user
+      const user = await getUser("contributor-user");
+      expect(
+        response.body.data.every(
+          (post) => post.attributes.author.data.id === user.id,
+        ),
+      ).toBe(true);
+    });
+  });
+  describe("GET /posts/:id", () => {
+    it("should prevent contributors viewing other user's post", async () => {
+      const post = await getPost("editors-draft-post");
+
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
+    });
+  });
+  describe("GET /posts/slug_id/:slug_id", () => {
+    it("should find post by slug_id", async () => {
+      // get slug_id from database
+      const post = await getPost("test-slug");
+
+      // find the post by slug_id through API
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/slug_id/${post.slug_id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.slug_id).toEqual(post.slug_id);
+      expect(responsePost.slug).toEqual("test-slug");
+    });
+    it("should prevent contributors viewing other user's post by slug_id", async () => {
+      // get slug_id from database
+      const post = await getPost("editors-draft-post");
+
+      // find the post by slug_id through API
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts/slug_id/${post.slug_id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
+    });
+  });
   describe("POST /posts", () => {
     it("should create post including publishedAt and scheduled_at for editors", async () => {
       const response = await request(strapi.server.httpServer)
@@ -82,7 +145,7 @@ describe("post", () => {
     });
 
     it("should not set publishedAt to future date", async () => {
-      const postToCreateCopy = { ...postToCreate };
+      const postToCreateCopy = { data: { ...postToCreate.data } };
       const now = new Date();
       const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
       postToCreateCopy.data.publishedAt = oneHourFromNow;
@@ -98,7 +161,45 @@ describe("post", () => {
         "publishedAt must be a past date",
       );
     });
+
+    it("should prevent contributors creating other user's post", async () => {
+      const currentUser = await getUser("contributor-user");
+
+      const postToCreateCopy = { ...postToCreate };
+      const editorUser = await getUser("editor-user");
+      postToCreateCopy.data.author = [editorUser.id];
+
+      const response = await request(strapi.server.httpServer)
+        .post("/api/posts")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(JSON.stringify(postToCreateCopy));
+
+      expect(response.status).toBe(200);
+      // author should be changed to the current user
+      const postCreated = await strapi.entityService.findOne(
+        "api::post.post",
+        response.body.data.id,
+        { populate: { author: true } },
+      );
+      expect(postCreated.author.id).toBe(currentUser.id);
+    });
+
+    it("should auto generate slug_id", async () => {
+      const response = await request(strapi.server.httpServer)
+        .post("/api/posts")
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(JSON.stringify(postToCreate));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      // slug_id should consist of 8 characters from the lowercase letters and numbers
+      expect(responsePost.slug_id).toMatch(/^[0-9a-z]{8}$/);
+    });
   });
+
   describe("PUT /posts/:id", () => {
     it("should update post including publishedAt and scheduled_at for editors", async () => {
       // find a post to update
@@ -178,6 +279,96 @@ describe("post", () => {
       expect(response.body.error.message).toBe(
         "publishedAt must be a past date",
       );
+    });
+
+    it("should prevent contributors updating other user's post", async () => {
+      const post = await getPost("editors-draft-post");
+      const newData = {
+        data: {
+          title: "Updated",
+        },
+      };
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(JSON.stringify(newData));
+
+      expect(response.status).toBe(403);
+      // title should not be changed
+      const postAfterRequest = await strapi.entityService.findOne(
+        "api::post.post",
+        post.id,
+      );
+      expect(postAfterRequest.title).toBe(post.title);
+    });
+
+    it("should prevent contributors changing author to other user", async () => {
+      const post = await getPost("test-slug");
+      const editorUser = await getUser("editor-user");
+      const contributorUser = await getUser("contributor-user");
+      const newData = {
+        data: {
+          author: [editorUser.id],
+        },
+      };
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(JSON.stringify(newData));
+
+      expect(response.status).toBe(200);
+      // author should not be changed
+      const postAfterRequest = await strapi.entityService.findOne(
+        "api::post.post",
+        post.id,
+        { populate: { author: true } },
+      );
+      expect(postAfterRequest.author.id).toBe(contributorUser.id);
+    });
+
+    it("should allow editors to update other user's post", async () => {
+      const post = await getPost("test-slug");
+      const newData = {
+        data: {
+          title: "Updated",
+        },
+      };
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send(JSON.stringify(newData));
+
+      expect(response.status).toBe(200);
+      // title should be changed
+      const postAfterRequest = await strapi.entityService.findOne(
+        "api::post.post",
+        post.id,
+      );
+      expect(postAfterRequest.title).toBe(newData.data.title);
+    });
+
+    it("should not change slug_id", async () => {
+      // get slug_id from database
+      const post = await getPost("test-slug");
+      const postCopy = { data: { ...post.data } };
+      postCopy.data.slug_id = "000000";
+
+      const response = await request(strapi.server.httpServer)
+        .put(`/api/posts/${post.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send(JSON.stringify(postCopy));
+
+      expect(response.status).toBe(200);
+      const responsePost = response.body.data.attributes;
+
+      expect(responsePost.slug_id).toEqual(post.slug_id);
     });
   });
   describe("PATCH /posts/:id/schedule", () => {
@@ -284,6 +475,19 @@ describe("post", () => {
 
       const response = await request(strapi.server.httpServer)
         .patch(`/api/posts/${post.id}/unpublish`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(403);
+    });
+  });
+  describe("DELETE /posts/:id", () => {
+    it("should prevent contributors deleting other user's post", async () => {
+      const post = await getPost("editors-draft-post");
+
+      const response = await request(strapi.server.httpServer)
+        .delete(`/api/posts/${post.id}`)
         .set("Content-Type", "application/json")
         .set("Authorization", `Bearer ${contributorJWT}`)
         .send();

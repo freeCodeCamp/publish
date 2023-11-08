@@ -126,61 +126,52 @@ function ToolBar({ editor }) {
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
         />
-        <MenuList as="ul" listStyleType="none">
-          <li>
-            <MenuItem
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 1 }).run()
-              }
-            >
-              Add heading 1
-            </MenuItem>
-          </li>
-          <li>
-            <MenuItem
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 2 }).run()
-              }
-            >
-              Add heading 2
-            </MenuItem>
-          </li>
-          <li>
-            <MenuItem
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 3 }).run()
-              }
-            >
-              Add heading 3
-            </MenuItem>
-          </li>
-          <li>
-            <MenuItem
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 4 }).run()
-              }
-            >
-              Add heading 4
-            </MenuItem>
-          </li>
-          <li>
-            <MenuItem
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 5 }).run()
-              }
-            >
-              Add heading 5
-            </MenuItem>
-          </li>
-          <li>
-            <MenuItem
-              onClick={() =>
-                editor.chain().focus().toggleHeading({ level: 6 }).run()
-              }
-            >
-              Add heading 6
-            </MenuItem>
-          </li>
+        <MenuList>
+          <MenuItem
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+          >
+            Add heading 1
+          </MenuItem>
+
+          <MenuItem
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+          >
+            Add heading 2
+          </MenuItem>
+
+          <MenuItem
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 3 }).run()
+            }
+          >
+            Add heading 3
+          </MenuItem>
+
+          <MenuItem
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 4 }).run()
+            }
+          >
+            Add heading 4
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 5 }).run()
+            }
+          >
+            Add heading 5
+          </MenuItem>
+          <MenuItem
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 6 }).run()
+            }
+          >
+            Add heading 6
+          </MenuItem>
         </MenuList>
       </Menu>
       <div className="vl"></div>
@@ -221,13 +212,9 @@ function ToolBar({ editor }) {
           leftIcon={<FontAwesomeIcon icon={faCode} />}
           variant="ghost"
         />
-        <MenuList as="ul" listStyleType="none">
-          <li>
-            <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
-          </li>
-          <li>
-            <MenuItem>Twitter</MenuItem>
-          </li>
+        <MenuList>
+          <MenuItem onClick={() => addYoutubeEmbed()}>YouTube</MenuItem>
+          <MenuItem>Twitter</MenuItem>
         </MenuList>
       </Menu>
       <Button
@@ -287,7 +274,7 @@ const Tiptap = ({ handleContentChange, content }) => {
         class: "prose focus:outline-none",
       },
     },
-    onUpdate: async ({ editor }) => {
+    onUpdate: ({ editor }) => {
       handleContentChange(editor.getHTML());
     },
   });

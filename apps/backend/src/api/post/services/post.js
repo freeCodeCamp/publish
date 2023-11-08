@@ -1,6 +1,7 @@
 "use strict";
 
 const { ValidationError } = require("@strapi/utils").errors;
+const { customAlphabet } = require("nanoid");
 
 /**
  * post service
@@ -9,6 +10,17 @@ const { ValidationError } = require("@strapi/utils").errors;
 const { createCoreService } = require("@strapi/strapi").factories;
 
 module.exports = createCoreService("api::post.post", ({ strapi }) => ({
+  // finds id from slug_id
+  // returns null if not found
+  async findIdBySlugId(slug_id) {
+    // Have to use findMany instead of fineOne to search by slug_id
+    const postIds = await strapi.entityService.findMany("api::post.post", {
+      filters: { slug_id: slug_id },
+      fields: ["id"],
+    });
+    return postIds.length > 0 ? postIds[0].id : null;
+  },
+
   async create(reqBody = {}) {
     if (process.env.DATA_MIGRATION === "true") {
       reqBody.data.createdAt = reqBody.data.created_at;
@@ -51,5 +63,12 @@ module.exports = createCoreService("api::post.post", ({ strapi }) => ({
       throw new ValidationError("publishedAt must be a past date");
     }
     return true;
+  },
+
+  generateSlugId() {
+    // generate random 8 characters ID
+    const characterSet = "0123456789abcdefghijklmnopqrstuvwxyz";
+    const nanoid = customAlphabet(characterSet, 8);
+    return nanoid();
   },
 }));

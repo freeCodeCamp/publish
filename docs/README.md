@@ -53,20 +53,7 @@ OR
 Alternatively, you can use `npm run run-tools` in the root directory to start up
 these services.
 
-Follow the npm-specific Turborepo
-[installation instructions](https://turbo.build/repo/docs/installing)
-
 ### Run initial setup
-
-Copy the sample env files.
-
-```sh
-cp apps/backend/sample.env apps/backend/.env
-cp apps/frontend/sample.env apps/frontend/.env
-cp apps/cron/sample.env apps/cron/.env
-```
-
-Follow the instructions in the `.env` files to setup the secrets.
 
 Install dependencies.
 
