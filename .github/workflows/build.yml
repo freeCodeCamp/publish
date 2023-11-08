@@ -40,12 +40,6 @@ jobs:
           --build-arg NEXT_PUBLIC_STRAPI_BACKEND_URL=${{ secrets.NEXT_PUBLIC_STRAPI_BACKEND_URL }} \
           --file docker/${{ matrix.apps }}/Dockerfile
 
-      # - name: Build the registry test image
-      #   run: |
-      #     cd registry-test
-      #     REGISTRY_NAME=${{ secrets.DOCR_NAME }} TAGNAME_CI=$tagname make build
-      #     cd ..
-
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -58,13 +52,3 @@ jobs:
         run: |
           docker push registry.digitalocean.com/${{ secrets.DOCR_NAME }}/${{ matrix.site_tlds }}/publish-${{ matrix.apps }}:$tagname
           docker push registry.digitalocean.com/${{ secrets.DOCR_NAME }}/${{ matrix.site_tlds }}/publish-${{ matrix.apps }}:latest
-
-      # - name: Push the registry test image
-      #   run: |
-      #     cd registry-test
-      #     REGISTRY_NAME=${{ secrets.DOCR_NAME }} TAGNAME_CI=$tagname make push
-      #     cd ..
-
-      - name: Clean up Self-hosted setup
-        uses: colpal/actions-clean@36e6ca1abd35efe61cb60f912bd7837f67887c8a # tag=v1
-        if: ${{ always() }} # To ensure this step runs even when earlier steps fail
