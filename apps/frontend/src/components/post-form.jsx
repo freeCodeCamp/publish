@@ -268,6 +268,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                           fontWeight={"500"}
                           color={"gray.600"}
                           fontSize={"sm"}
+                          onClick={() => setScheduleOption("now")}
                         >
                           Set it live now
                         </Text>
@@ -287,6 +288,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                           fontWeight={"500"}
                           color={"gray.600"}
                           fontSize={"sm"}
+                          onClick={() => setScheduleOption("later")}
                         >
                           Schedule it for Later
                         </Text>
