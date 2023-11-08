@@ -335,7 +335,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                       mr="1rem"
                       size="sm"
                     >
-                      Publish
+                      {scheduleOption == "now" ? "Publish" : "Schedule"}
                     </Button>
                   </Flex>
                 </MenuList>
