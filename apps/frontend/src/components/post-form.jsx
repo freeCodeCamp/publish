@@ -53,6 +53,9 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
+
   useEffect(() => {
     if (post) {
       const { title, body, slug, tags } = post.attributes;
@@ -91,6 +94,14 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   };
 
+  const handleSchedule = () => {
+    if (scheduledDate == "" || scheduledTime == "") {
+      return null;
+    } else {
+      return scheduledDate + "T" + scheduledTime + ":00.000Z";
+    }
+  };
+
   const handleSubmit = useCallback(async () => {
     const nonce = uuidv4();
     const token = user.jwt;
@@ -111,6 +122,12 @@ const PostForm = ({ tags, user, authors, post }) => {
         locale: "en",
       },
     };
+
+    if (scheduledDate != "" && scheduledTime != "") {
+      data.data.scheduled_at = handleSchedule();
+    }
+
+    console.log(data);
 
     try {
       await updatePost(postId, data, token);
@@ -255,8 +272,16 @@ const PostForm = ({ tags, user, authors, post }) => {
                         </Text>
                       </Radio>
                       <Stack direction={"row"} ml={"1.5rem"} pr={"1rem"}>
-                        <Input type={"date"} size="sm" />
-                        <Input type={"time"} size="sm" />
+                        <Input
+                          type={"date"}
+                          size="sm"
+                          onChange={(e) => setScheduledDate(e.target.value)}
+                        />
+                        <Input
+                          type={"time"}
+                          size="sm"
+                          onChange={(e) => setScheduledTime(e.target.value)}
+                        />
                       </Stack>
                       <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
                         Set automatic future publish date
