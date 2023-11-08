@@ -58,6 +58,9 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [scheduleOption, setScheduleOption] = useState("now");
 
+  const isScheduledAndDateValid =
+    scheduledDate != "" && scheduledTime != "" && scheduleOption == "later";
+
   useEffect(() => {
     if (post) {
       const { title, body, slug, tags } = post.attributes;
@@ -104,52 +107,61 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   };
 
-  const handleSubmit = useCallback(async () => {
-    const nonce = uuidv4();
-    const token = user.jwt;
+  const handleSubmit = useCallback(
+    async (shouldPublish = null) => {
+      const nonce = uuidv4();
+      const token = user.jwt;
 
-    const data = {
-      data: {
-        title: title,
-        slug: slugify(
-          postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
-          {
-            lower: true,
-            specialChar: false,
-          },
-        ),
-        body: content,
-        tags: postTagId,
-        author: [author != "" ? author : user.id],
-        locale: "en",
-      },
-    };
+      const data = {
+        data: {
+          title: title,
+          slug: slugify(
+            postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
+            {
+              lower: true,
+              specialChar: false,
+            },
+          ),
+          body: content,
+          tags: postTagId,
+          author: [author != "" ? author : user.id],
+          locale: "en",
+        },
+      };
 
-    if (scheduledDate != "" && scheduledTime != "") {
-      data.data.scheduled_at = handleSchedule();
-    }
+      if (shouldPublish) {
+        if (isScheduledAndDateValid && scheduleOption != "now") {
+          data.data.scheduled_at = handleSchedule();
+        }
 
-    try {
-      await updatePost(postId, data, token);
-      toast({
-        title: "Post Updated.",
-        description: "We've updated your post for you.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+        if (scheduleOption == "now") {
+          data.data.publishedAt = new Date().toISOString();
+        }
+      }
 
-      setUnsavedChanges(false);
-    } catch (error) {
-      toast({
-        title: "An error occurred.",
-        description: error.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  }, [toast, title, postUrl, postTagId, content, author, postId, user]);
+      try {
+        await updatePost(postId, data, token);
+        toast({
+          title: "Post Updated.",
+          description: "We've updated your post for you.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        setUnsavedChanges(false);
+      } catch (error) {
+        toast({
+          title: "An error occurred.",
+          description: error.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    },
+    [toast, title, postUrl, postTagId, content, author, postId, user],
+  );
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -204,11 +216,6 @@ const PostForm = ({ tags, user, authors, post }) => {
       setUnsavedChanges(true);
     }
   }
-
-  const isScheduledAndDateValid =
-    scheduledDate != "" && scheduledTime != "" && scheduleOption == "later";
-
-  console.log(isScheduledAndDateValid);
 
   return (
     <>
@@ -316,7 +323,10 @@ const PostForm = ({ tags, user, authors, post }) => {
                     </Button>
                     <Button
                       colorScheme="blue"
-                      onClick={handleSubmit}
+                      onClick={() => {
+                        handleSubmit(true);
+                        onClose();
+                      }}
                       isDisabled={
                         !isScheduledAndDateValid && scheduleOption != "now"
                       }
