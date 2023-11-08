@@ -82,9 +82,17 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "npm run start -- --filter=\!cron",
-    url: "http://localhost:3000",
-    reuseExistingServer: !process.env.CI,
-  },
+  // Using port so that playwright will wait for either 127.0.0.1 or ::1
+  webServer: [
+    {
+      command: "npm run start -- --filter=backend",
+      port: 1337,
+      reuseExistingServer: !process.env.CI,
+    },
+    {
+      command: "npm run start -- --filter=frontend",
+      port: 3000,
+      reuseExistingServer: !process.env.CI,
+    },
+  ],
 });
