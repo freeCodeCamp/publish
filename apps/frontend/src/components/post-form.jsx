@@ -212,51 +212,71 @@ const PostForm = ({ tags, user, authors, post }) => {
                   Publish
                 </MenuButton>
                 <MenuList w={"300px"}>
-                  <Box m={"1rem 0 0 1rem"}>
+                  <Box m={"0.75rem"}>
                     <Text fontSize="lg" color="gray.500">
-                      Read To Publish Post?
+                      Ready to publish your post?
                     </Text>
                   </Box>
                   <MenuDivider />
-                  <RadioGroup m={"1rem 1rem 0 1rem"}>
+                  <RadioGroup m={"1rem 0rem 0 1rem"}>
                     <Stack direction={"column"}>
                       <Radio
                         colorScheme="blue"
                         onClick={handleSubmit}
                         value="now"
                       >
-                        <Text fontWeight={"500"}>Publish Now</Text>
+                        <Text
+                          fontWeight={"500"}
+                          color={"gray.600"}
+                          fontSize={"sm"}
+                        >
+                          Set it live now
+                        </Text>
                       </Radio>
                       <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
-                        Post this immediately
+                        Post this post immediately
                       </Text>
-                      <Spacer />
                       <Spacer />
                       <Radio
                         colorScheme="blue"
                         onClick={handleSubmit}
                         value="later"
                       >
-                        <Text fontWeight={"500"}>Schedule for Later</Text>
+                        <Text
+                          fontWeight={"500"}
+                          color={"gray.600"}
+                          fontSize={"sm"}
+                        >
+                          Schedule it for Later
+                        </Text>
                       </Radio>
-                      <Stack direction={"row"}>
-                        <Input type={"date"} />
-                        <Input type={"time"} />
+                      <Stack direction={"row"} ml={"1.5rem"} pr={"1rem"}>
+                        <Input type={"date"} size="sm" />
+                        <Input type={"time"} size="sm" />
                       </Stack>
+                      <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
+                        Set automatic future publish date
+                      </Text>
                     </Stack>
                   </RadioGroup>
 
                   <MenuDivider />
-                  <Flex justifyContent={"end"}>
+                  <Flex justifyContent={"end"} mt={"1rem"}>
                     <Button
                       mr="1rem"
                       variant={"ghost"}
                       color="gray.500"
                       fontWeight={"400"}
+                      size="sm"
                     >
                       Cancel
                     </Button>
-                    <Button colorScheme="blue" onClick={handleSubmit} mr="1rem">
+                    <Button
+                      colorScheme="blue"
+                      onClick={handleSubmit}
+                      mr="1rem"
+                      size="sm"
+                    >
                       Publish
                     </Button>
                   </Flex>
