@@ -56,6 +56,8 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
 
+  const [scheduleOption, setScheduleOption] = useState("now");
+
   useEffect(() => {
     if (post) {
       const { title, body, slug, tags } = post.attributes;
@@ -126,8 +128,6 @@ const PostForm = ({ tags, user, authors, post }) => {
     if (scheduledDate != "" && scheduledTime != "") {
       data.data.scheduled_at = handleSchedule();
     }
-
-    console.log(data);
 
     try {
       await updatePost(postId, data, token);
@@ -205,6 +205,11 @@ const PostForm = ({ tags, user, authors, post }) => {
     }
   }
 
+  const isScheduledAndDateValid =
+    scheduledDate != "" && scheduledTime != "" && scheduleOption == "later";
+
+  console.log(isScheduledAndDateValid);
+
   return (
     <>
       <Flex>
@@ -239,11 +244,17 @@ const PostForm = ({ tags, user, authors, post }) => {
                     </Text>
                   </Box>
                   <MenuDivider />
-                  <RadioGroup m={"1rem 0rem 0 1rem"}>
+                  <RadioGroup
+                    m={"1rem 0rem 0 1rem"}
+                    defaultValue="now"
+                    value={scheduleOption}
+                  >
                     <Stack direction={"column"}>
                       <Radio
                         colorScheme="blue"
-                        onClick={handleSubmit}
+                        onClick={() => {
+                          setScheduleOption("now");
+                        }}
                         value="now"
                       >
                         <Text
@@ -260,7 +271,9 @@ const PostForm = ({ tags, user, authors, post }) => {
                       <Spacer />
                       <Radio
                         colorScheme="blue"
-                        onClick={handleSubmit}
+                        onClick={() => {
+                          setScheduleOption("later");
+                        }}
                         value="later"
                       >
                         <Text
@@ -304,6 +317,9 @@ const PostForm = ({ tags, user, authors, post }) => {
                     <Button
                       colorScheme="blue"
                       onClick={handleSubmit}
+                      isDisabled={
+                        !isScheduledAndDateValid && scheduleOption != "now"
+                      }
                       mr="1rem"
                       size="sm"
                     >
