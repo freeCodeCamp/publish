@@ -33,20 +33,21 @@ jobs:
         with:
           repository_name: '${{ matrix.variants }}/publish-${{ matrix.repos }}'
           days: '4'
+          dry_run: 'true'
 
-  clean:
-    name: Do Garbage Collection
-    runs-on: ubuntu-latest
-    environment: staging
-    needs: remove
-    steps:
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
-        with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+  # clean:
+  #   name: Do Garbage Collection
+  #   runs-on: ubuntu-latest
+  #   environment: staging
+  #   needs: remove
+  #   steps:
+  #     - name: Install doctl
+  #       uses: digitalocean/action-doctl@v2
+  #       with:
+  #         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1200
+  #     - name: Log in to DigitalOcean Container Registry with short-lived credentials
+  #       run: doctl registry login --expiry-seconds 1200
 
-      - name: Trigger Garbage collection
-        run: doctl registry garbage-collection start --include-untagged-manifests --force
+  #     - name: Trigger Garbage collection
+  #       run: doctl registry garbage-collection start --include-untagged-manifests --force
