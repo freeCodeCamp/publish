@@ -6,12 +6,12 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     environment: staging # Hardcoded for now. TODO: use a matrix?
     strategy:
       fail-fast: false
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
         site_tlds: ['dev']
         apps: ['backend', 'frontend', 'cron']
 
