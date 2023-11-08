@@ -2,7 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import Tiptap from "@/components/tiptap";
 import EditorDrawer from "@/components/editor-drawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronDown,
+  faChevronLeft,
+  faEdit,
+} from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuidv4 } from "uuid";
 import slugify from "slugify";
 import {
@@ -14,6 +18,13 @@ import {
   Stack,
   FormControl,
   FormErrorMessage,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuDivider,
+  RadioGroup,
+  Radio,
+  Spacer,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { updatePost } from "@/lib/posts";
@@ -178,7 +189,7 @@ const PostForm = ({ tags, user, authors, post }) => {
     <>
       <Flex>
         <Flex flexDirection="column" mr="1rem" maxWidth="100%" flex="4">
-          <Flex justifyContent="space-between" m="1rem 0 0 5rem">
+          <Flex m="1rem 0 0 5rem">
             <Box>
               <Button
                 variant="link"
@@ -188,6 +199,69 @@ const PostForm = ({ tags, user, authors, post }) => {
               >
                 <Text fontSize="2xl">Posts</Text>
               </Button>
+            </Box>
+            <Box ml="auto">
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  colorScheme="blue"
+                  variant={"ghost"}
+                  disabled={!unsavedChanges}
+                  rightIcon={<FontAwesomeIcon icon={faChevronDown} />}
+                >
+                  Publish
+                </MenuButton>
+                <MenuList w={"300px"}>
+                  <Box m={"1rem 0 0 1rem"}>
+                    <Text fontSize="lg" color="gray.500">
+                      Read To Publish Post?
+                    </Text>
+                  </Box>
+                  <MenuDivider />
+                  <RadioGroup m={"1rem 1rem 0 1rem"}>
+                    <Stack direction={"column"}>
+                      <Radio
+                        colorScheme="blue"
+                        onClick={handleSubmit}
+                        value="now"
+                      >
+                        <Text fontWeight={"500"}>Publish Now</Text>
+                      </Radio>
+                      <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
+                        Post this immediately
+                      </Text>
+                      <Spacer />
+                      <Spacer />
+                      <Radio
+                        colorScheme="blue"
+                        onClick={handleSubmit}
+                        value="later"
+                      >
+                        <Text fontWeight={"500"}>Schedule for Later</Text>
+                      </Radio>
+                      <Stack direction={"row"}>
+                        <Input type={"date"} />
+                        <Input type={"time"} />
+                      </Stack>
+                    </Stack>
+                  </RadioGroup>
+
+                  <MenuDivider />
+                  <Flex justifyContent={"end"}>
+                    <Button
+                      mr="1rem"
+                      variant={"ghost"}
+                      color="gray.500"
+                      fontWeight={"400"}
+                    >
+                      Cancel
+                    </Button>
+                    <Button colorScheme="blue" onClick={handleSubmit} mr="1rem">
+                      Publish
+                    </Button>
+                  </Flex>
+                </MenuList>
+              </Menu>
             </Box>
             <EditorDrawer
               tags={tags}
