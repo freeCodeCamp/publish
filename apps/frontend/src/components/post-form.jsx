@@ -109,6 +109,22 @@ const PostForm = ({ tags, user, authors, post }) => {
         }
       };
 
+      const getTitle = () => {
+        if (shouldPublish === "now") {
+          return "Post hast been published.";
+        }
+
+        if (shouldPublish === "later") {
+          return "Post hast been scheduled.";
+        }
+
+        if (shouldPublish === "unpublished") {
+          return "Post hast been unpublished.";
+        }
+
+        return "Post hast been updated.";
+      };
+
       if (shouldPublish === "unpublished") {
         data.data.publishedAt = null;
       }
@@ -124,8 +140,10 @@ const PostForm = ({ tags, user, authors, post }) => {
       try {
         await updatePost(postId, data, token);
         toast({
-          title: "Post Updated.",
-          description: "We've updated your post for you.",
+          title: getTitle(),
+          description: `The post ${
+            shouldPublish != null ? "status" : ""
+          } has been updated.`,
           status: "success",
           duration: 5000,
           isClosable: true,

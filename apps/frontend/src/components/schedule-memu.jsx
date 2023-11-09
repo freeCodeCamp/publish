@@ -26,7 +26,7 @@ const ScheduleMenu = ({ handleSubmit, post }) => {
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
 
-  const [isPublished, _setIsPublished] = useState(
+  const [isPublished, setIsPublished] = useState(
     post.attributes.publishedAt != null,
   );
 
@@ -208,6 +208,20 @@ const ScheduleMenu = ({ handleSubmit, post }) => {
             <Button
               colorScheme="blue"
               onClick={() => {
+                if (scheduleOption == "now") {
+                  setScheduledDate("");
+                  setScheduledTime("");
+
+                  setIsPublished(true);
+                }
+
+                if (scheduleOption == "unpublished") {
+                  setScheduledDate("");
+                  setScheduledTime("");
+
+                  setIsPublished(false);
+                }
+
                 handleSubmit(scheduleOption, scheduledDate, scheduledTime);
                 onClose();
               }}
