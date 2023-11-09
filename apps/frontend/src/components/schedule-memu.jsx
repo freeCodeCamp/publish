@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -21,15 +21,42 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 
-const ScheduleMenu = ({ handleSubmit }) => {
+const ScheduleMenu = ({ handleSubmit, post }) => {
   const [scheduleOption, setScheduleOption] = useState("now");
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
 
+  const [isPublished, _setIsPublished] = useState(
+    post.attributes.publishedAt != null,
+  );
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  useEffect(() => {
+    if (post) {
+      const option =
+        post.attributes.publishedAt != null ? "now" : "unpublished";
+      setScheduleOption(option);
+    }
+  }, [post]);
   const isScheduledAndDateValid =
     scheduledDate != "" && scheduledTime != "" && scheduleOption == "later";
+
+  const scheduleText = () => {
+    if (isPublished && scheduleOption === "now") {
+      return "Update";
+    }
+
+    if (scheduleOption === "now") {
+      return "Publish";
+    }
+    if (scheduleOption === "unpublished") {
+      return "Unpublish";
+    }
+    if (scheduleOption === "later") {
+      return "Schedule";
+    }
+  };
 
   return (
     <Box ml="auto">
@@ -40,83 +67,132 @@ const ScheduleMenu = ({ handleSubmit }) => {
           variant={"ghost"}
           rightIcon={<FontAwesomeIcon icon={faChevronDown} />}
         >
-          Publish
+          {isPublished ? "Update" : "Publish"}
         </MenuButton>
         <MenuList w={"375px"}>
           <Box m={"0.75rem"}>
             <Text fontSize="lg" color="gray.500">
-              Ready to publish your post?
+              {isPublished ? "Update" : "Ready to publish"} your post?
             </Text>
           </Box>
           <MenuDivider />
-          <RadioGroup
-            m={"1rem 0rem 0 1rem"}
-            defaultValue="now"
-            value={scheduleOption}
-          >
-            <Stack direction={"column"}>
-              <Radio
-                colorScheme="blue"
-                onClick={() => {
-                  setScheduleOption("now");
-                }}
-                value="now"
-              >
-                <Text
-                  fontWeight={"500"}
-                  color={"gray.600"}
-                  fontSize={"sm"}
-                  onClick={() => setScheduleOption("now")}
+          {!isPublished ? (
+            <RadioGroup
+              m={"1rem 0rem 0 1rem"}
+              defaultValue="now"
+              value={scheduleOption}
+            >
+              <Stack direction={"column"}>
+                <Radio
+                  colorScheme="blue"
+                  onClick={() => {
+                    setScheduleOption("now");
+                  }}
+                  value="now"
                 >
-                  Set it live now
+                  <Text
+                    fontWeight={"500"}
+                    color={"gray.600"}
+                    fontSize={"sm"}
+                    onClick={() => setScheduleOption("now")}
+                  >
+                    Set it live now
+                  </Text>
+                </Radio>
+                <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
+                  Post this post immediately
                 </Text>
-              </Radio>
-              <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
-                Post this post immediately
-              </Text>
-              <Spacer />
-              <Radio
-                colorScheme="blue"
-                onClick={() => {
-                  setScheduleOption("later");
-                }}
-                value="later"
-              >
-                <Text
-                  fontWeight={"500"}
-                  color={"gray.600"}
-                  fontSize={"sm"}
-                  onClick={() => setScheduleOption("later")}
+                <Spacer />
+                <Radio
+                  colorScheme="blue"
+                  onClick={() => {
+                    setScheduleOption("later");
+                  }}
+                  value="later"
                 >
-                  Schedule it for Later
-                </Text>
-              </Radio>
-              <Stack direction={"row"} ml={"1.5rem"} pr={"1rem"}>
-                <Input
-                  type={"date"}
-                  size="sm"
-                  onChange={(e) => setScheduledDate(e.target.value)}
-                />
-                <InputGroup size="sm">
+                  <Text
+                    fontWeight={"500"}
+                    color={"gray.600"}
+                    fontSize={"sm"}
+                    onClick={() => setScheduleOption("later")}
+                  >
+                    Schedule it for Later
+                  </Text>
+                </Radio>
+                <Stack direction={"row"} ml={"1.5rem"} pr={"1rem"}>
                   <Input
-                    type={"time"}
-                    className="time-input"
+                    type={"date"}
                     size="sm"
-                    onChange={(e) => setScheduledTime(e.target.value)}
+                    onChange={(e) => setScheduledDate(e.target.value)}
                   />
-                  <InputRightAddon>
-                    <Text fontSize={"sm"} time>
-                      UTC
-                    </Text>
-                  </InputRightAddon>
-                </InputGroup>
+                  <InputGroup size="sm">
+                    <Input
+                      type={"time"}
+                      className="time-input"
+                      size="sm"
+                      onChange={(e) => setScheduledTime(e.target.value)}
+                    />
+                    <InputRightAddon>
+                      <Text fontSize={"sm"} time>
+                        UTC
+                      </Text>
+                    </InputRightAddon>
+                  </InputGroup>
+                </Stack>
+                <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
+                  Set automatic future publish date
+                </Text>
               </Stack>
-              <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
-                Set automatic future publish date
-              </Text>
-            </Stack>
-          </RadioGroup>
-
+            </RadioGroup>
+          ) : (
+            <RadioGroup
+              m={"1rem 0rem 0 1rem"}
+              defaultValue="now"
+              value={scheduleOption}
+            >
+              <Stack direction={"column"}>
+                <Radio
+                  colorScheme="blue"
+                  onClick={() => {
+                    setScheduleOption("unpublished");
+                  }}
+                  value="unpublished"
+                >
+                  <Text
+                    fontWeight={"500"}
+                    color={"gray.600"}
+                    fontSize={"sm"}
+                    onClick={() => setScheduleOption("unpublished")}
+                  >
+                    Unpublished
+                  </Text>
+                </Radio>
+                <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
+                  Revert this post to a private draft
+                </Text>
+                <Spacer />
+                <Radio
+                  colorScheme="blue"
+                  onClick={() => {
+                    setScheduleOption("now");
+                  }}
+                  value="now"
+                >
+                  <Text
+                    fontWeight={"500"}
+                    color={"gray.600"}
+                    fontSize={"sm"}
+                    onClick={() => setScheduleOption("now")}
+                  >
+                    Published
+                  </Text>
+                </Radio>
+                <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
+                  Display this post publicly
+                </Text>
+              </Stack>
+            </RadioGroup>
+          )}
           <MenuDivider />
           <Flex justifyContent={"end"} mt={"1rem"}>
             <Button
@@ -135,11 +211,15 @@ const ScheduleMenu = ({ handleSubmit }) => {
                 handleSubmit(scheduleOption, scheduledDate, scheduledTime);
                 onClose();
               }}
-              isDisabled={!isScheduledAndDateValid && scheduleOption != "now"}
+              isDisabled={
+                !isScheduledAndDateValid &&
+                scheduleOption != "now" &&
+                !isPublished
+              }
               mr="1rem"
               size="sm"
             >
-              {scheduleOption == "now" ? "Publish" : "Schedule"}
+              {scheduleText()}
             </Button>
           </Flex>
         </MenuList>

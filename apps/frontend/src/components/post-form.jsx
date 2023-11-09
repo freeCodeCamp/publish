@@ -109,6 +109,10 @@ const PostForm = ({ tags, user, authors, post }) => {
         }
       };
 
+      if (shouldPublish === "unpublished") {
+        data.data.publishedAt = null;
+      }
+
       if (shouldPublish === "later") {
         data.data.scheduled_at = handleSchedule();
       }
@@ -210,7 +214,9 @@ const PostForm = ({ tags, user, authors, post }) => {
                 <Text fontSize="2xl">Posts</Text>
               </Button>
             </Box>
-            {isEditor(user) && <ScheduleMenu handleSubmit={handleSubmit} />}
+            {isEditor(user) && (
+              <ScheduleMenu handleSubmit={handleSubmit} post={post} />
+            )}
             <EditorDrawer
               tags={tags}
               authors={authors}
