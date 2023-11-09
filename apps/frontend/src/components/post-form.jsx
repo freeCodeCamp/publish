@@ -2,11 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Tiptap from "@/components/tiptap";
 import EditorDrawer from "@/components/editor-drawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faChevronDown,
-  faChevronLeft,
-  faEdit,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuidv4 } from "uuid";
 import slugify from "slugify";
 import {
@@ -18,28 +14,18 @@ import {
   Stack,
   FormControl,
   FormErrorMessage,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuDivider,
-  RadioGroup,
-  Radio,
-  Spacer,
-  InputGroup,
-  InputRightAddon,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { updatePost } from "@/lib/posts";
 import { useToast } from "@chakra-ui/react";
-import { useDisclosure } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { isEditor } from "@/lib/current-user";
+import ScheduleMenu from "./schedule-memu";
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
   const router = useRouter();
-
-  const { onClose, onOpen, isOpen } = useDisclosure();
 
   const [title, setTitle] = useState("(UNTITLED)");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -54,14 +40,6 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [content, setContent] = useState(post?.attributes.body || "");
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
-
-  const [scheduledDate, setScheduledDate] = useState("");
-  const [scheduledTime, setScheduledTime] = useState("");
-
-  const [scheduleOption, setScheduleOption] = useState("now");
-
-  const isScheduledAndDateValid =
-    scheduledDate != "" && scheduledTime != "" && scheduleOption == "later";
 
   useEffect(() => {
     if (post) {
@@ -102,7 +80,7 @@ const PostForm = ({ tags, user, authors, post }) => {
   };
 
   const handleSubmit = useCallback(
-    async (shouldPublish = null) => {
+    async (shouldPublish = null, scheduledDate = "", scheduledTime = "") => {
       const nonce = uuidv4();
       const token = user.jwt;
 
@@ -131,14 +109,12 @@ const PostForm = ({ tags, user, authors, post }) => {
         }
       };
 
-      if (shouldPublish) {
-        if (isScheduledAndDateValid && scheduleOption != "now") {
-          data.data.scheduled_at = handleSchedule();
-        }
+      if (shouldPublish === "later") {
+        data.data.scheduled_at = handleSchedule();
+      }
 
-        if (scheduleOption == "now") {
-          data.data.publishedAt = new Date().toISOString();
-        }
+      if (shouldPublish == "now") {
+        data.data.publishedAt = new Date().toISOString();
       }
 
       try {
@@ -162,20 +138,7 @@ const PostForm = ({ tags, user, authors, post }) => {
         });
       }
     },
-    [
-      toast,
-      title,
-      postUrl,
-      postTagId,
-      content,
-      author,
-      postId,
-      user,
-      isScheduledAndDateValid,
-      scheduleOption,
-      scheduledDate,
-      scheduledTime,
-    ],
+    [toast, title, postUrl, postTagId, content, author, postId, user],
   );
 
   useEffect(() => {
@@ -247,122 +210,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                 <Text fontSize="2xl">Posts</Text>
               </Button>
             </Box>
-            <Box ml="auto">
-              <Menu isOpen={isOpen} onClose={onClose}>
-                <MenuButton
-                  onClick={onOpen}
-                  as={Button}
-                  variant={"ghost"}
-                  disabled={!unsavedChanges}
-                  rightIcon={<FontAwesomeIcon icon={faChevronDown} />}
-                >
-                  Publish
-                </MenuButton>
-                <MenuList w={"350px"}>
-                  <Box m={"0.75rem"}>
-                    <Text fontSize="lg" color="gray.500">
-                      Ready to publish your post?
-                    </Text>
-                  </Box>
-                  <MenuDivider />
-                  <RadioGroup
-                    m={"1rem 0rem 0 1rem"}
-                    defaultValue="now"
-                    value={scheduleOption}
-                  >
-                    <Stack direction={"column"}>
-                      <Radio
-                        colorScheme="blue"
-                        onClick={() => {
-                          setScheduleOption("now");
-                        }}
-                        value="now"
-                      >
-                        <Text
-                          fontWeight={"500"}
-                          color={"gray.600"}
-                          fontSize={"sm"}
-                          onClick={() => setScheduleOption("now")}
-                        >
-                          Set it live now
-                        </Text>
-                      </Radio>
-                      <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
-                        Post this post immediately
-                      </Text>
-                      <Spacer />
-                      <Radio
-                        colorScheme="blue"
-                        onClick={() => {
-                          setScheduleOption("later");
-                        }}
-                        value="later"
-                      >
-                        <Text
-                          fontWeight={"500"}
-                          color={"gray.600"}
-                          fontSize={"sm"}
-                          onClick={() => setScheduleOption("later")}
-                        >
-                          Schedule it for Later
-                        </Text>
-                      </Radio>
-                      <Stack direction={"row"} ml={"1.5rem"} pr={"1rem"}>
-                        <Input
-                          type={"date"}
-                          size="sm"
-                          onChange={(e) => setScheduledDate(e.target.value)}
-                        />
-                        <InputGroup size="sm">
-                          <Input
-                            type={"time"}
-                            className="time-input"
-                            size="sm"
-                            onChange={(e) => setScheduledTime(e.target.value)}
-                          />
-                          <InputRightAddon>
-                            <Text fontSize={"sm"} time>
-                              UTC
-                            </Text>
-                          </InputRightAddon>
-                        </InputGroup>
-                      </Stack>
-                      <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
-                        Set automatic future publish date
-                      </Text>
-                    </Stack>
-                  </RadioGroup>
-
-                  <MenuDivider />
-                  <Flex justifyContent={"end"} mt={"1rem"}>
-                    <Button
-                      mr="1rem"
-                      variant={"ghost"}
-                      color="gray.500"
-                      fontWeight={"400"}
-                      size="sm"
-                      onClick={onClose}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      colorScheme="blue"
-                      onClick={() => {
-                        handleSubmit(true);
-                        onClose();
-                      }}
-                      isDisabled={
-                        !isScheduledAndDateValid && scheduleOption != "now"
-                      }
-                      mr="1rem"
-                      size="sm"
-                    >
-                      {scheduleOption == "now" ? "Publish" : "Schedule"}
-                    </Button>
-                  </Flex>
-                </MenuList>
-              </Menu>
-            </Box>
+            {isEditor(user) && <ScheduleMenu handleSubmit={handleSubmit} />}
             <EditorDrawer
               tags={tags}
               authors={authors}
