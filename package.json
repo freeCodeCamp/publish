@@ -1,13 +1,17 @@
 {
   "devDependencies": {
+    "@playwright/test": "^1.39.0",
+    "@types/node": "^20.8.10",
     "husky": "^8.0.0",
     "lint-staged": "^14.0.0",
     "turbo": "1.10.16"
   },
   "scripts": {
+    "build": "turbo build",
     "prepare": "husky install",
     "lint": "turbo lint --continue",
     "seed": "turbo seed",
+    "start": "turbo start",
     "develop": "turbo develop",
     "run-tools": "cd tools && docker compose up -d && cd .."
   },
