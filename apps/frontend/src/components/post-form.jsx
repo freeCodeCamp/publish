@@ -111,18 +111,18 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       const getTitle = () => {
         if (shouldPublish === "now") {
-          return "Post hast been published.";
+          return "Post has been published.";
         }
 
         if (shouldPublish === "later") {
-          return "Post hast been scheduled.";
+          return "Post has been scheduled.";
         }
 
         if (shouldPublish === "unpublished") {
-          return "Post hast been unpublished.";
+          return "Post has been unpublished.";
         }
 
-        return "Post hast been updated.";
+        return "Post has been updated.";
       };
 
       if (shouldPublish === "unpublished") {
