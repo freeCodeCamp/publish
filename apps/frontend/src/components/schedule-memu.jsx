@@ -28,6 +28,10 @@ const ScheduleMenu = ({ handleSubmit, post }) => {
     post.attributes.publishedAt != null,
   );
 
+  const [isScheduled, setIsScheduled] = useState(
+    post.attributes.scheduled_at != null,
+  );
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
@@ -46,11 +50,11 @@ const ScheduleMenu = ({ handleSubmit, post }) => {
         variant={"ghost"}
         rightIcon={<FontAwesomeIcon icon={faChevronDown} />}
       >
-        {isPublished ? "Update" : "Publish"}
+        {isPublished ? "Update" : isScheduled ? "Scheduled" : "Publish"}
       </MenuButton>
       <MenuList w={"375px"}>
         <Box m={"0.75rem"}>
-          <Text fontSize="lg" color="gray.500">
+          <Text fontSize="lg">
             {isPublished ? "Update" : "Ready to publish"} your post?
           </Text>
         </Box>
@@ -60,6 +64,10 @@ const ScheduleMenu = ({ handleSubmit, post }) => {
             scheduleOption={scheduleOption}
             setScheduleOption={setScheduleOption}
             setIsPublished={setIsPublished}
+            setIsScheduled={setIsScheduled}
+            isScheduled={isScheduled}
+            isPublished={isPublished}
+            post={post}
             onClose={onClose}
             handleSubmit={handleSubmit}
           />
@@ -106,7 +114,7 @@ const PublishedMenu = ({
               fontSize={"sm"}
               onClick={() => setScheduleOption("unpublished")}
             >
-              Unpublished
+              Revert to draft
             </Text>
           </Radio>
           <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
@@ -155,6 +163,7 @@ const PublishedMenu = ({
 
             if (scheduleOption == "unpublished") {
               setIsPublished(false);
+              setScheduleOption("now");
             }
 
             handleSubmit(scheduleOption);
@@ -174,6 +183,8 @@ const NotPublishedMenu = ({
   scheduleOption,
   setScheduleOption,
   setIsPublished,
+  setIsScheduled,
+  isScheduled,
   isPublished,
   handleSubmit,
   onClose,
@@ -195,21 +206,31 @@ const NotPublishedMenu = ({
           <Radio
             colorScheme="blue"
             onClick={() => {
-              setScheduleOption("now");
+              if (isScheduled) {
+                setScheduleOption("unpublished");
+              } else {
+                setScheduleOption("now");
+              }
             }}
-            value="now"
+            value={isScheduled ? "unpublished" : "now"}
           >
             <Text
               fontWeight={"500"}
               color={"gray.600"}
               fontSize={"sm"}
-              onClick={() => setScheduleOption("now")}
+              onClick={() => {
+                if (isScheduled) {
+                  setScheduleOption("unpublished");
+                } else {
+                  setScheduleOption("now");
+                }
+              }}
             >
-              Set it live now
+              {isScheduled ? "Unschedule" : "Publish"}
             </Text>
           </Radio>
           <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
-            Post this post immediately
+            {isScheduled ? "Revert to Draft" : "Post this post immediately"}
           </Text>
           <Spacer />
           <Radio
@@ -225,27 +246,13 @@ const NotPublishedMenu = ({
               fontSize={"sm"}
               onClick={() => setScheduleOption("later")}
             >
-              Schedule it for Later
+              {isScheduled ? "Reschedule" : "Schedule it for later"}
             </Text>
           </Radio>
-          <Stack direction={"row"} ml={"1.5rem"} pr={"1rem"}>
-            <Input
-              type={"date"}
-              size="sm"
-              onChange={(e) => setScheduledDate(e.target.value)}
-            />
-            <InputGroup size="sm">
-              <Input
-                type={"time"}
-                className="time-input"
-                size="sm"
-                onChange={(e) => setScheduledTime(e.target.value)}
-              />
-              <InputRightAddon>
-                <Text fontSize={"sm"}>UTC</Text>
-              </InputRightAddon>
-            </InputGroup>
-          </Stack>
+          <DatePicker
+            setScheduledDate={setScheduledDate}
+            setScheduledTime={setScheduledTime}
+          />
           <Text fontSize={"sm"} ml={"1.5rem"} color={"gray.500"}>
             Set automatic future publish date
           </Text>
@@ -270,23 +277,61 @@ const NotPublishedMenu = ({
               setIsPublished(true);
             }
 
+            if (scheduleOption == "later") {
+              setIsScheduled(true);
+            }
+
             if (scheduleOption == "unpublished") {
               setIsPublished(false);
+              setIsScheduled(false);
+              setScheduleOption("now");
             }
 
             handleSubmit(scheduleOption, scheduledDate, scheduledTime);
             onClose();
           }}
           isDisabled={
-            !isScheduledAndDateValid && scheduleOption != "now" && !isPublished
+            !isScheduledAndDateValid &&
+            scheduleOption != "now" &&
+            scheduleOption != "unpublished" &&
+            !isPublished
           }
           mr="1rem"
           size="sm"
         >
-          {scheduleOption === "later" ? "Schedule" : "Publish"}
+          {isScheduled
+            ? scheduleOption == "unpublished"
+              ? "Unschedule"
+              : "Reschedule"
+            : scheduleOption == "now"
+            ? "Publish"
+            : "Schedule"}
         </Button>
       </Flex>
     </>
+  );
+};
+
+const DatePicker = ({ setScheduledDate, setScheduledTime }) => {
+  return (
+    <Stack direction={"row"} ml={"1.5rem"} pr={"1rem"}>
+      <Input
+        type={"date"}
+        size="sm"
+        onChange={(e) => setScheduledDate(e.target.value)}
+      />
+      <InputGroup size="sm">
+        <Input
+          type={"time"}
+          className="time-input"
+          size="sm"
+          onChange={(e) => setScheduledTime(e.target.value)}
+        />
+        <InputRightAddon>
+          <Text fontSize={"sm"}>UTC</Text>
+        </InputRightAddon>
+      </InputGroup>
+    </Stack>
   );
 };
 

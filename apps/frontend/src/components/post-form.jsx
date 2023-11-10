@@ -127,6 +127,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       if (shouldPublish === "unpublished") {
         data.data.publishedAt = null;
+        data.data.scheduled_at = null;
       }
 
       if (shouldPublish === "later") {
@@ -135,6 +136,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       if (shouldPublish == "now") {
         data.data.publishedAt = new Date().toISOString();
+        data.data.scheduled_at = null;
       }
 
       try {
