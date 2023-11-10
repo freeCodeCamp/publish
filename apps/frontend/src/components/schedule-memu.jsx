@@ -55,7 +55,8 @@ const ScheduleMenu = ({ handleSubmit, post }) => {
       <MenuList w={"375px"}>
         <Box m={"0.75rem"}>
           <Text fontSize="lg">
-            {isPublished ? "Update" : "Ready to publish"} your post?
+            {isPublished || isScheduled ? "Update" : "Ready to publish"} your
+            post?
           </Text>
         </Box>
         <MenuDivider />
