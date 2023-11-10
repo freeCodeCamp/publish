@@ -133,9 +133,7 @@ const ScheduleMenu = ({ handleSubmit, post }) => {
                       onChange={(e) => setScheduledTime(e.target.value)}
                     />
                     <InputRightAddon>
-                      <Text fontSize={"sm"} time>
-                        UTC
-                      </Text>
+                      <Text fontSize={"sm"}>UTC</Text>
                     </InputRightAddon>
                   </InputGroup>
                 </Stack>
