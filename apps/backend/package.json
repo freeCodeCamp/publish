@@ -10,9 +10,9 @@
     "eslint": "eslint .",
     "prettier-check": "prettier --check .",
     "strapi": "strapi",
-    "seed": "node ./scripts/seed.js",
+    "seed": "config-sync import --yes && node ./scripts/seed.js",
     "cs": "config-sync",
-    "init": "shx cp -n sample.env .env && npm run cs import -- --yes",
+    "init": "shx cp -n sample.env .env",
     "test": "jest --forceExit",
     "test-verbose": "jest --forceExit --detectOpenHandles --verbose"
   },
