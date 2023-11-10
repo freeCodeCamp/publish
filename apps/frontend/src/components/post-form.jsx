@@ -20,6 +20,8 @@ import { updatePost } from "@/lib/posts";
 import { useToast } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { isEditor } from "@/lib/current-user";
+import ScheduleMenu from "./schedule-memu";
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
@@ -77,48 +79,91 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   };
 
-  const handleSubmit = useCallback(async () => {
-    const nonce = uuidv4();
-    const token = user.jwt;
+  const handleSubmit = useCallback(
+    async (shouldPublish = null, scheduledDate = "", scheduledTime = "") => {
+      const nonce = uuidv4();
+      const token = user.jwt;
 
-    const data = {
-      data: {
-        title: title,
-        slug: slugify(
-          postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
-          {
-            lower: true,
-            specialChar: false,
-          },
-        ),
-        body: content,
-        tags: postTagId,
-        author: [author != "" ? author : user.id],
-        locale: "en",
-      },
-    };
+      const data = {
+        data: {
+          title: title,
+          slug: slugify(
+            postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
+            {
+              lower: true,
+              specialChar: false,
+            },
+          ),
+          body: content,
+          tags: postTagId,
+          author: [author != "" ? author : user.id],
+          locale: "en",
+        },
+      };
 
-    try {
-      await updatePost(postId, data, token);
-      toast({
-        title: "Post Updated.",
-        description: "We've updated your post for you.",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
+      const handleSchedule = () => {
+        if (scheduledDate == "" || scheduledTime == "") {
+          return null;
+        } else {
+          return scheduledDate + "T" + scheduledTime + ":00.000Z";
+        }
+      };
 
-      setUnsavedChanges(false);
-    } catch (error) {
-      toast({
-        title: "An error occurred.",
-        description: error.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  }, [toast, title, postUrl, postTagId, content, author, postId, user]);
+      const getTitle = () => {
+        if (shouldPublish === "now") {
+          return "Post has been published.";
+        }
+
+        if (shouldPublish === "later") {
+          return "Post has been scheduled.";
+        }
+
+        if (shouldPublish === "unpublished") {
+          return "Post has been unpublished.";
+        }
+
+        return "Post has been updated.";
+      };
+
+      if (shouldPublish === "unpublished") {
+        data.data.publishedAt = null;
+        data.data.scheduled_at = null;
+      }
+
+      if (shouldPublish === "later") {
+        data.data.scheduled_at = handleSchedule();
+      }
+
+      if (shouldPublish == "now") {
+        data.data.publishedAt = new Date().toISOString();
+        data.data.scheduled_at = null;
+      }
+
+      try {
+        await updatePost(postId, data, token);
+        toast({
+          title: getTitle(),
+          description: `The post ${
+            shouldPublish != null ? "status" : ""
+          } has been updated.`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        });
+
+        setUnsavedChanges(false);
+      } catch (error) {
+        toast({
+          title: "An error occurred.",
+          description: error.message,
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    },
+    [toast, title, postUrl, postTagId, content, author, postId, user],
+  );
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -178,7 +223,7 @@ const PostForm = ({ tags, user, authors, post }) => {
     <>
       <Flex>
         <Flex flexDirection="column" mr="1rem" maxWidth="100%" flex="4">
-          <Flex justifyContent="space-between" m="1rem 0 0 5rem">
+          <Flex m="1rem 0 0 5rem">
             <Box>
               <Button
                 variant="link"
@@ -189,21 +234,26 @@ const PostForm = ({ tags, user, authors, post }) => {
                 <Text fontSize="2xl">Posts</Text>
               </Button>
             </Box>
-            <EditorDrawer
-              tags={tags}
-              authors={authors}
-              user={user}
-              post={post}
-              postTagId={postTagId}
-              title={title}
-              postUrl={postUrl}
-              handleTitleChange={handleTitleChange}
-              handlePostUrlChange={handlePostUrlChange}
-              handleAuthorChange={handleAuthorChange}
-              handleUnsavedChanges={handleUnsavedChanges}
-              handlePostTagId={handlePostTagId}
-              handleSubmit={handleSubmit}
-            />
+            <Box ml="auto" display={"flex"}>
+              {isEditor(user) && (
+                <ScheduleMenu handleSubmit={handleSubmit} post={post} />
+              )}
+              <EditorDrawer
+                tags={tags}
+                authors={authors}
+                user={user}
+                post={post}
+                postTagId={postTagId}
+                title={title}
+                postUrl={postUrl}
+                handleTitleChange={handleTitleChange}
+                handlePostUrlChange={handlePostUrlChange}
+                handleAuthorChange={handleAuthorChange}
+                handleUnsavedChanges={handleUnsavedChanges}
+                handlePostTagId={handlePostTagId}
+                handleSubmit={handleSubmit}
+              />
+            </Box>
           </Flex>
           <Flex m="1rem 0 0 5rem" flexDir={{ base: "column", lg: "row" }}>
             {!isEditingTitle ? (
