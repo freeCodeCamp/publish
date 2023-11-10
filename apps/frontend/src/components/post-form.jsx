@@ -232,24 +232,26 @@ const PostForm = ({ tags, user, authors, post }) => {
                 <Text fontSize="2xl">Posts</Text>
               </Button>
             </Box>
-            {isEditor(user) && (
-              <ScheduleMenu handleSubmit={handleSubmit} post={post} />
-            )}
-            <EditorDrawer
-              tags={tags}
-              authors={authors}
-              user={user}
-              post={post}
-              postTagId={postTagId}
-              title={title}
-              postUrl={postUrl}
-              handleTitleChange={handleTitleChange}
-              handlePostUrlChange={handlePostUrlChange}
-              handleAuthorChange={handleAuthorChange}
-              handleUnsavedChanges={handleUnsavedChanges}
-              handlePostTagId={handlePostTagId}
-              handleSubmit={handleSubmit}
-            />
+            <Box ml="auto" display={"flex"}>
+              {isEditor(user) && (
+                <ScheduleMenu handleSubmit={handleSubmit} post={post} />
+              )}
+              <EditorDrawer
+                tags={tags}
+                authors={authors}
+                user={user}
+                post={post}
+                postTagId={postTagId}
+                title={title}
+                postUrl={postUrl}
+                handleTitleChange={handleTitleChange}
+                handlePostUrlChange={handlePostUrlChange}
+                handleAuthorChange={handleAuthorChange}
+                handleUnsavedChanges={handleUnsavedChanges}
+                handlePostTagId={handlePostTagId}
+                handleSubmit={handleSubmit}
+              />
+            </Box>
           </Flex>
           <Flex m="1rem 0 0 5rem" flexDir={{ base: "column", lg: "row" }}>
             {!isEditingTitle ? (
