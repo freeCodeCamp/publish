@@ -9,7 +9,7 @@ require("dotenv").config();
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.STRAPI_ACCESS_TOKEN}`,
       },
-    }
+    },
   );
 
   const resJson = await res.json();
