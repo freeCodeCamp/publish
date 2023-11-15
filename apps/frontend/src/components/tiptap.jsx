@@ -264,6 +264,9 @@ const Tiptap = ({ handleContentChange, content }) => {
       }),
       Image.configure({
         inline: true,
+        HTMLAttributes: {
+          class: "add-image-form",
+        },
       }),
       Youtube.configure({
         width: 480,
