@@ -3,7 +3,8 @@ module.exports = () => ({
     config: {
       provider: "local",
       providerOptions: {
-        sizeLimit: 100000,
+        // 250MB
+        sizeLimit: 250000000,
       },
     },
   },

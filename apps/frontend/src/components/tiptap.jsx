@@ -26,13 +26,15 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 
 function ToolBar({ editor, user }) {
+  const [image, setImage] = useState();
+
   const addYoutubeEmbed = () => {
     const url = window.prompt("URL");
 
@@ -57,9 +59,12 @@ function ToolBar({ editor, user }) {
     const form = document.getElementById("choose-image-form");
 
     const addImage = async () => {
-      const image = document.getElementById("feature-image").files[0];
+      const imageLocal = document.getElementById("feature-image").files[0];
+
+      if (imageLocal === undefined) return;
+
       const reader = new FileReader();
-      reader.readAsDataURL(image);
+      reader.readAsDataURL(imageLocal);
       reader.onloadend = function () {
         const base64data = reader.result;
         editor.commands.setImage({
@@ -75,9 +80,10 @@ function ToolBar({ editor, user }) {
       await addImage(event);
 
       const apiURL = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
-      // const image = document.getElementById("feature-image").files;
 
-      // const formData = new FormData(event.target);
+      const formData = new FormData();
+
+      formData.append("files", image[0]);
 
       const res = await fetch(`${apiURL}/api/upload`, {
         method: "post",
@@ -103,6 +109,13 @@ function ToolBar({ editor, user }) {
       form.removeEventListener("submit", handleSubmit);
     };
   }, [editor]);
+
+  // make sure to submit form when image is selected
+  useEffect(() => {
+    document
+      .getElementById("choose-image-form")
+      .dispatchEvent(new Event("submit"));
+  }, [image]);
 
   return (
     <Box
@@ -254,11 +267,9 @@ function ToolBar({ editor, user }) {
           type="file"
           id="feature-image"
           accept="image/*"
-          onChange={() =>
-            document
-              .getElementById("choose-image-form")
-              .dispatchEvent(new Event("submit"))
-          }
+          onChange={() => {
+            setImage(document.getElementById("feature-image").files);
+          }}
           style={{ display: "none" }}
         />{" "}
       </form>
