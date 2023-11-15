@@ -4,18 +4,11 @@
 module.exports = ({ env }) => ({
   email: {
     config: {
-      provider: "nodemailer",
+      provider: "amazon-ses",
       providerOptions: {
-        host: env("NODEMAILER_HOST", "localhost"),
-        secure: false,
-        port: 1025,
-        auth: {
-          user: "test",
-          pass: "test",
-        },
-        tls: {
-          rejectUnauthorized: false,
-        },
+        key: env("AWS_SES_KEY"),
+        secret: env("AWS_SES_SECRET"),
+        amazon: env("AWS_SES_ENDPOINT"),
       },
     },
   },
