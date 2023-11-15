@@ -33,12 +33,17 @@ import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 
 function ToolBar({ editor }) {
-  const addImage = useCallback(() => {
-    const url = window.prompt("URL");
-
-    if (url) {
-      editor.chain().focus().setImage({ src: url, alt: "" }).run();
-    }
+  const addImage = useCallback(async () => {
+    const file = document.getElementById("feature-image").files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = function () {
+      const base64data = reader.result;
+      editor.commands.setImage({
+        src: base64data,
+        alt: "image",
+      });
+    };
   }, [editor]);
 
   const addYoutubeEmbed = () => {
@@ -194,15 +199,25 @@ function ToolBar({ editor }) {
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       />
       <div className="vl"></div>
-      <Button
-        variant="ghost"
-        iconSpacing={0}
-        p={2}
-        title="add an image"
-        aria-label="add an image"
-        leftIcon={<FontAwesomeIcon icon={faImage} />}
-        onClick={() => addImage()}
-      />
+      <label htmlFor="feature-image" className="custom-file-upload">
+        <Button
+          type="button"
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add an image"
+          aria-label="Add an image"
+          leftIcon={<FontAwesomeIcon icon={faImage} />}
+          onClick={() => document.getElementById("feature-image").click()}
+        />
+      </label>
+      <input
+        type="file"
+        id="feature-image"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={addImage}
+      />{" "}
       <Menu>
         <MenuButton
           as={Button}
