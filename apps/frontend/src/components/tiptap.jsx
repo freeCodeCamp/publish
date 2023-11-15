@@ -32,7 +32,7 @@ import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 
-function ToolBar({ editor }) {
+function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
     const url = window.prompt("URL");
 
@@ -78,10 +78,12 @@ function ToolBar({ editor }) {
 
       const res = await fetch(`${apiURL}/api/upload`, {
         method: "post",
-
+        headers: {
+          Authorization: `Bearer ${user.jwt}`,
+        },
         body: new FormData(event.target),
       });
-
+      console.log(event.target);
       console.log(res);
     };
 
@@ -231,19 +233,19 @@ function ToolBar({ editor }) {
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       />
       <div className="vl"></div>
+      <label htmlFor="feature-image" className="custom-file-upload">
+        <Button
+          type="button"
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add an image"
+          aria-label="Add an image"
+          leftIcon={<FontAwesomeIcon icon={faImage} />}
+          onClick={() => document.getElementById("feature-image").click()}
+        />
+      </label>
       <form id="choose-image-form">
-        <label htmlFor="feature-image" className="custom-file-upload">
-          <Button
-            type="button"
-            variant="ghost"
-            iconSpacing={0}
-            p={2}
-            title="Add an image"
-            aria-label="Add an image"
-            leftIcon={<FontAwesomeIcon icon={faImage} />}
-            onClick={() => document.getElementById("feature-image").click()}
-          />
-        </label>
         <input
           type="file"
           id="feature-image"
@@ -283,7 +285,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, content }) => {
+const Tiptap = ({ handleContentChange, user, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -339,7 +341,7 @@ const Tiptap = ({ handleContentChange, content }) => {
 
   return (
     <>
-      <ToolBar editor={editor} />
+      <ToolBar editor={editor} user={user} />
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
