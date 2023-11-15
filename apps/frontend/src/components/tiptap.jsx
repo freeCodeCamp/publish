@@ -26,26 +26,13 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useCallback } from "react";
+import { useEffect } from "react";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 
 function ToolBar({ editor }) {
-  const addImage = useCallback(async () => {
-    const file = document.getElementById("feature-image").files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = function () {
-      const base64data = reader.result;
-      editor.commands.setImage({
-        src: base64data,
-        alt: "image",
-      });
-    };
-  }, [editor]);
-
   const addYoutubeEmbed = () => {
     const url = window.prompt("URL");
 
@@ -65,6 +52,51 @@ function ToolBar({ editor }) {
       editor.commands.setLink({ href: url, target: "_blank" });
     }
   };
+
+  useEffect(() => {
+    const addImage = async () => {
+      const file = document.getElementById("feature-image").files[0];
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = function () {
+        const base64data = reader.result;
+        editor.commands.setImage({
+          src: base64data,
+          alt: "image",
+        });
+      };
+    };
+
+    const form = document.getElementById("choose-image-form");
+
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+
+      await addImage(event);
+
+      const apiURL = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
+
+      const res = await fetch(`${apiURL}/api/upload`, {
+        method: "post",
+
+        body: new FormData(event.target),
+      });
+
+      console.log(res);
+    };
+
+    // check if form has event listener attached already
+    form.removeEventListener("submit", handleSubmit);
+
+    // add event listener to form
+
+    form.addEventListener("submit", handleSubmit);
+
+    // Cleanup function to remove event listener when component unmounts
+    return () => {
+      form.removeEventListener("submit", handleSubmit);
+    };
+  }, [editor]);
 
   return (
     <Box
@@ -199,25 +231,31 @@ function ToolBar({ editor }) {
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       />
       <div className="vl"></div>
-      <label htmlFor="feature-image" className="custom-file-upload">
-        <Button
-          type="button"
-          variant="ghost"
-          iconSpacing={0}
-          p={2}
-          title="Add an image"
-          aria-label="Add an image"
-          leftIcon={<FontAwesomeIcon icon={faImage} />}
-          onClick={() => document.getElementById("feature-image").click()}
-        />
-      </label>
-      <input
-        type="file"
-        id="feature-image"
-        accept="image/*"
-        style={{ display: "none" }}
-        onChange={addImage}
-      />{" "}
+      <form id="choose-image-form">
+        <label htmlFor="feature-image" className="custom-file-upload">
+          <Button
+            type="button"
+            variant="ghost"
+            iconSpacing={0}
+            p={2}
+            title="Add an image"
+            aria-label="Add an image"
+            leftIcon={<FontAwesomeIcon icon={faImage} />}
+            onClick={() => document.getElementById("feature-image").click()}
+          />
+        </label>
+        <input
+          type="file"
+          id="feature-image"
+          accept="image/*"
+          onChange={() =>
+            document
+              .getElementById("choose-image-form")
+              .dispatchEvent(new Event("submit"))
+          }
+          style={{ display: "none" }}
+        />{" "}
+      </form>
       <Menu>
         <MenuButton
           as={Button}
