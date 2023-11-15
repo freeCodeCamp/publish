@@ -54,10 +54,12 @@ function ToolBar({ editor, user }) {
   };
 
   useEffect(() => {
+    const form = document.getElementById("choose-image-form");
+
     const addImage = async () => {
-      const file = document.getElementById("feature-image").files[0];
+      const image = document.getElementById("feature-image").files[0];
       const reader = new FileReader();
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(image);
       reader.onloadend = function () {
         const base64data = reader.result;
         editor.commands.setImage({
@@ -67,23 +69,25 @@ function ToolBar({ editor, user }) {
       };
     };
 
-    const form = document.getElementById("choose-image-form");
-
     const handleSubmit = async (event) => {
       event.preventDefault();
 
       await addImage(event);
 
       const apiURL = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
+      // const image = document.getElementById("feature-image").files;
+
+      // const formData = new FormData(event.target);
 
       const res = await fetch(`${apiURL}/api/upload`, {
         method: "post",
         headers: {
           Authorization: `Bearer ${user.jwt}`,
         },
-        body: new FormData(event.target),
+        body: formData,
       });
       console.log(event.target);
+
       console.log(res);
     };
 

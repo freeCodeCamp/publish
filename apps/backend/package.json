@@ -21,6 +21,7 @@
     "@strapi/plugin-i18n": "4.15.4",
     "@strapi/plugin-users-permissions": "4.15.4",
     "@strapi/provider-email-nodemailer": "^4.12.4",
+    "@strapi/provider-upload-local": "^4.15.4",
     "@strapi/strapi": "~4.15.0",
     "nanoid": "^3.3.6",
     "pg": "^8.11.3",
