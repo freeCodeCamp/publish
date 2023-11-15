@@ -83,6 +83,8 @@ function ToolBar({ editor, user }) {
 
       const formData = new FormData();
 
+      if (!image) return;
+
       formData.append("files", image[0]);
 
       const res = await fetch(`${apiURL}/api/upload`, {
@@ -108,7 +110,7 @@ function ToolBar({ editor, user }) {
     return () => {
       form.removeEventListener("submit", handleSubmit);
     };
-  }, [editor]);
+  }, [editor, image]);
 
   // make sure to submit form when image is selected
   useEffect(() => {
