@@ -56,28 +56,8 @@ function ToolBar({ editor, user }) {
   };
 
   useEffect(() => {
-    const form = document.getElementById("choose-image-form");
-
-    const addImage = async () => {
-      const imageLocal = document.getElementById("feature-image").files[0];
-
-      if (imageLocal === undefined) return;
-
-      const reader = new FileReader();
-      reader.readAsDataURL(imageLocal);
-      reader.onloadend = function () {
-        const base64data = reader.result;
-        editor.commands.setImage({
-          src: base64data,
-          alt: "image",
-        });
-      };
-    };
-
     const handleSubmit = async (event) => {
       event.preventDefault();
-
-      await addImage(event);
 
       const apiURL = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
@@ -90,14 +70,22 @@ function ToolBar({ editor, user }) {
       const res = await fetch(`${apiURL}/api/upload`, {
         method: "post",
         headers: {
+          Accept: "application/json",
           Authorization: `Bearer ${user.jwt}`,
         },
         body: formData,
       });
-      console.log(event.target);
 
-      console.log(res);
+      const data = await res.json();
+
+      editor.commands.setImage({
+        src: `${apiURL}${data[0].url}`,
+        alt: "image",
+      });
+
+      console.log(data);
     };
+    const form = document.getElementById("choose-image-form");
 
     // check if form has event listener attached already
     form.removeEventListener("submit", handleSubmit);
@@ -112,8 +100,9 @@ function ToolBar({ editor, user }) {
     };
   }, [editor, image]);
 
-  // make sure to submit form when image is selected
   useEffect(() => {
+    // sending a normal submit event on the form does not work, so we need to dispatch a new event
+
     document
       .getElementById("choose-image-form")
       .dispatchEvent(new Event("submit"));
@@ -321,7 +310,6 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       }),
       Image.configure({
         inline: true,
-        allowBase64: true,
         HTMLAttributes: {
           class: "add-image-form",
         },
