@@ -321,6 +321,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       }),
       Image.configure({
         inline: true,
+        allowBase64: true,
         HTMLAttributes: {
           class: "add-image-form",
         },
