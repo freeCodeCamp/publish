@@ -26,15 +26,12 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect, useState } from "react";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 
 function ToolBar({ editor, user }) {
-  const [image, setImage] = useState();
-
   const addYoutubeEmbed = () => {
     const url = window.prompt("URL");
 
@@ -55,58 +52,34 @@ function ToolBar({ editor, user }) {
     }
   };
 
-  useEffect(() => {
-    const handleSubmit = async (event) => {
-      event.preventDefault();
+  const handleImageSubmit = async (event) => {
+    event.preventDefault();
 
-      const apiURL = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
+    const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
-      const formData = new FormData();
+    const formData = new FormData();
+    const image = document.getElementById("feature-image").files;
 
-      if (!image) return;
+    // Handle the case where the user opts not to submit an image.
+    if (!image) return;
+    formData.append("files", image[0]);
 
-      formData.append("files", image[0]);
+    const res = await fetch(new URL("api/upload", apiBase), {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${user.jwt}`,
+      },
+      body: formData,
+    });
 
-      const res = await fetch(`${apiURL}/api/upload`, {
-        method: "post",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${user.jwt}`,
-        },
-        body: formData,
-      });
+    const data = await res.json();
 
-      const data = await res.json();
-
-      editor.commands.setImage({
-        src: `${apiURL}${data[0].url}`,
-        alt: "image",
-      });
-
-      console.log(data);
-    };
-    const form = document.getElementById("choose-image-form");
-
-    // check if form has event listener attached already
-    form.removeEventListener("submit", handleSubmit);
-
-    // add event listener to form
-
-    form.addEventListener("submit", handleSubmit);
-
-    // Cleanup function to remove event listener when component unmounts
-    return () => {
-      form.removeEventListener("submit", handleSubmit);
-    };
-  }, [editor, image]);
-
-  useEffect(() => {
-    // sending a normal submit event on the form does not work, so we need to dispatch a new event
-
-    document
-      .getElementById("choose-image-form")
-      .dispatchEvent(new Event("submit"));
-  }, [image]);
+    editor.commands.setImage({
+      src: new URL(data[0].url, apiBase),
+      alt: "image",
+    });
+  };
 
   return (
     <Box
@@ -253,14 +226,11 @@ function ToolBar({ editor, user }) {
           onClick={() => document.getElementById("feature-image").click()}
         />
       </label>
-      <form id="choose-image-form">
+      <form id="choose-image-form" onChange={handleImageSubmit}>
         <input
           type="file"
           id="feature-image"
           accept="image/*"
-          onChange={() => {
-            setImage(document.getElementById("feature-image").files);
-          }}
           style={{ display: "none" }}
         />{" "}
       </form>
