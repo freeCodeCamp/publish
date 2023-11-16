@@ -2,10 +2,8 @@ module.exports = () => ({
   upload: {
     config: {
       provider: "local",
-      providerOptions: {
-        // 250MB
-        sizeLimit: 250000000,
-      },
+      // 250MB
+      sizeLimit: 250 * 1024 * 1024,
     },
   },
 });
