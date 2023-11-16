@@ -129,6 +129,7 @@ export async function getServerSideProps(context) {
           },
         })
       : getUserPosts(session.user.jwt, {
+          publicationState: "preview",
           fields: ["id", "title", "slug", "publishedAt", "updatedAt"],
           populate: ["author", "tags"],
           filters: {
