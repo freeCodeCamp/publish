@@ -45,12 +45,6 @@
       "target": "plugin::users-permissions.user",
       "mappedBy": "role",
       "configurable": false
-    },
-    "invited_users": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::invited-user.invited-user",
-      "mappedBy": "role"
     }
   }
 }

@@ -7,9 +7,6 @@
       "action": "api::post.post.create"
     },
     {
-      "action": "api::post.post.createLocalization"
-    },
-    {
       "action": "api::post.post.delete"
     },
     {
