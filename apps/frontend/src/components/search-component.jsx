@@ -8,18 +8,49 @@ import {
   useDisclosure,
   InputGroup,
   InputLeftElement,
+  Text,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getAllPosts } from "@/lib/posts";
+import { isEditor } from "@/lib/current-user";
+import NextLink from "next/link";
 
-const PostSearch = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+const PostSearch = ({ user }) => {
+  const [posts, setPosts] = useState([]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const handleChange = (event) => {
-    setSearchTerm(event.target.value);
+  const search = async (query) => {
+    const contributorFilter = {
+      author: isEditor(user)
+        ? {}
+        : {
+            id: {
+              $eq: user.id,
+            },
+          },
+    };
+
+    const result = await getAllPosts(user.jwt, {
+      publicationState: "preview",
+      fields: ["title", "id"],
+      populate: ["author"],
+      filters: {
+        title: {
+          $containsi: query,
+        },
+        ...contributorFilter,
+      },
+      pagination: {
+        pageSize: 5,
+      },
+    });
+
+    setPosts(result.data);
   };
 
   return (
@@ -41,11 +72,17 @@ const PostSearch = () => {
             <Input
               type="text"
               placeholder="Search"
-              value={searchTerm}
-              onChange={handleChange}
+              onChange={(query) => search(query.target.value)}
               size="lg"
             />
           </InputGroup>
+          {posts.map((post) => (
+            <Card as={NextLink} href={`/posts/${post.id}`} key={post.id}>
+              <CardBody>
+                <Text>{post.attributes.title}</Text>
+              </CardBody>
+            </Card>
+          ))}
         </ModalContent>
       </Modal>
     </>

@@ -94,7 +94,7 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             />
             freeCodeCamp.org
           </Box>
-          <PostSearch />
+          <PostSearch user={user} />
           <CloseButton
             onClick={onClose}
             display={{ base: "flex", md: "none" }}
