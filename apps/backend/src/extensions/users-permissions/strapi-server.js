@@ -1,3 +1,5 @@
+const DASHBOARD_URL = process.env.DASHBOARD_URL ?? "http://localhost:3000";
+
 module.exports = (plugin) => {
   plugin.controllers.user.updateMe = async (ctx) => {
     if (!ctx.state.user || !ctx.state.user.id) {
@@ -41,11 +43,20 @@ module.exports = (plugin) => {
       return (ctx.response.status = 401);
     }
 
-    await strapi.query("plugin::users-permissions.user").update({
-      where: { id: ctx.request.params.id },
-      data: {
-        provider: "auth0",
-      },
+    const { email } = await strapi
+      .query("plugin::users-permissions.user")
+      .update({
+        where: { id: ctx.request.params.id },
+        data: {
+          provider: "auth0",
+        },
+      });
+
+    await strapi.plugins.email.services.email.send({
+      to: email,
+      from: "support@freecodecamp.org",
+      subject: "Invitation Link",
+      text: `Here is your invitation link: ${DASHBOARD_URL}/api/auth/signin`,
     });
 
     ctx.response.status = 200;
