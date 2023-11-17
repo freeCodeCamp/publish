@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  Button,
+  IconButton,
   Modal,
   ModalContent,
   ModalOverlay,
@@ -13,8 +13,6 @@ import {
   CardBody,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getAllPosts } from "@/lib/posts";
 import { isEditor } from "@/lib/current-user";
 import NextLink from "next/link";
@@ -55,12 +53,9 @@ const PostSearch = ({ user }) => {
 
   return (
     <>
-      <Button
-        onClick={onOpen}
-        rightIcon={<FontAwesomeIcon icon={faSearch} />}
-        iconSpacing={0}
-        variant={"ghost"}
-      ></Button>
+      <IconButton onClick={onOpen} variant={"ghost"}>
+        <SearchIcon />
+      </IconButton>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
