@@ -26,6 +26,7 @@ export const authOptions = {
               headers: { "Content-Type": "application/json" },
             },
           );
+
           const data = await res.json();
 
           if (res.ok && data.jwt) {
@@ -79,7 +80,7 @@ export const authOptions = {
 
         // Fetch user role data from /api/users/me?populate=role
         const res2 = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=*`,
+          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/${user.id}?populate=role,profile_image`,
           {
             headers: {
               Authorization: `Bearer ${token.jwt}`,
