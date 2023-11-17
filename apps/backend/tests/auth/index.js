@@ -14,12 +14,18 @@ const mockUserData = {
 
 describe("auth", () => {
   describe("invitation", () => {
+    let mockUser;
     let sendEmailSpy;
 
-    beforeEach(() => {
+    beforeEach(async () => {
       sendEmailSpy = jest
         .spyOn(strapi.plugins.email.services.email, "send")
         .mockImplementation(jest.fn());
+
+      mockUser =
+        await strapi.plugins["users-permissions"].services.user.add(
+          mockUserData,
+        );
     });
 
     afterEach(() => {
@@ -28,9 +34,6 @@ describe("auth", () => {
     });
 
     it("should set the user's provider to auth0 and delete the password", async () => {
-      await strapi.plugins["users-permissions"].services.user.add({
-        ...mockUserData,
-      });
       // There are subtle differences between what services.user.add and
       // getUser return, so we use getUser for a fair comparison.
       const user = await getUser(mockUserData.username);
@@ -53,15 +56,11 @@ describe("auth", () => {
     });
 
     it("should email the invited user", async () => {
-      const { id } =
-        await strapi.plugins["users-permissions"].services.user.add(
-          mockUserData,
-        );
       // TODO: only allow admin
       const editorToken = await getUserJWT("editor-user");
 
       const res = await request(strapi.server.httpServer)
-        .put("/api/auth/invitation/" + id)
+        .put("/api/auth/invitation/" + mockUser.id)
         .auth(editorToken, { type: "bearer" });
 
       expect(res.body).toEqual({ status: "success" });
@@ -78,11 +77,6 @@ describe("auth", () => {
     // This should happen irrespective of what we do with their password. i.e.
     // we null it, but even if we didn't they should not be able to login.
     it("should prevent email password login", async () => {
-      const { id } =
-        await strapi.plugins["users-permissions"].services.user.add(
-          mockUserData,
-        );
-
       const loginResponse = await request(strapi.server.httpServer)
         .post("/api/auth/local")
         .send({
@@ -95,7 +89,7 @@ describe("auth", () => {
       const editorToken = await getUserJWT("editor-user");
 
       await request(strapi.server.httpServer)
-        .put("/api/auth/invitation/" + id)
+        .put("/api/auth/invitation/" + mockUser.id)
         .auth(editorToken, { type: "bearer" });
 
       const deniedLoginResponse = await request(strapi.server.httpServer)
@@ -109,6 +103,26 @@ describe("auth", () => {
         "Invalid identifier or password",
       );
       expect(deniedLoginResponse.status).toEqual(400);
+    });
+
+    // TODO: enable once the administrator role exists.
+    it.skip("should reject requests from other roles", async () => {
+      // TODO: fetch all roles and test them directly (better future proofing)
+      const forbiddenUsers = ["contributor-user", "editor-user"];
+
+      for (const username of forbiddenUsers) {
+        const token = await getUserJWT(username);
+        const res = await request(strapi.server.httpServer)
+          .put("/api/auth/invitation/" + mockUser.id)
+          .auth(token, { type: "bearer" });
+        expect(res.status).toEqual(403);
+      }
+
+      const res = await request(strapi.server.httpServer).put(
+        "/api/auth/invitation/" + mockUser.id,
+      );
+
+      expect(res.status).toEqual(403);
     });
   });
 });
