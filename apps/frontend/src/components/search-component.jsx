@@ -23,16 +23,6 @@ const PostSearch = ({ user }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const search = async (query) => {
-    const contributorFilter = {
-      author: isEditor(user)
-        ? {}
-        : {
-            id: {
-              $eq: user.id,
-            },
-          },
-    };
-
     const result = await getAllPosts(user.jwt, {
       publicationState: "preview",
       fields: ["title", "id"],
@@ -41,7 +31,8 @@ const PostSearch = ({ user }) => {
         title: {
           $containsi: query,
         },
-        ...contributorFilter,
+        // only show posts of that user if they are not an editor
+        ...(isEditor(user) ? {} : { author: { id: { $eq: user.id } } }),
       },
       pagination: {
         pageSize: 5,
