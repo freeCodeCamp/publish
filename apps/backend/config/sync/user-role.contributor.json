@@ -52,9 +52,6 @@
       "action": "plugin::users-permissions.user.findOne"
     },
     {
-      "action": "plugin::users-permissions.user.me"
-    },
-    {
       "action": "plugin::users-permissions.user.updateMe"
     }
   ]
