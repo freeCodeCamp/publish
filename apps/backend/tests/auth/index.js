@@ -27,7 +27,7 @@ describe("auth", () => {
       jest.clearAllMocks();
     });
 
-    it("should set the user's provider to auth0", async () => {
+    it("should set the user's provider to auth0 and delete the password", async () => {
       await strapi.plugins["users-permissions"].services.user.add({
         ...mockUserData,
       });
@@ -48,6 +48,7 @@ describe("auth", () => {
         ...user,
         provider: "auth0",
         updatedAt: updatedUser.updatedAt,
+        password: null,
       });
     });
 
@@ -72,6 +73,42 @@ describe("auth", () => {
         subject: "Invitation Link",
         text: `Here is your invitation link: http://localhost:3000/api/auth/signin`,
       });
+    });
+
+    // This should happen irrespective of what we do with their password. i.e.
+    // we null it, but even if we didn't they should not be able to login.
+    it("should prevent email password login", async () => {
+      const { id } =
+        await strapi.plugins["users-permissions"].services.user.add(
+          mockUserData,
+        );
+
+      const loginResponse = await request(strapi.server.httpServer)
+        .post("/api/auth/local")
+        .send({
+          identifier: mockUserData.email,
+          password: mockUserData.password,
+        });
+      expect(loginResponse.status).toEqual(200);
+
+      // TODO: only allow admin
+      const editorToken = await getUserJWT("editor-user");
+
+      await request(strapi.server.httpServer)
+        .put("/api/auth/invitation/" + id)
+        .auth(editorToken, { type: "bearer" });
+
+      const deniedLoginResponse = await request(strapi.server.httpServer)
+        .post("/api/auth/local")
+        .send({
+          identifier: mockUserData.email,
+          password: mockUserData.password,
+        });
+
+      expect(deniedLoginResponse.body.error.message).toEqual(
+        "Invalid identifier or password",
+      );
+      expect(deniedLoginResponse.status).toEqual(400);
     });
   });
 });

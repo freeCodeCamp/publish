@@ -49,6 +49,7 @@ module.exports = (plugin) => {
         where: { id: ctx.request.params.id },
         data: {
           provider: "auth0",
+          password: null,
         },
       });
 
