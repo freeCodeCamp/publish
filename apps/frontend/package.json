@@ -13,6 +13,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/next-js": "^2.1.5",
     "@chakra-ui/react": "^2.8.0",
     "@choc-ui/chakra-autocomplete": "^5.2.8",
