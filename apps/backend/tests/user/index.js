@@ -1,4 +1,5 @@
 const request = require("supertest");
+const { deleteUser } = require("../helpers/helpers");
 
 // user mock data
 const mockUserData = {
@@ -13,6 +14,9 @@ const mockUserData = {
 describe("user", () => {
   // Example test taken from https://docs.strapi.io/dev-docs/testing
   // This test should pass if the test environment is set up properly
+  afterAll(async () => {
+    await deleteUser(mockUserData.username);
+  });
   it("should login user and return jwt token", async () => {
     /** Creates a new user and save it to the database */
     await strapi.plugins["users-permissions"].services.user.add({
