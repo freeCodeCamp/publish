@@ -23,7 +23,7 @@ import {
   faBars,
   faChevronDown,
   faFileLines,
-  faNewspaper,
+  // faNewspaper,
   faTags,
   faUser,
   faUsers,
@@ -103,7 +103,7 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
           <NavMenuLink text="Posts" icon={faFileLines} link="/posts" />
           {isEditor(user) && (
             <>
-              <NavMenuLink text="Pages" icon={faNewspaper} link="/pages" />
+              {/* <NavMenuLink text="Pages" icon={faNewspaper} link="/pages" /> */}
               <NavMenuLink text="Tags" icon={faTags} link="/tags" />
               <NavMenuLink text="Staff" icon={faUsers} link="/users" />
             </>
