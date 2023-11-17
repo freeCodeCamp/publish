@@ -4,19 +4,7 @@
   "type": "authenticated",
   "permissions": [
     {
-      "action": "api::invited-user.invited-user.create"
-    },
-    {
-      "action": "api::invited-user.invited-user.delete"
-    },
-    {
-      "action": "api::invited-user.invited-user.find"
-    },
-    {
       "action": "api::post.post.create"
-    },
-    {
-      "action": "api::post.post.createLocalization"
     },
     {
       "action": "api::post.post.delete"
