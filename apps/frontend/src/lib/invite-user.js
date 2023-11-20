@@ -1,20 +1,19 @@
 import qs from "qs";
 
-const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
+const base = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
 export async function getInvitedUsers(token, queryParams) {
-  const res = await fetch(
-    `${api_root}/invited-users?${qs.stringify(queryParams, {
-      encodeValuesOnly: true,
-    })}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
+  const url = new URL("/api/invited-users", base);
+  url.search = qs.stringify(queryParams, {
+    encodeValuesOnly: true,
+  });
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-  );
+  });
 
   try {
     const data = await res.json();
@@ -32,7 +31,8 @@ export async function getInvitedUsers(token, queryParams) {
 }
 
 export async function inviteUser(token, data) {
-  const res = await fetch(`${api_root}/invited-users`, {
+  const url = new URL("/api/invited-users", base);
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -58,7 +58,8 @@ export async function inviteUser(token, data) {
 }
 
 export async function invitedUserExists(token, email) {
-  const endpoint = `${api_root}/invited-users?${qs.stringify(
+  const url = new URL("/api/invited-users", base);
+  url.search = qs.stringify(
     {
       filters: {
         email: {
@@ -69,7 +70,7 @@ export async function invitedUserExists(token, email) {
     {
       encodeValuesOnly: true,
     },
-  )}`;
+  );
 
   const options = {
     method: "GET",
@@ -79,7 +80,7 @@ export async function invitedUserExists(token, email) {
     },
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("invitedUserExists Failed");
@@ -90,7 +91,8 @@ export async function invitedUserExists(token, email) {
 }
 
 export async function deleteInvitedUser(token, id) {
-  const res = await fetch(`${api_root}/invited-users/${id}`, {
+  const url = new URL(`/api/invited-users/${id}`, base);
+  const res = await fetch(url, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",

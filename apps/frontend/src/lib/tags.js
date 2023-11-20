@@ -1,13 +1,13 @@
 import qs from "qs";
 
 // Tag API calls
-
-const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
+const base = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
 export async function getTags(token, queryParams) {
-  const endpoint = `${api_root}/tags?${qs.stringify(queryParams, {
+  const url = new URL("/api/tags", base);
+  url.search = qs.stringify(queryParams, {
     encodeValuesOnly: true,
-  })}`;
+  });
 
   const options = {
     method: "GET",
@@ -18,17 +18,17 @@ export async function getTags(token, queryParams) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     return res.json();
   } catch (error) {
-    console.error("getTags responded with error. Status: ", res?.body);
-    throw new Error(`getTags responded with error. Status: ${res?.body}`);
+    console.error("getTags responded with error. Status: ", res.body);
+    throw new Error(`getTags responded with error. Status: ${res.body}`);
   }
 }
 
 export async function createTag(token, data) {
-  const endpoint = `${api_root}/tags`;
+  const url = new URL("/api/tags", base);
 
   const options = {
     method: "POST",
@@ -40,11 +40,11 @@ export async function createTag(token, data) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     if (!res.ok) {
-      console.error("createTag responded with error. Status: ", res?.status);
-      throw new Error(`createTag responded with error. Status: ${res?.status}`);
+      console.error("createTag responded with error. Status: ", res.status);
+      throw new Error(`createTag responded with error. Status: ${res.status}`);
     }
 
     return res.json();
@@ -55,14 +55,15 @@ export async function createTag(token, data) {
 }
 
 export async function getTag(token, tagId) {
-  const endpoint = `${api_root}/tags/${tagId}?${qs.stringify(
+  const url = new URL(`/api/tags/${tagId}`, base);
+  url.search = qs.stringify(
     {
       populate: "*",
     },
     {
       encodeValuesOnly: true,
     },
-  )}`;
+  );
 
   const options = {
     method: "GET",
@@ -73,24 +74,25 @@ export async function getTag(token, tagId) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     return res.json();
   } catch (error) {
-    console.error("getTag responded with error. Status: ", res?.body);
-    throw new Error(`getTag responded with error. Status: ${res?.body}`);
+    console.error("getTag responded with error. Status: ", res.body);
+    throw new Error(`getTag responded with error. Status: ${res.body}`);
   }
 }
 
 export async function updateTag(token, tagId, data) {
-  const endpoint = `${api_root}/tags/${tagId}?${qs.stringify(
+  const url = new URL(`/api/tags/${tagId}`, base);
+  url.search = qs.stringify(
     {
       populate: "*",
     },
     {
       encodeValuesOnly: true,
     },
-  )}`;
+  );
 
   const options = {
     method: "PUT",
@@ -102,17 +104,17 @@ export async function updateTag(token, tagId, data) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     return res.json();
   } catch (error) {
-    console.error("updateTag responded with error. Status: ", res?.body);
-    throw new Error(`updateTag responded with error. Status: ${res?.body}`);
+    console.error("updateTag responded with error. Status: ", res.body);
+    throw new Error(`updateTag responded with error. Status: ${res.body}`);
   }
 }
 
 export async function deleteTag(token, tagId) {
-  const endpoint = `${api_root}/tags/${tagId}`;
+  const url = new URL(`/api/tags/${tagId}`, base);
 
   const options = {
     method: "DELETE",
@@ -123,11 +125,11 @@ export async function deleteTag(token, tagId) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     return res.json();
   } catch (error) {
-    console.error("deleteTag responded with error. Status: ", res?.body);
-    throw new Error(`deleteTag responded with error. Status: ${res?.body}`);
+    console.error("deleteTag responded with error. Status: ", res.body);
+    throw new Error(`deleteTag responded with error. Status: ${res.body}`);
   }
 }
