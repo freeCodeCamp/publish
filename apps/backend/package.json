@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@strapi/plugin-documentation": "^4.11.5",
-    "@strapi/plugin-i18n": "4.15.0",
+    "@strapi/plugin-i18n": "4.15.4",
     "@strapi/plugin-users-permissions": "4.15.4",
     "@strapi/provider-email-nodemailer": "^4.12.4",
     "@strapi/provider-upload-local": "^4.15.4",
