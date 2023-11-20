@@ -18,14 +18,15 @@ export const authOptions = {
         },
         async authorize(credentials) {
           const { identifier, password } = credentials;
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/local`,
-            {
-              method: "POST",
-              body: JSON.stringify({ identifier, password }),
-              headers: { "Content-Type": "application/json" },
-            },
+          const url = new URL(
+            "api/auth/local",
+            process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
           );
+          const res = await fetch(url, {
+            method: "POST",
+            body: JSON.stringify({ identifier, password }),
+            headers: { "Content-Type": "application/json" },
+          });
           const data = await res.json();
 
           if (res.ok && data.jwt) {
@@ -46,9 +47,12 @@ export const authOptions = {
   callbacks: {
     async signIn({ user }) {
       const { email } = user;
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/invited-users?filters[email][$eq]=${email}`,
+      const url = new URL(
+        "api/invited-users",
+        process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
       );
+      url.search = `filters[email][$eq]=${email}`;
+      const res = await fetch(url);
       const { data } = await res.json();
       if (data.length === 0) {
         return false;
@@ -63,9 +67,11 @@ export const authOptions = {
         // Get JWT token to access the Strapi API
         // Note: This is different from the session JWT that is stored in the cookie at the end of this callback
         if (account.provider === "auth0") {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/auth/${account.provider}/callback?access_token=${account.access_token}`,
+          const url = new URL(
+            `/api/auth/${account.provider}/callback`,
+            process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
           );
+          url.search = `access_token=${account.access_token}`;
           const data = await res.json();
           // Note: If the email is already registered on Strapi app without using Auth0
           // then it will fail to get JWT token
@@ -78,14 +84,16 @@ export const authOptions = {
         }
 
         // Fetch user role data from /api/users/me?populate=role
-        const res2 = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api/users/me?populate=*`,
-          {
-            headers: {
-              Authorization: `Bearer ${token.jwt}`,
-            },
-          },
+        const usersUrl = new URL(
+          "/api/users/me",
+          process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
         );
+        usersUrl.search = "populate=*";
+        const res2 = await fetch(usersUrl, {
+          headers: {
+            Authorization: `Bearer ${token.jwt}`,
+          },
+        });
 
         if (res2.ok) {
           const userData = await res2.json();

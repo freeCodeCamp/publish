@@ -1,12 +1,12 @@
 import qs from "qs";
 
 // Users & Permissions API calls
-
-const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
+const base = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 export async function getMe(token, queryParams) {
-  const endpoint = `${api_root}/users/me?${qs.stringify(queryParams, {
+  const url = new URL("/api/users/me", base);
+  url.search = qs.stringify(queryParams, {
     encodeValuesOnly: true,
-  })}`;
+  });
 
   const options = {
     method: "GET",
@@ -16,7 +16,7 @@ export async function getMe(token, queryParams) {
     },
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
   if (!res.ok) {
     throw new Error("getMe Failed");
   }
@@ -24,7 +24,7 @@ export async function getMe(token, queryParams) {
 }
 
 export async function updateMe(token, data) {
-  const endpoint = `${api_root}/users/me`;
+  const url = new URL("/api/users/me", base);
 
   const options = {
     method: "PUT",
@@ -35,7 +35,7 @@ export async function updateMe(token, data) {
     body: JSON.stringify(data),
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("updateUsers Failed");
@@ -44,9 +44,10 @@ export async function updateMe(token, data) {
 }
 
 export async function getUsers(token, queryParams) {
-  const endpoint = `${api_root}/users?${qs.stringify(queryParams, {
+  const url = new URL("/api/users", base);
+  url.search = qs.stringify(queryParams, {
     encodeValuesOnly: true,
-  })}`;
+  });
 
   const options = {
     method: "GET",
@@ -56,7 +57,7 @@ export async function getUsers(token, queryParams) {
     },
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("getUsers Failed");
@@ -65,7 +66,8 @@ export async function getUsers(token, queryParams) {
 }
 
 export async function userExists(token, email) {
-  const endpoint = `${api_root}/users?${qs.stringify(
+  const url = new URL("/api/users", base);
+  url.search = qs.stringify(
     {
       filters: {
         email: {
@@ -76,7 +78,7 @@ export async function userExists(token, email) {
     {
       encodeValuesOnly: true,
     },
-  )}`;
+  );
 
   const options = {
     method: "GET",
@@ -86,7 +88,7 @@ export async function userExists(token, email) {
     },
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("userExists Failed");
@@ -97,14 +99,15 @@ export async function userExists(token, email) {
 }
 
 export async function getUser(token, userId) {
-  const endpoint = `${api_root}/users/${userId}?${qs.stringify(
+  const url = new URL(`/api/users/${userId}`, base);
+  url.search = qs.stringify(
     {
       populate: ["role"],
     },
     {
       encodeValuesOnly: true,
     },
-  )}`;
+  );
 
   const options = {
     method: "GET",
@@ -114,7 +117,7 @@ export async function getUser(token, userId) {
     },
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("getUsers Failed");
@@ -123,7 +126,7 @@ export async function getUser(token, userId) {
 }
 
 export async function updateUser(token, userId, data) {
-  const endpoint = `${api_root}/users/${userId}`;
+  const url = new URL(`/api/users/${userId}`, base);
 
   const options = {
     method: "PUT",
@@ -134,7 +137,7 @@ export async function updateUser(token, userId, data) {
     body: JSON.stringify(data),
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("updateUsers Failed");
@@ -143,7 +146,7 @@ export async function updateUser(token, userId, data) {
 }
 
 export async function deleteUser(token, userId) {
-  const endpoint = `${api_root}/users/${userId}`;
+  const url = new URL(`/api/users/${userId}`, base);
 
   const options = {
     method: "DELETE",
@@ -153,7 +156,7 @@ export async function deleteUser(token, userId) {
     },
   };
 
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("deleteUsers Failed");

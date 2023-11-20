@@ -1,4 +1,5 @@
 "use strict";
+const { ValidationError } = require("@strapi/utils").errors;
 
 /**
  * post controller
@@ -57,7 +58,17 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
       }
 
       // call the default core action with modified data
-      return await super.create(ctx);
+      try {
+        return await super.create(ctx);
+      } catch (err) {
+        // TODO: DRY out error handling.
+        const isValidationError = err instanceof ValidationError;
+        if (isValidationError) {
+          ctx.throw(400, err);
+        } else {
+          ctx.throw(err);
+        }
+      }
     },
     async update(ctx) {
       if (!helpers.isEditor(ctx)) {
@@ -77,7 +88,17 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
       delete ctx.request.body.data.slug_id;
 
       // call the default core action with modified data
-      return await super.update(ctx);
+      try {
+        return await super.update(ctx);
+      } catch (err) {
+        // TODO: DRY out error handling.
+        const isValidationError = err instanceof ValidationError;
+        if (isValidationError) {
+          ctx.throw(400, err);
+        } else {
+          ctx.throw(err);
+        }
+      }
     },
     async schedule(ctx) {
       try {
