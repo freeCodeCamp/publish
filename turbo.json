@@ -13,6 +13,7 @@
     "prettier-check": {},
     "type-check": {},
     "eslint": {},
+    "format": {},
     "develop": {
       "cache": false,
       "persistent": true
