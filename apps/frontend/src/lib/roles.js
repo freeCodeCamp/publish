@@ -1,7 +1,7 @@
-const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
+const base = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
 export async function getRoles(token) {
-  const endpoint = `${api_root}/users-permissions/roles`;
+  const url = new URL("/api/users-permissions/roles", base);
 
   const options = {
     method: "GET",
@@ -12,7 +12,7 @@ export async function getRoles(token) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     return res.json();
   } catch (error) {

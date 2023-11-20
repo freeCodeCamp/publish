@@ -21,7 +21,7 @@ import { useToast } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { isEditor } from "@/lib/current-user";
-import ScheduleMenu from "./schedule-memu";
+import ScheduleMenu from "./schedule-menu";
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
@@ -69,10 +69,10 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   };
 
-  const handlePostTagId = (value) => {
+  const handlePostTagId = useCallback((value) => {
     setPostTagId([...value]);
     setUnsavedChanges(true);
-  };
+  }, []);
 
   const handleAuthorChange = (author) => {
     setAuthor(author);
