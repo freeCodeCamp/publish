@@ -69,10 +69,10 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   };
 
-  const handlePostTagId = (value) => {
+  const handlePostTagId = useCallback((value) => {
     setPostTagId([...value]);
     setUnsavedChanges(true);
-  };
+  }, []);
 
   const handleAuthorChange = (author) => {
     setAuthor(author);

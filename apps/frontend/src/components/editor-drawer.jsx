@@ -78,7 +78,7 @@ const EditorDrawer = ({
 
       setAuthorName(post.attributes.author.data.attributes.name);
     }
-  }, [post]);
+  }, [post, handlePostTagId]);
 
   const handleFileInputChange = (event) => {
     const file = event.target.files[0];
