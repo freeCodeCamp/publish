@@ -14,9 +14,9 @@ beforeAll(async () => {
   const fixtures = await setupFixtures();
 
   // Seed test database
-  await createTestUsers(fixtures.testUsers);
-  await createTestTags(fixtures.testTags);
-  await createTestPosts(fixtures.testPosts);
+  const users = await createTestUsers(fixtures.testUsers);
+  const tags = await createTestTags(fixtures.testTags);
+  await createTestPosts(fixtures.getTestPostsData, users, tags);
 });
 
 afterAll(cleanupStrapi);
