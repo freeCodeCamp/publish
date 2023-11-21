@@ -3,6 +3,7 @@ const { getRoleId } = require("./helpers");
 const setupFixtures = async () => {
   const contributor = await getRoleId("Contributor");
   const editor = await getRoleId("Editor");
+  const administrator = await getRoleId("Administrator");
 
   const fixtures = {
     testUsers: {
@@ -28,6 +29,17 @@ const setupFixtures = async () => {
           connect: [editor],
         },
       },
+      administrator: {
+        name: "Administrator User",
+        slug: "administrator-user",
+        username: "administrator-user",
+        email: "administrator@example.com",
+        password: "administrator",
+        confirmed: true,
+        role: {
+          connect: [administrator],
+        },
+      },
     },
     testTags: {
       html: {
@@ -39,6 +51,7 @@ const setupFixtures = async () => {
         slug: "css",
       },
     },
+    // administrator exists, but has no posts
     getTestPostsData({ editor, contributor }, { html, css }) {
       return [
         {

@@ -9,10 +9,15 @@ const createTestUsers = async (testUsers) => {
     "plugin::users-permissions.user",
     { data: testUsers.contributor },
   );
+  const administrator = await strapi.entityService.create(
+    "plugin::users-permissions.user",
+    { data: testUsers.administrator },
+  );
 
   return {
     editor,
     contributor,
+    administrator,
   };
 };
 

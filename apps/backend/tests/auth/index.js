@@ -22,6 +22,11 @@ describe("auth", () => {
   describe("invitation", () => {
     let mockUser;
     let sendEmailSpy;
+    let administratorToken;
+
+    beforeAll(async () => {
+      administratorToken = await getUserJWT("administrator-user");
+    });
 
     beforeEach(async () => {
       sendEmailSpy = jest
@@ -43,12 +48,10 @@ describe("auth", () => {
       // There are subtle differences between what services.user.add and
       // getUser return, so we use getUser for a fair comparison.
       const user = await getUser(mockUserData.username);
-      // TODO: only allow admin
-      const editorToken = await getUserJWT("editor-user");
 
       const res = await request(strapi.server.httpServer)
         .put("/api/auth/invitation/" + user.id)
-        .auth(editorToken, { type: "bearer" });
+        .auth(administratorToken, { type: "bearer" });
 
       expect(res.body).toEqual({ status: "success" });
       expect(res.status).toEqual(200);
@@ -62,12 +65,9 @@ describe("auth", () => {
     });
 
     it("should email the invited user", async () => {
-      // TODO: only allow admin
-      const editorToken = await getUserJWT("editor-user");
-
       const res = await request(strapi.server.httpServer)
         .put("/api/auth/invitation/" + mockUser.id)
-        .auth(editorToken, { type: "bearer" });
+        .auth(administratorToken, { type: "bearer" });
 
       expect(res.body).toEqual({ status: "success" });
       expect(res.status).toEqual(200);
@@ -91,12 +91,10 @@ describe("auth", () => {
         });
       expect(loginResponse.status).toEqual(200);
 
-      // TODO: only allow admin
-      const editorToken = await getUserJWT("editor-user");
-
-      await request(strapi.server.httpServer)
+      const invitationResponse = await request(strapi.server.httpServer)
         .put("/api/auth/invitation/" + mockUser.id)
-        .auth(editorToken, { type: "bearer" });
+        .auth(administratorToken, { type: "bearer" });
+      expect(invitationResponse.status).toEqual(200);
 
       const deniedLoginResponse = await request(strapi.server.httpServer)
         .post("/api/auth/local")
@@ -105,9 +103,10 @@ describe("auth", () => {
           password: mockUserData.password,
         });
 
-      expect(deniedLoginResponse.body.error.message).toEqual(
-        "Invalid identifier or password",
-      );
+      expect(deniedLoginResponse.body.error).toMatchObject({
+        message: "Invalid identifier or password",
+        name: "ValidationError",
+      });
       expect(deniedLoginResponse.status).toEqual(400);
     });
 
