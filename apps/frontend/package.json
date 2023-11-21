@@ -6,7 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "develop": "npm run dev",
-    "eslint": "next lint",
+    "eslint": "next lint --max-warnings 0",
     "format": "prettier --write .",
     "init": "shx cp -n sample.env .env",
     "prettier-check": "prettier --check .",

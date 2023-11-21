@@ -2,7 +2,7 @@ require("dotenv").config();
 
 (async () => {
   const res = await fetch(
-    `${process.env.STRAPI_URL}/api/posts/check-and-publish`,
+    new URL("/api/posts/check-and-publish", process.env.STRAPI_URL),
     {
       method: "GET",
       headers: {

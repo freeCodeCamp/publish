@@ -26,21 +26,12 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useCallback } from "react";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 
-function ToolBar({ editor }) {
-  const addImage = useCallback(() => {
-    const url = window.prompt("URL");
-
-    if (url) {
-      editor.chain().focus().setImage({ src: url, alt: "" }).run();
-    }
-  }, [editor]);
-
+function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
     const url = window.prompt("URL");
 
@@ -59,6 +50,35 @@ function ToolBar({ editor }) {
     if (url) {
       editor.commands.setLink({ href: url, target: "_blank" });
     }
+  };
+
+  const handleImageSubmit = async (event) => {
+    event.preventDefault();
+
+    const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
+
+    const formData = new FormData();
+    const image = document.getElementById("feature-image").files;
+
+    // Handle the case where the user opts not to submit an image.
+    if (!image) return;
+    formData.append("files", image[0]);
+
+    const res = await fetch(new URL("api/upload", apiBase), {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${user.jwt}`,
+      },
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    editor.commands.setImage({
+      src: new URL(data[0].url, apiBase),
+      alt: "image",
+    });
   };
 
   return (
@@ -194,15 +214,26 @@ function ToolBar({ editor }) {
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       />
       <div className="vl"></div>
-      <Button
-        variant="ghost"
-        iconSpacing={0}
-        p={2}
-        title="add an image"
-        aria-label="add an image"
-        leftIcon={<FontAwesomeIcon icon={faImage} />}
-        onClick={() => addImage()}
-      />
+      <label htmlFor="feature-image" className="custom-file-upload">
+        <Button
+          type="button"
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add an image"
+          aria-label="Add an image"
+          leftIcon={<FontAwesomeIcon icon={faImage} />}
+          onClick={() => document.getElementById("feature-image").click()}
+        />
+      </label>
+      <form id="choose-image-form" onChange={handleImageSubmit}>
+        <input
+          type="file"
+          id="feature-image"
+          accept="image/*"
+          style={{ display: "none" }}
+        />{" "}
+      </form>
       <Menu>
         <MenuButton
           as={Button}
@@ -230,7 +261,7 @@ function ToolBar({ editor }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, content }) => {
+const Tiptap = ({ handleContentChange, user, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -249,6 +280,9 @@ const Tiptap = ({ handleContentChange, content }) => {
       }),
       Image.configure({
         inline: true,
+        HTMLAttributes: {
+          class: "add-image-form",
+        },
       }),
       Youtube.configure({
         width: 480,
@@ -283,7 +317,7 @@ const Tiptap = ({ handleContentChange, content }) => {
 
   return (
     <>
-      <ToolBar editor={editor} />
+      <ToolBar editor={editor} user={user} />
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
