@@ -1,6 +1,12 @@
 "use strict";
 const request = require("supertest");
-const { getUser, getUserJWT, deleteUser } = require("../helpers/helpers");
+const {
+  getUser,
+  getUserJWT,
+  deleteUser,
+  getAllRoles,
+  getUserByRole,
+} = require("../helpers/helpers");
 
 // user mock data
 const mockUserData = {
@@ -105,23 +111,30 @@ describe("auth", () => {
       expect(deniedLoginResponse.status).toEqual(400);
     });
 
-    // TODO: enable once the administrator role exists.
-    it.skip("should reject requests from other roles", async () => {
-      // TODO: fetch all roles and test them directly (better future proofing)
-      const forbiddenUsers = ["contributor-user", "editor-user"];
+    it("should reject requests from non-administrator roles", async () => {
+      const allRoles = await getAllRoles();
+      const forbiddenRoles = allRoles.filter(
+        (role) => role.type !== "administrator",
+      );
 
-      for (const username of forbiddenUsers) {
-        const token = await getUserJWT(username);
+      for (const role of forbiddenRoles) {
+        const user = await getUserByRole(role.id);
+        const token = await getUserJWT(user.username);
         const res = await request(strapi.server.httpServer)
           .put("/api/auth/invitation/" + mockUser.id)
           .auth(token, { type: "bearer" });
-        expect(res.status).toEqual(403);
+        if (res.status !== 403) {
+          throw new Error(
+            `Expected ${role.name} to be forbidden but it returned status: ${res.status}`,
+          );
+        }
       }
+    });
 
+    it("should reject requests from unauthenticated users", async () => {
       const res = await request(strapi.server.httpServer).put(
         "/api/auth/invitation/" + mockUser.id,
       );
-
       expect(res.status).toEqual(403);
     });
   });
