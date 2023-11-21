@@ -32,6 +32,7 @@ import { signOut } from "next-auth/react";
 import NextLink from "next/link";
 
 import { isEditor } from "@/lib/current-user";
+import PostSearch from "./search-component";
 
 const Icon = chakra(FontAwesomeIcon);
 
@@ -79,7 +80,7 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             mx="20px"
             textAlign="center"
             fontWeight="700"
-            fontSize="20px"
+            fontSize="16px"
             display="flex"
             alignItems="center"
           >
@@ -92,6 +93,7 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             />
             freeCodeCamp.org
           </Box>
+          <PostSearch user={user} />
           <CloseButton
             onClick={onClose}
             display={{ base: "flex", md: "none" }}
