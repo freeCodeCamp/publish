@@ -61,9 +61,6 @@
       "action": "plugin::users-permissions.auth.changePassword"
     },
     {
-      "action": "plugin::users-permissions.auth.invitation"
-    },
-    {
       "action": "plugin::users-permissions.role.find"
     },
     {

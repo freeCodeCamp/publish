@@ -1,0 +1,13 @@
+{
+  "name": "Administrator",
+  "description": "Currently this just lets us register and invite new users.",
+  "type": "administrator",
+  "permissions": [
+    {
+      "action": "plugin::users-permissions.auth.invitation"
+    },
+    {
+      "action": "plugin::users-permissions.auth.register"
+    }
+  ]
+}
