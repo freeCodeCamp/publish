@@ -4,9 +4,6 @@
   "type": "public",
   "permissions": [
     {
-      "action": "api::invited-user.invited-user.find"
-    },
-    {
       "action": "plugin::users-permissions.auth.callback"
     },
     {

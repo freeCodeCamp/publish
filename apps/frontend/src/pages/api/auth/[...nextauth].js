@@ -45,21 +45,6 @@ export const authOptions = {
 
   // Details: https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async signIn({ user }) {
-      const { email } = user;
-      const url = new URL(
-        "api/invited-users",
-        process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
-      );
-      url.search = `filters[email][$eq]=${email}`;
-      const res = await fetch(url);
-      const { data } = await res.json();
-      if (data.length === 0) {
-        return false;
-      }
-      return true;
-    },
-
     // This callback is called whenever a JSON Web Token is created (i.e. at sign in)
     // or updated(i.e whenever a session is accessed in the client).
     async jwt({ token, user, account }) {
