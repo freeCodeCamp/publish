@@ -16,16 +16,17 @@ describe("auth", () => {
   describe("invitation", () => {
     let mockUser;
     let sendEmailSpy;
+    let editorToken;
 
     beforeEach(async () => {
       sendEmailSpy = jest
         .spyOn(strapi.plugins.email.services.email, "send")
         .mockImplementation(jest.fn());
-
       mockUser =
         await strapi.plugins["users-permissions"].services.user.add(
           mockUserData,
         );
+      editorToken = await getUserJWT("editor-user");
     });
 
     afterEach(() => {
@@ -37,8 +38,6 @@ describe("auth", () => {
       // There are subtle differences between what services.user.add and
       // getUser return, so we use getUser for a fair comparison.
       const user = await getUser(mockUserData.username);
-      // TODO: only allow admin
-      const editorToken = await getUserJWT("editor-user");
 
       const res = await request(strapi.server.httpServer)
         .put("/api/auth/invitation/" + user.id)
@@ -56,9 +55,6 @@ describe("auth", () => {
     });
 
     it("should email the invited user", async () => {
-      // TODO: only allow admin
-      const editorToken = await getUserJWT("editor-user");
-
       const res = await request(strapi.server.httpServer)
         .put("/api/auth/invitation/" + mockUser.id)
         .auth(editorToken, { type: "bearer" });
@@ -84,9 +80,6 @@ describe("auth", () => {
           password: mockUserData.password,
         });
       expect(loginResponse.status).toEqual(200);
-
-      // TODO: only allow admin
-      const editorToken = await getUserJWT("editor-user");
 
       await request(strapi.server.httpServer)
         .put("/api/auth/invitation/" + mockUser.id)
