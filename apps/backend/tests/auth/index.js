@@ -6,6 +6,7 @@ const {
   deleteUser,
   getAllRoles,
   getUserByRole,
+  getRoleId,
 } = require("../helpers/helpers");
 
 // user mock data
@@ -16,6 +17,14 @@ const mockUserData = {
   password: "1234abc",
   confirmed: true,
   blocked: null,
+};
+
+const invitedUserData = {
+  username: "invited",
+  email: "invited@user.com",
+  provider: "auth0",
+  confirmed: false,
+  status: "invited",
 };
 
 describe("auth", () => {
@@ -125,6 +134,36 @@ describe("auth", () => {
           );
         }
       }
+    });
+  });
+
+  describe("accept-invitation", () => {
+    afterEach(() => {
+      deleteUser(invitedUserData.username);
+    });
+
+    // TODO: loop over all roles after fetching them with getAllRoles
+    const roles = ["Editor", "Contributor"];
+
+    roles.forEach((role) => {
+      it(`should set a ${role} user as active if they are not already`, async () => {
+        const roleId = await getRoleId(role);
+        await strapi.plugins["users-permissions"].services.user.add({
+          ...invitedUserData,
+          role: roleId,
+        });
+
+        const invitedUserToken = await getUserJWT(invitedUserData.username);
+
+        const res = await request(strapi.server.httpServer)
+          .put("/api/auth/accept-invitation/")
+          .auth(invitedUserToken, { type: "bearer" });
+
+        expect(res.status).toEqual(200);
+        expect(res.body).toEqual({ status: "success" });
+        const updatedUser = await getUser(invitedUserData.username);
+        expect(updatedUser.status).toEqual("active");
+      });
     });
   });
 });
