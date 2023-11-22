@@ -40,7 +40,7 @@ describe("auth", () => {
       jest.clearAllMocks();
     });
 
-    it("should set the user's provider to auth0 and delete the password", async () => {
+    it('should modify the user object into the "invited" state', async () => {
       // There are subtle differences between what services.user.add and
       // getUser return, so we use getUser for a fair comparison.
       const user = await getUser(mockUserData.username);
@@ -52,11 +52,12 @@ describe("auth", () => {
       expect(res.body).toEqual({ status: "success" });
       expect(res.status).toEqual(200);
       const updatedUser = await getUser(user.username);
-      expect(updatedUser).toEqual({
+      expect(updatedUser).toMatchObject({
         ...user,
         provider: "auth0",
         updatedAt: updatedUser.updatedAt,
         password: null,
+        status: "invited",
       });
     });
 

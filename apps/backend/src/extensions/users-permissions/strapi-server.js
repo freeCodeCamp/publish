@@ -50,6 +50,7 @@ module.exports = (plugin) => {
         data: {
           provider: "auth0",
           password: null,
+          status: "invited",
         },
       });
 
