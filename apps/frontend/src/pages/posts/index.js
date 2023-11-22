@@ -134,6 +134,9 @@ export async function getServerSideProps(context) {
           populate: ["author", "tags"],
           filters: {
             author: session.user.id,
+            publishedAt: {
+              $notNull: false,
+            },
             ...queryHandler(context.query),
           },
           sort: sortHandler(context.query.sortBy),
