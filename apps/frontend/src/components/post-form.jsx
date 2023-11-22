@@ -46,6 +46,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   useEffect(() => {
     if (post) {
+      const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
       const { title, body, slug, tags, feature_image } = post.attributes;
       const tagIds = tags.data.map((tag) => tag.id);
 
@@ -56,9 +57,12 @@ const PostForm = ({ tags, user, authors, post }) => {
       setPostId(post.id);
       setPostTagId(tagIds);
 
-      setFeatureImageUrl(feature_image);
-
-      console.log(post.attributes);
+      if (feature_image.data) {
+        setFeatureImageUrl(
+          new URL(feature_image.data[0].attributes.url, apiBase),
+        );
+        setFeatureImageId(feature_image.data[0].id);
+      }
     }
   }, [post]);
 
@@ -100,7 +104,7 @@ const PostForm = ({ tags, user, authors, post }) => {
       const data = {
         data: {
           title: title,
-          feature_image: [featureImageId],
+          feature_image: featureImageId !== null ? [featureImageId] : [],
           slug: slugify(
             postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
             {
@@ -176,7 +180,17 @@ const PostForm = ({ tags, user, authors, post }) => {
         });
       }
     },
-    [toast, title, postUrl, postTagId, content, author, postId, user],
+    [
+      toast,
+      title,
+      postUrl,
+      postTagId,
+      featureImageId,
+      content,
+      author,
+      postId,
+      user,
+    ],
   );
 
   useEffect(() => {

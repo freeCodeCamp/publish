@@ -83,6 +83,8 @@ const EditorDrawer = ({
   const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
 
+    if (!file) return;
+
     const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
     const formData = new FormData();
@@ -99,6 +101,7 @@ const EditorDrawer = ({
 
     if (response.status === 200) {
       const data = await response.json();
+
       handleFeatureImageChange(new URL(data[0].url, apiBase), data[0].id);
     }
   };
