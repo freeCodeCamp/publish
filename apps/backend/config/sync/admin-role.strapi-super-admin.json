@@ -21,7 +21,8 @@
           "codeinjection_head",
           "codeinjection_foot",
           "slug_id"
-        ]
+        ],
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -29,14 +30,18 @@
       "action": "plugin::content-manager.explorer.delete",
       "actionParameters": {},
       "subject": "api::post.post",
-      "properties": {},
+      "properties": {
+        "locales": ["en"]
+      },
       "conditions": []
     },
     {
       "action": "plugin::content-manager.explorer.publish",
       "actionParameters": {},
       "subject": "api::post.post",
-      "properties": {},
+      "properties": {
+        "locales": ["en"]
+      },
       "conditions": []
     },
     {
@@ -57,7 +62,8 @@
           "codeinjection_head",
           "codeinjection_foot",
           "slug_id"
-        ]
+        ],
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -79,7 +85,8 @@
           "codeinjection_head",
           "codeinjection_foot",
           "slug_id"
-        ]
+        ],
+        "locales": ["en"]
       },
       "conditions": []
     },
@@ -478,6 +485,34 @@
     },
     {
       "action": "plugin::email.settings.read",
+      "actionParameters": {},
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::i18n.locale.create",
+      "actionParameters": {},
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::i18n.locale.delete",
+      "actionParameters": {},
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::i18n.locale.read",
+      "actionParameters": {},
+      "subject": null,
+      "properties": {},
+      "conditions": []
+    },
+    {
+      "action": "plugin::i18n.locale.update",
       "actionParameters": {},
       "subject": null,
       "properties": {},
