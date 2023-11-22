@@ -47,3 +47,13 @@
   height: 2rem;
   margin: 0 0.5rem;
 }
+
+.add-image-form {
+  width: 40%;
+  height: 40%;
+}
+
+.InputLeft {
+  top: 3px !important;
+  left: 3px !important;
+}

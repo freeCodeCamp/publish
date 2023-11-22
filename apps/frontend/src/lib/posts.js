@@ -2,12 +2,13 @@ import qs from "qs";
 
 // Post API calls
 
-const api_root = `${process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL}/api`;
+const base = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
 export async function getAllPosts(token, queryParams) {
-  const endpoint = `${api_root}/posts?${qs.stringify(queryParams, {
+  const url = new URL("/api/posts", base);
+  url.search = qs.stringify(queryParams, {
     encodeValuesOnly: true,
-  })}`;
+  });
 
   const options = {
     method: "GET",
@@ -18,7 +19,7 @@ export async function getAllPosts(token, queryParams) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     if (!res.ok) {
       console.error("getAllPosts responded with error. Status: ", res.status);
@@ -35,9 +36,10 @@ export async function getAllPosts(token, queryParams) {
 }
 
 export async function getUserPosts(token, queryParams) {
-  const endpoint = `${api_root}/posts?${qs.stringify(queryParams, {
+  const url = new URL("/api/posts", base);
+  url.search = qs.stringify(queryParams, {
     encodeValuesOnly: true,
-  })}`;
+  });
 
   const options = {
     method: "GET",
@@ -48,7 +50,7 @@ export async function getUserPosts(token, queryParams) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     if (!res.ok) {
       console.error("getUserPosts responded with error. Status: ", res.status);
@@ -65,7 +67,8 @@ export async function getUserPosts(token, queryParams) {
 }
 
 export async function getPost(postId, token) {
-  const endpoint = `${api_root}/posts/${postId}?populate=*`;
+  const url = new URL(`/api/posts/${postId}`, base);
+  url.search = "populate=*";
 
   const options = {
     method: "GET",
@@ -76,7 +79,7 @@ export async function getPost(postId, token) {
   };
 
   try {
-    const res = await fetch(endpoint, options);
+    const res = await fetch(url, options);
 
     if (!res.ok) {
       console.error(
@@ -95,13 +98,10 @@ export async function getPost(postId, token) {
 }
 
 export async function createPost(data, token) {
-  // API endpoint where we send form data.
-  const endpoint = `${api_root}/posts`;
+  const url = new URL("/api/posts", base);
 
-  // Form the request for sending data to the server.
   const options = {
     method: "POST",
-    // Tell the server we're sending JSON.
     headers: {
       "Content-Type": "application/json",
       accept: "application/json",
@@ -109,8 +109,7 @@ export async function createPost(data, token) {
     },
     body: JSON.stringify(data),
   };
-  // Send the form data to our forms API and get a response.
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
   if (!res.ok) {
     throw new Error("createPost Failed");
   }
@@ -119,13 +118,10 @@ export async function createPost(data, token) {
 }
 
 export async function updatePost(postId, data, token) {
-  // API endpoint where we send form data.
-  const endpoint = `${api_root}/posts/${postId}`;
+  const url = new URL(`/api/posts/${postId}`, base);
 
-  // Form the request for sending data to the server.
   const options = {
     method: "PUT",
-    // Tell the server we're sending JSON.
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -133,8 +129,7 @@ export async function updatePost(postId, data, token) {
     body: JSON.stringify(data),
   };
 
-  // Send the form data to our forms API and get a response.
-  const res = await fetch(endpoint, options);
+  const res = await fetch(url, options);
 
   if (!res.ok) {
     throw new Error("updatePost Failed");

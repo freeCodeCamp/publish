@@ -6,12 +6,14 @@
     "build": "next build",
     "dev": "next dev",
     "develop": "npm run dev",
-    "eslint": "next lint",
+    "eslint": "next lint --max-warnings 0",
+    "format": "prettier --write .",
     "init": "shx cp -n sample.env .env",
     "prettier-check": "prettier --check .",
     "start": "next start"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/next-js": "^2.1.5",
     "@chakra-ui/react": "^2.8.0",
     "@choc-ui/chakra-autocomplete": "^5.2.8",

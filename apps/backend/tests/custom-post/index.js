@@ -6,10 +6,16 @@ const expectedPost = {
   slug: "test-slug",
   body: "<p>test body</p>",
   excerpt: null,
-  locale: "en",
+  // TODO: should we have this?
+  // locale: "en",
   published_at: "2023-08-30T00:00:00.000Z",
   created_at: expect.any(String),
   updated_at: expect.any(String),
+  codeinjection_head: null,
+  codeinjection_foot: null,
+  ghost_id: null,
+  scheduled_at: null,
+  slug_id: expect.stringMatching(/[a-z0-9]{8}/),
 };
 
 const expectedAuthor = {

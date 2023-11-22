@@ -1,50 +1,42 @@
 // helper functions to seed the test database
 
 const createTestUsers = async (testUsers) => {
-  try {
-    for (const user of testUsers) {
-      await strapi.entityService.create("plugin::users-permissions.user", {
-        data: {
-          ...user,
-        },
-      });
-    }
-  } catch (e) {
-    console.error(e);
-    console.error(e.details.errors);
-    throw new Error("Failed to create mock users");
-  }
+  const editor = await strapi.entityService.create(
+    "plugin::users-permissions.user",
+    { data: testUsers.editor },
+  );
+  const contributor = await strapi.entityService.create(
+    "plugin::users-permissions.user",
+    { data: testUsers.contributor },
+  );
+
+  return {
+    editor,
+    contributor,
+  };
 };
 
 const createTestTags = async (testTags) => {
-  try {
-    for (const tag of testTags) {
-      await strapi.entityService.create("api::tag.tag", {
-        data: {
-          ...tag,
-        },
-      });
-    }
-  } catch (e) {
-    console.error(e);
-    console.error(e.details.errors);
-    throw new Error("Failed to create mock tags");
-  }
+  const html = await strapi.entityService.create("api::tag.tag", {
+    data: testTags.html,
+  });
+  const css = await strapi.entityService.create("api::tag.tag", {
+    data: testTags.css,
+  });
+
+  return {
+    html,
+    css,
+  };
 };
 
-const createTestPosts = async (testPosts) => {
-  try {
-    for (const post of testPosts) {
-      await strapi.entityService.create("api::post.post", {
-        data: {
-          ...post,
-        },
-      });
-    }
-  } catch (e) {
-    console.error(e);
-    console.error(e.details.errors);
-    throw new Error("Failed to create mock posts");
+const createTestPosts = async (generateTestPosts, users, tags) => {
+  const testPosts = await generateTestPosts(users, tags);
+
+  for (const data of testPosts) {
+    await strapi.entityService.create("api::post.post", {
+      data,
+    });
   }
 };
 

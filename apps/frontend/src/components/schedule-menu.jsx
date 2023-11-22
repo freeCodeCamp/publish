@@ -305,8 +305,8 @@ const NotPublishedMenu = ({
               ? "Unschedule"
               : "Reschedule"
             : scheduleOption == "now"
-            ? "Publish"
-            : "Schedule"}
+              ? "Publish"
+              : "Schedule"}
         </Button>
       </Flex>
     </>
