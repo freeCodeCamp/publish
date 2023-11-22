@@ -13,7 +13,7 @@
     "seed": "turbo seed",
     "start": "turbo start",
     "develop": "turbo develop",
-    "run-tools": "cd tools && docker compose up -d && cd ..",
+    "run-tools": "cd tools && docker compose up -d",
     "test": "turbo test",
     "turbo": "turbo"
   },
