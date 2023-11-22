@@ -161,3 +161,15 @@ docker logs -f publish-backend >> publish-backend.log &
 docker logs -f publish-frontend >> publish-frontend.log &
 docker logs -f publish-cron >> publish-cron.log &
 ```
+
+### Deploy (DigitalOcean App Platform)
+
+Almost everything is standard, but there are a few things to note:
+
+App types: the `backend` and `frontend` apps need to be deployed as a `Web Service` and
+ the `cron` app needs to be deployed as a `Worker`.
+  
+Environment variables
+
+- `frontend` needs to have `NEXTAUTH_URL=${APP_URL}` otherwise follow the instructions in sample.env
+- `backend` needs to have `APP_URL=${APP_URL}`, `NODE_ENV=production`, `HOST` can be omitted or set to `0.0.0.0`, `PORT` can also be omitted
