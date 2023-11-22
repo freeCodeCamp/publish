@@ -1,5 +1,9 @@
 const request = require("supertest");
-const { deleteUser } = require("../helpers/helpers");
+const {
+  deleteUser,
+  getUserByRole,
+  getAllRoles,
+} = require("../helpers/helpers");
 
 // user mock data
 const mockUserData = {
@@ -36,5 +40,19 @@ describe("user", () => {
       .then((data) => {
         expect(data.body.jwt).toBeDefined();
       });
+  });
+
+  // This just ensures that the test environment is set up with all types of
+  // user.
+  it("should have a user for each of the roles", async () => {
+    const roles = await getAllRoles();
+    for (const role of roles) {
+      const user = await getUserByRole(role.id);
+      expect(user).toMatchObject({
+        role: {
+          name: role.name,
+        },
+      });
+    }
   });
 });
