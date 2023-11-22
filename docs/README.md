@@ -172,4 +172,4 @@ App types: the `backend` and `frontend` apps need to be deployed as a `Web Servi
 Environment variables
 
 - `frontend` needs to have `NEXTAUTH_URL=${APP_URL}` otherwise follow the instructions in sample.env
-- `backend` needs to have `APP_URL=${APP_URL}`, `NODE_ENV=production`, `HOST` can be omitted or set to `0.0.0.0`, `PORT` can also be omitted
+- `backend` needs to have `APP_URL=${APP_URL}` and `NODE_ENV=production`. `HOST` can be omitted or set to `0.0.0.0` and `PORT` can also be omitted.
