@@ -56,7 +56,36 @@ describe("post", () => {
         ),
       ).toBe(true);
     });
+
+    it("should return drafted posts for contribors", async () => {
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts?populate=author&publicationState=preview`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+
+      expect(
+        response.body.data.some((post) => post.attributes.publishedAt === null),
+      ).toBe(true);
+    });
+
+    it("should return published posts for contribors", async () => {
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/posts?populate=author&publicationState=preview`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+
+      expect(
+        response.body.data.some((post) => post.attributes.publishedAt !== null),
+      ).toBe(true);
+    });
   });
+
   describe("GET /posts/:id", () => {
     it("should prevent contributors viewing other user's post", async () => {
       const post = await getPost("editors-draft-post");
