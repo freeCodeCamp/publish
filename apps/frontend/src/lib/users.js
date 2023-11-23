@@ -95,7 +95,27 @@ export async function userExists(token, email) {
   }
 
   const data = await res.json();
-  return data.length > 0;
+  return data.length > 0 ? data[0].status : false;
+}
+
+export async function createUser(token, data) {
+  const url = new URL(`/api/users`, base);
+
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  };
+
+  const res = await fetch(url, options);
+
+  if (!res.ok) {
+    throw new Error("createUser Failed");
+  }
+  return res.json();
 }
 
 export async function getUser(token, userId) {
@@ -160,6 +180,25 @@ export async function deleteUser(token, userId) {
 
   if (!res.ok) {
     throw new Error("deleteUsers Failed");
+  }
+  return res.json();
+}
+
+export async function inviteUser(token, userId) {
+  const url = new URL(`/api/auth/invitation/${userId}`, base);
+
+  const options = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const res = await fetch(url, options);
+
+  if (!res.ok) {
+    throw new Error("inviteUser Failed");
   }
   return res.json();
 }
