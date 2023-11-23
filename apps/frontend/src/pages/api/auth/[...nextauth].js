@@ -57,6 +57,7 @@ export const authOptions = {
             process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
           );
           url.search = `access_token=${account.access_token}`;
+          const res = await fetch(url);
           const data = await res.json();
           // Note: If the email is already registered on Strapi app without using Auth0
           // then it will fail to get JWT token
