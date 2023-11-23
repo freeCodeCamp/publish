@@ -29,14 +29,14 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 import NavMenu from "@/components/nav-menu";
-import {
-  deleteInvitedUser,
-  getInvitedUsers,
-  inviteUser,
-  invitedUserExists,
-} from "@/lib/invite-user";
 import { getRoles } from "@/lib/roles";
-import { getUsers, userExists } from "@/lib/users";
+import {
+  createUser,
+  deleteUser,
+  getUsers,
+  inviteUser,
+  userExists,
+} from "@/lib/users";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export async function getServerSideProps(context) {
@@ -45,12 +45,6 @@ export async function getServerSideProps(context) {
     populate: ["role", "profile_image"],
   });
   const rolesData = await getRoles(session.user.jwt);
-  const invitedUsers = await getInvitedUsers(session.user.jwt, {
-    populate: "role",
-    filters: {
-      accepted: false,
-    },
-  });
 
   const roles = rolesData.roles.reduce(
     (acc, role) => ({ ...acc, [role.name]: role.id }),
@@ -58,9 +52,12 @@ export async function getServerSideProps(context) {
   );
   delete roles.Public;
 
+  const activeUsers = allUsers.filter((user) => user.status === "active");
+  const invitedUsers = allUsers.filter((user) => user.status !== "active");
+
   return {
     props: {
-      allUsers,
+      activeUsers,
       invitedUsers,
       roles,
       user: session.user,
@@ -68,24 +65,27 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
+export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const router = useRouter();
 
   const [revokingInvitation, setRevokingInvitation] = useState(false);
 
-  const handleSubmit = async (values) => {
+  const handleInvite = async (values) => {
     const token = user.jwt;
     const data = {
-      data: {
-        email: values.email,
-        role: [roles[values.role]],
-      },
+      username: values.email,
+      name: values.email,
+      slug: values.email,
+      email: values.email,
+      password: "password",
+      role: roles[values.role],
     };
 
     try {
-      await inviteUser(token, data);
+      const newUser = await createUser(token, data);
+      await inviteUser(token, newUser.id);
       toast({
         title: "User invited.",
         status: "success",
@@ -109,9 +109,34 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
     setRevokingInvitation(true);
     const token = user.jwt;
     try {
-      await deleteInvitedUser(token, invitedUserId);
+      await deleteUser(token, invitedUserId);
       toast({
         title: "User invitation revoked.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      router.replace(router.asPath);
+    } catch (error) {
+      console.log(error);
+      toast({
+        title: "An error occurred.",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    setRevokingInvitation(false);
+  };
+
+  const resendInvitation = async (invitedUserId) => {
+    setRevokingInvitation(true);
+    const token = user.jwt;
+    try {
+      await inviteUser(token, invitedUserId);
+      toast({
+        title: "Invitation resent.",
         status: "success",
         duration: 5000,
         isClosable: true,
@@ -160,7 +185,8 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                 initialValues={{ email: "", role: "Contributor" }}
                 onSubmit={async (values, actions) => {
                   // Check if user exists
-                  if (await userExists(user.jwt, values.email)) {
+                  const userStatus = await userExists(user.jwt, values.email);
+                  if (userStatus === "active") {
                     actions.setErrors({
                       email: "A user with that email address already exists.",
                     });
@@ -168,7 +194,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                   }
 
                   // Check if user has already been invited
-                  if (await invitedUserExists(user.jwt, values.email)) {
+                  if (userStatus === "invited" || userStatus === "new") {
                     actions.setErrors({
                       email:
                         "A user with that email address has already been invited.",
@@ -176,7 +202,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                     return;
                   }
 
-                  await handleSubmit(values);
+                  await handleInvite(values);
                   onClose();
                 }}
               >
@@ -230,18 +256,16 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
         <Box pb="10" mt="4">
           <Heading size="md">Invited Users</Heading>
           <Box my="4" boxShadow="md" bgColor="white">
-            {invitedUsers.data.map((user) => {
-              if (user.attributes.accepted) return null;
-
-              const userEmail = user.attributes.email;
-              const userRole = user.attributes.role.data.attributes.name;
+            {invitedUsers.map((invitedUser) => {
+              const userEmail = invitedUser.email;
+              const userRole = invitedUser.role.name;
               const createdAt = intlFormatDistance(
-                new Date(user.attributes.createdAt),
+                new Date(invitedUser.createdAt),
                 new Date(),
               );
               return (
                 <Flex
-                  key={user.id}
+                  key={invitedUser.id}
                   py="2"
                   px="4"
                   alignItems="center"
@@ -280,7 +304,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                           bgColor: "red.50",
                           color: "red.500",
                         }}
-                        onClick={() => revokeInvitation(user.id)}
+                        onClick={() => revokeInvitation(invitedUser.id)}
                       >
                         Revoke
                       </Button>
@@ -289,6 +313,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                         cursor="pointer"
                         fontSize="xs"
                         isDisabled={revokingInvitation}
+                        onClick={() => resendInvitation(invitedUser.id)}
                       >
                         Resend
                       </Button>
@@ -308,17 +333,17 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
 
           <Heading size="md">Active Users</Heading>
           <Box my="4" boxShadow="md" bgColor="white">
-            {allUsers.map((user) => {
-              const userEmail = user.email;
-              const userRole = user.role.name;
+            {activeUsers.map((activeUser) => {
+              const userEmail = activeUser.email;
+              const userRole = activeUser.role.name;
               const profileImage =
-                user.profile_image !== null
+                activeUser.profile_image !== null
                   ? process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL +
-                    user.profile_image.url
+                    activeUser.profile_image.url
                   : "";
               return (
                 <Flex
-                  key={user.id}
+                  key={activeUser.id}
                   py="2"
                   px="4"
                   alignItems="center"
@@ -328,7 +353,7 @@ export default function UsersIndex({ allUsers, invitedUsers, roles, user }) {
                   borderBottom="1px solid"
                   borderColor="gray.200"
                   cursor="pointer"
-                  onClick={() => router.push(`/users/${user.id}`)}
+                  onClick={() => router.push(`/users/${activeUser.id}`)}
                 >
                   <Flex alignItems="center" pr="2">
                     <Avatar size="sm" mr="4" src={profileImage} />
