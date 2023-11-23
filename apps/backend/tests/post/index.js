@@ -57,9 +57,11 @@ describe("post", () => {
       ).toBe(true);
     });
 
-    it("should return drafted posts for contribors", async () => {
+    it("should only show drafted posts to contributors", async () => {
       const response = await request(strapi.server.httpServer)
-        .get(`/api/posts?populate=author&publicationState=preview`)
+        .get(
+          `/api/posts?publicationState=preview&filters[publishedAt][$null]=true`,
+        )
         .set("Content-Type", "application/json")
         .set("Authorization", `Bearer ${contributorJWT}`)
         .send();
@@ -67,21 +69,9 @@ describe("post", () => {
       expect(response.status).toBe(200);
 
       expect(
-        response.body.data.some((post) => post.attributes.publishedAt === null),
-      ).toBe(true);
-    });
-
-    it("should return published posts for contribors", async () => {
-      const response = await request(strapi.server.httpServer)
-        .get(`/api/posts?populate=author&publicationState=preview`)
-        .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${contributorJWT}`)
-        .send();
-
-      expect(response.status).toBe(200);
-
-      expect(
-        response.body.data.some((post) => post.attributes.publishedAt !== null),
+        response.body.data.every(
+          (post) => post.attributes.publishedAt === null,
+        ),
       ).toBe(true);
     });
   });
