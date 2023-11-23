@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 import Auth0Provider from "next-auth/providers/auth0";
+import CredentialsProvider from "next-auth/providers/credentials";
+import qs from "qs";
 
 export const authOptions = {
   providers: [
@@ -45,6 +46,30 @@ export const authOptions = {
 
   // Details: https://next-auth.js.org/configuration/callbacks
   callbacks: {
+    async signIn({ user }) {
+      // TODO: try calling strapi callbacks here as auth0 one will fail if user doesn't exist which we can use for rejecting signups
+      const email = user.email;
+      const url = new URL(
+        "/api/users",
+        process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
+      );
+      url.search = qs.stringify(
+        {
+          filters: {
+            email: {
+              $eqi: email,
+            },
+          },
+        },
+        {
+          encodeValuesOnly: true,
+        },
+      );
+      const res = await fetch(url);
+      const data = await res.json();
+
+      return data.length > 0;
+    },
     // This callback is called whenever a JSON Web Token is created (i.e. at sign in)
     // or updated(i.e whenever a session is accessed in the client).
     async jwt({ token, user, account }) {
@@ -68,6 +93,18 @@ export const authOptions = {
         } else {
           token.jwt = user.jwt;
         }
+
+        // Set user status to actice
+        const acceptInvitationUrl = new URL(
+          "/api/auth/accept-invitation",
+          process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
+        );
+        await fetch(acceptInvitationUrl, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token.jwt}`,
+          },
+        });
 
         // Fetch user role data from /api/users/me?populate=role
         const usersUrl = new URL(
