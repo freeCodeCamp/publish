@@ -31,6 +31,7 @@ async function createSeedUsers(strapi) {
         email: "contributor@user.com",
         password: "contributor",
         provider: "local",
+        status: "active",
         confirmed: true,
         role: {
           connect: [contributor],
@@ -48,6 +49,7 @@ async function createSeedUsers(strapi) {
         email: "editor@user.com",
         password: "editor",
         provider: "local",
+        status: "active",
         confirmed: true,
         role: {
           connect: [editor],

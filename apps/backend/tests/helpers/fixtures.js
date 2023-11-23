@@ -12,6 +12,7 @@ const setupFixtures = async () => {
         username: "contributor-user",
         email: "contributor@example.com",
         password: "contributor",
+        status: "active",
         confirmed: true,
         role: {
           connect: [contributor],
@@ -23,6 +24,7 @@ const setupFixtures = async () => {
         username: "editor-user",
         email: "editor@example.com",
         password: "editor",
+        status: "active",
         confirmed: true,
         role: {
           connect: [editor],
