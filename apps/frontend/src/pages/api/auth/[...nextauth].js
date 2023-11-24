@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Auth0Provider from "next-auth/providers/auth0";
 import CredentialsProvider from "next-auth/providers/credentials";
-import qs from "qs";
 
 export const authOptions = {
   providers: [
@@ -46,53 +45,41 @@ export const authOptions = {
 
   // Details: https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    async signIn({ user }) {
-      // TODO: try calling strapi callbacks here as auth0 one will fail if user doesn't exist which we can use for rejecting signups
-      const email = user.email;
-      const url = new URL(
-        "/api/users",
-        process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
-      );
-      url.search = qs.stringify(
-        {
-          filters: {
-            email: {
-              $eqi: email,
-            },
-          },
-        },
-        {
-          encodeValuesOnly: true,
-        },
-      );
-      const res = await fetch(url);
-      const data = await res.json();
+    async signIn({ user, account }) {
+      // For auth0 we reuqest the callback to get strapi jwt token. If user exists
+      // token is returned otherwise the request will fail with a 400 error which
+      // we use for rejecting sign in attempt from non-invited users.
+      if (account.provider === "auth0") {
+        const url = new URL(
+          `/api/auth/${account.provider}/callback`,
+          process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
+        );
+        url.search = `access_token=${account.access_token}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        // Note: If the email is already registered on Strapi app without using Auth0
+        // then it will fail to get JWT token
+        // https://github.com/strapi/strapi/issues/12907
+        if (res.ok) {
+          const { jwt } = data;
+          // Storing the token in the user object so that it can then be passed to the
+          // session token in the jwt callback
+          user.jwt = jwt;
+          return true;
+        } else {
+          return false;
+        }
+      }
 
-      return data.length > 0;
+      // We return true by default as for credentials login only invited users will pass
+      // the authorization step and land here.
+      return true;
     },
     // This callback is called whenever a JSON Web Token is created (i.e. at sign in)
     // or updated(i.e whenever a session is accessed in the client).
-    async jwt({ token, user, account }) {
-      if (user && account) {
-        // Get JWT token to access the Strapi API
-        // Note: This is different from the session JWT that is stored in the cookie at the end of this callback
-        if (account.provider === "auth0") {
-          const url = new URL(
-            `/api/auth/${account.provider}/callback`,
-            process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL,
-          );
-          url.search = `access_token=${account.access_token}`;
-          const res = await fetch(url);
-          const data = await res.json();
-          // Note: If the email is already registered on Strapi app without using Auth0
-          // then it will fail to get JWT token
-          // https://github.com/strapi/strapi/issues/12907
-          const { jwt } = data;
-          // Add the JWT token for Strapi API to session JWT
-          token.jwt = jwt;
-        } else {
-          token.jwt = user.jwt;
-        }
+    async jwt({ token, user }) {
+      if (user) {
+        token.jwt = user.jwt;
 
         // Set user status to actice
         const acceptInvitationUrl = new URL(
@@ -131,6 +118,7 @@ export const authOptions = {
           }
         }
       }
+
       // The returned value will be encrypted, and it is stored in a cookie.
       // We can access it through the session callback.
       return token;
