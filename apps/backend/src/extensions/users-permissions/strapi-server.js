@@ -96,7 +96,7 @@ module.exports = (plugin) => {
 
   plugin.routes["content-api"].routes.unshift({
     method: "PUT",
-    path: "/auth/accept-invitation/",
+    path: "/auth/accept-invitation",
     handler: "auth.acceptInvitation",
     config: {
       prefix: "",

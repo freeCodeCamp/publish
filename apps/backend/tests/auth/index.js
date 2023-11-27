@@ -156,7 +156,7 @@ describe("auth", () => {
         const invitedUserToken = await getUserJWT(invitedUserData.username);
 
         const res = await request(strapi.server.httpServer)
-          .put("/api/auth/accept-invitation/")
+          .put("/api/auth/accept-invitation")
           .auth(invitedUserToken, { type: "bearer" });
 
         expect(res.status).toEqual(200);
