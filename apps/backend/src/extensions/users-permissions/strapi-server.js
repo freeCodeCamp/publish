@@ -50,6 +50,7 @@ module.exports = (plugin) => {
         data: {
           provider: "auth0",
           password: null,
+          status: "invited",
         },
       });
 
@@ -69,6 +70,34 @@ module.exports = (plugin) => {
     method: "PUT",
     path: "/auth/invitation/:id",
     handler: "auth.invitation",
+    config: {
+      prefix: "",
+      policies: [],
+    },
+  });
+
+  plugin.controllers.auth.acceptInvitation = async (ctx) => {
+    if (!ctx.state.user || !ctx.state.user.id) {
+      return (ctx.response.status = 401);
+    }
+
+    await strapi.query("plugin::users-permissions.user").update({
+      where: { id: ctx.state.user.id },
+      data: {
+        status: "active",
+      },
+    });
+
+    ctx.response.status = 200;
+    ctx.response.body = {
+      status: "success",
+    };
+  };
+
+  plugin.routes["content-api"].routes.unshift({
+    method: "PUT",
+    path: "/auth/accept-invitation",
+    handler: "auth.acceptInvitation",
     config: {
       prefix: "",
       policies: [],

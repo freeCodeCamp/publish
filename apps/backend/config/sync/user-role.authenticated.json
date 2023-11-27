@@ -58,6 +58,9 @@
       "action": "plugin::upload.content-api.upload"
     },
     {
+      "action": "plugin::users-permissions.auth.acceptInvitation"
+    },
+    {
       "action": "plugin::users-permissions.auth.changePassword"
     },
     {
