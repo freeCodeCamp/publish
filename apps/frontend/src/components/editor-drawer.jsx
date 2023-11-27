@@ -44,10 +44,12 @@ const EditorDrawer = ({
   postUrl,
   postTagId,
   title,
+  featureImage,
   handleUnsavedChanges,
   handlePostTagId,
   handleAuthorChange,
   handlePostUrlChange,
+  handleFeatureImageChange,
   handleSubmit,
 }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -61,8 +63,6 @@ const EditorDrawer = ({
   const [tagsList, setTagsList] = useState(tags);
 
   const [authorName, setAuthorName] = useState("");
-
-  const [featureImage, setFeatureImage] = useState("");
 
   useEffect(() => {
     if (post) {
@@ -80,9 +80,30 @@ const EditorDrawer = ({
     }
   }, [post, handlePostTagId]);
 
-  const handleFileInputChange = (event) => {
+  const handleFileInputChange = async (event) => {
     const file = event.target.files[0];
-    setFeatureImage(URL.createObjectURL(file));
+
+    if (!file) return;
+
+    const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
+
+    const formData = new FormData();
+    formData.append("files", file);
+
+    const response = await fetch(new URL("api/upload", apiBase), {
+      method: "post",
+      body: formData,
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${user.jwt}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const data = await response.json();
+
+      handleFeatureImageChange(new URL(data[0].url, apiBase), data[0].id);
+    }
   };
 
   function addTag(tagName, tagSlug) {
@@ -237,7 +258,7 @@ const EditorDrawer = ({
               <Button
                 colorScheme="red"
                 w="100%"
-                onClick={() => setFeatureImage(null)}
+                onClick={() => handleFeatureImageChange(null, null)}
               >
                 Delete Image
               </Button>

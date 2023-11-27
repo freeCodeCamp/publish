@@ -58,7 +58,7 @@ function ToolBar({ editor, user }) {
     const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
     const formData = new FormData();
-    const image = document.getElementById("feature-image").files;
+    const image = document.getElementById("add-image").files;
 
     // Handle the case where the user opts not to submit an image.
     if (!image) return;
@@ -214,7 +214,7 @@ function ToolBar({ editor, user }) {
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       />
       <div className="vl"></div>
-      <label htmlFor="feature-image" className="custom-file-upload">
+      <label htmlFor="add-image" className="custom-file-upload">
         <Button
           type="button"
           variant="ghost"
@@ -223,13 +223,13 @@ function ToolBar({ editor, user }) {
           title="Add an image"
           aria-label="Add an image"
           leftIcon={<FontAwesomeIcon icon={faImage} />}
-          onClick={() => document.getElementById("feature-image").click()}
+          onClick={() => document.getElementById("add-image").click()}
         />
       </label>
       <form id="choose-image-form" onChange={handleImageSubmit}>
         <input
           type="file"
-          id="feature-image"
+          id="add-image"
           accept="image/*"
           style={{ display: "none" }}
         />{" "}
