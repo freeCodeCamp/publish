@@ -43,15 +43,8 @@ If you're managing PostgreSQL manually (and don't need mailhog), you can skip
 this section. Otherwise:
 
 ```sh
-cd tools
-docker compose up -d
-cd ..
+npm run run-tools
 ```
-
-OR
-
-Alternatively, you can use `npm run run-tools` in the root directory to start up
-these services.
 
 ### Run initial setup
 
@@ -82,7 +75,7 @@ account to login to the frontend app.
 Once this is complete you will see the seeded data in the admin panel and you
 can use the seeded users to login in the Next.js app. Email and password of the
 seeded users are in `src/seed/index.js` file. One account of each
-role(Contributor and Editor) is seeded.
+role (Contributor and Editor) is seeded.
 
 Go to http://localhost:3000/ to see the frontend app and login with a seeded
 user.
@@ -102,7 +95,7 @@ user.
   under `config/sync` directory. Include those files in your Git commit. For
   more details see: https://market.strapi.io/plugins/strapi-plugin-config-sync
 
-- API docs is available at: http://localhost:1337/documentation/v1.0.0 . The
+- API docs are available at: http://localhost:1337/documentation/v1.0.0. The
   Strapi app needs to be running to view the docs.
 
 #### How to use Admin Panel
@@ -121,7 +114,7 @@ user.
 ### frontend (Next.js)
 
 - We will be using Auth0 as a sign-in method in production
-
+  - TODO: update this section when the invitation workflow is implemented.
   - You have to create the user on `backend` (Strapi) app **by signing in
     through the `frontend` (Next.js) app for the first time**. If you manually
     create the user of the same email address from the Strapi Admin panel
@@ -130,88 +123,53 @@ user.
 
 ## How to run the apps in production mode with Docker
 
-### backend (Strapi)
+### Build
 
-To build the docker image:
+The 'build' workflow will build the docker images for all the apps. To trigger a build, go to [the workflow](https://github.com/freeCodeCamp/publish/actions/workflows/build.yml) and click on the 'Run workflow' button.
 
-```
-docker compose -f docker-compose.prod.yml build
-```
+### Deploy (VM)
 
-To start the docker container: (Replace `***` with the values you want to set
-for the environment variables.)
+After the build has completed, pull the latest images from Docker Hub:
 
-```
-VARIABLE1_NAME=*** VARIABLE2_NAME=*** ... \
-docker compose -f docker-compose.prod.yml up -d
+```sh
+docker image pull registry.digitalocean.com/fcc-cr/dev/publish-frontend:latest
+docker image pull registry.digitalocean.com/fcc-cr/dev/publish-backend:latest
+docker image pull registry.digitalocean.com/fcc-cr/dev/publish-cron:latest
 ```
 
-Alternatively, using .env file: (Replace .env with the path to the .env file you
-want to use)
+Update the three environment files (`.env-frontend`, `.env-backend` and `.env-cron`) if there are any changes to the environment variables (compare them with the `apps/*/sample.env` files).
 
-```
-docker compose --env-file .env -f docker-compose.prod.yml up -d
-```
+Then run the containers (stoppping any existing containers first):
 
-Refer to `.env.example` for the list of environment variables.
-
-To stop the docker container:
-
-```
-docker compose -f docker-compose.prod.yml down
+```sh
+docker run -d --env-file .env-backend -p 127.0.0.1:1337:1337 registry.digitalocean.com/fcc-cr/dev/publish-backend
+docker run -d --env-file .env-frontend -p 127.0.0.1:3000:3000 registry.digitalocean.com/fcc-cr/dev/publish-frontend
 ```
 
-#### Initial setup
+To start the cron container, the `.env-cron` file's `STRAPI_ACCESS_TOKEN` must have an api token.  If there isn't one, create an api token in the [admin panel](https://publish-backend-anhgw.ondigitalocean.app/admin/settings/api-tokens/create) with the token type "custom" and one permission: `post.checkAndPublish`. Then run the cron container:
 
-The app requires some configurations for full functionality.
-
-- Import config
-
-```
-# Go into the strapi-production container
-docker exec -it strapi-production sh
-
-# Import config
-npm run cs import
+```sh
+docker run -d --env-file .env-cron registry.digitalocean.com/fcc-cr/dev/publish-cron
 ```
 
-- Visit admin panel and create the first admin account
+#### Logs
 
-- In Content Manager, create `Invited User` entry for the first user. This will
-  allow the first user on the frontend app to login using Auth0. Set the
-  following values:
-  - email: valid email you can login using Auth0
-  - role: choose "Editor" (unless you can't invite other users)
-  - accepted: false
-- In Settings > Providers, enable `auth0`.
-- (If you want to access endpoints that uses API token) In Settings > API
-  Tokens, generate API tokens
+The container logs are piped to log files in the home directory. To set this up:
 
-### frontend (Next.js)
-
-To build the docker image:
-
-```
-docker compose -f docker/production/docker-compose.yml build
+```sh
+docker logs -f publish-backend >> publish-backend.log &
+docker logs -f publish-frontend >> publish-frontend.log &
+docker logs -f publish-cron >> publish-cron.log &
 ```
 
-To start the docker container: (Replace `***` with the values you want to set
-for the environment variables)
+### Deploy (DigitalOcean App Platform)
 
-```
-NEXTAUTH_SECRET=*** AUTH0_CLIENT_ID=*** AUTH0_CLIENT_SECRET=*** \
-NEXT_PUBLIC_STRAPI_BACKEND_URL=*** NEXTAUTH_URL=*** AUTH0_DOMAIN=*** \
-docker compose -f docker/production/docker-compose.yml up -d
-```
+Almost everything is standard, but there are a few things to note:
 
-Alternatively, using .env file:
+App types: the `backend` and `frontend` apps need to be deployed as a `Web Service` and
+ the `cron` app needs to be deployed as a `Worker`.
+  
+Environment variables
 
-```
-docker compose --env-file .env -f docker/production/docker-compose.yml up -d
-```
-
-To stop the docker container:
-
-```
-docker compose -f docker/production/docker-compose.yml down
-```
+- `frontend` needs to have `NEXTAUTH_URL=${APP_URL}` otherwise follow the instructions in sample.env
+- `backend` needs to have `APP_URL=${APP_URL}` and `NODE_ENV=production`. `HOST` can be omitted or set to `0.0.0.0` and `PORT` can also be omitted.

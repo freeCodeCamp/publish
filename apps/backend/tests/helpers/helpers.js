@@ -10,6 +10,22 @@ const getUser = async (username) => {
   }
 };
 
+const getUserByRole = async (roleId) =>
+  await strapi.db
+    .query("plugin::users-permissions.user")
+    .findOne({ where: { role: roleId }, populate: ["role"] });
+
+const deleteUser = async (username) => {
+  try {
+    return await strapi.db.query("plugin::users-permissions.user").delete({
+      where: { username },
+    });
+  } catch (e) {
+    console.error(e);
+    throw new Error(`Failed to delete User for ${username}`);
+  }
+};
+
 const getPost = async (slug) => {
   try {
     return await strapi.db.query("api::post.post").findOne({
@@ -47,9 +63,17 @@ const getRoleId = async (roleName) => {
   }
 };
 
+const getAllRoles = async () =>
+  await strapi.db.query("plugin::users-permissions.role").findMany({
+    where: { $not: { type: "public" } },
+  });
+
 module.exports = {
+  deleteUser,
   getUser,
   getPost,
   getUserJWT,
   getRoleId,
+  getUserByRole,
+  getAllRoles,
 };

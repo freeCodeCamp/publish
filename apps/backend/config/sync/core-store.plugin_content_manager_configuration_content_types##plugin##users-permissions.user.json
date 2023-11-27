@@ -376,7 +376,6 @@
       }
     },
     "layouts": {
-      "list": ["id", "username", "email", "confirmed", "role"],
       "edit": [
         [
           {
@@ -470,7 +469,8 @@
             "size": 6
           }
         ]
-      ]
+      ],
+      "list": ["id", "username", "email", "confirmed", "role", "status"]
     }
   },
   "type": "object",

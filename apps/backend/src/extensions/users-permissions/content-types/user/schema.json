@@ -105,11 +105,6 @@
       "type": "string",
       "maxLength": 200
     },
-    "status": {
-      "type": "string",
-      "required": true,
-      "default": "active"
-    },
     "last_seen": {
       "type": "datetime"
     },
@@ -121,6 +116,12 @@
     },
     "ghost_id": {
       "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["new", "invited", "active"],
+      "required": true,
+      "default": "new"
     }
   }
 }
