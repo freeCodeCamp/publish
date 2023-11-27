@@ -70,6 +70,9 @@
       "action": "plugin::users-permissions.role.find"
     },
     {
+      "action": "plugin::users-permissions.user.create"
+    },
+    {
       "action": "plugin::users-permissions.user.destroy"
     },
     {
