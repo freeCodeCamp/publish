@@ -1,23 +1,11 @@
-import { test as setup, expect } from "@playwright/test";
+import { test as setup } from "@playwright/test";
+
+import { signIn } from "./helpers/signin";
 
 const authFile = "playwright/.auth/user.json";
 
 setup("authenticate", async ({ page }) => {
-  await page.goto("/");
-  const emailField = page.getByLabel("Email");
-  const passwordField = page.getByLabel("Password");
-  const signinButton = page.getByRole("button", { name: "Sign in with email" });
-
-  await page.getByRole("button", { name: "Sign in" }).click();
-  await emailField.click();
-  await emailField.fill("editor@user.com");
-  await emailField.press("Tab");
-  await expect(passwordField).toBeFocused();
-  await passwordField.fill("editor");
-  await passwordField.press("Tab");
-  await expect(signinButton).toBeFocused();
-  await signinButton.click();
-
+  await signIn(page, "editor@user.com", "editor");
   // Wait until the page receives the cookies.
 
   await page.waitForURL("**/posts");
