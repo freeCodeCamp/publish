@@ -265,6 +265,7 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
               );
               return (
                 <Flex
+                  data-testid="invited-user"
                   key={invitedUser.id}
                   py="2"
                   px="4"
@@ -343,6 +344,7 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
                   : "";
               return (
                 <Flex
+                  data-testid="active-user"
                   key={activeUser.id}
                   py="2"
                   px="4"

@@ -1,13 +1,11 @@
 import { test as setup } from "@playwright/test";
 
 import { signIn } from "./helpers/user";
+import { EDITOR_CREDENTIALS } from "./helpers/constants";
 
-const authFile = "playwright/.auth/user.json";
+const editorFile = "playwright/.auth/editor.json";
 
-setup("authenticate", async ({ page }) => {
-  await signIn(page, { identifier: "editor@user.com", password: "editor" });
-  // Wait until the page receives the cookies.
-
-  await page.waitForURL("**/posts");
-  await page.context().storageState({ path: authFile });
+setup("authenticate as editor", async ({ page }) => {
+  await signIn(page, EDITOR_CREDENTIALS);
+  await page.context().storageState({ path: editorFile });
 });

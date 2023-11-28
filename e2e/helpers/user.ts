@@ -23,6 +23,7 @@ export async function signIn(
   const passwordField = page.getByLabel("Password");
   const signinButton = page.getByRole("button", { name: "Sign in with email" });
 
+  // Sign in via the UI
   await emailField.click();
   await emailField.fill(credentials.identifier);
   await emailField.press("Tab");
@@ -31,6 +32,9 @@ export async function signIn(
   await passwordField.press("Tab");
   await expect(signinButton).toBeFocused();
   await signinButton.click();
+
+  // Wait until the page receives the cookies.
+  await page.waitForURL("**/posts");
 }
 
 export async function getUserByUsername(
