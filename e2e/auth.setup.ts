@@ -1,6 +1,6 @@
 import { test as setup } from "@playwright/test";
 
-import { signIn } from "./helpers/signin";
+import { signIn } from "./helpers/user";
 
 const authFile = "playwright/.auth/user.json";
 

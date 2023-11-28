@@ -1,7 +1,6 @@
 import { test, expect, APIRequestContext } from "@playwright/test";
 
-import { signIn } from "./helpers/signin";
-import { getBearerToken } from "./helpers/user";
+import { getBearerToken, signIn } from "./helpers/user";
 import { API_URL } from "./helpers/constants";
 
 // Reset storage state for this file to avoid being authenticated
