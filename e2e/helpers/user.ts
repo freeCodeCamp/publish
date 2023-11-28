@@ -32,3 +32,21 @@ export async function signIn(
   await expect(signinButton).toBeFocused();
   await signinButton.click();
 }
+
+export async function getUserByUsername(
+  request: APIRequestContext,
+  data: { username: string; jwt: string }
+) {
+  const usersRes = await request.get(
+    `${API_URL}/api/users?filters[username][$eq]=${data.username}`,
+    {
+      headers: {
+        Authorization: `Bearer ${data.jwt}`,
+      },
+    }
+  );
+  const users = await usersRes.json();
+  // There should only be one user with this username, so we should assert that.
+  expect(users).toHaveLength(1);
+  return users[0];
+}

@@ -1,13 +1,13 @@
 import { test, expect, APIRequestContext } from "@playwright/test";
 
-import { getBearerToken, signIn } from "./helpers/user";
+import { getBearerToken, getUserByUsername, signIn } from "./helpers/user";
 import { API_URL } from "./helpers/constants";
 
 // Reset storage state for this file to avoid being authenticated
 test.use({ storageState: { cookies: [], origins: [] } });
 
 test.describe("first sign in", () => {
-  const updateUserUrl = API_URL + "/api/users/3";
+  let updateUserUrl: string;
   let editorJWT: string;
 
   const resetInvitedUser = (request: APIRequestContext) =>
@@ -23,6 +23,11 @@ test.describe("first sign in", () => {
       identifier: "editor@user.com",
       password: "editor",
     });
+    const invitedUser = await getUserByUsername(request, {
+      username: "invited-user",
+      jwt: editorJWT,
+    });
+    updateUserUrl = `${API_URL}/api/users/${invitedUser.id}`;
   });
   test.beforeEach(async ({ request }) => await resetInvitedUser(request));
   test.afterAll(async ({ request }) => await resetInvitedUser(request));
