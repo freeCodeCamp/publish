@@ -57,6 +57,24 @@ async function createSeedUsers(strapi) {
       },
     },
   );
+
+  // This user has no posts, so there is no need to add it to the userIds array.
+  await strapi.entityService.create("plugin::users-permissions.user", {
+    data: {
+      username: "invited-user",
+      name: "invited-user",
+      slug: "invited-user",
+      email: "invited@user.com",
+      password: "invited",
+      provider: "local",
+      status: "invited",
+      confirmed: true,
+      role: {
+        connect: [contributor],
+      },
+    },
+  });
+
   userIds = [userRes1.id, userRes2.id];
 }
 
