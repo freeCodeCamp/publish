@@ -1,6 +1,6 @@
 import { test, expect, APIRequestContext } from "@playwright/test";
 
-import { getBearerToken, getUserByUsername, signIn } from "./helpers/user";
+import { getBearerToken, getUserByEmail, signIn } from "./helpers/user";
 import {
   API_URL,
   EDITOR_CREDENTIALS,
@@ -24,8 +24,8 @@ test.describe("first sign in", () => {
 
   test.beforeAll(async ({ request }) => {
     editorJWT = await getBearerToken(request, EDITOR_CREDENTIALS);
-    const invitedUser = await getUserByUsername(request, {
-      username: "invited-user",
+    const invitedUser = await getUserByEmail(request, {
+      email: INVITEE_CREDENTIALS.identifier,
       jwt: editorJWT,
     });
     updateUserUrl = `${API_URL}/api/users/${invitedUser.id}`;

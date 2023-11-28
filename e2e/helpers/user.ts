@@ -37,12 +37,12 @@ export async function signIn(
   await page.waitForURL("**/posts");
 }
 
-export async function getUserByUsername(
+export async function getUserByEmail(
   request: APIRequestContext,
-  data: { username: string; jwt: string }
+  data: { email: string; jwt: string }
 ) {
   const usersRes = await request.get(
-    `${API_URL}/api/users?filters[username][$eq]=${data.username}`,
+    `${API_URL}/api/users?filters[email][$eq]=${data.email}`,
     {
       headers: {
         Authorization: `Bearer ${data.jwt}`,
