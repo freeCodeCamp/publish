@@ -35,7 +35,7 @@ test.describe("first sign in", () => {
     });
     expect(await originalUserRes.json()).toMatchObject({ status: "invited" });
 
-    await signIn(page, "invited@user.com", "invited");
+    await signIn(page, { identifier: "invited@user.com", password: "invited" });
 
     const userRes = await request.get(updateUserUrl, {
       headers: {

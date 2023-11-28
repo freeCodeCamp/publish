@@ -5,7 +5,7 @@ import { signIn } from "./helpers/user";
 const authFile = "playwright/.auth/user.json";
 
 setup("authenticate", async ({ page }) => {
-  await signIn(page, "editor@user.com", "editor");
+  await signIn(page, { identifier: "editor@user.com", password: "editor" });
   // Wait until the page receives the cookies.
 
   await page.waitForURL("**/posts");
