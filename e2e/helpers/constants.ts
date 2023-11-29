@@ -9,3 +9,8 @@ export const INVITEE_CREDENTIALS = {
   identifier: "invited@user.com",
   password: "invited",
 };
+
+export const CONTRIBUTOR_CREDENTIALS = {
+  identifier: "contributor@user.com",
+  password: "contributor",
+};
