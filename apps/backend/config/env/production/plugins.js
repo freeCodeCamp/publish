@@ -4,11 +4,15 @@
 module.exports = ({ env }) => ({
   email: {
     config: {
-      provider: "amazon-ses",
+      provider: "nodemailer",
       providerOptions: {
-        key: env("AWS_SES_KEY"),
-        secret: env("AWS_SES_SECRET"),
-        amazon: env("AWS_SES_ENDPOINT"),
+        host: env("AWS_SES_HOST"),
+        secure: true,
+        port: 465,
+        auth: {
+          user: env("AWS_SES_KEY"),
+          pass: env("AWS_SES_SECRET"),
+        },
       },
     },
   },
