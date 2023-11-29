@@ -71,7 +71,20 @@ test("it should be possible to create a new internal tag", async ({ page }) => {
     await page.getByText("My new tag 2").isVisible();
 });
 
+test("it should handle empty name fields correctly", async ({ page }) => {
+    await page.goto("/tags");
+    
+    await page.getByRole("link", { name: "New Tag" }).click();
 
+    await page.getByRole("button", { name: "Save" }).click();
+
+    await page.getByText("You must specify a name for the tag.").isVisible();
+});
+
+
+// TODO: add handling for empty slug fields
+
+// TODO: add handling for duplicate slug fields
 
 
 
