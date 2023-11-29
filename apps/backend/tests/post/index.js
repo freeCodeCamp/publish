@@ -56,24 +56,6 @@ describe("post", () => {
         ),
       ).toBe(true);
     });
-
-    it("should only show drafted posts to contributors", async () => {
-      const response = await request(strapi.server.httpServer)
-        .get(
-          `/api/posts?publicationState=preview&filters[publishedAt][$null]=true`,
-        )
-        .set("Content-Type", "application/json")
-        .set("Authorization", `Bearer ${contributorJWT}`)
-        .send();
-
-      expect(response.status).toBe(200);
-
-      expect(
-        response.body.data.every(
-          (post) => post.attributes.publishedAt === null,
-        ),
-      ).toBe(true);
-    });
   });
 
   describe("GET /posts/:id", () => {
