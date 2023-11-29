@@ -4,56 +4,46 @@ test.beforeEach(async ({ page }) => {
     await page.goto("/tags");
 });
 
-test("it should be possible to create a new tag", async ({ page }) => {
+test("it should be possible to create and delete a new tag", async ({ page }) => {
+    // first create a new tag
     await page.getByRole("link", { name: "New Tag" }).click();
 
-    await page.fill("input[name=name]", "My new tag 1");
-    await page.fill("input[name=slug]", "my-new-tag-1");
+    await page.fill("input[name=name]", "My new tag");
+    await page.fill("input[name=slug]", "my-new-tag");
 
     await page.getByRole("button", { name: "Save" }).click();
-
-    await expect(page.getByText("My new tag 1")).toBeVisible();
-});
-
-test("it should be possible to edit a tag", async ({ page }) => {
-    await page.getByRole("link", { name: "New Tag" }).click();
-
-    await page.fill("input[name=name]", "My new tag 2");
-    await page.fill("input[name=slug]", "my-new-tag-2");
-
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await page.getByText("My new tag 2").click();
-
-    await page.fill("input[name=name]", "My new tag 2 - edited");
-
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await expect( page.getByText("My new tag 2 - edited")).toBeVisible();
-});
-
-test('it should be possible to delete a tag', async ({ page }) => {
-    await page.getByRole("link", { name: "New Tag" }).click();
-
-    await page.fill("input[name=name]", "My new tag 3");
-    await page.fill("input[name=slug]", "my-new-tag-3");
-
-    await page.getByRole("button", { name: "Save" }).click();
-
-    await page.getByText("My new tag 3").click();
+    await page.waitForURL("**/tags");
+    
+    // now delete it
+    await page.getByText("My new tag").click();
 
     await page.getByRole("button", { name: "Delete tag" }).click();
 
     await page.getByRole("button", { name: "Delete" }).click();
     await expect(page.getByText("Are you sure")).toBeHidden();
-    await expect(page.getByText("My new tag 3")).toBeHidden();
-})
+    await expect(page.getByText("My new tag")).toBeHidden();
+});
+
+test("it should be possible to edit a tag", async ({ page }) => {
+    await page.getByText("HTML", { exact: true }).click();
+
+    await page.fill("input[name=name]", "HTML - edited");
+    await page.getByRole("button", { name: "Save" }).click();
+    await page.waitForURL("**/tags");
+
+    await expect(page.getByText("HTML - edited")).toBeVisible();
+    
+    // undo the edit
+    await page.getByText("HTML - edited").click();
+    await page.fill("input[name=name]", "HTML");
+    await page.getByRole("button", { name: "Save" }).click();
+});
 
 test("it should be possible to create a new internal tag", async ({ page }) => {
     await page.getByRole("link", { name: "New Tag" }).click();
 
-    await page.fill("input[name=name]", "My new tag 4");
-    await page.fill("input[name=slug]", "my-new-tag-4");
+    await page.fill("input[name=name]", "My new tag");
+    await page.fill("input[name=slug]", "my-new-tag");
 
     await page.check('text=Internal Tag');
 
@@ -61,7 +51,12 @@ test("it should be possible to create a new internal tag", async ({ page }) => {
 
     await page.getByText("Internal Tags").click()
 
-    await page.getByText("My new tag 4").isVisible();
+    // TODO: delete via api call and just check that it's visible
+    await page.getByText("My new tag").click();
+    await page.getByRole("button", { name: "Delete tag" }).click();
+    await page.getByRole("button", { name: "Delete" }).click();
+    await expect(page.getByText("Are you sure")).toBeHidden();
+    await expect(page.getByText("My new tag")).toBeHidden();
 });
 
 test("it should handle empty name fields correctly", async ({ page }) => {
