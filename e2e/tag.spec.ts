@@ -29,7 +29,7 @@ test("it should be possible to edit a tag", async ({ page }) => {
 
     await page.getByRole("button", { name: "Save" }).click();
 
-    await expect( page.getByText("My new tag 1 - edited")).toBeVisible();
+    await expect( page.getByText("My new tag 2 - edited")).toBeVisible();
 });
 
 test('it should be possible to delete a tag', async ({ page }) => {
