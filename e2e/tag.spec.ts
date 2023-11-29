@@ -1,8 +1,10 @@
 import { test } from "@playwright/test";
 
-test("it should be possible to create a new tag", async ({ page }) => {
+test.beforeEach(async ({ page }) => {
     await page.goto("/tags");
-    
+});
+
+test("it should be possible to create a new tag", async ({ page }) => {
     await page.getByRole("link", { name: "New Tag" }).click();
 
     await page.fill("input[name=name]", "My new tag 1");
@@ -18,9 +20,6 @@ test("it should be possible to create a new tag", async ({ page }) => {
 });
 
 test("it should be possible to edit a tag", async ({ page }) => {
-
-    await page.goto("/tags");
-
     await page.getByText("My new tag 1").click();   
 
     await page.fill("input[name=name]", "My new tag 1 - edited");
@@ -35,9 +34,6 @@ test("it should be possible to edit a tag", async ({ page }) => {
 });
 
 test('it should be possible to delete a tag', async ({ page }) => {
-    
-    await page.goto("/tags");
-
     await page.getByText("My new tag 1").click();   
 
     await page.getByRole("button", { name: "Delete tag" }).click();
@@ -53,8 +49,6 @@ test('it should be possible to delete a tag', async ({ page }) => {
 })
 
 test("it should be possible to create a new internal tag", async ({ page }) => {
-    await page.goto("/tags");
-    
     await page.getByRole("link", { name: "New Tag" }).click();
 
     await page.fill("input[name=name]", "My new tag 2");
@@ -71,9 +65,7 @@ test("it should be possible to create a new internal tag", async ({ page }) => {
     await page.getByText("My new tag 2").isVisible();
 });
 
-test("it should handle empty name fields correctly", async ({ page }) => {
-    await page.goto("/tags");
-    
+test("it should handle empty name fields correctly", async ({ page }) => {    
     await page.getByRole("link", { name: "New Tag" }).click();
 
     await page.getByRole("button", { name: "Save" }).click();
