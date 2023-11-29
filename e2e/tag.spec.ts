@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
     await page.goto("/tags");
@@ -12,11 +12,7 @@ test("it should be possible to create a new tag", async ({ page }) => {
 
     await page.getByRole("button", { name: "Save" }).click();
 
-    await page.waitForTimeout(1000);
-
-    await page.goto("/tags");
-
-    await page.getByText("My new tag 1").isVisible();
+    await expect(page.getByText("My new tag 1")).toBeVisible();
 });
 
 test("it should be possible to edit a tag", async ({ page }) => {
@@ -27,17 +23,13 @@ test("it should be possible to edit a tag", async ({ page }) => {
 
     await page.getByRole("button", { name: "Save" }).click();
 
-    await page.waitForTimeout(1000);
-
     await page.getByText("My new tag 2").click();
 
     await page.fill("input[name=name]", "My new tag 2 - edited");
 
     await page.getByRole("button", { name: "Save" }).click();
 
-    await page.goto("/tags");
-
-    await page.getByText("My new tag 1 - edited").isVisible();
+    await expect( page.getByText("My new tag 1 - edited")).toBeVisible();
 });
 
 test('it should be possible to delete a tag', async ({ page }) => {
@@ -52,14 +44,9 @@ test('it should be possible to delete a tag', async ({ page }) => {
 
     await page.getByRole("button", { name: "Delete tag" }).click();
 
-    await page.waitForTimeout(1000);
-
     await page.getByRole("button", { name: "Delete" }).click();
-
-    await page.waitForTimeout(1000);
-
-    await page.getByText("My new tag 3").isHidden();
-
+    await expect(page.getByText("Are you sure")).toBeHidden();
+    await expect(page.getByText("My new tag 3")).toBeHidden();
 })
 
 test("it should be possible to create a new internal tag", async ({ page }) => {
@@ -72,9 +59,7 @@ test("it should be possible to create a new internal tag", async ({ page }) => {
 
     await page.getByRole("button", { name: "Save" }).click();
 
-    await page.waitForTimeout(1000);
-
-    await page.goto("/tags?visibility=internal&page=1");
+    await page.getByText("Internal Tags").click()
 
     await page.getByText("My new tag 4").isVisible();
 });
