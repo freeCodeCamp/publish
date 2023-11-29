@@ -14,6 +14,9 @@ module.exports = ({ env }) => ({
           pass: env("AWS_SES_SECRET"),
         },
       },
+      settings: {
+        defaultFrom: "team@freecodecamp.org",
+      },
     },
   },
 });
