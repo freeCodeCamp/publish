@@ -31,6 +31,7 @@ async function createSeedUsers(strapi) {
         email: "contributor@user.com",
         password: "contributor",
         provider: "local",
+        status: "active",
         confirmed: true,
         role: {
           connect: [contributor],
@@ -48,6 +49,7 @@ async function createSeedUsers(strapi) {
         email: "editor@user.com",
         password: "editor",
         provider: "local",
+        status: "active",
         confirmed: true,
         role: {
           connect: [editor],
@@ -56,37 +58,6 @@ async function createSeedUsers(strapi) {
     },
   );
   userIds = [userRes1.id, userRes2.id];
-}
-
-async function createSeedInvitedUsers(strapi) {
-  const contributor = await findRoleId(strapi, "Contributor");
-  const editor = await findRoleId(strapi, "Editor");
-  await strapi.entityService.create("api::invited-user.invited-user", {
-    data: {
-      email: "contributor@user.com",
-      accepted: "true",
-      role: {
-        connect: [contributor],
-      },
-    },
-  });
-  await strapi.entityService.create("api::invited-user.invited-user", {
-    data: {
-      email: "editor@user.com",
-      accepted: "true",
-      role: {
-        connect: [editor],
-      },
-    },
-  });
-  await strapi.entityService.create("api::invited-user.invited-user", {
-    data: {
-      email: "invited@user.com",
-      role: {
-        connect: [contributor],
-      },
-    },
-  });
 }
 
 async function createSeedTags(strapi) {
@@ -196,7 +167,6 @@ async function generateSeedData(strapi) {
   console.log("Creating seed data...");
 
   await createSeedUsers(strapi);
-  await createSeedInvitedUsers(strapi);
   await createSeedTags(strapi);
   await createSeedPosts(strapi);
 }
