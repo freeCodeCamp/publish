@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
 
-test("it should be possible to type in the editor", async ({ page }) => {
+test.beforeAll(async ({ page }) => {
     await page.goto("/posts/2");
+}
+);
 
+test("it should be possible to type in the editor", async ({ page }) => {
     const textToType = 'Hello World';
     await page.getByTestId('editor').fill(textToType);
 
@@ -12,8 +15,6 @@ test("it should be possible to type in the editor", async ({ page }) => {
 
 
 test("it should have eleven buttons in the toolbar", async ({ page }) => {
-    await page.goto("/posts/2");
-
     const buttons = page.locator('#toolbar > button');
     expect(await buttons.count()).toBe(10);
 
@@ -22,14 +23,11 @@ test("it should have eleven buttons in the toolbar", async ({ page }) => {
 });
 
 test("it should be possible to edit the title", async ({ page }) => {
-    await page.goto("/posts/2");
-
     page.getByTestId('post-title').click();
 
     const titleField =  page.getByTestId('post-title-field');
     await titleField.fill('New Title');
     await page.keyboard.press('Enter');
-
 
     const newTitle = await page.getByTestId('post-title').innerText();
     expect(newTitle).toBe('New Title');
