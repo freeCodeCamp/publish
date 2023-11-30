@@ -90,6 +90,7 @@ function ToolBar({ editor, user }) {
       border="1px solid silver"
       borderRadius="lg"
       overflowX="auto"
+      id="toolbar"
     >
       <Button
         variant="ghost"
@@ -305,6 +306,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
     editorProps: {
       attributes: {
         class: "prose focus:outline-none",
+        "data-testid": "editor",
       },
     },
     onUpdate: ({ editor }) => {
@@ -325,6 +327,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
           fontSize="xl"
           opacity={0.6}
           backgroundColor="white"
+          data-testid="word-count"
           padding="0.5rem"
         >
           {words === 1 ? `${words} word` : `${words} words`}
