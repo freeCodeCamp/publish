@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/tags");
+    await page.goto("/posts/2");
 });
 
 
