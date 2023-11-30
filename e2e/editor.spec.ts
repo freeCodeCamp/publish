@@ -1,9 +1,9 @@
 import { test, expect } from "@playwright/test";
 
-test.beforeAll(async ({ page }) => {
-    await page.goto("/posts/2");
-}
-);
+test.beforeEach(async ({ page }) => {
+    await page.goto("/tags");
+});
+
 
 test("it should be possible to type in the editor", async ({ page }) => {
     const textToType = 'Hello World';
