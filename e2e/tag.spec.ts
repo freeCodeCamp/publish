@@ -1,17 +1,21 @@
 import { type Page, expect, test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
-    await page.goto("/tags");
+  await page.goto("/tags");
 });
 
 // Helper function to wait for the tags page to load. This is because waitForURL
 // doesn't always work as expected. However, we know that the "New Tag" button
 // is always visible on the tags page.
 async function waitForTags(page: Page) {
-    return await expect(page.getByRole("link", { name: "New Tag" })).toBeVisible();
+  return await expect(
+    page.getByRole("link", { name: "New Tag" })
+  ).toBeVisible();
 }
 
-test("it should be possible to create and delete a new tag", async ({ page }) => {
+test("it should be possible to create and delete a new tag", async ({
+  page,
+}) => {
   // first create a new tag
   await page.getByRole("link", { name: "New Tag" }).click();
 
@@ -65,17 +69,13 @@ test("it should be possible to create a new internal tag", async ({ page }) => {
 });
 
 test("it should handle empty name fields correctly", async ({ page }) => {
-    await page.getByRole("link", { name: "New Tag" }).click();
+  await page.getByRole("link", { name: "New Tag" }).click();
 
-    await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save" }).click();
 
-    await page.getByText("You must specify a name for the tag.").isVisible();
+  await page.getByText("You must specify a name for the tag.").isVisible();
 });
-
 
 // TODO: add handling for empty slug fields
 
 // TODO: add handling for duplicate slug fields
-
-
-
