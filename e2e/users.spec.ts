@@ -9,18 +9,23 @@ const NEW_USER_CREDENTIALS = {
 };
 
 test.describe("inviting a user", () => {
-  test.afterEach(async ({ request }) => {
-    // Delete the user if it exists
-    await deleteUser(request, NEW_USER_CREDENTIALS);
-  });
-  test("invitations can be created and revoked", async ({ browser }) => {
+  let usersPage: UsersPage;
+  
+  test.beforeEach(async ({ browser }) => {
     // To avoid using the invitee's credentials, we have to create a new context
     const editorContext = await browser.newContext({
       storageState: "playwright/.auth/editor.json",
     });
-    const usersPage = new UsersPage(await editorContext.newPage());
+    usersPage = new UsersPage(await editorContext.newPage());
     await usersPage.goto();
-
+  });
+  
+  test.afterEach(async ({ request }) => {
+    // Delete the user if it exists
+    await deleteUser(request, NEW_USER_CREDENTIALS);
+  });
+  
+  test("invitations can be created and revoked", async () => {
     await usersPage.inviteUser(NEW_USER_CREDENTIALS.identifier);
     await expect(
       await usersPage.getInvitedUser(NEW_USER_CREDENTIALS.identifier)
@@ -35,14 +40,7 @@ test.describe("inviting a user", () => {
   test("invited users become active by signing in", async ({
     page,
     request,
-    browser,
   }) => {
-    // To avoid using the invitee's credentials, we have to create a new context
-    const editorContext = await browser.newContext({
-      storageState: "playwright/.auth/editor.json",
-    });
-    const usersPage = new UsersPage(await editorContext.newPage());
-    await usersPage.goto();
     await usersPage.inviteUser(NEW_USER_CREDENTIALS.identifier);
 
     // Allow the user to sign in with email/password, not Auth0.
