@@ -1,14 +1,14 @@
 import type { Page, APIRequestContext } from "@playwright/test";
 import { expect } from "@playwright/test";
 
-import { API_URL } from "./constants";
+import { API_URL, EDITOR_CREDENTIALS } from "./constants";
 
 export async function getBearerToken(
   request: APIRequestContext,
-  credentials: { identifier: string; password: string }
+  data: { identifier: string; password: string }
 ) {
   const editorRes = await request.post(API_URL + "/api/auth/local", {
-    data: credentials,
+    data,
   });
   expect(editorRes.status()).toBe(200);
   return (await editorRes.json()).jwt;
@@ -31,13 +31,14 @@ async function getUsersHelper(
 
 export async function deleteUser(
   request: APIRequestContext,
-  credentials: { identifier: string; jwt: string }
+  data: { identifier: string }
 ) {
-  const user = await getUsersHelper(request, credentials);
+  const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
+  const user = await getUsersHelper(request, { ...data, jwt });
   if (user.length) {
     await request.delete(`${API_URL}/api/users/${user[0].id}`, {
       headers: {
-        Authorization: `Bearer ${credentials.jwt}`,
+        Authorization: `Bearer ${jwt}`,
       },
     });
   }
@@ -69,9 +70,10 @@ export async function signIn(
 
 export async function getUserByEmail(
   request: APIRequestContext,
-  data: { identifier: string; jwt: string }
+  data: { identifier: string }
 ) {
-  const users = await getUsersHelper(request, data);
+  const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
+  const users = await getUsersHelper(request, { ...data, jwt });
   // There should only be one user with this username, so we should assert that.
   expect(users).toHaveLength(1);
   return users[0];
@@ -81,9 +83,10 @@ export async function getUserByEmail(
 // in in testing, we need to change the provider to local and set a password.
 export async function useCredentialsForAuth(
   request: APIRequestContext,
-  data: { identifier: string; password: string; jwt: string }
+  data: { identifier: string; password: string }
 ) {
-  const { password, jwt } = data;
+  const { password } = data;
+  const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const user = await getUserByEmail(request, data);
   const updateUserUrl = `${API_URL}/api/users/${user.id}`;
   const userRes = await request.put(updateUserUrl, {
