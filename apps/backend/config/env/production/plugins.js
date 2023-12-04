@@ -6,16 +6,16 @@ module.exports = ({ env }) => ({
     config: {
       provider: "nodemailer",
       providerOptions: {
-        host: env("NODEMAILER_HOST", "localhost"),
-        secure: false,
-        port: 1025,
+        host: env("AWS_SES_HOST"),
+        secure: true,
+        port: 465,
         auth: {
-          user: "test",
-          pass: "test",
+          user: env("AWS_SES_KEY"),
+          pass: env("AWS_SES_SECRET"),
         },
-        tls: {
-          rejectUnauthorized: false,
-        },
+      },
+      settings: {
+        defaultFrom: "team@freecodecamp.org",
       },
     },
   },
