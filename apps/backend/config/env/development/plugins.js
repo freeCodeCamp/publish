@@ -44,4 +44,13 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  // When running e2e tests we use NODE_ENV=development and do not want to be
+  // rate limited.
+  "users-permissions": {
+    config: {
+      ratelimit: {
+        enabled: false,
+      },
+    },
+  },
 });

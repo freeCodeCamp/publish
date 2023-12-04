@@ -147,6 +147,9 @@ export async function getServerSideProps(context) {
         }),
     getUsers(session.user.jwt, {
       fields: ["id", "name", "slug"],
+      filters: {
+        status: "active",
+      },
     }),
     getTags(session.user.jwt, {
       fields: ["id", "name", "slug"],

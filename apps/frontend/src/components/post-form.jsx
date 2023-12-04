@@ -41,9 +41,13 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
+  const [featureImage, setFeatureImageUrl] = useState();
+  const [featureImageId, setFeatureImageId] = useState();
+
   useEffect(() => {
     if (post) {
-      const { title, body, slug, tags } = post.attributes;
+      const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
+      const { title, body, slug, tags, feature_image } = post.attributes;
       const tagIds = tags.data.map((tag) => tag.id);
 
       setTitle(title);
@@ -52,6 +56,13 @@ const PostForm = ({ tags, user, authors, post }) => {
       setPostUrl(slug ?? "");
       setPostId(post.id);
       setPostTagId(tagIds);
+
+      if (feature_image.data) {
+        setFeatureImageUrl(
+          new URL(feature_image.data[0].attributes.url, apiBase),
+        );
+        setFeatureImageId(feature_image.data[0].id);
+      }
     }
   }, [post]);
 
@@ -79,6 +90,12 @@ const PostForm = ({ tags, user, authors, post }) => {
     setUnsavedChanges(true);
   };
 
+  const handleFeatureImageChange = (url, id) => {
+    setFeatureImageUrl(url);
+    setFeatureImageId(id);
+    setUnsavedChanges(true);
+  };
+
   const handleSubmit = useCallback(
     async (shouldPublish = null, scheduledDate = "", scheduledTime = "") => {
       const nonce = uuidv4();
@@ -87,6 +104,7 @@ const PostForm = ({ tags, user, authors, post }) => {
       const data = {
         data: {
           title: title,
+          feature_image: featureImageId !== null ? [featureImageId] : [],
           slug: slugify(
             postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
             {
@@ -162,7 +180,17 @@ const PostForm = ({ tags, user, authors, post }) => {
         });
       }
     },
-    [toast, title, postUrl, postTagId, content, author, postId, user],
+    [
+      toast,
+      title,
+      postUrl,
+      postTagId,
+      featureImageId,
+      content,
+      author,
+      postId,
+      user,
+    ],
   );
 
   useEffect(() => {
@@ -246,10 +274,12 @@ const PostForm = ({ tags, user, authors, post }) => {
                 postTagId={postTagId}
                 title={title}
                 postUrl={postUrl}
+                featureImage={featureImage}
                 handleTitleChange={handleTitleChange}
                 handlePostUrlChange={handlePostUrlChange}
                 handleAuthorChange={handleAuthorChange}
                 handleUnsavedChanges={handleUnsavedChanges}
+                handleFeatureImageChange={handleFeatureImageChange}
                 handlePostTagId={handlePostTagId}
                 handleSubmit={handleSubmit}
               />
