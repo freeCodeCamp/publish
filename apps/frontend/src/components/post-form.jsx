@@ -156,10 +156,8 @@ const PostForm = ({ tags, user, authors, post }) => {
         data.data.publishedAt = new Date().toISOString();
         data.data.scheduled_at = null;
       }
-      console.log(data);
       try {
-        const res = await updatePost(postId, data, token);
-        console.log(res);
+        await updatePost(postId, data, token);
         toast({
           title: getTitle(),
           description: `The post ${
