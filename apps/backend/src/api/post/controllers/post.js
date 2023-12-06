@@ -39,6 +39,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
         // pass it onto default findOne controller
         return await super.findOne(ctx);
       } catch (err) {
+        console.error(err);
         ctx.body = err;
       }
     },
@@ -61,6 +62,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
       try {
         return await super.create(ctx);
       } catch (err) {
+        console.error(err);
         // TODO: DRY out error handling.
         const isValidationError = err instanceof ValidationError;
         if (isValidationError) {
@@ -91,6 +93,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
       try {
         return await super.update(ctx);
       } catch (err) {
+        console.error(err);
         // TODO: DRY out error handling.
         const isValidationError = err instanceof ValidationError;
         if (isValidationError) {
@@ -111,6 +114,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
         // to comply with other default endpoints
         ctx.body = this.transformResponse(response);
       } catch (err) {
+        console.error(err);
         ctx.body = err;
       }
     },
@@ -121,6 +125,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
           .publish(ctx.request.params.id);
         ctx.body = this.transformResponse(response);
       } catch (err) {
+        console.error(err);
         ctx.body = err;
       }
     },
@@ -131,6 +136,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
           .unpublish(ctx.request.params.id);
         ctx.body = this.transformResponse(response);
       } catch (err) {
+        console.error(err);
         ctx.body = err;
       }
     },
@@ -163,6 +169,7 @@ module.exports = createCoreController("api::post.post", ({ strapi }) => {
 
         ctx.body = this.transformResponse(response);
       } catch (err) {
+        console.error(err);
         ctx.body = err;
       }
     },
