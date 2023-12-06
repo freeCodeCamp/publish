@@ -59,9 +59,9 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       if (feature_image.data) {
         setFeatureImageUrl(
-          new URL(feature_image.data[0].attributes.url, apiBase),
+          new URL(feature_image.data.attributes.formats.large.url, apiBase),
         );
-        setFeatureImageId(feature_image.data[0].id);
+        setFeatureImageId(feature_image.data.id);
       }
     }
   }, [post]);
@@ -104,7 +104,7 @@ const PostForm = ({ tags, user, authors, post }) => {
       const data = {
         data: {
           title: title,
-          feature_image: featureImageId !== null ? [featureImageId] : [],
+          feature_image: featureImageId ? [featureImageId] : null,
           slug: slugify(
             postUrl != "" ? postUrl : title != "(UNTITLED)" ? title : nonce,
             {
@@ -156,9 +156,10 @@ const PostForm = ({ tags, user, authors, post }) => {
         data.data.publishedAt = new Date().toISOString();
         data.data.scheduled_at = null;
       }
-
+      console.log(data);
       try {
-        await updatePost(postId, data, token);
+        const res = await updatePost(postId, data, token);
+        console.log(res);
         toast({
           title: getTitle(),
           description: `The post ${
@@ -168,7 +169,6 @@ const PostForm = ({ tags, user, authors, post }) => {
           duration: 5000,
           isClosable: true,
         });
-
         setUnsavedChanges(false);
       } catch (error) {
         toast({
