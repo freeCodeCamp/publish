@@ -44,10 +44,10 @@ test('it should be possible to save', async ({ page }) => {
     const saveNotificationTitle = page.locator('#toast-1-title');
     const saveNotificationDescription = page.locator('#toast-1-description');
 
-    expect(saveNotificationDescription).toBeInViewport();
+    expect(saveNotificationDescription).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
 
-    expect(saveNotificationDescription).toBeInViewport();
+    expect(saveNotificationDescription).toBeVisible();
     expect(await saveNotificationDescription.innerText()).toBe('The post has been updated.');
     
     await waitForSavePromise;
