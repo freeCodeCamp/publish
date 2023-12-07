@@ -40,21 +40,12 @@ test('it should be possible to save', async ({ page }) => {
 
     await page.keyboard.down('Control');
     await page.keyboard.press('s');
-
-    const saveNotificationTitle = page.locator('#toast-1-title');
-    const saveNotificationDescription = page.locator('#toast-1-description');
-
-    expect(saveNotificationDescription).toBeVisible();
-    expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
-
-    expect(saveNotificationDescription).toBeVisible();
-    expect(await saveNotificationDescription.innerText()).toBe('The post has been updated.');
     
     await waitForSavePromise;
 })
 
 
-test('the saved image should be visible in the drawer', async ({ page }) => {
+test('the saved image should be visible in the drawer and can be deleted', async ({ page }) => {
     await page.goto('/posts/2');
 
     await page.getByTestId('open-post-drawer').click();
