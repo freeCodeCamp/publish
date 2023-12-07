@@ -59,7 +59,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
       if (feature_image.data) {
         setFeatureImageUrl(
-          new URL(feature_image.data.attributes.formats.large.url, apiBase),
+          new URL(feature_image.data.attributes.formats.thumbnail.url, apiBase),
         );
         setFeatureImageId(feature_image.data.id);
       }
