@@ -139,17 +139,29 @@ docker image pull registry.digitalocean.com/fcc-cr/dev/publish-cron:latest
 
 Update the three environment files (`.env-frontend`, `.env-backend` and `.env-cron`) if there are any changes to the environment variables (compare them with the `apps/*/sample.env` files).
 
-Then run the containers (stoppping any existing containers first):
+If there are existing containers, stop and rename them:
 
 ```sh
-docker run -d --env-file .env-backend -p 127.0.0.1:1337:1337 registry.digitalocean.com/fcc-cr/dev/publish-backend
-docker run -d --env-file .env-frontend -p 127.0.0.1:3000:3000 registry.digitalocean.com/fcc-cr/dev/publish-frontend
+docker stop publish-frontend
+docker stop publish-backend
+docker stop publish-cron
+
+docker rename publish-frontend publish-frontend-old
+docker rename publish-backend publish-backend-old
+docker rename publish-cron publish-cron-old
+```
+
+Then run the containers:
+
+```sh
+docker run -d --env-file .env-backend --name publish-backend -p 127.0.0.1:1337:1337 registry.digitalocean.com/fcc-cr/dev/publish-backend
+docker run -d --env-file .env-frontend --name publish-frontend -p 127.0.0.1:3000:3000 registry.digitalocean.com/fcc-cr/dev/publish-frontend
 ```
 
 To start the cron container, the `.env-cron` file's `STRAPI_ACCESS_TOKEN` must have an api token.  If there isn't one, create an api token in the [admin panel](https://publish-backend-anhgw.ondigitalocean.app/admin/settings/api-tokens/create) with the token type "custom" and one permission: `post.checkAndPublish`. Then run the cron container:
 
 ```sh
-docker run -d --env-file .env-cron registry.digitalocean.com/fcc-cr/dev/publish-cron
+docker run -d --env-file .env-cron --name publish-cron registry.digitalocean.com/fcc-cr/dev/publish-cron
 ```
 
 #### Logs
@@ -160,6 +172,15 @@ The container logs are piped to log files in the home directory. To set this up:
 docker logs -f publish-backend >> publish-backend.log &
 docker logs -f publish-frontend >> publish-frontend.log &
 docker logs -f publish-cron >> publish-cron.log &
+```
+
+#### Remove old containers and images
+
+To remove unused containers and images, run:
+
+```sh
+docker container prune
+docker image prune
 ```
 
 ### Deploy (DigitalOcean App Platform)
