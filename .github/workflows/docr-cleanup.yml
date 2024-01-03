@@ -1,0 +1,53 @@
+name: DOCR - Cleanup Container Images
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 0 * * 3,6' # 12:05 UTC on Wednesdays and Saturdays (6 hour maintenance window)
+
+jobs:
+  remove:
+    name: Delete Old Images
+    runs-on: ubuntu-latest
+    environment: staging
+    strategy:
+      fail-fast: false
+      matrix:
+        repos:
+          - backend
+          - frontend
+          - cron
+        variants:
+          - dev
+
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 1200
+
+      - name: Delete Images
+        uses: raisedadead/action-docr-cleanup@latest
+        with:
+          repository_name: '${{ matrix.variants }}/publish-${{ matrix.repos }}'
+          days: '4'
+          dry_run: 'true'
+
+  # clean:
+  #   name: Do Garbage Collection
+  #   runs-on: ubuntu-latest
+  #   environment: staging
+  #   needs: remove
+  #   steps:
+  #     - name: Install doctl
+  #       uses: digitalocean/action-doctl@v2
+  #       with:
+  #         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+  #     - name: Log in to DigitalOcean Container Registry with short-lived credentials
+  #       run: doctl registry login --expiry-seconds 1200
+
+  #     - name: Trigger Garbage collection
+  #       run: doctl registry garbage-collection start --include-untagged-manifests --force
