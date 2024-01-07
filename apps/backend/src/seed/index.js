@@ -155,7 +155,26 @@ async function createSeedPosts(strapi) {
       title: "Internal post",
       author: { connect: [userIds[1]] },
       tags: { connect: [internalTagId] },
-      body: "I'm an internal post and meant to be hidden",
+      body: "A post with internal tag.",
+      publishedAt: new Date(),
+    },
+  });
+
+  // Posts by contributors
+  await strapi.entityService.create("api::post.post", {
+    data: {
+      title: "Contributor's draft post",
+      author: { connect: [userIds[0]] }, // Contributor
+      tags: { connect: tagIds.slice(1, 3) },
+      body: "A post by contributor in draft state.",
+    },
+  });
+  await strapi.entityService.create("api::post.post", {
+    data: {
+      title: "Contributor's published post",
+      author: { connect: [userIds[0]] }, // Contributor
+      tags: { connect: tagIds.slice(1, 3) },
+      body: "A post by contributor in published state.",
       publishedAt: new Date(),
     },
   });

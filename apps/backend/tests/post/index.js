@@ -57,6 +57,7 @@ describe("post", () => {
       ).toBe(true);
     });
   });
+
   describe("GET /posts/:id", () => {
     it("should prevent contributors viewing other user's post", async () => {
       const post = await getPost("editors-draft-post");
