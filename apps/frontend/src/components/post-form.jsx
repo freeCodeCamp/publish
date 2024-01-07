@@ -289,7 +289,9 @@ const PostForm = ({ tags, user, authors, post }) => {
             {!isEditingTitle ? (
               <>
                 <Stack direction="row" onClick={() => setIsEditingTitle(true)}>
-                  <Text fontSize="2xl">{title}</Text>
+                  <Text fontSize="2xl" data-testid="post-title">
+                    {title}
+                  </Text>
                   <Text fontSize="2xl">
                     <FontAwesomeIcon icon={faEdit} />
                   </Text>
@@ -314,7 +316,12 @@ const PostForm = ({ tags, user, authors, post }) => {
                             w="30%"
                             isInvalid={form.errors.title && form.touched.title}
                           >
-                            <Input {...field} placeholder="title" required />
+                            <Input
+                              {...field}
+                              placeholder="title"
+                              data-testid="post-title-field"
+                              required
+                            />
                             <FormErrorMessage>
                               {form.errors.title}
                             </FormErrorMessage>

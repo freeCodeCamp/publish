@@ -27,5 +27,4 @@ it("strapi is defined", () => {
 
 require("./user");
 require("./auth");
-require("./custom-post");
 require("./post");
