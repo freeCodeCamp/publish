@@ -181,6 +181,7 @@ const EditorDrawer = ({
           variant="ghost"
           onClick={onOpen}
           aria-label="Open Post Drawer"
+          data-testid="open-post-drawer"
           icon={<FontAwesomeIcon icon={faGear} />}
         />
       </Box>
@@ -245,7 +246,7 @@ const EditorDrawer = ({
               ) : (
                 <Img
                   src={featureImage}
-                  alt="feature"
+                  data-testid="feature-image"
                   borderRadius="lg"
                   objectFit="cover"
                   w="100%"
@@ -257,6 +258,7 @@ const EditorDrawer = ({
             {featureImage && (
               <Button
                 colorScheme="red"
+                data-testid="delete-feature-image"
                 w="100%"
                 onClick={() => handleFeatureImageChange(null, null)}
               >
