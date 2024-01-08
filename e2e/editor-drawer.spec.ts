@@ -1,30 +1,62 @@
 import { test, expect } from "@playwright/test";
 import path from 'path';
 
-test('it should be possible to save without an image present', async ({ page }) => {
-    await page.goto('/posts/1');
+import { deletePost, getPostIdInURL, createPostWithFeatureImage } from "./helpers/post";
 
+test.describe('feature image', () => {
+  let postIdsToDelete: string[] = [];
+
+  test.afterAll(async ({ request }) => {
+    // delete all posts created in the tests
+    for (const postId of postIdsToDelete) {
+      await deletePost(request, postId);
+    }
+  })
+
+  test('it should be possible to save without a feature image', async ({ page, request }) => {
+    // Open a new post
+    await page.goto('/posts');
+    await page.getByRole('button', { name: 'New post' }).click();
+    await page.waitForURL(/.*\/posts\/\d+/);
+    // Store the post id to delete after the test
+    const postId = getPostIdInURL(page);
+    if (postId) {
+      // Store the post id to delete after the test
+      postIdsToDelete.push(postId);
+    }
+
+  // Save the new post without adding a feature image
     await page.keyboard.down('Control');
     await page.keyboard.press('s');
 
+    // Check that the post was saved successfully
     const saveNotificationTitle = page.locator('#toast-1-title');
     const saveNotificationDescription = page.locator('#toast-1-description');
-
+    await saveNotificationTitle.waitFor(); // Wait for the toast to appear
     expect(saveNotificationTitle).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
 
     expect(saveNotificationDescription).toBeVisible();
     expect(await saveNotificationDescription.innerText()).toBe('The post has been updated.');
-})
+  })
 
-test('it should be possible to save', async ({ page }) => {
-    await page.goto('/posts/2');
+  test('it should be possible to save with a feature image', async ({ page, request }) => {
+    // Open a new post
+    await page.goto('/posts');
+    await page.getByRole('button', { name: 'New post' }).click();
+    await page.waitForURL(/.*\/posts\/\d+/);
+    // Store the post id to delete after the test
+    const postId = getPostIdInURL(page); // Extract the new post id from the URL
+    if (postId) {
+      // Store the post id to delete after the test
+      postIdsToDelete.push(postId);
+    }
 
+    // Prepare promises before clicking the button
     const fileChooserPromise = page.waitForEvent('filechooser');
-
-    // wait for the feature image upload to return 200 from the server before saving
     const waitForUploadPromise = page.waitForResponse('**/api/upload');
 
+    // Select a feature image
     const drawerButton = page.getByTestId('open-post-drawer');
     await drawerButton.click();
 
@@ -34,37 +66,64 @@ test('it should be possible to save', async ({ page }) => {
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(path.join(__dirname, '/fixtures/feature-image.png'));
 
-    await waitForUploadPromise;
+    // Make sure the feature image was uploaded before saving the post
+    // Check that the feature image upload returns 200
+    expect((await waitForUploadPromise).status()).toBe(200);
 
-    const waitForSavePromise = page.waitForResponse('**/api/posts/2?populate=feature_image');
+    // Prepare a promise before pressing the save shortcut
+    const waitForSavePromise = page.waitForResponse(`**/api/posts/${postId}?populate=feature_image`);
 
+    // Save the new post with a feature image
     await page.keyboard.down('Control');
     await page.keyboard.press('s');
-    
-    await waitForSavePromise;
-})
 
+    // Check that the post was saved successfully
+    const saveNotificationTitle = page.locator('#toast-1-title');
+    await saveNotificationTitle.waitFor(); // Wait for the toast to appear
+    expect(saveNotificationTitle).toBeVisible();
+    expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
 
-test('the saved image should be visible in the drawer and can be deleted', async ({ page }) => {
-    await page.goto('/posts/2');
+    // Check that the update post request returns 200
+    expect((await waitForSavePromise).status()).toBe(200);
+  })
 
+  test('the saved image should be visible in the drawer and can be deleted', async ({ page, request }) => {
+    // Prepare existing post that has a feature image
+    const postId = await createPostWithFeatureImage(page, request);
+    if (postId) {
+      // Store the post id to delete after the test
+      postIdsToDelete.push(postId);
+    }
+
+    // Open the post
+    await page.goto(`/posts/${postId}`);
     await page.getByTestId('open-post-drawer').click();
 
-    const image = page.getByTestId('feature-image');
-    expect(image).toBeVisible();
+    // Check that saved feature image is visible in the drawer
+    expect(page.getByTestId('feature-image')).toBeVisible();
 
+    // Check that it's possible to delete the feature image
     const deleteImageButton = page.getByTestId('delete-feature-image');
     await deleteImageButton.click();
 
-    const nextPromise = page.waitForResponse('**/api/posts/2?populate=feature_image');
-
+    // Prepare a promise before pressing the save shortcut
+    const nextPromise = page.waitForResponse(`**/api/posts/${postId}?populate=feature_image`);
     await page.keyboard.down('Control');
     await page.keyboard.press('s');
 
-    await nextPromise;
+    // Wait for the save notification to appear
+    const saveNotificationTitle = page.locator('#toast-1-title');
+    await saveNotificationTitle.waitFor(); // Wait for the toast to appear
+    expect(saveNotificationTitle).toBeVisible();
+    expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
 
-    await page.goto('/posts/2');
+    // Check that the update post request returns 200
+    expect((await nextPromise).status()).toBe(200);
+
+    // Check that deleted image has dissapeared from the drawer
+    await page.goto(`/posts/${postId}`);
     await page.getByTestId('open-post-drawer').click();
-
-    expect(image).not.toBeVisible();
+    expect(page.getByTestId('feature-image')).not.toBeVisible();
+  });
 })
+
