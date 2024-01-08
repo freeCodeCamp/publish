@@ -87,8 +87,9 @@ test.describe('feature image', () => {
     expect((await waitForSavePromise).status()).toBe(200);
   })
 
-  // TODO: Fix failure due to timeout
-  test.skip('the saved image should be visible in the drawer and can be deleted', async ({ page, request }) => {
+  test('the saved image should be visible in the drawer and can be deleted', async ({ page, request }) => {
+    test.slow(); // TODO: Investigate if it is a pure timeout or there is another issue
+
     // Prepare existing post that has a feature image
     const postId = await createPostWithFeatureImage(page, request);
     if (postId) {
