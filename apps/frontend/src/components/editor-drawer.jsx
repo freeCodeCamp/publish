@@ -64,6 +64,8 @@ const EditorDrawer = ({
 
   const [authorName, setAuthorName] = useState("");
 
+  const toast = useToast();
+
   useEffect(() => {
     if (post) {
       const { tags } = post.attributes;
