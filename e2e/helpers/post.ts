@@ -27,7 +27,7 @@ export function getPostIdInURL(page: Page) {
   return postId;
 }
 
-export async function createPostWithFeatureImage(page: Page, request: APIRequestContext) {
+export async function createPost(request: APIRequestContext) {
   // Create a new post via API
   const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const timestamp = Date.now();
@@ -44,9 +44,15 @@ export async function createPostWithFeatureImage(page: Page, request: APIRequest
       }
     },
   });
-  const postId = (await createPostRes.json()).data.id;
+  return (await createPostRes.json()).data.id;
+}
+
+export async function createPostWithFeatureImage(request: APIRequestContext) {
+  // Create a new post via API
+  const postId = await createPost(request);
 
   // Attach a feature image to the post
+  const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const formData = new FormData();
   const image = fs.createReadStream(path.join(__dirname, '..', 'fixtures', 'feature-image.png'));
   formData.append('files', image);

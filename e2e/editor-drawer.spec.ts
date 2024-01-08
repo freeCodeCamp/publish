@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import path from 'path';
 
-import { deletePost, getPostIdInURL, createPostWithFeatureImage } from "./helpers/post";
+import { deletePost, getPostIdInURL, createPost, createPostWithFeatureImage } from "./helpers/post";
 
 test.describe('feature image', () => {
   let postIdsToDelete: string[] = [];
@@ -14,25 +14,22 @@ test.describe('feature image', () => {
   })
 
   test('it should be possible to save without a feature image', async ({ page, request }) => {
-    // Open a new post
-    await page.goto('/posts');
-    await page.getByRole('button', { name: 'New post' }).click();
-    await page.waitForURL(/.*\/posts\/\d+/);
-    // Store the post id to delete after the test
-    const postId = getPostIdInURL(page);
+    // Prepare post
+    const postId = await createPost(request);
     if (postId) {
       // Store the post id to delete after the test
       postIdsToDelete.push(postId);
     }
+    // Open the post
+    await page.goto(`/posts/${postId}`);
 
-  // Save the new post without adding a feature image
+    // Save the new post without adding a feature image
     await page.keyboard.down('Control');
     await page.keyboard.press('s');
 
     // Check that the post was saved successfully
     const saveNotificationTitle = page.locator('#toast-1-title');
     const saveNotificationDescription = page.locator('#toast-1-description');
-    await saveNotificationTitle.waitFor(); // Wait for the toast to appear
     expect(saveNotificationTitle).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
 
@@ -41,16 +38,14 @@ test.describe('feature image', () => {
   })
 
   test('it should be possible to save with a feature image', async ({ page, request }) => {
-    // Open a new post
-    await page.goto('/posts');
-    await page.getByRole('button', { name: 'New post' }).click();
-    await page.waitForURL(/.*\/posts\/\d+/);
-    // Store the post id to delete after the test
-    const postId = getPostIdInURL(page); // Extract the new post id from the URL
+    // Prepare post
+    const postId = await createPost(request);
     if (postId) {
       // Store the post id to delete after the test
       postIdsToDelete.push(postId);
     }
+    // Open the post
+    await page.goto(`/posts/${postId}`);
 
     // Prepare promises before clicking the button
     const fileChooserPromise = page.waitForEvent('filechooser');
@@ -79,7 +74,6 @@ test.describe('feature image', () => {
 
     // Check that the post was saved successfully
     const saveNotificationTitle = page.locator('#toast-1-title');
-    await saveNotificationTitle.waitFor(); // Wait for the toast to appear
     expect(saveNotificationTitle).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
 
@@ -88,10 +82,10 @@ test.describe('feature image', () => {
   })
 
   // TODO: Needs investigation. Fails when running all tests but passes when running individually.
-  test.skip('the saved image should be visible in the drawer and can be deleted', async ({ page, request }) => {
+  test('the saved image should be visible in the drawer and can be deleted', async ({ page, request }) => {
 
     // Prepare existing post that has a feature image
-    const postId = await createPostWithFeatureImage(page, request);
+    const postId = await createPostWithFeatureImage(request);
     if (postId) {
       // Store the post id to delete after the test
       postIdsToDelete.push(postId);
@@ -115,7 +109,6 @@ test.describe('feature image', () => {
 
     // Wait for the save notification to appear
     const saveNotificationTitle = page.locator('#toast-1-title');
-    await saveNotificationTitle.waitFor(); // Wait for the toast to appear
     expect(saveNotificationTitle).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe('Post has been updated.');
 
