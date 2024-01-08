@@ -30,7 +30,7 @@ import {
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import slugify from "slugify";
