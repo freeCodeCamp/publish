@@ -1,7 +1,6 @@
 import type { Page, APIRequestContext } from "@playwright/test";
 const path = require("path");
 const fs = require('fs');
-const mime = require('mime-types'); //used to detect file's mime type
 const fetch = require('node-fetch');
 const FormData = require('form-data');
 
@@ -27,7 +26,7 @@ export function getPostIdInURL(page: Page) {
   return postId;
 }
 
-export async function createPost(request: APIRequestContext) {
+export async function createPostWithFeatureImage(page: Page, request: APIRequestContext) {
   // Create a new post via API
   const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const timestamp = Date.now();
@@ -44,15 +43,9 @@ export async function createPost(request: APIRequestContext) {
       }
     },
   });
-  return (await createPostRes.json()).data.id;
-}
-
-export async function createPostWithFeatureImage(request: APIRequestContext) {
-  // Create a new post via API
-  const postId = await createPost(request);
+  const postId = (await createPostRes.json()).data.id;
 
   // Attach a feature image to the post
-  const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const formData = new FormData();
   const image = fs.createReadStream(path.join(__dirname, '..', 'fixtures', 'feature-image.png'));
   formData.append('files', image);
