@@ -118,7 +118,7 @@ export async function createPost(data, token) {
 }
 
 export async function updatePost(postId, data, token) {
-  const url = new URL(`/api/posts/${postId}`, base);
+  const url = new URL(`/api/posts/${postId}?populate=feature_image`, base);
 
   const options = {
     method: "PUT",
