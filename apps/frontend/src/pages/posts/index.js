@@ -129,10 +129,14 @@ export async function getServerSideProps(context) {
           },
         })
       : getUserPosts(session.user.jwt, {
+          publicationState: "preview",
           fields: ["id", "title", "slug", "publishedAt", "updatedAt"],
           populate: ["author", "tags"],
           filters: {
             author: session.user.id,
+            publishedAt: {
+              $notNull: false,
+            },
             ...queryHandler(context.query),
           },
           sort: sortHandler(context.query.sortBy),
@@ -524,9 +528,11 @@ export default function IndexPage({
                   new Date(),
                 );
                 const status = post.attributes.publishedAt ? (
-                  <Badge>Published</Badge>
+                  <Badge data-testid="published-badge">Published</Badge>
                 ) : (
-                  <Badge colorScheme="pink">Draft</Badge>
+                  <Badge data-testid="draft-badge" colorScheme="pink">
+                    Draft
+                  </Badge>
                 );
                 return (
                   <Tr
@@ -601,7 +607,10 @@ export default function IndexPage({
               />
             </Box>
             <Menu ml="auto">
-              <FilterButton text={resultsPerPage} />
+              <FilterButton
+                text={resultsPerPage}
+                data-testid="results-per-page"
+              />
               <MenuList>
                 <MenuOptionGroup
                   value={resultsPerPage}

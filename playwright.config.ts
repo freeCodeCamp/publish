@@ -35,6 +35,7 @@ export default defineConfig({
     { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
       name: "chromium",
+      testIgnore: "e2e/contributor/**",
       use: {
         ...devices["Desktop Chrome"],
         storageState: "playwright/.auth/editor.json",
@@ -44,6 +45,7 @@ export default defineConfig({
 
     {
       name: "firefox",
+      testIgnore: "e2e/contributor/**",
       use: {
         ...devices["Desktop Firefox"],
         storageState: "playwright/.auth/editor.json",
@@ -53,9 +55,40 @@ export default defineConfig({
 
     {
       name: "webkit",
+      testIgnore: "e2e/contributor/**",
       use: {
         ...devices["Desktop Safari"],
         storageState: "playwright/.auth/editor.json",
+      },
+      dependencies: ["setup"],
+    },
+
+    {
+      name: "chromium-contributor",
+      testDir: "e2e/contributor",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "playwright/.auth/contributor.json",
+      },
+      dependencies: ["setup"],
+    },
+
+    {
+      name: "firefox-contributor",
+      testDir: "e2e/contributor",
+      use: {
+        ...devices["Desktop Firefox"],
+        storageState: "playwright/.auth/contributor.json",
+      },
+      dependencies: ["setup"],
+    },
+
+    {
+      name: "webkit-contributor",
+      testDir: "e2e/contributor",
+      use: {
+        ...devices["Desktop Safari"],
+        storageState: "playwright/.auth/contributor.json",
       },
       dependencies: ["setup"],
     },
