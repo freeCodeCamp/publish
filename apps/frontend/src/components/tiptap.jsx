@@ -1,6 +1,7 @@
 import {
   faBold,
   faCode,
+  faFileCode,
   faHeader,
   faImage,
   faItalic,
@@ -241,7 +242,7 @@ function ToolBar({ editor, user }) {
           iconSpacing={0}
           title="Select embed content"
           aria-label="Select embed content"
-          leftIcon={<FontAwesomeIcon icon={faCode} />}
+          leftIcon={<FontAwesomeIcon icon={faFileCode} />}
           variant="ghost"
         />
         <MenuList>
