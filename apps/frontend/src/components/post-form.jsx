@@ -316,7 +316,7 @@ const PostForm = ({ tags, user, authors, post }) => {
                           >
                             <Input
                               {...field}
-                              placeholder="title"
+                              placeholder="Title"
                               data-testid="post-title-field"
                               required
                             />
