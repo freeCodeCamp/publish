@@ -90,7 +90,7 @@ export default function PreviewArticlePage({ post }) {
 
   return (
     <>
-      <Box m="0rem auto" w="100vh" pt="5rem">
+      <Box m="0rem auto" w="100%" maxW="1060px" pt="5rem" px="4vw">
         <Text fontSize="xxx-large" fontWeight="bold">
           {post?.title}
         </Text>
