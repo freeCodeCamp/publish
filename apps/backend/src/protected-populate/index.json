@@ -1,1 +1,688 @@
-{}
+{
+  "GET /api/posts": {
+    "content-type": "api::post.post",
+    "roles": {
+      "public": {},
+      "authenticated": {
+        "fields": [
+          "title",
+          "slug",
+          "body",
+          "excerpt",
+          "scheduled_at",
+          "ghost_id",
+          "codeinjection_head",
+          "codeinjection_foot",
+          "slug_id",
+          "createdAt",
+          "updatedAt",
+          "id",
+          "publishedAt"
+        ],
+        "populate": {
+          "feature_image": {
+            "fields": ["url", "id"],
+            "populate": {}
+          },
+          "tags": {
+            "fields": [
+              "name",
+              "slug",
+              "visibility",
+              "ghost_id",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ]
+          },
+          "author": {
+            "fields": [
+              "email",
+              "provider",
+              "confirmed",
+              "blocked",
+              "slug",
+              "name",
+              "bio",
+              "website",
+              "location",
+              "facebook",
+              "twitter",
+              "last_seen",
+              "ghost_id",
+              "status",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ],
+            "populate": {
+              "role": {
+                "fields": [
+                  "name",
+                  "description",
+                  "type",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ]
+              },
+              "profile_image": {
+                "fields": [
+                  "name",
+                  "alternativeText",
+                  "caption",
+                  "width",
+                  "height",
+                  "formats",
+                  "hash",
+                  "ext",
+                  "mime",
+                  "size",
+                  "url",
+                  "previewUrl",
+                  "provider",
+                  "provider_metadata",
+                  "folderPath",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "contributor": {
+        "fields": [
+          "title",
+          "slug",
+          "body",
+          "excerpt",
+          "scheduled_at",
+          "ghost_id",
+          "codeinjection_foot",
+          "codeinjection_head",
+          "slug_id",
+          "createdAt",
+          "updatedAt",
+          "id",
+          "publishedAt"
+        ],
+        "populate": {
+          "feature_image": {
+            "fields": ["url", "id"]
+          },
+          "tags": {
+            "fields": [
+              "name",
+              "slug",
+              "visibility",
+              "ghost_id",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ]
+          },
+          "author": {
+            "fields": [
+              "name",
+              "slug",
+              "bio",
+              "website",
+              "location",
+              "facebook",
+              "twitter",
+              "last_seen",
+              "ghost_id",
+              "status",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ],
+            "populate": {
+              "profile_image": {
+                "fields": ["url"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "GET /api/posts/:id": {
+    "content-type": "api::post.post",
+    "roles": {
+      "public": {},
+      "authenticated": {
+        "fields": [
+          "title",
+          "slug",
+          "body",
+          "excerpt",
+          "scheduled_at",
+          "ghost_id",
+          "codeinjection_head",
+          "codeinjection_foot",
+          "slug_id",
+          "createdAt",
+          "updatedAt",
+          "id",
+          "publishedAt"
+        ],
+        "populate": {
+          "feature_image": {
+            "fields": ["url", "id"],
+            "populate": {}
+          },
+          "tags": {
+            "fields": [
+              "name",
+              "slug",
+              "visibility",
+              "ghost_id",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ]
+          },
+          "author": {
+            "fields": [
+              "email",
+              "provider",
+              "confirmed",
+              "blocked",
+              "slug",
+              "name",
+              "bio",
+              "website",
+              "location",
+              "facebook",
+              "twitter",
+              "last_seen",
+              "ghost_id",
+              "status",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ],
+            "populate": {
+              "role": {
+                "fields": [
+                  "name",
+                  "description",
+                  "type",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ]
+              },
+              "profile_image": {
+                "fields": [
+                  "name",
+                  "alternativeText",
+                  "caption",
+                  "width",
+                  "height",
+                  "formats",
+                  "hash",
+                  "ext",
+                  "mime",
+                  "size",
+                  "url",
+                  "previewUrl",
+                  "provider",
+                  "provider_metadata",
+                  "folderPath",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "contributor": {
+        "fields": [
+          "title",
+          "slug",
+          "body",
+          "excerpt",
+          "scheduled_at",
+          "ghost_id",
+          "codeinjection_foot",
+          "codeinjection_head",
+          "slug_id",
+          "createdAt",
+          "updatedAt",
+          "id",
+          "publishedAt"
+        ],
+        "populate": {
+          "feature_image": {
+            "fields": ["url", "id"]
+          },
+          "tags": {
+            "fields": [
+              "name",
+              "slug",
+              "visibility",
+              "ghost_id",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ]
+          },
+          "author": {
+            "fields": [
+              "name",
+              "slug",
+              "bio",
+              "website",
+              "location",
+              "facebook",
+              "twitter",
+              "last_seen",
+              "ghost_id",
+              "status",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ],
+            "populate": {
+              "profile_image": {
+                "fields": ["url"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "GET /api/posts/slug_id/:slug_id": {
+    "content-type": "api::post.post",
+    "roles": {
+      "public": {},
+      "authenticated": {
+        "fields": [
+          "title",
+          "slug",
+          "body",
+          "excerpt",
+          "scheduled_at",
+          "ghost_id",
+          "codeinjection_head",
+          "codeinjection_foot",
+          "slug_id",
+          "createdAt",
+          "updatedAt",
+          "id",
+          "publishedAt"
+        ],
+        "populate": {
+          "feature_image": {
+            "fields": ["url", "id"],
+            "populate": {}
+          },
+          "tags": {
+            "fields": [
+              "name",
+              "slug",
+              "visibility",
+              "ghost_id",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ]
+          },
+          "author": {
+            "fields": [
+              "email",
+              "provider",
+              "confirmed",
+              "blocked",
+              "slug",
+              "name",
+              "bio",
+              "website",
+              "location",
+              "facebook",
+              "twitter",
+              "last_seen",
+              "ghost_id",
+              "status",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ],
+            "populate": {
+              "role": {
+                "fields": [
+                  "name",
+                  "description",
+                  "type",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ]
+              },
+              "profile_image": {
+                "fields": [
+                  "name",
+                  "alternativeText",
+                  "caption",
+                  "width",
+                  "height",
+                  "formats",
+                  "hash",
+                  "ext",
+                  "mime",
+                  "size",
+                  "url",
+                  "previewUrl",
+                  "provider",
+                  "provider_metadata",
+                  "folderPath",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "contributor": {
+        "fields": [
+          "title",
+          "slug",
+          "body",
+          "excerpt",
+          "scheduled_at",
+          "ghost_id",
+          "codeinjection_foot",
+          "codeinjection_head",
+          "slug_id",
+          "createdAt",
+          "updatedAt",
+          "id",
+          "publishedAt"
+        ],
+        "populate": {
+          "feature_image": {
+            "fields": ["url", "id"]
+          },
+          "tags": {
+            "fields": [
+              "name",
+              "slug",
+              "visibility",
+              "ghost_id",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ]
+          },
+          "author": {
+            "fields": [
+              "name",
+              "slug",
+              "bio",
+              "website",
+              "location",
+              "facebook",
+              "twitter",
+              "last_seen",
+              "ghost_id",
+              "status",
+              "createdAt",
+              "updatedAt",
+              "id"
+            ],
+            "populate": {
+              "profile_image": {
+                "fields": ["url"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "GET /api/tags": {
+    "content-type": "api::tag.tag",
+    "roles": {
+      "public": {},
+      "authenticated": {
+        "populate": {
+          "posts": {
+            "fields": [
+              "title",
+              "slug",
+              "body",
+              "excerpt",
+              "scheduled_at",
+              "ghost_id",
+              "codeinjection_head",
+              "codeinjection_foot",
+              "slug_id",
+              "createdAt",
+              "updatedAt",
+              "id",
+              "publishedAt"
+            ],
+            "populate": {
+              "feature_image": {
+                "fields": ["url", "id"]
+              },
+              "author": {
+                "fields": [
+                  "name",
+                  "bio",
+                  "website",
+                  "location",
+                  "facebook",
+                  "twitter",
+                  "last_seen",
+                  "ghost_id",
+                  "status",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ],
+                "populate": {
+                  "profile_image": {
+                    "fields": ["url", "id"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fields": [
+          "name",
+          "slug",
+          "visibility",
+          "ghost_id",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ]
+      },
+      "contributor": {
+        "populate": {
+          "posts": {
+            "fields": [
+              "title",
+              "slug",
+              "body",
+              "excerpt",
+              "scheduled_at",
+              "ghost_id",
+              "codeinjection_head",
+              "codeinjection_foot",
+              "slug_id",
+              "createdAt",
+              "updatedAt",
+              "id",
+              "publishedAt"
+            ],
+            "populate": {
+              "feature_image": {
+                "fields": ["url", "id"]
+              },
+              "author": {
+                "fields": [
+                  "name",
+                  "bio",
+                  "website",
+                  "location",
+                  "facebook",
+                  "twitter",
+                  "last_seen",
+                  "ghost_id",
+                  "status",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ],
+                "populate": {
+                  "profile_image": {
+                    "fields": ["url", "id"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fields": [
+          "name",
+          "slug",
+          "visibility",
+          "ghost_id",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ]
+      }
+    }
+  },
+  "GET /api/tags/:id": {
+    "content-type": "api::tag.tag",
+    "roles": {
+      "public": {},
+      "authenticated": {
+        "populate": {
+          "posts": {
+            "fields": [
+              "title",
+              "slug",
+              "body",
+              "excerpt",
+              "scheduled_at",
+              "ghost_id",
+              "codeinjection_head",
+              "codeinjection_foot",
+              "slug_id",
+              "createdAt",
+              "updatedAt",
+              "id",
+              "publishedAt"
+            ],
+            "populate": {
+              "feature_image": {
+                "fields": ["url", "id"]
+              },
+              "author": {
+                "fields": [
+                  "name",
+                  "bio",
+                  "website",
+                  "location",
+                  "facebook",
+                  "twitter",
+                  "last_seen",
+                  "ghost_id",
+                  "status",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ],
+                "populate": {
+                  "profile_image": {
+                    "fields": ["url", "id"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fields": [
+          "name",
+          "slug",
+          "visibility",
+          "ghost_id",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ]
+      },
+      "contributor": {
+        "populate": {
+          "posts": {
+            "fields": [
+              "title",
+              "slug",
+              "body",
+              "excerpt",
+              "scheduled_at",
+              "ghost_id",
+              "codeinjection_head",
+              "codeinjection_foot",
+              "slug_id",
+              "createdAt",
+              "updatedAt",
+              "id",
+              "publishedAt"
+            ],
+            "populate": {
+              "feature_image": {
+                "fields": ["url", "id"]
+              },
+              "author": {
+                "fields": [
+                  "name",
+                  "bio",
+                  "website",
+                  "location",
+                  "facebook",
+                  "twitter",
+                  "last_seen",
+                  "ghost_id",
+                  "status",
+                  "createdAt",
+                  "updatedAt",
+                  "id"
+                ],
+                "populate": {
+                  "profile_image": {
+                    "fields": ["url", "id"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fields": [
+          "name",
+          "slug",
+          "visibility",
+          "ghost_id",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ]
+      }
+    }
+  }
+}
