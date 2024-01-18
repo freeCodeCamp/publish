@@ -108,7 +108,7 @@ export const authOptions = {
         if (res2.ok) {
           const userData = await res2.json();
           // Add the role name to session JWT
-          token.name = userData?.username || null;
+          token.name = userData?.name || null;
           token.userRole = userData?.role?.name || null;
           token.id = userData?.id || null;
           if (userData.profile_image !== null) {

@@ -1,6 +1,7 @@
 import {
   faBold,
   faCode,
+  faFileCode,
   faHeader,
   faImage,
   faItalic,
@@ -142,8 +143,8 @@ function ToolBar({ editor, user }) {
         <MenuButton
           as={Button}
           variant="ghost"
-          title="select heading text"
-          aria-label="select heading text"
+          title="Select heading text"
+          aria-label="Select heading text"
           iconSpacing={0}
           leftIcon={<FontAwesomeIcon icon={faHeader} />}
         />
@@ -153,7 +154,7 @@ function ToolBar({ editor, user }) {
               editor.chain().focus().toggleHeading({ level: 1 }).run()
             }
           >
-            Add heading 1
+            Heading 1
           </MenuItem>
 
           <MenuItem
@@ -161,7 +162,7 @@ function ToolBar({ editor, user }) {
               editor.chain().focus().toggleHeading({ level: 2 }).run()
             }
           >
-            Add heading 2
+            Heading 2
           </MenuItem>
 
           <MenuItem
@@ -169,7 +170,7 @@ function ToolBar({ editor, user }) {
               editor.chain().focus().toggleHeading({ level: 3 }).run()
             }
           >
-            Add heading 3
+            Heading 3
           </MenuItem>
 
           <MenuItem
@@ -177,21 +178,21 @@ function ToolBar({ editor, user }) {
               editor.chain().focus().toggleHeading({ level: 4 }).run()
             }
           >
-            Add heading 4
+            Heading 4
           </MenuItem>
           <MenuItem
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 5 }).run()
             }
           >
-            Add heading 5
+            Heading 5
           </MenuItem>
           <MenuItem
             onClick={() =>
               editor.chain().focus().toggleHeading({ level: 6 }).run()
             }
           >
-            Add heading 6
+            Heading 6
           </MenuItem>
         </MenuList>
       </Menu>
@@ -241,7 +242,7 @@ function ToolBar({ editor, user }) {
           iconSpacing={0}
           title="Select embed content"
           aria-label="Select embed content"
-          leftIcon={<FontAwesomeIcon icon={faCode} />}
+          leftIcon={<FontAwesomeIcon icon={faFileCode} />}
           variant="ghost"
         />
         <MenuList>

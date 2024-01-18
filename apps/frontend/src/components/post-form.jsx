@@ -247,109 +247,128 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   return (
     <>
-      <Flex>
-        <Flex flexDirection="column" mr="1rem" maxWidth="100%" flex="4">
-          <Flex m="1rem 0 0 5rem">
-            <Box>
-              <Button
-                variant="link"
-                as={NextLink}
-                href="/posts/"
-                leftIcon={<FontAwesomeIcon size="lg" icon={faChevronLeft} />}
-              >
-                <Text fontSize="2xl">Posts</Text>
-              </Button>
-            </Box>
-            <Box ml="auto" display={"flex"}>
-              {isEditor(user) && (
-                <ScheduleMenu handleSubmit={handleSubmit} post={post} />
-              )}
-              <EditorDrawer
-                tags={tags}
-                authors={authors}
-                user={user}
-                post={post}
-                postTagId={postTagId}
-                title={title}
-                postUrl={postUrl}
-                featureImage={featureImage}
-                handleTitleChange={handleTitleChange}
-                handlePostUrlChange={handlePostUrlChange}
-                handleAuthorChange={handleAuthorChange}
-                handleUnsavedChanges={handleUnsavedChanges}
-                handleFeatureImageChange={handleFeatureImageChange}
-                handlePostTagId={handlePostTagId}
-                handleSubmit={handleSubmit}
-              />
-            </Box>
-          </Flex>
-          <Flex m="1rem 0 0 5rem" flexDir={{ base: "column", lg: "row" }}>
-            {!isEditingTitle ? (
-              <>
-                <Stack direction="row" onClick={() => setIsEditingTitle(true)}>
-                  <Text fontSize="2xl" data-testid="post-title">
-                    {title}
-                  </Text>
-                  <Text fontSize="2xl">
-                    <FontAwesomeIcon icon={faEdit} />
-                  </Text>
-                </Stack>
-              </>
-            ) : (
-              <Formik
-                initialValues={{ title: title }}
-                onSubmit={(values, actions) => {
-                  setTitle(values.title);
-                  setIsEditingTitle(false);
-                  actions.setSubmitting(false);
-                  setUnsavedChanges(true);
-                }}
-              >
-                {(props) => (
-                  <Form style={{ width: "100%" }}>
-                    <Stack direction={{ base: "column", lg: "row" }}>
-                      <Field name="title">
-                        {({ field, form }) => (
-                          <FormControl
-                            w="30%"
-                            isInvalid={form.errors.title && form.touched.title}
-                          >
-                            <Input
-                              {...field}
-                              placeholder="title"
-                              data-testid="post-title-field"
-                              required
-                            />
-                            <FormErrorMessage>
-                              {form.errors.title}
-                            </FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
-                      <Button
-                        colorScheme="blue"
-                        isLoading={props.isSubmitting}
-                        type="submit"
-                        w="15%"
-                        margin={{ base: "0 0 1rem 0" }}
-                      >
-                        Done
-                      </Button>
-                    </Stack>
-                  </Form>
-                )}
-              </Formik>
+      <Flex
+        flexDirection="column"
+        m="0 1rem"
+        h="100vh"
+        maxWidth="100%"
+        flex="4"
+      >
+        <Flex m="1rem auto 0 auto" w="100%">
+          <Box>
+            <Button
+              variant="link"
+              as={NextLink}
+              href="/posts/"
+              leftIcon={<FontAwesomeIcon size="lg" icon={faChevronLeft} />}
+            >
+              <Text fontSize="2xl">Posts</Text>
+            </Button>
+          </Box>
+          <Box ml="auto" display={"flex"}>
+            {isEditor(user) && (
+              <ScheduleMenu handleSubmit={handleSubmit} post={post} />
             )}
-          </Flex>
-          <Box p="0 0 0 5rem">
-            <Tiptap
-              handleContentChange={handleContentChange}
-              content={content}
+            <EditorDrawer
+              tags={tags}
+              authors={authors}
               user={user}
-              postId={postId}
+              post={post}
+              postTagId={postTagId}
+              title={title}
+              postUrl={postUrl}
+              featureImage={featureImage}
+              handleTitleChange={handleTitleChange}
+              handlePostUrlChange={handlePostUrlChange}
+              handleAuthorChange={handleAuthorChange}
+              handleUnsavedChanges={handleUnsavedChanges}
+              handleFeatureImageChange={handleFeatureImageChange}
+              handlePostTagId={handlePostTagId}
+              handleSubmit={handleSubmit}
             />
           </Box>
         </Flex>
+        <Flex
+          m="1rem auto 0 auto"
+          w="100%"
+          maxW="1060px"
+          flexDir={{ base: "column", lg: "row" }}
+        >
+          {!isEditingTitle ? (
+            <>
+              <Stack
+                w="100%"
+                maxW="1060px"
+                direction="row"
+                onClick={() => setIsEditingTitle(true)}
+              >
+                <Text
+                  fontSize="2xl"
+                  overflowWrap="break-word"
+                  wordBreak="break-word"
+                  data-testid="post-title"
+                >
+                  {title}
+                </Text>
+                <Text fontSize="2xl">
+                  <FontAwesomeIcon icon={faEdit} />
+                </Text>
+              </Stack>
+            </>
+          ) : (
+            <Formik
+              initialValues={{ title: title }}
+              onSubmit={(values, actions) => {
+                setTitle(values.title);
+                setIsEditingTitle(false);
+                actions.setSubmitting(false);
+                setUnsavedChanges(true);
+              }}
+            >
+              {(props) => (
+                <Form style={{ width: "100%" }}>
+                  <Stack direction={{ base: "column", lg: "row" }}>
+                    <Field name="title">
+                      {({ field, form }) => (
+                        <FormControl
+                          w="100%"
+                          isInvalid={form.errors.title && form.touched.title}
+                        >
+                          <Input
+                            {...field}
+                            placeholder="Title"
+                            data-testid="post-title-field"
+                            required
+                          />
+                          <FormErrorMessage>
+                            {form.errors.title}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                    <Button
+                      colorScheme="blue"
+                      isLoading={props.isSubmitting}
+                      type="submit"
+                      w="15%"
+                      margin={{ base: "0 0 1rem 0" }}
+                    >
+                      Done
+                    </Button>
+                  </Stack>
+                </Form>
+              )}
+            </Formik>
+          )}
+        </Flex>
+        <Box p="0 auto" m="0rem auto" w="100%" maxW="1060px">
+          <Tiptap
+            handleContentChange={handleContentChange}
+            content={content}
+            user={user}
+            postId={postId}
+          />
+        </Box>
       </Flex>
     </>
   );
