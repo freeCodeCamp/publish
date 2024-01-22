@@ -25,7 +25,7 @@ import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, useEditor, BubbleMenu } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
@@ -262,6 +262,60 @@ function ToolBar({ editor, user }) {
   );
 }
 
+function BubbleMenuBar({ editor }) {
+  const addLink = () => {
+    const url = window.prompt("URL");
+
+    if (url) {
+      editor.commands.setLink({ href: url, target: "_blank" });
+    }
+  };
+
+  return (
+    <BubbleMenu editor={editor}>
+      <Box
+        display="flex"
+        flexDirection="row"
+        p="0.2rem"
+        marginTop="1rem"
+        border="1px solid silver"
+        borderRadius="lg"
+        overflowX="auto"
+        id="toolbar"
+        background="white"
+      >
+        <Button
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add bold text"
+          aria-label="Add bold text"
+          leftIcon={<FontAwesomeIcon icon={faBold} />}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        />
+        <Button
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add italic text"
+          aria-label="Add italic text"
+          leftIcon={<FontAwesomeIcon icon={faItalic} />}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        />
+        <Button
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add a link"
+          aria-label="Add a link"
+          leftIcon={<FontAwesomeIcon icon={faLink} />}
+          onClick={() => addLink()}
+        />
+      </Box>
+    </BubbleMenu>
+  );
+}
+
 const Tiptap = ({ handleContentChange, user, content }) => {
   const editor = useEditor({
     extensions: [
@@ -320,6 +374,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   return (
     <>
       <ToolBar editor={editor} user={user} />
+      <BubbleMenuBar editor={editor} />
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
