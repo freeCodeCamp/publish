@@ -7,6 +7,17 @@
   pointer-events: none;
 }
 
+/* CSS for underlining links */
+.ProseMirror a {
+  text-decoration: underline !important;
+  text-decoration-color: #3eb0ef !important;
+}
+
+.ProseMirror a:hover {
+  text-decoration: underline !important;
+  text-decoration-color: #3eb0ef !important;
+}
+
 .ProseMirror {
   min-height: 75vh;
   max-height: 75vh;
