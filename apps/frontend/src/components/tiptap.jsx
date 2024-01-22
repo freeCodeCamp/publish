@@ -281,7 +281,7 @@ function BubbleMenuBar({ editor }) {
         border="1px solid silver"
         borderRadius="lg"
         overflowX="auto"
-        id="toolbar"
+        id="bubble-menu"
         background="white"
       >
         <Button
