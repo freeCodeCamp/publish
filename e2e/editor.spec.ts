@@ -32,3 +32,17 @@ test("it should be possible to edit the title", async ({ page }) => {
     const newTitle = await page.getByTestId('post-title').innerText();
     expect(newTitle).toBe('New Title');
 })
+
+test("it should have bubble menu when text is selected with 3 buttons", async ({ page }) => {
+    const bubbleMenu = page.locator('#bubble-menu');
+    await expect(bubbleMenu).not.toBeVisible();
+
+    await page.getByTestId('editor').fill('Hello World');
+    await page.getByTestId('editor').selectText();
+
+    await expect(bubbleMenu).toBeVisible();
+    await expect(bubbleMenu).toHaveCount(1);
+
+    const buttons = page.locator('#bubble-menu > button');
+    await expect(buttons).toHaveCount(3);
+});
