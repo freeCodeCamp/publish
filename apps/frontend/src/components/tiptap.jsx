@@ -374,7 +374,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   return (
     <>
       <ToolBar editor={editor} user={user} />
-      <BubbleMenuBar editor={editor} />
+      {editor && <BubbleMenuBar editor={editor} />}
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
