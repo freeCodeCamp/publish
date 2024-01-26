@@ -393,6 +393,10 @@ export default function IndexPage({
                 <FilterButton
                   text={postButtonText[postType]}
                   bgColor={filterButton}
+                  _active={{
+                    bgColor: "white",
+                    color: "black",
+                  }}
                 />
                 <MenuList zIndex={2}>
                   <MenuOptionGroup
@@ -431,6 +435,10 @@ export default function IndexPage({
                       onChange={(event) =>
                         handleShallowFilter("author", event.target.value)
                       }
+                      _focus={{
+                        bgColor: "white",
+                        color: "black",
+                      }}
                     />
                     <InputRightElement>
                       <Icon
@@ -474,6 +482,10 @@ export default function IndexPage({
                   onChange={(event) => {
                     handleShallowFilter("tags", event.target.value);
                   }}
+                  _focus={{
+                    bgColor: "white",
+                    color: "black",
+                  }}
                 />
                 <InputRightElement>
                   <Icon
@@ -502,6 +514,10 @@ export default function IndexPage({
             <FilterButton
               text={`Sort by: ${sortButtonNames[sortBy]}`}
               bgColor={filterButton}
+              _active={{
+                bgColor: "white",
+                color: "black",
+              }}
             />
             <MenuList zIndex={2}>
               <MenuOptionGroup
@@ -622,6 +638,11 @@ export default function IndexPage({
               <FilterButton
                 text={resultsPerPage}
                 data-testid="results-per-page"
+                bgColor={filterButton}
+                _active={{
+                  bgColor: "white",
+                  color: "black",
+                }}
               />
               <MenuList>
                 <MenuOptionGroup
