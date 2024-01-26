@@ -23,6 +23,7 @@ import {
   Tr,
   chakra,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   AutoComplete,
@@ -208,6 +209,11 @@ export default function IndexPage({
   const router = useRouter();
   const toast = useToast();
 
+  const bg = useColorModeValue("gray.200", "gray.700");
+  const filterButton = useColorModeValue("white", "gray.600");
+  const tableHeader = useColorModeValue("gray.100", "gray.600");
+  const tableBody = useColorModeValue("white", "gray.700");
+
   const [searchedTags, setSearchedTags] = useState([]);
   const [hasSearchedTags, setHasSearchedTags] = useState(
     queryParams?.tags ? true : false,
@@ -354,16 +360,15 @@ export default function IndexPage({
   };
 
   return (
-    <Box minH="100vh" bgColor="gray.200">
+    <Box minH="100vh" bgColor={bg}>
       <NavMenu user={user} />
-
       <Box ml={{ base: 0, md: "300px" }} px="6">
         <Flex
           alignItems="center"
           minH="20"
           position="sticky"
           top="0"
-          bgColor="gray.200"
+          bgColor={bg}
           zIndex={3}
         >
           <Heading>Posts</Heading>
@@ -385,7 +390,10 @@ export default function IndexPage({
           {isEditor(user) && (
             <>
               <Menu>
-                <FilterButton text={postButtonText[postType]} />
+                <FilterButton
+                  text={postButtonText[postType]}
+                  bgColor={filterButton}
+                />
                 <MenuList zIndex={2}>
                   <MenuOptionGroup
                     value={postType}
@@ -417,7 +425,7 @@ export default function IndexPage({
                       variant="outline"
                       placeholder="Filter by Author"
                       value={authorInputText}
-                      backgroundColor="white"
+                      bgColor={filterButton}
                       fontSize="14px"
                       fontWeight="600"
                       onChange={(event) =>
@@ -459,8 +467,8 @@ export default function IndexPage({
                 <AutoCompleteInput
                   variant="outline"
                   placeholder="Filter by Tag"
+                  bgColor={filterButton}
                   value={tagInputText}
-                  backgroundColor="white"
                   fontSize="14px"
                   fontWeight="600"
                   onChange={(event) => {
@@ -491,7 +499,10 @@ export default function IndexPage({
             </AutoComplete>
           </FormControl>
           <Menu>
-            <FilterButton text={`Sort by: ${sortButtonNames[sortBy]}`} />
+            <FilterButton
+              text={`Sort by: ${sortButtonNames[sortBy]}`}
+              bgColor={filterButton}
+            />
             <MenuList zIndex={2}>
               <MenuOptionGroup
                 value={sortBy}
@@ -510,7 +521,7 @@ export default function IndexPage({
 
         <Box pb="10">
           <Table boxShadow="md" borderWidth="1px">
-            <Thead bgColor="rgb(243, 244, 246)">
+            <Thead bgColor={tableHeader}>
               <Tr>
                 <Th>Title</Th>
                 <Th w="140px" display={{ base: "none", sm: "table-cell" }}>
@@ -518,7 +529,7 @@ export default function IndexPage({
                 </Th>
               </Tr>
             </Thead>
-            <Tbody bgColor="white">
+            <Tbody bgColor={tableBody}>
               {posts.data.map((post) => {
                 const title = post.attributes.title;
                 const name = post.attributes.author.data.attributes.name;
@@ -551,6 +562,7 @@ export default function IndexPage({
                         marginBottom=".25em"
                         _hover={{
                           background: "transparent",
+                          color: "black",
                         }}
                         _before={{
                           content: '""',
