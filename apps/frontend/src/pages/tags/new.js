@@ -13,6 +13,7 @@ import {
   Input,
   chakra,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -30,6 +31,10 @@ const Icon = chakra(FontAwesomeIcon);
 export default function CreateTag() {
   const router = useRouter();
   const toast = useToast();
+
+  const bg = useColorModeValue("gray.200", "gray.700");
+  const container = useColorModeValue("white", "gray.800");
+
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -119,16 +124,14 @@ export default function CreateTag() {
 
   if (session) {
     return (
-      <Box minH="100vh" bgColor="gray.200">
+      <Box minH="100vh" bgColor={bg}>
         <NavMenu user={user} />
-
         <Box ml={{ base: 0, md: "300px" }} px="6">
           <Flex
             alignItems="center"
             minH="20"
             position={{ md: "sticky" }}
             top="0"
-            bgColor="gray.200"
             zIndex="9999"
           >
             <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
@@ -145,7 +148,7 @@ export default function CreateTag() {
             </Breadcrumb>
           </Flex>
 
-          <Box p="4" pb="6" bgColor="white" rounded="4" boxShadow="md">
+          <Box p="4" pb="6" bgColor={container} rounded="4" boxShadow="md">
             <Formik
               initialValues={tagData}
               enableReinitialize={true}
