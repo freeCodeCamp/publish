@@ -327,7 +327,6 @@ const Tiptap = ({ handleContentChange, user, content }) => {
         <Text
           fontSize="xl"
           opacity={0.6}
-          backgroundColor="white"
           data-testid="word-count"
           padding="0.5rem"
         >
