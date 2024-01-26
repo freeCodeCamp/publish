@@ -30,11 +30,13 @@ import {
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
+  useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import slugify from "slugify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { createTag } from "@/lib/tags";
 
 const EditorDrawer = ({
   tags,
@@ -63,6 +65,8 @@ const EditorDrawer = ({
   const [tagsList, setTagsList] = useState(tags);
 
   const [authorName, setAuthorName] = useState("");
+
+  const toast = useToast();
 
   useEffect(() => {
     if (post) {
@@ -157,7 +161,7 @@ const EditorDrawer = ({
     } catch (error) {
       toast({
         title: "An error occurred.",
-        description: error,
+        description: error.message,
         status: "error",
         duration: 5000,
         isClosable: true,
