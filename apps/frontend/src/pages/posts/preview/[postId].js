@@ -7,7 +7,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 
-// import Image from "@tiptap/extension-image";
+import { Image as TiptapImage } from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 import Link from "@tiptap/extension-link";
 import { Text, Box, Image, useToast } from "@chakra-ui/react";
@@ -56,9 +56,9 @@ export default function PreviewArticlePage({ post, baseUrl }) {
         // Use a placeholder:
         placeholder: "Write something …",
       }),
-      // Image.configure({
-      //   inline: true,
-      // }),
+      TiptapImage.configure({
+        inline: true,
+      }),
       Youtube.configure({
         width: 480,
         height: 320,
