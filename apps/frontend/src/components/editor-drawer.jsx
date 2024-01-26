@@ -219,7 +219,6 @@ const EditorDrawer = ({
               w="100%"
               h="175px"
               overflow="hidden"
-              bg="#f1f5f9"
               justifyContent="center"
               alignItems="center"
             >
@@ -307,7 +306,6 @@ const EditorDrawer = ({
               <AutoCompleteInput
                 variant="outline"
                 placeholder="Filter by Tag"
-                backgroundColor="white"
                 value={postTagInputText}
                 fontSize="14px"
                 fontWeight="600"
@@ -419,7 +417,6 @@ const EditorDrawer = ({
                   <AutoCompleteInput
                     variant="outline"
                     placeholder="Filter by Author"
-                    backgroundColor="white"
                     fontSize="14px"
                     value={authorName}
                     fontWeight="600"
