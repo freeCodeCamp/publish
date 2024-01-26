@@ -28,6 +28,8 @@ import {
   faTags,
   faUser,
   faUsers,
+  faMoon,
+  faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut } from "next-auth/react";
@@ -63,11 +65,6 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   const bg = useColorModeValue("white", "gray.800");
-
-  const handleTheme = () => {
-    console.log(colorMode);
-    toggleColorMode();
-  };
 
   return (
     <Flex
@@ -123,15 +120,6 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
         </Box>
       </Box>
       <Spacer />
-      <Button
-        variant="outline"
-        mx="8px"
-        my="8px"
-        w="auto"
-        onClick={handleTheme}
-      >
-        Light Mode
-      </Button>
       <Box m="0 5px">
         <Menu>
           <MenuButton
@@ -167,6 +155,17 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             </Flex>
           </MenuButton>
           <MenuList>
+            <MenuItem
+              icon={
+                <Icon
+                  icon={colorMode === "light" ? faMoon : faSun}
+                  fixedWidth
+                />
+              }
+              onClick={toggleColorMode}
+            >
+              {colorMode === "light" ? "Dark Mode" : "Light Mode"}
+            </MenuItem>
             <MenuItem
               icon={<Icon icon={faUser} fixedWidth />}
               as={NextLink}
