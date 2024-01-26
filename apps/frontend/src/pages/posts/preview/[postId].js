@@ -110,6 +110,7 @@ export default function PreviewArticlePage({ post, baseUrl }) {
           {post.feature_image.data ? (
             <Image
               src={baseUrl + post.feature_image.data.attributes.url}
+              alt="Post Image"
               w="100%"
               h="auto"
               maxH="500px"
