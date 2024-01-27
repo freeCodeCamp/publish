@@ -30,20 +30,20 @@ const theme = extendTheme(
   withProse({
     baseStyle: {
       h1: {
-        marginTop: 0,
-        marginBottom: "2rem",
+        mt: 0,
+        mb: "2rem",
       },
       h2: {
-        marginTop: 0,
-        marginBottom: "1.5rem",
+        mt: 0,
+        mb: "1.5rem",
       },
       h3: {
-        marginTop: 0,
-        marginBottom: "1rem",
+        mt: 0,
+        mb: "1rem",
       },
       h4: {
-        marginTop: 0,
-        marginBottom: "0.5rem",
+        mt: 0,
+        mb: "0.5rem",
       },
       h5: {
         margin: 0,
