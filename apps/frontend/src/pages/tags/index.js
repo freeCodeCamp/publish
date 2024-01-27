@@ -12,6 +12,7 @@ import {
   Tr,
   useRadio,
   useRadioGroup,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { getServerSession } from "next-auth/next";
 import NextLink from "next/link";
@@ -51,8 +52,11 @@ export async function getServerSideProps(context) {
 }
 
 const TagsTableBody = (tags, router) => {
+  const tableBody = useColorModeValue("white", "gray.700");
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
+
   return (
-    <Tbody bgColor="white">
+    <Tbody bgColor={tableBody}>
       {tags.map((tag) => {
         const name = tag.attributes.name;
         const slug = tag.attributes.slug;
@@ -63,7 +67,7 @@ const TagsTableBody = (tags, router) => {
             key={tag.id}
             cursor="pointer"
             _hover={{
-              bgColor: "rgb(243, 244, 246)",
+              bgColor: hoverBgColor,
             }}
             onClick={() => router.push(`/tags/${tag.id}`)}
           >
@@ -91,23 +95,23 @@ const TagsTableBody = (tags, router) => {
 
 const TagFilterButton = ({ tagType, ...radioProps }) => {
   const { getInputProps, getRadioProps } = useRadio(radioProps);
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
+  const activeBgColor = useColorModeValue("white", "gray.500");
 
   return (
     <Button
       as="label"
-      bgColor="white"
       fontSize="14px"
-      boxShadow="sm"
       cursor="pointer"
-      borderRight="1px solid"
       borderColor="gray.200"
       borderLeftRadius={radioProps.value === "public" ? "md" : "none"}
       borderRightRadius={radioProps.value === "public" ? "none" : "md"}
       _hover={{
         boxShadow: "md",
+        bgColor: hoverBgColor,
       }}
       _active={{
-        bgColor: "white",
+        bgColor: activeBgColor,
       }}
     >
       <input {...getInputProps()} />
@@ -125,6 +129,9 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
 export default function TagsIndex({ tags, isInternal, pagination, user }) {
   const router = useRouter();
 
+  const bg = useColorModeValue("gray.200", "gray.700");
+  const tableHeader = useColorModeValue("gray.100", "gray.600");
+
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: isInternal ? "internal" : "public",
     onChange: (value) => {
@@ -137,7 +144,7 @@ export default function TagsIndex({ tags, isInternal, pagination, user }) {
   });
 
   return (
-    <Box minH="100vh" bgColor="gray.200">
+    <Box minH="100vh" bgColor={bg}>
       <NavMenu user={user} />
       <Box ml={{ base: 0, md: "300px" }} px="6">
         <Flex
@@ -145,7 +152,7 @@ export default function TagsIndex({ tags, isInternal, pagination, user }) {
           minH="20"
           position={{ md: "sticky" }}
           top="0"
-          bgColor="gray.200"
+          bgColor={bg}
           zIndex="9999"
         >
           <Heading>Tags</Heading>
@@ -188,7 +195,7 @@ export default function TagsIndex({ tags, isInternal, pagination, user }) {
 
         <Box pb="10">
           <Table boxShadow="md" borderWidth="1px">
-            <Thead bgColor="rgb(243, 244, 246)">
+            <Thead bgColor={tableHeader}>
               <Tr>
                 <Th>Tag</Th>
                 <Th w="20%" display={{ base: "none", sm: "table-cell" }}>
