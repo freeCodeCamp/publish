@@ -93,6 +93,12 @@ export default function PreviewArticlePage({ post, baseUrl }) {
   return (
     <>
       <Box m="0rem auto" w="100%" maxW="1060px" pt="5rem" px="4vw">
+        <Text fontSize="xxx-large" fontWeight="bold">
+          {post?.title}
+        </Text>
+        <Text fontSize="md" color="gray.500" mb="2rem">
+          Written by {post.author.data.attributes.name}
+        </Text>
         <Box
           display="flex"
           justifyContent="center"
@@ -100,8 +106,8 @@ export default function PreviewArticlePage({ post, baseUrl }) {
           w="100%"
           h="auto"
           minW="100%"
-          minH="400px"
-          maxH="400px"
+          maxH="800px"
+          objectFit="cover"
           overflow="hidden"
           borderRadius="md"
           bgColor="gray.100"
@@ -124,13 +130,6 @@ export default function PreviewArticlePage({ post, baseUrl }) {
             </Box>
           )}
         </Box>
-        {console.log()}
-        <Text fontSize="xxx-large" fontWeight="bold">
-          {post?.title}
-        </Text>
-        <Text fontSize="md" color="gray.500" mb="2rem">
-          Written by {post.author.data.attributes.name}
-        </Text>
         <Prose>
           <EditorContent editor={editor} />
         </Prose>
