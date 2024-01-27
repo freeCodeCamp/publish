@@ -35,7 +35,7 @@ test.describe('feature image', () => {
     ]);
 
     // Wait for the new page to load
-    await newPage.waitForLoadState('load');
+    await newPage.locator('[data-testid="feature-image-preview"]').waitFor();
 
     // Check that saved feature image is visible
     expect(newPage.getByTestId('feature-image-preview')).toBeVisible();
@@ -56,7 +56,7 @@ test.describe('feature image', () => {
     ]);
 
     // Wait for the new page to load
-    await newPage.waitForLoadState('load');
+    await newPage.locator('text="No image provided"').waitFor();
 
     // Check that the preview was opened successfully
     expect(newPage.locator('text="No image provided"')).toBeVisible();
