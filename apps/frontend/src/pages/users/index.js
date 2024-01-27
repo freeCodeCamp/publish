@@ -21,6 +21,7 @@ import {
   Text,
   useDisclosure,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import intlFormatDistance from "date-fns/intlFormatDistance";
 import { Field, Form, Formik } from "formik";
@@ -67,6 +68,8 @@ export async function getServerSideProps(context) {
 
 export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const bg = useColorModeValue("gray.200", "gray.700");
+  const container = useColorModeValue("white", "gray.800");
   const toast = useToast();
   const router = useRouter();
 
@@ -156,7 +159,7 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
   };
 
   return (
-    <Box minH="100vh" bgColor="gray.200">
+    <Box minH="100vh" bgColor={bg}>
       <NavMenu user={user} />
 
       <Box ml={{ base: 0, md: "300px" }} px="6">
@@ -165,10 +168,10 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
           minH="20"
           position={{ md: "sticky" }}
           top="0"
-          bgColor="gray.200"
+          bgColor={bg}
           zIndex="999"
         >
-          <Heading>Staff users</Heading>
+          <Heading>Staff Users</Heading>
           <Spacer />
           <Button colorScheme="blue" onClick={onOpen}>
             Invite user
@@ -255,7 +258,7 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
 
         <Box pb="10" mt="4">
           <Heading size="md">Invited Users</Heading>
-          <Box my="4" boxShadow="md" bgColor="white">
+          <Box my="4" boxShadow="md" bg={container}>
             {invitedUsers.map((invitedUser) => {
               const userEmail = invitedUser.email;
               const userRole = invitedUser.role.name;
@@ -333,7 +336,7 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
           </Box>
 
           <Heading size="md">Active Users</Heading>
-          <Box my="4" boxShadow="md" bgColor="white">
+          <Box my="4" boxShadow="md" bg={container}>
             {activeUsers.map((activeUser) => {
               const userEmail = activeUser.email;
               const userRole = activeUser.role.name;
