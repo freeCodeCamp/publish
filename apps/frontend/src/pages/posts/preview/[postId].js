@@ -115,12 +115,13 @@ export default function PreviewArticlePage({ post, baseUrl }) {
         >
           {post.feature_image.data ? (
             <Image
-              src={baseUrl + post.feature_image.data.attributes.url}
+              src={new URL(post.feature_image.data.attributes.url, baseUrl)}
               alt="Post Image"
               w="100%"
               h="auto"
               maxH="500px"
               objectFit="cover"
+              data-testid="feature-image-preview"
             />
           ) : (
             <Box>
