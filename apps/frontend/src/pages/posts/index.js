@@ -213,6 +213,7 @@ export default function IndexPage({
   const filterButton = useColorModeValue("white", "gray.600");
   const tableHeader = useColorModeValue("gray.100", "gray.600");
   const tableBody = useColorModeValue("white", "gray.700");
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
 
   const [searchedTags, setSearchedTags] = useState([]);
   const [hasSearchedTags, setHasSearchedTags] = useState(
@@ -566,7 +567,7 @@ export default function IndexPage({
                     display="table-row"
                     key={post.id}
                     _hover={{
-                      bgColor: "rgb(243, 244, 246)",
+                      bgColor: hoverBgColor,
                     }}
                     position="relative"
                   >
@@ -578,7 +579,6 @@ export default function IndexPage({
                         marginBottom=".25em"
                         _hover={{
                           background: "transparent",
-                          color: "black",
                         }}
                         _before={{
                           content: '""',

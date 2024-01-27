@@ -41,7 +41,9 @@ import PostSearch from "./search-component";
 const Icon = chakra(FontAwesomeIcon);
 
 const NavMenuLink = ({ text, link, icon }) => {
-  const color = useColorModeValue("gray.800", "gray.800");
+  const color = useColorModeValue("gray.800", "white");
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.700");
+
   return (
     <a href={link}>
       <Box
@@ -49,7 +51,7 @@ const NavMenuLink = ({ text, link, icon }) => {
         fontWeight="400"
         m="2px 5px"
         _hover={{
-          bgColor: "rgb(243, 244, 246)",
+          bgColor: hoverBgColor,
           borderRadius: "5px",
           color: color,
         }}
@@ -65,6 +67,8 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   const bg = useColorModeValue("white", "gray.800");
+  const color = useColorModeValue("gray.800", "white");
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.700");
 
   return (
     <Flex
@@ -129,12 +133,12 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             mt={3}
             mb={6}
             _hover={{
-              bgColor: "rgb(243, 244, 246)",
-              color: "gray.800",
+              bgColor: hoverBgColor,
+              color: color,
             }}
             _active={{
-              bgColor: "rgb(243, 244, 246)",
-              color: "gray.800",
+              bgColor: hoverBgColor,
+              color: color,
             }}
           >
             <Flex>

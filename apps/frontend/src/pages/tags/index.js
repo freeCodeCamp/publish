@@ -53,6 +53,7 @@ export async function getServerSideProps(context) {
 
 const TagsTableBody = (tags, router) => {
   const tableBody = useColorModeValue("white", "gray.700");
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
 
   return (
     <Tbody bgColor={tableBody}>
@@ -66,8 +67,7 @@ const TagsTableBody = (tags, router) => {
             key={tag.id}
             cursor="pointer"
             _hover={{
-              color: "gray.800",
-              bgColor: "rgb(243, 244, 246)",
+              bgColor: hoverBgColor,
             }}
             onClick={() => router.push(`/tags/${tag.id}`)}
           >
@@ -95,6 +95,8 @@ const TagsTableBody = (tags, router) => {
 
 const TagFilterButton = ({ tagType, ...radioProps }) => {
   const { getInputProps, getRadioProps } = useRadio(radioProps);
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
+  const activeBgColor = useColorModeValue("white", "gray.500");
 
   return (
     <Button
@@ -106,9 +108,10 @@ const TagFilterButton = ({ tagType, ...radioProps }) => {
       borderRightRadius={radioProps.value === "public" ? "none" : "md"}
       _hover={{
         boxShadow: "md",
+        bgColor: hoverBgColor,
       }}
       _active={{
-        bgColor: "white",
+        bgColor: activeBgColor,
       }}
     >
       <input {...getInputProps()} />
