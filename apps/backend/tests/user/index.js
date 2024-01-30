@@ -3,6 +3,8 @@ const {
   deleteUser,
   getUserByRole,
   getAllRoles,
+  getUser,
+  getUserJWT,
 } = require("../helpers/helpers");
 
 // user mock data
@@ -14,6 +16,15 @@ const mockUserData = {
   confirmed: true,
   blocked: null,
 };
+
+let contributorJWT = "";
+let editorJWT = "";
+
+beforeAll(async () => {
+  // Prepare user token
+  contributorJWT = await getUserJWT("contributor-user");
+  editorJWT = await getUserJWT("editor-user");
+});
 
 describe("user", () => {
   // Example test taken from https://docs.strapi.io/dev-docs/testing
@@ -54,5 +65,73 @@ describe("user", () => {
         },
       });
     }
+  });
+
+  describe("Contributors getting user data", () => {
+    // Due to Strapi's permission system, if we desable the /users or /users/:id endpoint,
+    // it will also disable population of the user data in other endpoints.
+    // (e.g. /posts?populate[0]=author)
+    // Therefore, we are filtering out the email field in the response
+    // instead of disabling the entire endpoint.
+
+    it("GET /users should not return email to contributors", async () => {
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/users`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      // check that email and username are not present in the response
+      expect(response.body.every((user) => !user.email && !user.username)).toBe(
+        true,
+      );
+    });
+
+    it("GET /users/:id should not return email to contributors", async () => {
+      const editorUser = await getUser("editor-user");
+
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/users/${editorUser.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${contributorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+
+      // check that email and username are not present in the response
+      expect(response.body).not.toHaveProperty("email");
+      expect(response.body).not.toHaveProperty("username");
+    });
+  });
+
+  describe("Editors getting user data", () => {
+    it("GET /users should return email to editors", async () => {
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/users`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+      expect(response.body.every((user) => user.email && !user.username)).toBe(
+        true,
+      );
+    });
+
+    it("GET /users/:id should return email to editors", async () => {
+      const contributorUser = await getUser("contributor-user");
+
+      const response = await request(strapi.server.httpServer)
+        .get(`/api/users/${contributorUser.id}`)
+        .set("Content-Type", "application/json")
+        .set("Authorization", `Bearer ${editorJWT}`)
+        .send();
+
+      expect(response.status).toBe(200);
+
+      expect(response.body).toHaveProperty("email");
+      expect(response.body).not.toHaveProperty("username");
+    });
   });
 });

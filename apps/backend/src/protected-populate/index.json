@@ -21,7 +21,7 @@
         ],
         "populate": {
           "feature_image": {
-            "fields": ["url", "id"],
+            "fields": ["url", "id", "formats"],
             "populate": {}
           },
           "tags": {
@@ -110,7 +110,7 @@
         ],
         "populate": {
           "feature_image": {
-            "fields": ["url", "id"]
+            "fields": ["url", "id", "formats"]
           },
           "tags": {
             "fields": [
@@ -171,7 +171,7 @@
         ],
         "populate": {
           "feature_image": {
-            "fields": ["url", "id"],
+            "fields": ["url", "id", "formats"],
             "populate": {}
           },
           "tags": {
@@ -260,7 +260,7 @@
         ],
         "populate": {
           "feature_image": {
-            "fields": ["url", "id"]
+            "fields": ["url", "id", "formats"]
           },
           "tags": {
             "fields": [
@@ -683,6 +683,132 @@
           "id"
         ]
       }
+    }
+  },
+  "GET /api/users": {
+    "content-type": "plugin::users-permissions.user",
+    "roles": {
+      "contributor": {
+        "fields": [
+          "provider",
+          "confirmed",
+          "blocked",
+          "slug",
+          "name",
+          "bio",
+          "website",
+          "location",
+          "facebook",
+          "twitter",
+          "last_seen",
+          "ghost_id",
+          "status",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ],
+        "populate": {
+          "role": {
+            "fields": ["name", "type", "id", "description"]
+          },
+          "profile_image": {
+            "fields": ["url"]
+          }
+        }
+      },
+      "authenticated": {
+        "fields": [
+          "email",
+          "provider",
+          "confirmed",
+          "blocked",
+          "slug",
+          "name",
+          "bio",
+          "website",
+          "location",
+          "facebook",
+          "twitter",
+          "last_seen",
+          "ghost_id",
+          "status",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ],
+        "populate": {
+          "profile_image": {
+            "fields": ["url"]
+          },
+          "role": {
+            "fields": ["name", "description", "type", "id"]
+          }
+        }
+      },
+      "public": {}
+    }
+  },
+  "GET /api/users/:id": {
+    "content-type": "plugin::users-permissions.user",
+    "roles": {
+      "contributor": {
+        "fields": [
+          "provider",
+          "confirmed",
+          "blocked",
+          "slug",
+          "name",
+          "bio",
+          "website",
+          "location",
+          "facebook",
+          "twitter",
+          "last_seen",
+          "ghost_id",
+          "status",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ],
+        "populate": {
+          "role": {
+            "fields": ["name", "type", "id", "description"]
+          },
+          "profile_image": {
+            "fields": ["url"]
+          }
+        }
+      },
+      "authenticated": {
+        "fields": [
+          "email",
+          "provider",
+          "confirmed",
+          "blocked",
+          "slug",
+          "name",
+          "bio",
+          "website",
+          "location",
+          "facebook",
+          "twitter",
+          "last_seen",
+          "ghost_id",
+          "status",
+          "createdAt",
+          "updatedAt",
+          "id"
+        ],
+        "populate": {
+          "profile_image": {
+            "fields": ["url"]
+          },
+          "role": {
+            "fields": ["name", "description", "type", "id"]
+          }
+        }
+      },
+      "public": {}
     }
   }
 }
