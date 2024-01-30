@@ -4,7 +4,7 @@ import path from 'path';
 import { deletePost, getPostIdInURL, createPostWithFeatureImage } from "./helpers/post";
 
 test.describe('feature image', () => {
-  let postIdsToDelete: string[] = [];
+  const postIdsToDelete: string[] = [];
 
   test.afterAll(async ({ request }) => {
     // delete all posts created in the tests
