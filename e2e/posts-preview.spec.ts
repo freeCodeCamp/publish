@@ -49,6 +49,6 @@ test.describe('feature image', () => {
     ]);
 
     // Check that the preview was opened successfully
-    expect(newPage.locator('text="No image provided"')).toBeVisible();
+    await expect(newPage.locator('text="No image provided"')).toBeVisible();
   });
 })
