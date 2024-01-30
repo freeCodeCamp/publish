@@ -15,7 +15,9 @@
     "develop": "turbo develop",
     "run-tools": "cd tools && docker compose up -d",
     "test": "turbo test",
-    "turbo": "turbo"
+    "turbo": "turbo",
+    "format": "prettier --write --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore .",
+    "prettier-check": "prettier --check --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore --ignore-path=.gitignore ."
   },
   "workspaces": [
     "apps/*"
