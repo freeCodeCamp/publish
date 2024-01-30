@@ -32,7 +32,7 @@ test.describe('feature image', () => {
     ]);
 
     // Check that saved feature image is visible
-    expect(newPage.getByTestId('feature-image-preview')).toBeVisible();
+    await expect(newPage.getByTestId('feature-image-preview')).toBeVisible();
   });
 
   test('preview should open without feature image', async ({ page, request }) => {
