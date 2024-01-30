@@ -16,10 +16,7 @@ test.describe('feature image', () => {
   test('feature image should be visible in preview', async ({ page, request }) => {
     // Prepare existing post that has a feature image
     const postId = await createPostWithFeatureImage(page, request);
-    if (postId) {
-      // Store the post id to delete after the test
-      postIdsToDelete.push(postId);
-    }
+    postIdsToDelete.push(postId);
 
     // Open a post
     await page.goto(`/posts/${postId}`);
