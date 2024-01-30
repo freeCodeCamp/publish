@@ -34,7 +34,7 @@ test.describe('feature image', () => {
     await expect(newPage.getByTestId('feature-image-preview')).toBeVisible();
   });
 
-  test('preview should open without feature image', async ({ page, request }) => {
+  test('preview should open without feature image', async ({ page }) => {
     // Open a post
     await page.goto('/posts/1');
 
