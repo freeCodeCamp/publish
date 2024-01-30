@@ -1,5 +1,4 @@
 import { test, expect } from "@playwright/test";
-import path from 'path';
 
 import { deletePost, getPostIdInURL, createPostWithFeatureImage } from "./helpers/post";
 
