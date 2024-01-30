@@ -49,9 +49,6 @@ test.describe('feature image', () => {
       page.getByRole('button', { name: 'Preview' }).click(),
     ]);
 
-    // Wait for the new page to load
-    await newPage.locator('text="No image provided"').waitFor();
-
     // Check that the preview was opened successfully
     expect(newPage.locator('text="No image provided"')).toBeVisible();
   });
