@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-import { deletePost, getPostIdInURL, createPostWithFeatureImage } from "./helpers/post";
+import { deletePost, createPostWithFeatureImage } from "./helpers/post";
 
 test.describe('feature image', () => {
   const postIdsToDelete: string[] = [];
