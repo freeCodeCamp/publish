@@ -1,16 +1,13 @@
 import type { Page, APIRequestContext } from "@playwright/test";
 const path = require("path");
-const fs = require('fs');
-const fetch = require('node-fetch');
-const FormData = require('form-data');
+const fs = require("fs");
+const fetch = require("node-fetch");
+const FormData = require("form-data");
 
 import { API_URL, EDITOR_CREDENTIALS } from "./constants";
 import { getBearerToken } from "./user";
 
-export async function deletePost(
-  request: APIRequestContext,
-  postId: string
-) {
+export async function deletePost(request: APIRequestContext, postId: string) {
   const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   await request.delete(`${API_URL}/api/posts/${postId}`, {
     headers: {
@@ -26,7 +23,10 @@ export function getPostIdInURL(page: Page) {
   return postId;
 }
 
-export async function createPostWithFeatureImage(page: Page, request: APIRequestContext) {
+export async function createPostWithFeatureImage(
+  page: Page,
+  request: APIRequestContext,
+) {
   // Create a new post via API
   const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const timestamp = Date.now();
@@ -38,23 +38,25 @@ export async function createPostWithFeatureImage(page: Page, request: APIRequest
       data: {
         title: `Test Post ${timestamp}`,
         slug: `test-post-${timestamp}`, // Make sure the slug is unique
-        body: 'Test post body',
-        author: [1]
-      }
+        body: "Test post body",
+        author: [1],
+      },
     },
   });
   const postId = (await createPostRes.json()).data.id;
 
   // Attach a feature image to the post
   const formData = new FormData();
-  const image = fs.createReadStream(path.join(__dirname, '..', 'fixtures', 'feature-image.png'));
-  formData.append('files', image);
-  formData.append('refId', postId);
-  formData.append('ref', 'api::post.post');
-  formData.append('field', 'feature_image');
+  const image = fs.createReadStream(
+    path.join(__dirname, "..", "fixtures", "feature-image.png"),
+  );
+  formData.append("files", image);
+  formData.append("refId", postId);
+  formData.append("ref", "api::post.post");
+  formData.append("field", "feature_image");
   // Using fetch here since Playwright's request context didn't work
-  const uploadRes = await fetch(new URL('api/upload', API_URL), {
-    method: 'POST',
+  const uploadRes = await fetch(new URL("api/upload", API_URL), {
+    method: "POST",
     headers: {
       Accept: "application/json",
       Authorization: `Bearer ${jwt}`,
