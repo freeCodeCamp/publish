@@ -31,9 +31,6 @@ test.describe('feature image', () => {
       page.getByRole('button', { name: 'Preview' }).click(),
     ]);
 
-    // Wait for the new page to load
-    await newPage.locator('[data-testid="feature-image-preview"]').waitFor();
-
     // Check that saved feature image is visible
     expect(newPage.getByTestId('feature-image-preview')).toBeVisible();
   });
