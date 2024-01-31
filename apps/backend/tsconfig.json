@@ -1,0 +1,5 @@
+{
+  // What is this doing here, we don't use TypeScript in the backend? Well, if
+  // we don't put this here, Strapi will go looking in the root, find the
+  // tsconfig.json file there and the build breaks.
+}
