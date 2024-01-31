@@ -2,4 +2,8 @@
   // What is this doing here, we don't use TypeScript in the backend? Well, if
   // we don't put this here, Strapi will go looking in the root, find the
   // tsconfig.json file there and the build breaks.
+  "compilerOptions": {
+    "skipLibCheck": true // There are a lot of errors in node_modules. Hopefully
+    // none of them matter.
+  }
 }
