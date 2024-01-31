@@ -1,0 +1,13 @@
+// Why is this called tsconfig.root not tsconfig? Because otherwise Strapi will
+// find it when checking to see if _it_ is a TypeScript project and then it will
+// break. If we migrate Strapi to TypeScript, it will find its own tsconfig and
+// this one can be named whatever we want.
+{
+  "include": ["e2e"],
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "noEmit": true,
+    "strict": true,
+    "skipLibCheck": true // Since we aren't using pnpm, there are conflicts in the types.
+  }
+}

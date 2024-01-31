@@ -21,7 +21,7 @@
     "run-tools": "cd tools && docker compose up -d",
     "test": "turbo test",
     "turbo": "turbo",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --noEmit --project tsconfig.root.json",
     "format": "prettier --write --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore .",
     "prettier-check": "prettier --check --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore --ignore-path=.gitignore ."
   },
