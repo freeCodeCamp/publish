@@ -14,7 +14,7 @@
     "build": "turbo build",
     "prepare": "husky install",
     "lint": "turbo lint --continue",
-    "eslint": "eslint \"e2e/**/*.ts\"",
+    "eslint": "eslint e2e",
     "seed": "turbo seed",
     "start": "turbo start",
     "develop": "turbo develop",
