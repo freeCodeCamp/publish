@@ -29,7 +29,9 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
-import Code from "@tiptap/extension-code";
+import { lowlight } from "lowlight";
+
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import CharacterCount from "@tiptap/extension-character-count";
 
 function ToolBar({ editor, user }) {
@@ -127,7 +129,7 @@ function ToolBar({ editor, user }) {
         title="Add code"
         aria-label="Add code"
         leftIcon={<FontAwesomeIcon icon={faCode} />}
-        onClick={() => editor.chain().focus().toggleCode().run()}
+        onClick={() => editor.commands.toggleCodeBlock()}
       />
       <Button
         variant="ghost"
@@ -295,10 +297,8 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       Markdown.configure({
         transformPastedText: true,
       }),
-      Code.configure({
-        HTMLAttributes: {
-          class: "code",
-        },
+      CodeBlockLowlight.configure({
+        lowlight,
       }),
       CharacterCount.configure({}),
     ],
