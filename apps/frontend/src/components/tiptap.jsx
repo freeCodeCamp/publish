@@ -301,6 +301,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
         transformPastedText: true,
       }),
       CodeBlockLowlight.configure({
+        defaultLanguage: "javascript",
         lowlight,
       }),
       CharacterCount.configure({}),
