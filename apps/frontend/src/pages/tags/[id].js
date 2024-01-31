@@ -20,6 +20,7 @@ import {
   chakra,
   useDisclosure,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -52,6 +53,9 @@ export default function EditTag({ tag, user }) {
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
+
+  const bg = useColorModeValue("gray.200", "gray.700");
+  const container = useColorModeValue("white", "gray.800");
 
   const [tagData, setTagData] = useState({
     name: tag.attributes.name,
@@ -143,7 +147,7 @@ export default function EditTag({ tag, user }) {
   };
 
   return (
-    <Box minH="100vh" bgColor="gray.200">
+    <Box minH="100vh" bgColor={bg}>
       <NavMenu user={user} />
 
       <Box ml={{ base: 0, md: "300px" }} px="6">
@@ -152,7 +156,7 @@ export default function EditTag({ tag, user }) {
           minH="20"
           position={{ md: "sticky" }}
           top="0"
-          bgColor="gray.200"
+          bgColor={bg}
           zIndex="999"
         >
           <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
@@ -169,7 +173,7 @@ export default function EditTag({ tag, user }) {
           </Breadcrumb>
         </Flex>
 
-        <Box p="4" pb="6" bgColor="white" rounded="4" boxShadow="md">
+        <Box p="4" pb="6" bgColor={container} rounded="4" boxShadow="md">
           <Formik
             initialValues={tagData}
             enableReinitialize={true}

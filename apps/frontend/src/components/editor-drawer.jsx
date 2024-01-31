@@ -30,11 +30,13 @@ import {
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
+  useToast,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import slugify from "slugify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
+import { createTag } from "@/lib/tags";
 
 const EditorDrawer = ({
   tags,
@@ -63,6 +65,8 @@ const EditorDrawer = ({
   const [tagsList, setTagsList] = useState(tags);
 
   const [authorName, setAuthorName] = useState("");
+
+  const toast = useToast();
 
   useEffect(() => {
     if (post) {
@@ -157,7 +161,7 @@ const EditorDrawer = ({
     } catch (error) {
       toast({
         title: "An error occurred.",
-        description: error,
+        description: error.message,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -219,7 +223,6 @@ const EditorDrawer = ({
               w="100%"
               h="175px"
               overflow="hidden"
-              bg="#f1f5f9"
               justifyContent="center"
               alignItems="center"
             >
@@ -307,7 +310,6 @@ const EditorDrawer = ({
               <AutoCompleteInput
                 variant="outline"
                 placeholder="Filter by Tag"
-                backgroundColor="white"
                 value={postTagInputText}
                 fontSize="14px"
                 fontWeight="600"
@@ -419,7 +421,6 @@ const EditorDrawer = ({
                   <AutoCompleteInput
                     variant="outline"
                     placeholder="Filter by Author"
-                    backgroundColor="white"
                     fontSize="14px"
                     value={authorName}
                     fontWeight="600"

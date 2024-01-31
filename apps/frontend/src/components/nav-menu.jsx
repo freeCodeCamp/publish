@@ -17,6 +17,8 @@ import {
   Spacer,
   chakra,
   useDisclosure,
+  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   faArrowRightFromBracket,
@@ -26,6 +28,8 @@ import {
   faTags,
   faUser,
   faUsers,
+  faMoon,
+  faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { signOut } from "next-auth/react";
@@ -37,16 +41,19 @@ import PostSearch from "./search-component";
 const Icon = chakra(FontAwesomeIcon);
 
 const NavMenuLink = ({ text, link, icon }) => {
+  const color = useColorModeValue("gray.800", "white");
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.700");
+
   return (
     <a href={link}>
       <Box
-        color="black"
         p="0.5rem 2rem"
         fontWeight="400"
         m="2px 5px"
         _hover={{
-          bgColor: "rgb(243, 244, 246)",
+          bgColor: hoverBgColor,
           borderRadius: "5px",
+          color: color,
         }}
       >
         <Icon icon={icon} fixedWidth mr="0.5rem" />
@@ -57,13 +64,19 @@ const NavMenuLink = ({ text, link, icon }) => {
 };
 
 const NavMenuContent = ({ user, onClose, ...rest }) => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  const bg = useColorModeValue("white", "gray.800");
+  const color = useColorModeValue("gray.800", "white");
+  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.700");
+
   return (
     <Flex
       flexDirection="column"
       w={{ base: "full", md: "300px" }}
       h="100%"
       pos="fixed"
-      bgColor="white"
+      bgColor={bg}
       borderRightWidth="1px"
       {...rest}
     >
@@ -116,15 +129,16 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
           <MenuButton
             as={Button}
             rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-            bgColor="white"
             w="100%"
             mt={3}
             mb={6}
             _hover={{
-              bgColor: "rgb(243, 244, 246)",
+              bgColor: hoverBgColor,
+              color: color,
             }}
             _active={{
-              bgColor: "rgb(243, 244, 246)",
+              bgColor: hoverBgColor,
+              color: color,
             }}
           >
             <Flex>
@@ -138,7 +152,6 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
                   fontWeight="400"
                   lineHeight="1.1em"
                   pb="3px"
-                  color="#54666d"
                 >
                   {user.email}
                 </Box>
@@ -146,6 +159,17 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             </Flex>
           </MenuButton>
           <MenuList>
+            <MenuItem
+              icon={
+                <Icon
+                  icon={colorMode === "light" ? faMoon : faSun}
+                  fixedWidth
+                />
+              }
+              onClick={toggleColorMode}
+            >
+              {colorMode === "light" ? "Dark Mode" : "Light Mode"}
+            </MenuItem>
             <MenuItem
               icon={<Icon icon={faUser} fixedWidth />}
               as={NextLink}

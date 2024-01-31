@@ -6,14 +6,15 @@ import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
-import Image from "@tiptap/extension-image";
+
+import { Image as TiptapImage } from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 import Link from "@tiptap/extension-link";
-import { Text, Box } from "@chakra-ui/react";
-import { useToast } from "@chakra-ui/react";
+import { Text, Box, Image, useToast } from "@chakra-ui/react";
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
+  const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
   const { params } = context;
   const { postId } = params;
@@ -24,6 +25,7 @@ export async function getServerSideProps(context) {
       props: {
         post: data.data.attributes,
         postId: postId,
+        baseUrl: apiBase,
       },
     };
   } catch (error) {
@@ -34,7 +36,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function PreviewArticlePage({ post }) {
+export default function PreviewArticlePage({ post, baseUrl }) {
   const toast = useToast();
   const toastIdRef = useRef();
 
@@ -54,7 +56,7 @@ export default function PreviewArticlePage({ post }) {
         // Use a placeholder:
         placeholder: "Write something …",
       }),
-      Image.configure({
+      TiptapImage.configure({
         inline: true,
       }),
       Youtube.configure({
@@ -94,7 +96,40 @@ export default function PreviewArticlePage({ post }) {
         <Text fontSize="xxx-large" fontWeight="bold">
           {post?.title}
         </Text>
-        <Text>Written by {post.author.data.attributes.name}</Text>
+        <Text fontSize="md" color="gray.500" mb="2rem">
+          Written by {post.author.data.attributes.name}
+        </Text>
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          w="100%"
+          h="auto"
+          minW="100%"
+          maxH="800px"
+          objectFit="cover"
+          overflow="hidden"
+          borderRadius="md"
+          bgColor="gray.100"
+          mb="2rem"
+        >
+          {post.feature_image.data ? (
+            <Image
+              src={baseUrl + post.feature_image.data.attributes.url}
+              alt="Post Image"
+              w="100%"
+              h="auto"
+              maxH="500px"
+              objectFit="cover"
+            />
+          ) : (
+            <Box>
+              <Text color="gray.400" textAlign="center">
+                No image provided
+              </Text>
+            </Box>
+          )}
+        </Box>
         <Prose>
           <EditorContent editor={editor} />
         </Prose>

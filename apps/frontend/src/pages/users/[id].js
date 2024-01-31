@@ -22,6 +22,7 @@ import {
   chakra,
   useDisclosure,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -88,6 +89,10 @@ export async function getServerSideProps(context) {
 export default function EditTag({ userData, user, roles }) {
   const router = useRouter();
   const toast = useToast();
+
+  const bg = useColorModeValue("gray.200", "gray.700");
+  const container = useColorModeValue("white", "gray.800");
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
 
@@ -162,7 +167,7 @@ export default function EditTag({ userData, user, roles }) {
   };
 
   return (
-    <Box minH="100vh" bgColor="gray.200">
+    <Box minH="100vh" bgColor={bg}>
       <NavMenu user={user} />
 
       <Box ml={{ base: 0, md: "300px" }} pb="8">
@@ -172,7 +177,7 @@ export default function EditTag({ userData, user, roles }) {
           minH="20"
           position={{ md: "sticky" }}
           top="0"
-          bgColor="gray.200"
+          bgColor={bg}
           zIndex="999"
         >
           <Breadcrumb separator={<Icon icon={faChevronRight} fixedWidth />}>
@@ -189,7 +194,7 @@ export default function EditTag({ userData, user, roles }) {
           </Breadcrumb>
         </Flex>
 
-        <Box p="4" mx="6" pb="6" bgColor="white" rounded="4" boxShadow="md">
+        <Box p="4" mx="6" pb="6" bgColor={container} rounded="4" boxShadow="md">
           <Formik
             initialValues={userData}
             enableReinitialize={true}

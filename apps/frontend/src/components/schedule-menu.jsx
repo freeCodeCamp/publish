@@ -111,7 +111,6 @@ const PublishedMenu = ({
           >
             <Text
               fontWeight={"500"}
-              color={"gray.600"}
               fontSize={"sm"}
               onClick={() => setScheduleOption("unpublished")}
             >
@@ -131,7 +130,6 @@ const PublishedMenu = ({
           >
             <Text
               fontWeight={"500"}
-              color={"gray.600"}
               fontSize={"sm"}
               onClick={() => setScheduleOption("now")}
             >
@@ -217,7 +215,6 @@ const NotPublishedMenu = ({
           >
             <Text
               fontWeight={"500"}
-              color={"gray.600"}
               fontSize={"sm"}
               onClick={() => {
                 if (isScheduled) {
@@ -243,7 +240,6 @@ const NotPublishedMenu = ({
           >
             <Text
               fontWeight={"500"}
-              color={"gray.600"}
               fontSize={"sm"}
               onClick={() => setScheduleOption("later")}
             >
@@ -264,7 +260,6 @@ const NotPublishedMenu = ({
         <Button
           mr="1rem"
           variant={"ghost"}
-          color="gray.500"
           fontWeight={"400"}
           size="sm"
           onClick={onClose}
