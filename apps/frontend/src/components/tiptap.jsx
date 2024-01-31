@@ -25,12 +25,16 @@ import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
-import { EditorContent, useEditor, BubbleMenu } from "@tiptap/react";
+import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
+import { Extension, BubbleMenu } from "@tiptap/react";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
+import { useState } from "react";
+import Tippy from "@tippyjs/react/headless";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -317,6 +321,47 @@ function BubbleMenuBar({ editor }) {
 }
 
 const Tiptap = ({ handleContentChange, user, content }) => {
+  const [isLinkHover, setIsLinkHover] = useState(false);
+  const [linkEl, setLinkEl] = useState(null);
+
+  const HoverBar = Extension.create({
+    name: "hover-bar",
+
+    addProseMirrorPlugins() {
+      return [
+        new Plugin({
+          key: new PluginKey("hover-bar"),
+          props: {
+            handleDOMEvents: {
+              mouseover: (view, event) => {
+                const target = event.target;
+                const pos = view.posAtDOM(target, 0);
+
+                if (pos === null) return false;
+
+                const node = view.state.doc.nodeAt(pos);
+                if (!node || !node.isAtom) return false;
+
+                if (
+                  target.tagName.toLowerCase() === "a" &&
+                  node.marks[0]?.type.name === "link"
+                ) {
+                  // const href = node.marks[0]?.attrs.href;
+                  console.log(event.target);
+                  setLinkEl(event.target);
+                  setIsLinkHover(true);
+                } else {
+                  console.log("out of link");
+                  setIsLinkHover(false);
+                }
+              },
+            },
+          },
+        }),
+      ];
+    },
+  });
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -355,6 +400,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
         },
       }),
       CharacterCount.configure({}),
+      HoverBar.configure({}),
     ],
     content: content ? content : "",
     autofocus: true,
@@ -374,8 +420,48 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   return (
     <>
       <ToolBar editor={editor} user={user} />
-      {editor && <BubbleMenuBar editor={editor} />}
+      {editor && <BubbleMenuBar editor={editor} isLinkHover={isLinkHover} />}
       <Prose>
+        <Tippy
+          reference={linkEl}
+          visible={isLinkHover}
+          interactive={true}
+          appendTo={() => document.body}
+          render={(attrs) => {
+            return (
+              <Box
+                p="0.2rem"
+                border="1px solid silver"
+                borderRadius="lg"
+                overflowX="auto"
+                id="bubble-menu"
+                background="white"
+                width="fit-content"
+                display={isLinkHover ? "flex" : "none"}
+                {...attrs}
+              >
+                <Button
+                  variant="ghost"
+                  iconSpacing={0}
+                  p={2}
+                  title="Add bold text"
+                  aria-label="Add bold text"
+                  leftIcon={<FontAwesomeIcon icon={faBold} />}
+                  onClick={() => editor.chain().focus().toggleBold().run()}
+                />
+                <Button
+                  variant="ghost"
+                  iconSpacing={0}
+                  p={2}
+                  title="Add italic text"
+                  aria-label="Add italic text"
+                  leftIcon={<FontAwesomeIcon icon={faItalic} />}
+                  onClick={() => editor.chain().focus().toggleItalic().run()}
+                />
+              </Box>
+            );
+          }}
+        />
         <EditorContent editor={editor} />
       </Prose>
       <Box right="50px" bottom="50px" zIndex="1" position="fixed">
