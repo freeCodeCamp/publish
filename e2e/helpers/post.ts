@@ -2,6 +2,7 @@ import type { Page, APIRequestContext } from "@playwright/test";
 import path from "path";
 import fs from "fs";
 import FormData from "form-data";
+import fetch from "node-fetch";
 
 import { API_URL, EDITOR_CREDENTIALS } from "./constants";
 import { getBearerToken } from "./user";
@@ -55,7 +56,7 @@ export async function createPostWithFeatureImage(
   formData.append("ref", "api::post.post");
   formData.append("field", "feature_image");
   // Using fetch here since Playwright's request context didn't work
-  const uploadRes = await fetch(new URL("api/upload", API_URL), {
+  await fetch(new URL("api/upload", API_URL), {
     method: "POST",
     headers: {
       Accept: "application/json",
