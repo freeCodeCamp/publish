@@ -10,9 +10,16 @@
     },
     "test": {},
     "lint": {
-      "dependsOn": ["//#prettier-check", "//#eslint", "eslint", "type-check"]
+      "dependsOn": [
+        "//#prettier-check",
+        "//#eslint",
+        "eslint",
+        "//#type-check",
+        "type-check"
+      ]
     },
     "//#prettier-check": {},
+    "//#type-check": {},
     "type-check": {},
     "//#eslint": {},
     "eslint": {},
