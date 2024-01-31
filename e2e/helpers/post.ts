@@ -1,8 +1,7 @@
 import type { Page, APIRequestContext } from "@playwright/test";
-const path = require("path");
-const fs = require("fs");
-const fetch = require("node-fetch");
-const FormData = require("form-data");
+import path from "path";
+import fs from "fs";
+import FormData from "form-data";
 
 import { API_URL, EDITOR_CREDENTIALS } from "./constants";
 import { getBearerToken } from "./user";
@@ -43,7 +42,8 @@ export async function createPostWithFeatureImage(
       },
     },
   });
-  const postId = (await createPostRes.json()).data.id;
+  const postId = ((await createPostRes.json()) as { data: { id: string } }).data
+    .id;
 
   // Attach a feature image to the post
   const formData = new FormData();

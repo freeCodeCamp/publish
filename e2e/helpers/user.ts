@@ -11,7 +11,7 @@ export async function getBearerToken(
     data,
   });
   expect(editorRes.status()).toBe(200);
-  return (await editorRes.json()).jwt;
+  return ((await editorRes.json()) as { jwt: string }).jwt;
 }
 
 async function getUsersHelper(

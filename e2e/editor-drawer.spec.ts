@@ -8,7 +8,7 @@ import {
 } from "./helpers/post";
 
 test.describe("feature image", () => {
-  let postIdsToDelete: string[] = [];
+  const postIdsToDelete: string[] = [];
 
   test.afterAll(async ({ request }) => {
     // delete all posts created in the tests
@@ -19,7 +19,6 @@ test.describe("feature image", () => {
 
   test("it should be possible to save without a feature image", async ({
     page,
-    request,
   }) => {
     // Open a new post
     await page.goto("/posts");
@@ -42,12 +41,12 @@ test.describe("feature image", () => {
     // Check that the post was saved successfully
     const saveNotificationTitle = page.locator("#toast-1-title");
     const saveNotificationDescription = page.locator("#toast-1-description");
-    expect(saveNotificationTitle).toBeVisible();
+    await expect(saveNotificationTitle).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe(
       "Post has been updated.",
     );
 
-    expect(saveNotificationDescription).toBeVisible();
+    await expect(saveNotificationDescription).toBeVisible();
     expect(await saveNotificationDescription.innerText()).toBe(
       "The post has been updated.",
     );
@@ -55,7 +54,6 @@ test.describe("feature image", () => {
 
   test("it should be possible to save with a feature image", async ({
     page,
-    request,
   }) => {
     // Open a new post
     await page.goto("/posts");
@@ -101,7 +99,7 @@ test.describe("feature image", () => {
 
     // Check that the post was saved successfully
     const saveNotificationTitle = page.locator("#toast-1-title");
-    expect(saveNotificationTitle).toBeVisible();
+    await expect(saveNotificationTitle).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe(
       "Post has been updated.",
     );
@@ -123,7 +121,7 @@ test.describe("feature image", () => {
 
     // Check that saved feature image is visible in the drawer
     await page.getByTestId("open-post-drawer").click();
-    expect(page.getByTestId("feature-image")).toBeVisible();
+    await expect(page.getByTestId("feature-image")).toBeVisible();
 
     // Check that it's possible to delete the feature image
     const deleteImageButton = page.getByTestId("delete-feature-image");
@@ -141,7 +139,7 @@ test.describe("feature image", () => {
 
     // Wait for the save notification to appear
     const saveNotificationTitle = page.locator("#toast-1-title");
-    expect(saveNotificationTitle).toBeVisible();
+    await expect(saveNotificationTitle).toBeVisible();
     expect(await saveNotificationTitle.innerText()).toBe(
       "Post has been updated.",
     );
@@ -153,6 +151,6 @@ test.describe("feature image", () => {
     await page.locator('text="Select Image"').waitFor();
 
     // Check that deleted image has dissapeared
-    expect(page.getByTestId("feature-image")).not.toBeVisible();
+    await expect(page.getByTestId("feature-image")).not.toBeVisible();
   });
 });
