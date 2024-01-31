@@ -116,3 +116,7 @@
     }
   }
 }
+
+.dark-border pre {
+  border: 2px solid #adb5bd;
+}

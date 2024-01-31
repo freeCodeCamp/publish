@@ -19,6 +19,7 @@ import {
   MenuList,
   MenuItem,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
@@ -265,6 +266,8 @@ function ToolBar({ editor, user }) {
 }
 
 const Tiptap = ({ handleContentChange, user, content }) => {
+  const { colorMode } = useColorMode();
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -306,7 +309,9 @@ const Tiptap = ({ handleContentChange, user, content }) => {
     autofocus: true,
     editorProps: {
       attributes: {
-        class: "prose focus:outline-none",
+        class: `prose focus:outline-none ${
+          colorMode === "dark" ? "dark-border" : ""
+        }`,
         "data-testid": "editor",
       },
     },
