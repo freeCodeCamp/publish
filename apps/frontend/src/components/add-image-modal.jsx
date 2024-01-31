@@ -22,11 +22,14 @@ export default function ImageModal({
   editor,
   user,
 }) {
+  // Image preview state
   const [currentImg, setCurrentImage] = useState(null);
-  //const [currentAlt, setCurrentAlt] = useState(null);
+  const [_, setCurrentAlt] = useState(null);
+  const [submitableImage, setSubmitableImage] = useState(null);
 
   const handleImagePreview = (event) => {
     setCurrentImage(URL.createObjectURL(event.target.files[0]));
+    setSubmitableImage(event.target.files);
   };
 
   const handleImageSubmit = async (event) => {
@@ -35,11 +38,10 @@ export default function ImageModal({
     const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
 
     const formData = new FormData();
-    const image = document.getElementById("add-image").files;
 
     // Handle the case where the user opts not to submit an image.
-    if (!image) return;
-    formData.append("files", image[0]);
+    if (!submitableImage) return;
+    formData.append("files", submitableImage[0]);
 
     const res = await fetch(new URL("api/upload", apiBase), {
       method: "post",
@@ -56,6 +58,11 @@ export default function ImageModal({
       src: new URL(data[0].url, apiBase),
       alt: "image",
     });
+
+    setCurrentImage(null);
+    setCurrentAlt("");
+
+    onClose();
   };
 
   return (
@@ -65,14 +72,13 @@ export default function ImageModal({
         <ModalContent>
           <ModalHeader>Add an Image</ModalHeader>
           <ModalCloseButton />
-          <Formik
-            onSubmit={(event) => {
-              handleImageSubmit(event);
-              onClose();
-            }}
-          >
-            {({ handleSubmit }) => (
-              <form onSubmit={handleSubmit}>
+          <Formik>
+            {({}) => (
+              <form
+                onSubmit={(event) => {
+                  handleImageSubmit(event);
+                }}
+              >
                 <ModalBody>
                   <Box
                     display="flex"
@@ -89,7 +95,7 @@ export default function ImageModal({
                     ) : (
                       <>
                         <label
-                          htmlFor="feature-image"
+                          htmlFor="content-image"
                           className="custom-file-upload"
                         >
                           <button
@@ -124,16 +130,18 @@ export default function ImageModal({
                     </>
                   )}
                   <Spacer height="1rem" width="100%" />
-                  <Input type="text" placeholder="Alternative Text" required />
+                  <Input
+                    type="text"
+                    placeholder="Alternative Text"
+                    onChange={(event) => {
+                      setCurrentAlt(event);
+                    }}
+                    required
+                  />
                 </ModalBody>
 
                 <ModalFooter>
-                  <Button
-                    colorScheme="blue"
-                    _disabled={!currentImg}
-                    type="submit"
-                    disabled={true}
-                  >
+                  <Button colorScheme="blue" type="submit" disabled={true}>
                     Save
                   </Button>
                   <Button
