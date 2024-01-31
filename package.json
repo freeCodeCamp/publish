@@ -23,7 +23,7 @@
     "test": "turbo test",
     "turbo": "turbo",
     "type-check": "tsc --noEmit --project e2e/tsconfig.json",
-    "format": "prettier --write --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore .",
+    "format": "prettier --write --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore --ignore-path=.gitignore .",
     "prettier-check": "prettier --check --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore --ignore-path=.gitignore ."
   },
   "workspaces": [
