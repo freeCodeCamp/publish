@@ -1,34 +1,15 @@
-import "@/styles/globals.css";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { withProse } from "@nikolovlazar/chakra-ui-prose";
+import { ChakraProvider } from "@chakra-ui/react";
+import { config } from "@fortawesome/fontawesome-svg-core";
 import { SessionProvider } from "next-auth/react";
 
-// import Font Awesome CSS
+import theme from "@/lib/theme";
+
+import "@/styles/globals.css";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 
-import { config } from "@fortawesome/fontawesome-svg-core";
 // Tell Font Awesome to skip adding the CSS automatically
 // since it's already imported above
 config.autoAddCss = false;
-const theme = extendTheme(
-  {
-    components: {
-      Table: {
-        variants: {
-          simple: {
-            th: {
-              borderColor: "gray.200",
-            },
-            td: {
-              borderColor: "gray.200",
-            },
-          },
-        },
-      },
-    },
-  },
-  withProse(),
-);
 
 export default function App({
   Component,
