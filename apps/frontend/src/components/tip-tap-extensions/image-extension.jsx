@@ -23,7 +23,7 @@ function UpdateModalAttributes({
   finalRef,
   incAlt,
   incCap,
-  updateAttributes,
+  updateAndRerender,
   id,
   jwt,
 }) {
@@ -58,7 +58,10 @@ function UpdateModalAttributes({
 
     if (updatedFileInfo.status === 200) {
       console.log("updated file info");
-      updateAttributes(fileInfo);
+      updateAndRerender({
+        alt: currentAlt,
+        title: currentCaption,
+      });
       onClose();
     } else {
       toast({
@@ -118,10 +121,12 @@ function ImageNode(props) {
   // importing caption as the title for now
   const { src, alt, id, title, jwt } = props.node.attrs;
 
-  const { updateAttributes } = props;
-
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
+
+  const updateAndRerender = (newAttrs) => {
+    props.updateAttributes(newAttrs);
+  };
 
   let className = "image add-image-form";
 
@@ -143,7 +148,7 @@ function ImageNode(props) {
         id={id}
         jwt={jwt}
         incCap={title}
-        updateAttributes={updateAttributes}
+        updateAndRerender={updateAndRerender}
       />
     </NodeViewWrapper>
   );
