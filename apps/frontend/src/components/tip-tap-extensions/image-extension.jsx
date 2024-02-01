@@ -26,6 +26,7 @@ function UpdateModalAttributes({
   updateAndRerender,
   id,
   jwt,
+  save,
 }) {
   const [currentAlt, setCurrentAlt] = useState(incAlt);
   const [currentCaption, setCurrentCaption] = useState(incCap);
@@ -62,6 +63,7 @@ function UpdateModalAttributes({
         alt: currentAlt,
         title: currentCaption,
       });
+      save();
       onClose();
     } else {
       toast({
@@ -119,7 +121,7 @@ function UpdateModalAttributes({
 
 function ImageNode(props) {
   // importing caption as the title for now
-  const { src, alt, id, title, jwt } = props.node.attrs;
+  const { src, alt, id, title, jwt, save } = props.node.attrs;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
@@ -149,6 +151,7 @@ function ImageNode(props) {
         jwt={jwt}
         incCap={title}
         updateAndRerender={updateAndRerender}
+        save={save}
       />
     </NodeViewWrapper>
   );
@@ -173,6 +176,9 @@ export default Image.extend({
         default: null,
       },
       jwt: {
+        default: null,
+      },
+      save: {
         default: null,
       },
     };

@@ -22,6 +22,7 @@ export default function ImageModal({
   finalRef,
   editor,
   user,
+  handleSubmit,
 }) {
   // Image preview state
   const [currentImg, setCurrentImage] = useState(null);
@@ -102,8 +103,10 @@ export default function ImageModal({
         title: currentCaption,
         id: data[0].id,
         jwt: user.jwt,
+        save: handleSubmit,
       });
 
+      handleSubmit();
       setCurrentImage(null);
       setCurrentAlt("");
       setCurrentCaption("");

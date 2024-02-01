@@ -36,7 +36,7 @@ import { useRef } from "react";
 import Image from "./tip-tap-extensions/image-extension";
 import ImageModal from "./add-image-modal";
 
-function ToolBar({ editor, user }) {
+function ToolBar({ editor, user, handleSubmit }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef(null);
 
@@ -206,6 +206,7 @@ function ToolBar({ editor, user }) {
       <ImageModal
         isOpen={isOpen}
         onClose={onClose}
+        handleSubmit={handleSubmit}
         finalRef={finalRef}
         editor={editor}
         user={user}
@@ -236,7 +237,7 @@ function ToolBar({ editor, user }) {
   );
 }
 
-const Tiptap = ({ handleContentChange, user, content }) => {
+const Tiptap = ({ handleContentChange, handleSubmit, user, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -290,7 +291,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
 
   return (
     <>
-      <ToolBar editor={editor} user={user} />
+      <ToolBar editor={editor} user={user} handleSubmit={handleSubmit} />
       <Prose>
         <EditorContent editor={editor} />
       </Prose>
