@@ -9,7 +9,7 @@ test.beforeEach(async ({ page }) => {
 // is always visible on the tags page.
 async function waitForTags(page: Page) {
   return await expect(
-    page.getByRole("link", { name: "New Tag" })
+    page.getByRole("link", { name: "New Tag" }),
   ).toBeVisible();
 }
 

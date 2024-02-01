@@ -5,18 +5,18 @@ import { API_URL, EDITOR_CREDENTIALS } from "./constants";
 
 export async function getBearerToken(
   request: APIRequestContext,
-  data: { identifier: string; password: string }
+  data: { identifier: string; password: string },
 ) {
   const editorRes = await request.post(API_URL + "/api/auth/local", {
     data,
   });
   expect(editorRes.status()).toBe(200);
-  return (await editorRes.json()).jwt;
+  return ((await editorRes.json()) as { jwt: string }).jwt;
 }
 
 async function getUsersHelper(
   request: APIRequestContext,
-  data: { identifier: string; jwt: string }
+  data: { identifier: string; jwt: string },
 ) {
   const usersRes = await request.get(
     `${API_URL}/api/users?filters[email][$eq]=${data.identifier}`,
@@ -24,14 +24,14 @@ async function getUsersHelper(
       headers: {
         Authorization: `Bearer ${data.jwt}`,
       },
-    }
+    },
   );
   return await usersRes.json();
 }
 
 export async function deleteUser(
   request: APIRequestContext,
-  data: { identifier: string }
+  data: { identifier: string },
 ) {
   const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const user = await getUsersHelper(request, { ...data, jwt });
@@ -46,7 +46,7 @@ export async function deleteUser(
 
 export async function signIn(
   page: Page,
-  credentials: { identifier: string; password: string }
+  credentials: { identifier: string; password: string },
 ) {
   await page.goto("/api/auth/signin?callbackUrl=%2Fposts");
 
@@ -70,7 +70,7 @@ export async function signIn(
 
 export async function getUserByEmail(
   request: APIRequestContext,
-  data: { identifier: string }
+  data: { identifier: string },
 ) {
   const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);
   const users = await getUsersHelper(request, { ...data, jwt });
@@ -83,7 +83,7 @@ export async function getUserByEmail(
 // in in testing, we need to change the provider to local and set a password.
 export async function useCredentialsForAuth(
   request: APIRequestContext,
-  data: { identifier: string; password: string }
+  data: { identifier: string; password: string },
 ) {
   const { password } = data;
   const jwt = await getBearerToken(request, EDITOR_CREDENTIALS);

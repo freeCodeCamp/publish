@@ -27,7 +27,7 @@ export class UsersPage {
   async revokeUser(email: string) {
     const revokeButton = (await this.getInvitedUser(email)).getByRole(
       "button",
-      { name: "Revoke" }
+      { name: "Revoke" },
     );
     await revokeButton.click();
   }

@@ -1,0 +1,14 @@
+// Why is this here and not the root? Because if it's in the root, it will be
+// picked up by Strapi (it looks up the tree for tsconfig.json files). We could
+// avoid that by calling it something else, but then VSCode would not discover
+// it.
+{
+  "include": ["**/*.ts"],
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "noEmit": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true // Since we aren't using pnpm, there are conflicts in the types.
+  }
+}
