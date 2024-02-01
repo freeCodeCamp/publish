@@ -24,8 +24,10 @@ function UpdateModalAttributes({
   incAlt,
   incCap,
   updateAttributes,
+  id,
+  jwt,
 }) {
-  const [currentAlt, setCurrentAlt] = useState(incAlt.split("-")[0]);
+  const [currentAlt, setCurrentAlt] = useState(incAlt);
   const [currentCaption, setCurrentCaption] = useState(incCap);
 
   const toast = useToast();
@@ -34,7 +36,6 @@ function UpdateModalAttributes({
 
   const submitFileInfo = async () => {
     const form = new FormData();
-    const fileId = incAlt.split("-")[1];
 
     const fileInfo = {
       alternativeText: currentAlt,
@@ -44,12 +45,12 @@ function UpdateModalAttributes({
     form.append("fileInfo", JSON.stringify(fileInfo));
 
     const updatedFileInfo = await fetch(
-      new URL(`api/upload?id=${fileId}`, apiBase),
+      new URL(`api/upload?id=${id}`, apiBase),
       {
         method: "post",
         headers: {
           Accept: "application/json",
-          Authorization: `Bearer ${incAlt.split("-")[2]}`,
+          Authorization: `Bearer ${jwt}`,
         },
         body: form,
       },
@@ -115,7 +116,7 @@ function UpdateModalAttributes({
 
 function ImageNode(props) {
   // importing caption as the title for now
-  const { src, alt, title } = props.node.attrs;
+  const { src, alt, id, title, jwt } = props.node.attrs;
 
   const { updateAttributes } = props;
 
@@ -131,7 +132,7 @@ function ImageNode(props) {
   return (
     <NodeViewWrapper className={className}>
       <figure onClick={onOpen}>
-        <img src={src} alt={alt.split("-")[0]} title={title} />
+        <img src={src} alt={alt} title={title} />
         <figcaption>{title}</figcaption>
       </figure>
       <UpdateModalAttributes
@@ -139,6 +140,8 @@ function ImageNode(props) {
         onClose={onClose}
         finalRef={finalRef}
         incAlt={alt}
+        id={id}
+        jwt={jwt}
         incCap={title}
         updateAttributes={updateAttributes}
       />
@@ -149,5 +152,24 @@ function ImageNode(props) {
 export default Image.extend({
   addNodeView() {
     return ReactNodeViewRenderer(ImageNode);
+  },
+  addAttributes() {
+    return {
+      src: {
+        default: null,
+      },
+      alt: {
+        default: null,
+      },
+      title: {
+        default: null,
+      },
+      id: {
+        default: null,
+      },
+      jwt: {
+        default: null,
+      },
+    };
   },
 });
