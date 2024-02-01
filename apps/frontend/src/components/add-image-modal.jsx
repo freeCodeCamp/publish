@@ -24,12 +24,40 @@ export default function ImageModal({
 }) {
   // Image preview state
   const [currentImg, setCurrentImage] = useState(null);
-  const [_, setCurrentAlt] = useState(null);
+  const [currentAlt, setCurrentAlt] = useState(null);
+  const [currentCaption, setCurrentCaption] = useState(null);
   const [submitableImage, setSubmitableImage] = useState(null);
 
   const handleImagePreview = (event) => {
     setCurrentImage(URL.createObjectURL(event.target.files[0]));
     setSubmitableImage(event.target.files);
+  };
+
+  const submitFileInfo = async (fileId, apiBase) => {
+    const form = new FormData();
+
+    const fileInfo = {
+      alternativeText: currentAlt,
+      caption: currentCaption,
+    };
+
+    form.append("fileInfo", JSON.stringify(fileInfo));
+
+    const updatedFileInfo = await fetch(
+      new URL(`api/upload?id=${fileId}`, apiBase),
+      {
+        method: "post",
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${user.jwt}`,
+        },
+        body: form,
+      },
+    );
+
+    if (updatedFileInfo.status === 200) {
+      return await updatedFileInfo.json();
+    }
   };
 
   const handleImageSubmit = async (event) => {
@@ -39,8 +67,8 @@ export default function ImageModal({
 
     const formData = new FormData();
 
-    // Handle the case where the user opts not to submit an image.
     if (!submitableImage) return;
+
     formData.append("files", submitableImage[0]);
 
     const res = await fetch(new URL("api/upload", apiBase), {
@@ -53,6 +81,8 @@ export default function ImageModal({
     });
 
     const data = await res.json();
+
+    submitFileInfo(data[0].id, apiBase);
 
     editor.commands.setImage({
       src: new URL(data[0].url, apiBase),
@@ -134,12 +164,19 @@ export default function ImageModal({
                     type="text"
                     placeholder="Alternative Text"
                     onChange={(event) => {
-                      setCurrentAlt(event);
+                      setCurrentAlt(event.target.value);
                     }}
                     required
                   />
+                  <Spacer height="1rem" width="100%" />
+                  <Input
+                    type="text"
+                    placeholder="Caption"
+                    onChange={(event) => {
+                      setCurrentCaption(event.target.value);
+                    }}
+                  />
                 </ModalBody>
-
                 <ModalFooter>
                   <Button colorScheme="blue" type="submit" disabled={true}>
                     Save
