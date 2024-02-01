@@ -98,7 +98,7 @@ export default function ImageModal({
 
       editor.commands.setImage({
         src: new URL(data[0].url, apiBase),
-        alt: currentAlt,
+        alt: `${currentAlt}-${data[0].id}-${user.jwt}`,
         title: currentCaption,
       });
 
