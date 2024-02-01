@@ -23,7 +23,6 @@ import {
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import { EditorContent, useEditor } from "@tiptap/react";
@@ -33,6 +32,8 @@ import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 import { useRef } from "react";
+
+import Image from "./tip-tap-extensions/image-extension";
 import ImageModal from "./add-image-modal";
 
 function ToolBar({ editor, user }) {
@@ -254,9 +255,6 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       }),
       Image.configure({
         inline: true,
-        HTMLAttributes: {
-          class: "add-image-form",
-        },
       }),
       Youtube.configure({
         width: 480,

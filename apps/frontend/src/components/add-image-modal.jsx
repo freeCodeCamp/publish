@@ -13,6 +13,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
+  useToast,
 } from "@chakra-ui/react";
 
 export default function ImageModal({
@@ -27,6 +28,8 @@ export default function ImageModal({
   const [currentAlt, setCurrentAlt] = useState(null);
   const [currentCaption, setCurrentCaption] = useState(null);
   const [submitableImage, setSubmitableImage] = useState(null);
+
+  const toast = useToast();
 
   const handleImagePreview = (event) => {
     setCurrentImage(URL.createObjectURL(event.target.files[0]));
@@ -57,6 +60,14 @@ export default function ImageModal({
 
     if (updatedFileInfo.status === 200) {
       return await updatedFileInfo.json();
+    } else {
+      toast({
+        title: "Error",
+        description: "There was an error uploading your image",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   };
 
@@ -80,19 +91,31 @@ export default function ImageModal({
       body: formData,
     });
 
-    const data = await res.json();
+    if (res.status === 200) {
+      const data = await res.json();
 
-    submitFileInfo(data[0].id, apiBase);
+      submitFileInfo(data[0].id, apiBase);
 
-    editor.commands.setImage({
-      src: new URL(data[0].url, apiBase),
-      alt: "image",
-    });
+      editor.commands.setImage({
+        src: new URL(data[0].url, apiBase),
+        alt: currentAlt,
+        title: currentCaption,
+      });
 
-    setCurrentImage(null);
-    setCurrentAlt("");
+      setCurrentImage(null);
+      setCurrentAlt("");
+      setCurrentCaption("");
 
-    onClose();
+      onClose();
+    } else {
+      toast({
+        title: "Error",
+        description: "There was an error uploading your image",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
