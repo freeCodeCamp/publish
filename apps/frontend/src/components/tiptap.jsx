@@ -34,6 +34,7 @@ import { lowlight } from "lowlight";
 
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import CharacterCount from "@tiptap/extension-character-count";
+import Code from "@tiptap/extension-code";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -123,15 +124,26 @@ function ToolBar({ editor, user }) {
         leftIcon={<FontAwesomeIcon icon={faStrikethrough} />}
         onClick={() => editor.chain().focus().toggleStrike().run()}
       />
-      <Button
-        variant="ghost"
-        iconSpacing={0}
-        p={2}
-        title="Add code"
-        aria-label="Add code"
-        leftIcon={<FontAwesomeIcon icon={faCode} />}
-        onClick={() => editor.commands.toggleCodeBlock()}
-      />
+      <Menu>
+        <MenuButton
+          as={Button}
+          variant="ghost"
+          title="Select code"
+          aria-label="Select code"
+          iconSpacing={0}
+          p={2}
+          leftIcon={<FontAwesomeIcon icon={faCode} />}
+        />
+        <MenuList>
+          <MenuItem onClick={() => editor.commands.toggleCode()}>
+            Add inline code
+          </MenuItem>
+
+          <MenuItem onClick={() => editor.commands.toggleCodeBlock()}>
+            Add code block
+          </MenuItem>
+        </MenuList>
+      </Menu>
       <Button
         variant="ghost"
         iconSpacing={0}
@@ -303,6 +315,11 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       CodeBlockLowlight.configure({
         defaultLanguage: "javascript",
         lowlight,
+      }),
+      Code.configure({
+        HTMLAttributes: {
+          class: "code",
+        },
       }),
       CharacterCount.configure({}),
     ],
