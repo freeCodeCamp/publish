@@ -65,7 +65,6 @@ function UpdateModalAttributes({
               placeholder="Caption"
               value={currentCaption}
               onChange={(event) => setCurrentCaption(event.target.value)}
-              required
             />
           </ModalBody>
           <ModalFooter>
