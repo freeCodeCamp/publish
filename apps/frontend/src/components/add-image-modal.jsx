@@ -37,41 +37,6 @@ export default function ImageModal({
     setSubmitableImage(event.target.files);
   };
 
-  const submitFileInfo = async (fileId, apiBase) => {
-    const form = new FormData();
-
-    const fileInfo = {
-      alternativeText: currentAlt,
-      caption: currentCaption,
-    };
-
-    form.append("fileInfo", JSON.stringify(fileInfo));
-
-    const updatedFileInfo = await fetch(
-      new URL(`api/upload?id=${fileId}`, apiBase),
-      {
-        method: "post",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${user.jwt}`,
-        },
-        body: form,
-      },
-    );
-
-    if (updatedFileInfo.status === 200) {
-      return await updatedFileInfo.json();
-    } else {
-      toast({
-        title: "Error",
-        description: "There was an error uploading your image",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
-
   const handleImageSubmit = async (event) => {
     event.preventDefault();
 
@@ -95,14 +60,10 @@ export default function ImageModal({
     if (res.status === 200) {
       const data = await res.json();
 
-      submitFileInfo(data[0].id, apiBase);
-
       editor.commands.setImage({
         src: new URL(data[0].url, apiBase),
         alt: currentAlt,
         title: currentCaption,
-        id: data[0].id,
-        jwt: user.jwt,
         save: handleSubmit,
       });
 
