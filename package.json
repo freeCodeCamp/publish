@@ -2,20 +2,29 @@
   "devDependencies": {
     "@playwright/test": "^1.39.0",
     "@types/node": "^20.8.10",
+    "@types/node-fetch": "^2.6.11",
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "eslint": "^8.56.0",
     "husky": "^8.0.0",
     "lint-staged": "^14.0.0",
-    "turbo": "1.10.16"
+    "turbo": "1.10.16",
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "build": "turbo build",
     "prepare": "husky install",
     "lint": "turbo lint --continue",
+    "eslint": "eslint e2e",
     "seed": "turbo seed",
     "start": "turbo start",
     "develop": "turbo develop",
     "run-tools": "cd tools && docker compose up -d",
     "test": "turbo test",
-    "turbo": "turbo"
+    "turbo": "turbo",
+    "type-check": "tsc --noEmit --project e2e/tsconfig.json",
+    "format": "prettier --write --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore --ignore-path=.gitignore .",
+    "prettier-check": "prettier --check --ignore-path=apps/backend/.gitignore --ignore-path=apps/frontend/.gitignore --ignore-path=apps/cron/.gitignore --ignore-path=.gitignore ."
   },
   "workspaces": [
     "apps/*"

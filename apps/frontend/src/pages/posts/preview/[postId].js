@@ -6,11 +6,13 @@ import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 
 import { Image as TiptapImage } from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
 import Link from "@tiptap/extension-link";
 import { Text, Box, Image, useToast } from "@chakra-ui/react";
+import { lowlight } from "lowlight";
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -62,6 +64,10 @@ export default function PreviewArticlePage({ post, baseUrl }) {
       Youtube.configure({
         width: 480,
         height: 320,
+      }),
+      CodeBlockLowlight.configure({
+        defaultLanguage: "javascript",
+        lowlight,
       }),
       Link.configure({
         protocols: ["http", "https", "mailto", "tel"],
@@ -115,12 +121,13 @@ export default function PreviewArticlePage({ post, baseUrl }) {
         >
           {post.feature_image.data ? (
             <Image
-              src={baseUrl + post.feature_image.data.attributes.url}
+              src={new URL(post.feature_image.data.attributes.url, baseUrl)}
               alt="Post Image"
               w="100%"
               h="auto"
               maxH="500px"
               objectFit="cover"
+              data-testid="feature-image-preview"
             />
           ) : (
             <Box>
