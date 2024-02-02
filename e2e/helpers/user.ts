@@ -14,10 +14,24 @@ export async function getBearerToken(
   return ((await editorRes.json()) as { jwt: string }).jwt;
 }
 
+// This type is not exhaustive - it only contains the types currently used by the tests.
+
+type User = {
+  id: string;
+};
+
+function validateUsers(users: unknown[]): asserts users is User[] {
+  users.forEach(validateUser);
+}
+
+function validateUser(user: unknown): asserts user is User {
+  expect(user).toHaveProperty("id");
+}
+
 async function getUsersHelper(
   request: APIRequestContext,
   data: { identifier: string; jwt: string },
-) {
+): Promise<User[]> {
   const usersRes = await request.get(
     `${API_URL}/api/users?filters[email][$eq]=${data.identifier}`,
     {
@@ -26,7 +40,10 @@ async function getUsersHelper(
       },
     },
   );
-  return await usersRes.json();
+
+  const users = (await usersRes.json()) as unknown[];
+  validateUsers(users);
+  return users;
 }
 
 export async function deleteUser(
@@ -68,7 +85,7 @@ export async function signIn(
   await page.waitForURL("**/posts");
 }
 
-export async function getUserByEmail(
+async function getUserByEmail(
   request: APIRequestContext,
   data: { identifier: string },
 ) {
@@ -96,5 +113,7 @@ export async function useCredentialsForAuth(
     data: { provider: "local", password },
   });
   expect(userRes.status()).toBe(200);
-  return await userRes.json();
+  const updatedUser = (await userRes.json()) as unknown;
+  validateUser(updatedUser);
+  return updatedUser;
 }

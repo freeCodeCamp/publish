@@ -3,7 +3,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    // "plugin:@typescript-eslint/recommended-type-checked", // Disabled to
+    "plugin:@typescript-eslint/recommended-type-checked", // Disabled to
     // allow us to incrementally fix the errors
   ],
   parser: "@typescript-eslint/parser",
