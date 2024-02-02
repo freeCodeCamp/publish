@@ -22,7 +22,6 @@ export default function ImageModal({
   finalRef,
   editor,
   user,
-  handleSubmit,
 }) {
   // Image preview state
   const [currentImg, setCurrentImage] = useState(null);
@@ -64,10 +63,8 @@ export default function ImageModal({
         src: new URL(data[0].url, apiBase),
         alt: currentAlt,
         title: currentCaption,
-        save: handleSubmit,
       });
 
-      handleSubmit();
       setCurrentImage(null);
       setCurrentAlt("");
       setCurrentCaption("");

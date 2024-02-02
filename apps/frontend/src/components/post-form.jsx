@@ -364,7 +364,6 @@ const PostForm = ({ tags, user, authors, post }) => {
         <Box p="0 auto" m="0rem auto" w="100%" maxW="1060px">
           <Tiptap
             handleContentChange={handleContentChange}
-            handleSubmit={handleSubmit}
             content={content}
             user={user}
             postId={postId}
