@@ -34,6 +34,14 @@ export default function ImageModal({
   const handleImagePreview = (event) => {
     setCurrentImage(URL.createObjectURL(event.target.files[0]));
     setSubmitableImage(event.target.files);
+    setCurrentAlt("");
+  };
+
+  const removeOrCancel = () => {
+    setCurrentImage(null);
+    setSubmitableImage(null);
+    setCurrentAlt("");
+    setCurrentCaption("");
   };
 
   const handleImageSubmit = async (event) => {
@@ -66,6 +74,7 @@ export default function ImageModal({
       });
 
       setCurrentImage(null);
+      setSubmitableImage(null);
       setCurrentAlt("");
       setCurrentCaption("");
 
@@ -139,7 +148,7 @@ export default function ImageModal({
                       <Button
                         colorScheme="red"
                         width="100%"
-                        onClick={() => setCurrentImage(null)}
+                        onClick={() => removeOrCancel()}
                       >
                         Remove Image
                       </Button>
@@ -152,26 +161,32 @@ export default function ImageModal({
                     onChange={(event) => {
                       setCurrentAlt(event.target.value);
                     }}
+                    value={currentAlt}
                     required
                   />
                   <Spacer height="1rem" width="100%" />
                   <Input
                     type="text"
                     placeholder="Caption"
+                    value={currentCaption}
                     onChange={(event) => {
                       setCurrentCaption(event.target.value);
                     }}
                   />
                 </ModalBody>
                 <ModalFooter>
-                  <Button colorScheme="blue" type="submit" disabled={true}>
+                  <Button
+                    colorScheme="blue"
+                    type="submit"
+                    isDisabled={!submitableImage || !currentAlt}
+                  >
                     Save
                   </Button>
                   <Button
                     colorScheme="red"
                     ml={3}
                     onClick={() => {
-                      setCurrentImage(null);
+                      removeOrCancel();
                       onClose();
                     }}
                   >
