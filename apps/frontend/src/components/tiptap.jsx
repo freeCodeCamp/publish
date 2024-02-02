@@ -31,6 +31,7 @@ import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
 import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
+import { Heading } from "./tip-tap-extensions/heading-extension";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -266,6 +267,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
+        heading: false,
         bulletList: {
           keepMarks: true,
           keepAttributes: false,
@@ -285,6 +287,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
           class: "add-image-form",
         },
       }),
+      Heading,
       Youtube.configure({
         width: 480,
         height: 320,
