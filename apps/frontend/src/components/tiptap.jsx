@@ -20,7 +20,6 @@ import {
   MenuItem,
   Text,
   useDisclosure,
-  useColorMode,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
@@ -30,9 +29,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Youtube from "@tiptap/extension-youtube";
 import { Markdown } from "tiptap-markdown";
-import { lowlight } from "lowlight";
-
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
 import { useRef } from "react";
 
@@ -108,7 +105,7 @@ function ToolBar({ editor, user }) {
         title="Add code"
         aria-label="Add code"
         leftIcon={<FontAwesomeIcon icon={faCode} />}
-        onClick={() => editor.commands.toggleCodeBlock()}
+        onClick={() => editor.chain().focus().toggleCode().run()}
       />
       <Button
         variant="ghost"
@@ -240,8 +237,6 @@ function ToolBar({ editor, user }) {
 }
 
 const Tiptap = ({ handleContentChange, user, content }) => {
-  const { colorMode } = useColorMode();
-
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -260,6 +255,9 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       }),
       Image.configure({
         inline: true,
+        HTMLAttributes: {
+          class: "add-image-form",
+        },
       }),
       Youtube.configure({
         width: 480,
@@ -271,9 +269,10 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       Markdown.configure({
         transformPastedText: true,
       }),
-      CodeBlockLowlight.configure({
-        defaultLanguage: "javascript",
-        lowlight,
+      Code.configure({
+        HTMLAttributes: {
+          class: "code",
+        },
       }),
       CharacterCount.configure({}),
     ],
@@ -281,9 +280,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
     autofocus: true,
     editorProps: {
       attributes: {
-        class: `prose focus:outline-none ${
-          colorMode === "dark" ? "dark-border" : ""
-        }`,
+        class: "prose focus:outline-none",
         "data-testid": "editor",
       },
     },
