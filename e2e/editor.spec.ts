@@ -5,11 +5,15 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("it should be possible to type in the editor", async ({ page }) => {
-  const textToType = "Hello World";
-  await page.getByTestId("editor").fill(textToType);
+  const editor = page.getByTestId("editor");
+  const wordCount = page.getByTestId("word-count");
 
-  const wordCount = await page.getByTestId("word-count").innerText();
-  expect(wordCount).toBe(textToType.split(" ").length.toString() + " words");
+  await editor.press("Control+A");
+  await editor.press("Backspace");
+  await expect(wordCount).toHaveText("0 words");
+
+  await editor.pressSequentially("Hello World");
+  await expect(wordCount).toHaveText("2 words");
 });
 
 test("it should have eleven buttons in the toolbar", async ({ page }) => {
