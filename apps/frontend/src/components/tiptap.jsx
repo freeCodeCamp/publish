@@ -333,6 +333,7 @@ function BubbleMenuBar({ editor, isLinkHover }) {
 
 const Tiptap = ({ handleContentChange, user, content }) => {
   const [link, setLink] = useState(null);
+  const [linkEl, setLinkEl] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const editorRef = useRef(null);
@@ -392,6 +393,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
                 ) {
                   const href = node.marks[0]?.attrs.href;
                   setLink(href);
+                  setLinkEl(target);
                   refs.setReference(event.target);
                 }
               },
@@ -487,6 +489,8 @@ const Tiptap = ({ handleContentChange, user, content }) => {
             whiteSpace="nowrap"
             maxW="25rem"
             px={2}
+            // as="a"
+            // href={link}
           >
             {link}
           </Text>
@@ -508,7 +512,16 @@ const Tiptap = ({ handleContentChange, user, content }) => {
             title="Delete link"
             aria-label="Delete link"
             leftIcon={<FontAwesomeIcon icon={faTrash} />}
-            // onClick={() => editor.chain().focus().toggleItalic().run()}
+            onClick={() => {
+              const { tr } = editor.state;
+              const pos = editor.view.posAtDOM(linkEl, 0);
+              const node = editor.view.state.doc.nodeAt(pos);
+              tr.removeMark(pos, pos + node.nodeSize, editor.schema.marks.link);
+              editor.view.dispatch(tr);
+              setLinkEl(null);
+              setLink(null);
+              setIsOpen(false);
+            }}
           />
         </Box>
       )}
