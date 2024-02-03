@@ -21,6 +21,7 @@ import {
 import {
   faBold,
   faCode,
+  faEdit,
   faFileCode,
   faHeader,
   faImage,
@@ -30,6 +31,7 @@ import {
   faListUl,
   faQuoteLeft,
   faStrikethrough,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
@@ -339,7 +341,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
     useFloating({
       placement: "top",
       middleware: [
-        offset(10),
+        offset(4),
         flip({
           boundary: editorRef.current,
         }),
@@ -389,13 +391,8 @@ const Tiptap = ({ handleContentChange, user, content }) => {
                   node.marks[0]?.type.name === "link"
                 ) {
                   const href = node.marks[0]?.attrs.href;
-                  console.log(event.target);
                   setLink(href);
-                  // setIsLinkHover(true);
                   refs.setReference(event.target);
-                } else {
-                  console.log("out of link");
-                  // setIsLinkHover(false);
                 }
               },
             },
@@ -478,37 +475,40 @@ const Tiptap = ({ handleContentChange, user, content }) => {
           }
           zIndex={99999}
           display="flex"
+          alignItems="center"
           ref={refs.setFloating}
           style={floatingStyles}
           {...getFloatingProps()}
         >
-          <p
-            style={{
-              maxWidth: "28rem",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
+          <Text
+            fontSize="sm"
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+            maxW="25rem"
+            px={2}
           >
             {link}
-          </p>
+          </Text>
           <Button
+            size="sm"
             variant="ghost"
             iconSpacing={0}
-            p={2}
-            title="Add bold text"
-            aria-label="Add bold text"
-            leftIcon={<FontAwesomeIcon icon={faBold} />}
-            onClick={() => editor.chain().focus().toggleBold().run()}
+            p={1}
+            title="Edit link"
+            aria-label="Edit link"
+            leftIcon={<FontAwesomeIcon icon={faEdit} />}
+            // onClick={() => editor.chain().focus().toggleBold().run()}
           />
           <Button
+            size="sm"
             variant="ghost"
             iconSpacing={0}
-            p={2}
-            title="Add italic text"
-            aria-label="Add italic text"
-            leftIcon={<FontAwesomeIcon icon={faItalic} />}
-            onClick={() => editor.chain().focus().toggleItalic().run()}
+            p={1}
+            title="Delete link"
+            aria-label="Delete link"
+            leftIcon={<FontAwesomeIcon icon={faTrash} />}
+            // onClick={() => editor.chain().focus().toggleItalic().run()}
           />
         </Box>
       )}
