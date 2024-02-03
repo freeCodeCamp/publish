@@ -502,7 +502,26 @@ const Tiptap = ({ handleContentChange, user, content }) => {
             title="Edit link"
             aria-label="Edit link"
             leftIcon={<FontAwesomeIcon icon={faEdit} />}
-            // onClick={() => editor.chain().focus().toggleBold().run()}
+            onClick={() => {
+              const url = window.prompt("URL", link);
+              if (url) {
+                const { tr } = editor.state;
+                const pos = editor.view.posAtDOM(linkEl, 0);
+                const node = editor.view.state.doc.nodeAt(pos);
+                tr.removeMark(
+                  pos,
+                  pos + node.nodeSize,
+                  editor.schema.marks.link,
+                );
+                tr.addMark(
+                  pos,
+                  pos + node.nodeSize,
+                  editor.schema.marks.link.create({ href: url }),
+                );
+                editor.view.dispatch(tr);
+                setLink(url);
+              }
+            }}
           />
           <Button
             size="sm"
