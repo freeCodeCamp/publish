@@ -275,7 +275,7 @@ function ToolBar({ editor, user }) {
   );
 }
 
-function BubbleMenuBar({ editor }) {
+function BubbleMenuBar({ editor, isLinkHover }) {
   const addLink = () => {
     const url = window.prompt("URL");
 
@@ -287,7 +287,7 @@ function BubbleMenuBar({ editor }) {
   return (
     <BubbleMenu editor={editor}>
       <Box
-        display="flex"
+        display={isLinkHover ? "none" : "flex"}
         flexDirection="row"
         p="0.2rem"
         marginTop="1rem"
