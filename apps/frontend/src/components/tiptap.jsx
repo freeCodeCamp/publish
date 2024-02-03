@@ -539,7 +539,6 @@ const Tiptap = ({ handleContentChange, user, content }) => {
               editor.view.dispatch(tr);
               setLinkEl(null);
               setLink(null);
-              setIsOpen(false);
             }}
           />
         </Box>
