@@ -1,40 +1,49 @@
 import {
+  Box,
+  Button,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from "@chakra-ui/react";
+import {
+  autoUpdate,
+  flip,
+  hide,
+  offset,
+  safePolygon,
+  shift,
+  useFloating,
+  useHover,
+  useInteractions,
+} from "@floating-ui/react";
+import {
   faBold,
   faCode,
   faFileCode,
   faHeader,
   faImage,
   faItalic,
-  faListOl,
   faLink,
+  faListOl,
   faListUl,
   faQuoteLeft,
   faStrikethrough,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  Box,
-  Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  Text,
-} from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import Image from "@tiptap/extension-image";
-import Placeholder from "@tiptap/extension-placeholder";
-import Link from "@tiptap/extension-link";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Youtube from "@tiptap/extension-youtube";
-import { Markdown } from "tiptap-markdown";
-import Code from "@tiptap/extension-code";
 import CharacterCount from "@tiptap/extension-character-count";
-import { Extension, BubbleMenu } from "@tiptap/react";
+import Code from "@tiptap/extension-code";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import Youtube from "@tiptap/extension-youtube";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { useState } from "react";
-import Tippy from "@tippyjs/react/headless";
+import { BubbleMenu, EditorContent, Extension, useEditor } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import { useEffect, useState } from "react";
+import { Markdown } from "tiptap-markdown";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -321,8 +330,30 @@ function BubbleMenuBar({ editor }) {
 }
 
 const Tiptap = ({ handleContentChange, user, content }) => {
-  const [isLinkHover, setIsLinkHover] = useState(false);
-  const [linkEl, setLinkEl] = useState(null);
+  const [link, setLink] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { refs, floatingStyles, context, elements, update, middlewareData } =
+    useFloating({
+      placement: "top",
+      middleware: [offset(10), flip(), shift({ padding: 10 }), hide()],
+      whileElementsMounted: autoUpdate,
+      open: isOpen,
+      onOpenChange: setIsOpen,
+    });
+
+  const hover = useHover(context, {
+    handleClose: safePolygon(),
+  });
+
+  const { getFloatingProps } = useInteractions([hover]);
+
+  useEffect(() => {
+    if (isOpen && elements.reference && elements.floating) {
+      const cleanup = autoUpdate(elements.reference, elements.floating, update);
+      return cleanup;
+    }
+  }, [isOpen, elements, update]);
 
   const HoverBar = Extension.create({
     name: "hover-bar",
@@ -346,13 +377,14 @@ const Tiptap = ({ handleContentChange, user, content }) => {
                   target.tagName.toLowerCase() === "a" &&
                   node.marks[0]?.type.name === "link"
                 ) {
-                  // const href = node.marks[0]?.attrs.href;
+                  const href = node.marks[0]?.attrs.href;
                   console.log(event.target);
-                  setLinkEl(event.target);
-                  setIsLinkHover(true);
+                  setLink(href);
+                  // setIsLinkHover(true);
+                  refs.setReference(event.target);
                 } else {
                   console.log("out of link");
-                  setIsLinkHover(false);
+                  // setIsLinkHover(false);
                 }
               },
             },
@@ -420,48 +452,56 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   return (
     <>
       <ToolBar editor={editor} user={user} />
-      {editor && <BubbleMenuBar editor={editor} isLinkHover={isLinkHover} />}
+      {editor && <BubbleMenuBar editor={editor} isLinkHover={isOpen} />}
+      {isOpen && (
+        <Box
+          p="0.2rem"
+          border="1px solid silver"
+          borderRadius="lg"
+          overflowX="auto"
+          id="bubble-menu"
+          background="white"
+          width="fit-content"
+          visibility={
+            middlewareData.hide?.referenceHidden ? "hidden" : "visible"
+          }
+          zIndex={99999}
+          display="flex"
+          ref={refs.setFloating}
+          style={floatingStyles}
+          {...getFloatingProps()}
+        >
+          <p
+            style={{
+              maxWidth: "28rem",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {link}
+          </p>
+          <Button
+            variant="ghost"
+            iconSpacing={0}
+            p={2}
+            title="Add bold text"
+            aria-label="Add bold text"
+            leftIcon={<FontAwesomeIcon icon={faBold} />}
+            onClick={() => editor.chain().focus().toggleBold().run()}
+          />
+          <Button
+            variant="ghost"
+            iconSpacing={0}
+            p={2}
+            title="Add italic text"
+            aria-label="Add italic text"
+            leftIcon={<FontAwesomeIcon icon={faItalic} />}
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+          />
+        </Box>
+      )}
       <Prose>
-        <Tippy
-          reference={linkEl}
-          visible={isLinkHover}
-          interactive={true}
-          appendTo={() => document.body}
-          render={(attrs) => {
-            return (
-              <Box
-                p="0.2rem"
-                border="1px solid silver"
-                borderRadius="lg"
-                overflowX="auto"
-                id="bubble-menu"
-                background="white"
-                width="fit-content"
-                display={isLinkHover ? "flex" : "none"}
-                {...attrs}
-              >
-                <Button
-                  variant="ghost"
-                  iconSpacing={0}
-                  p={2}
-                  title="Add bold text"
-                  aria-label="Add bold text"
-                  leftIcon={<FontAwesomeIcon icon={faBold} />}
-                  onClick={() => editor.chain().focus().toggleBold().run()}
-                />
-                <Button
-                  variant="ghost"
-                  iconSpacing={0}
-                  p={2}
-                  title="Add italic text"
-                  aria-label="Add italic text"
-                  leftIcon={<FontAwesomeIcon icon={faItalic} />}
-                  onClick={() => editor.chain().focus().toggleItalic().run()}
-                />
-              </Box>
-            );
-          }}
-        />
         <EditorContent editor={editor} />
       </Prose>
       <Box right="50px" bottom="50px" zIndex="1" position="fixed">
