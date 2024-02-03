@@ -42,7 +42,7 @@ import Youtube from "@tiptap/extension-youtube";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { BubbleMenu, EditorContent, Extension, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Markdown } from "tiptap-markdown";
 
 function ToolBar({ editor, user }) {
@@ -333,10 +333,21 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   const [link, setLink] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
+  const editorRef = useRef(null);
+
   const { refs, floatingStyles, context, elements, update, middlewareData } =
     useFloating({
       placement: "top",
-      middleware: [offset(10), flip(), shift({ padding: 10 }), hide()],
+      middleware: [
+        offset(10),
+        flip({
+          boundary: editorRef.current,
+        }),
+        shift({ padding: 10 }),
+        hide({
+          boundary: editorRef.current,
+        }),
+      ],
       whileElementsMounted: autoUpdate,
       open: isOpen,
       onOpenChange: setIsOpen,
@@ -501,9 +512,11 @@ const Tiptap = ({ handleContentChange, user, content }) => {
           />
         </Box>
       )}
-      <Prose>
-        <EditorContent editor={editor} />
-      </Prose>
+      <div ref={editorRef}>
+        <Prose>
+          <EditorContent editor={editor} id="editor" />
+        </Prose>
+      </div>
       <Box right="50px" bottom="50px" zIndex="1" position="fixed">
         <Text
           fontSize="xl"
