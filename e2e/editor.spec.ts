@@ -21,7 +21,7 @@ test("it should have eleven buttons in the toolbar", async ({ page }) => {
 });
 
 test("it should be possible to edit the title", async ({ page }) => {
-  page.getByTestId("post-title").click();
+  await page.getByTestId("post-title").click();
 
   const titleField = page.getByTestId("post-title-field");
   await titleField.fill("New Title");
