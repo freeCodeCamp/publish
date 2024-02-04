@@ -67,8 +67,6 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   const bg = useColorModeValue("white", "gray.800");
-  const color = useColorModeValue("gray.800", "white");
-  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.700");
 
   return (
     <Flex
@@ -132,14 +130,6 @@ const NavMenuContent = ({ user, onClose, ...rest }) => {
             w="100%"
             mt={3}
             mb={6}
-            _hover={{
-              bgColor: hoverBgColor,
-              color: color,
-            }}
-            _active={{
-              bgColor: hoverBgColor,
-              color: color,
-            }}
           >
             <Flex>
               <Avatar size="sm" mr="8px" my="auto" src={user?.image} />
