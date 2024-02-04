@@ -6,6 +6,7 @@ import {
   MenuItem,
   MenuList,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import {
   autoUpdate,
@@ -36,13 +37,14 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import CharacterCount from "@tiptap/extension-character-count";
-import Code from "@tiptap/extension-code";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Youtube from "@tiptap/extension-youtube";
 import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { lowlight } from "lowlight";
 import { useEffect, useRef, useState } from "react";
 import { Markdown } from "tiptap-markdown";
 
@@ -141,7 +143,7 @@ function ToolBar({ editor, user }) {
         title="Add code"
         aria-label="Add code"
         leftIcon={<FontAwesomeIcon icon={faCode} />}
-        onClick={() => editor.chain().focus().toggleCode().run()}
+        onClick={() => editor.commands.toggleCodeBlock()}
       />
       <Button
         variant="ghost"
@@ -421,12 +423,15 @@ function HoverMenuBar({
 }
 
 const Tiptap = ({ handleContentChange, user, content }) => {
+  const { colorMode } = useColorMode();
+
   const [link, setLink] = useState(null);
   const [linkEl, setLinkEl] = useState(null);
   const [isHoverBarOpen, setIsHoverBarOpen] = useState(false);
 
   const editorRef = useRef(null);
 
+  // Floating UI configuration
   const {
     refs: floatingRefs,
     floatingStyles,
@@ -491,10 +496,9 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       Markdown.configure({
         transformPastedText: true,
       }),
-      Code.configure({
-        HTMLAttributes: {
-          class: "code",
-        },
+      CodeBlockLowlight.configure({
+        defaultLanguage: "javascript",
+        lowlight,
       }),
       CharacterCount.configure({}),
     ],
@@ -502,7 +506,9 @@ const Tiptap = ({ handleContentChange, user, content }) => {
     autofocus: true,
     editorProps: {
       attributes: {
-        class: "prose focus:outline-none",
+        class: `prose focus:outline-none ${
+          colorMode === "dark" ? "dark-border" : ""
+        }`,
         "data-testid": "editor",
       },
     },

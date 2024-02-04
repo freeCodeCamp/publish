@@ -7,9 +7,7 @@
     "dev": "next dev",
     "develop": "npm run dev",
     "eslint": "next lint --max-warnings 0",
-    "format": "prettier --write .",
     "init": "shx cp -n sample.env .env",
-    "prettier-check": "prettier --check .",
     "start": "next start"
   },
   "dependencies": {
@@ -28,7 +26,7 @@
     "@tippyjs/react": "^4.2.6",
     "@tiptap/extension-bubble-menu": "^2.2.0",
     "@tiptap/extension-character-count": "^2.1.11",
-    "@tiptap/extension-code": "^2.1.11",
+    "@tiptap/extension-code-block-lowlight": "^2.2.0",
     "@tiptap/extension-image": "^2.0.4",
     "@tiptap/extension-link": "^2.1.8",
     "@tiptap/extension-list-item": "^2.0.3",
@@ -41,6 +39,7 @@
     "date-fns": "^2.30.0",
     "formik": "^2.4.4",
     "framer-motion": "^10.13.1",
+    "lowlight": "2.9.0",
     "next": "13.5.6",
     "next-auth": "^4.22.1",
     "qs": "^6.11.2",
