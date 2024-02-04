@@ -41,8 +41,7 @@ import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
 import Youtube from "@tiptap/extension-youtube";
-import { Plugin, PluginKey } from "@tiptap/pm/state";
-import { BubbleMenu, EditorContent, Extension, useEditor } from "@tiptap/react";
+import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef, useState } from "react";
 import { Markdown } from "tiptap-markdown";
@@ -331,78 +330,132 @@ function BubbleMenuBar({ editor, isLinkHover }) {
   );
 }
 
+function HoverMenuBar({
+  editor,
+  floatingMiddleware,
+  floatingRefs,
+  floatingStyles,
+  getFloatingProps,
+  link,
+  setLink,
+  linkEl,
+  setLinkEl,
+}) {
+  return (
+    <Box
+      p="0.2rem"
+      border="1px solid silver"
+      borderRadius="lg"
+      overflowX="auto"
+      id="bubble-menu"
+      background="white"
+      width="fit-content"
+      visibility={
+        floatingMiddleware.hide?.referenceHidden ? "hidden" : "visible"
+      }
+      zIndex={99999}
+      display="flex"
+      alignItems="center"
+      ref={floatingRefs.setFloating}
+      style={floatingStyles}
+      {...getFloatingProps()}
+    >
+      <Text
+        fontSize="sm"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+        maxW="25rem"
+        px={2}
+        as="a"
+        href={link}
+        target="_blank"
+      >
+        {link}
+      </Text>
+      <Button
+        size="sm"
+        variant="ghost"
+        iconSpacing={0}
+        p={1}
+        title="Edit link"
+        aria-label="Edit link"
+        leftIcon={<FontAwesomeIcon icon={faEdit} />}
+        onClick={() => {
+          const url = window.prompt("URL", link);
+          if (url) {
+            const { tr } = editor.state;
+            const pos = editor.view.posAtDOM(linkEl, 0);
+            const node = editor.view.state.doc.nodeAt(pos);
+            tr.removeMark(pos, pos + node.nodeSize, editor.schema.marks.link);
+            tr.addMark(
+              pos,
+              pos + node.nodeSize,
+              editor.schema.marks.link.create({ href: url }),
+            );
+            editor.view.dispatch(tr);
+            setLink(url);
+          }
+        }}
+      />
+      <Button
+        size="sm"
+        variant="ghost"
+        iconSpacing={0}
+        p={1}
+        title="Delete link"
+        aria-label="Delete link"
+        leftIcon={<FontAwesomeIcon icon={faTrash} />}
+        onClick={() => {
+          const { tr } = editor.state;
+          const pos = editor.view.posAtDOM(linkEl, 0);
+          const node = editor.view.state.doc.nodeAt(pos);
+          tr.removeMark(pos, pos + node.nodeSize, editor.schema.marks.link);
+          editor.view.dispatch(tr);
+          setLinkEl(null);
+          setLink(null);
+        }}
+      />
+    </Box>
+  );
+}
+
 const Tiptap = ({ handleContentChange, user, content }) => {
   const [link, setLink] = useState(null);
   const [linkEl, setLinkEl] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isHoverBarOpen, setIsHoverBarOpen] = useState(false);
 
   const editorRef = useRef(null);
 
-  const { refs, floatingStyles, context, elements, update, middlewareData } =
-    useFloating({
-      placement: "top",
-      middleware: [
-        offset(4),
-        flip({
-          boundary: editorRef.current,
-        }),
-        shift({ padding: 10 }),
-        hide({
-          boundary: editorRef.current,
-        }),
-      ],
-      whileElementsMounted: autoUpdate,
-      open: isOpen,
-      onOpenChange: setIsOpen,
-    });
+  const {
+    refs: floatingRefs,
+    floatingStyles,
+    context: floatingCtx,
+    elements: floatingElements,
+    update: floatingUpdate,
+    middlewareData: floatingMiddleware,
+  } = useFloating({
+    placement: "top",
+    middleware: [
+      offset(4),
+      flip({
+        boundary: editorRef.current,
+      }),
+      shift({ padding: 10 }),
+      hide({
+        boundary: editorRef.current,
+      }),
+    ],
+    whileElementsMounted: autoUpdate,
+    open: isHoverBarOpen,
+    onOpenChange: setIsHoverBarOpen,
+  });
 
-  const hover = useHover(context, {
+  const hover = useHover(floatingCtx, {
     handleClose: safePolygon(),
   });
 
   const { getFloatingProps } = useInteractions([hover]);
-
-  useEffect(() => {
-    if (isOpen && elements.reference && elements.floating) {
-      const cleanup = autoUpdate(elements.reference, elements.floating, update);
-      return cleanup;
-    }
-  }, [isOpen, elements, update]);
-
-  const HoverBar = Extension.create({
-    name: "hover-bar",
-
-    addProseMirrorPlugins() {
-      return [
-        new Plugin({
-          key: new PluginKey("hover-bar"),
-          props: {
-            handleDOMEvents: {
-              mouseover: (view, event) => {
-                const target = event.target;
-                const pos = view.posAtDOM(target, 0);
-
-                if (pos === null) return false;
-
-                const node = view.state.doc.nodeAt(pos);
-                if (!node || !node.isAtom) return false;
-
-                if (
-                  target.tagName.toLowerCase() === "a" &&
-                  node.marks[0]?.type.name === "link"
-                ) {
-                  const href = node.marks[0]?.attrs.href;
-                  setLink(href);
-                  setLinkEl(target);
-                  refs.setReference(event.target);
-                }
-              },
-            },
-          },
-        }),
-      ];
-    },
-  });
 
   const editor = useEditor({
     extensions: [
@@ -444,7 +497,6 @@ const Tiptap = ({ handleContentChange, user, content }) => {
         },
       }),
       CharacterCount.configure({}),
-      HoverBar.configure({}),
     ],
     content: content ? content : "",
     autofocus: true,
@@ -461,94 +513,65 @@ const Tiptap = ({ handleContentChange, user, content }) => {
 
   const words = editor?.storage.characterCount.words();
 
+  const handleLinkHover = (event) => {
+    const target = event.target;
+    const pos = editor.view.posAtDOM(target, 0);
+
+    if (pos === null) return false;
+
+    const node = editor.state.doc.nodeAt(pos);
+    if (!node || !node.isAtom) return false;
+
+    if (
+      target.tagName.toLowerCase() === "a" &&
+      node.marks[0]?.type.name === "link"
+    ) {
+      const href = node.marks[0]?.attrs.href;
+      setLink(href);
+      setLinkEl(target);
+      floatingRefs.setReference(event.target);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      isHoverBarOpen &&
+      floatingElements.reference &&
+      floatingElements.floating
+    ) {
+      const cleanup = autoUpdate(
+        floatingElements.reference,
+        floatingElements.floating,
+        floatingUpdate,
+      );
+      return cleanup;
+    }
+  }, [isHoverBarOpen, floatingElements, floatingUpdate]);
+
   return (
     <>
       <ToolBar editor={editor} user={user} />
-      {editor && <BubbleMenuBar editor={editor} isLinkHover={isOpen} />}
-      {isOpen && (
-        <Box
-          p="0.2rem"
-          border="1px solid silver"
-          borderRadius="lg"
-          overflowX="auto"
-          id="bubble-menu"
-          background="white"
-          width="fit-content"
-          visibility={
-            middlewareData.hide?.referenceHidden ? "hidden" : "visible"
-          }
-          zIndex={99999}
-          display="flex"
-          alignItems="center"
-          ref={refs.setFloating}
-          style={floatingStyles}
-          {...getFloatingProps()}
-        >
-          <Text
-            fontSize="sm"
-            overflow="hidden"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-            maxW="25rem"
-            px={2}
-            as="a"
-            href={link}
-            target="_blank"
-          >
-            {link}
-          </Text>
-          <Button
-            size="sm"
-            variant="ghost"
-            iconSpacing={0}
-            p={1}
-            title="Edit link"
-            aria-label="Edit link"
-            leftIcon={<FontAwesomeIcon icon={faEdit} />}
-            onClick={() => {
-              const url = window.prompt("URL", link);
-              if (url) {
-                const { tr } = editor.state;
-                const pos = editor.view.posAtDOM(linkEl, 0);
-                const node = editor.view.state.doc.nodeAt(pos);
-                tr.removeMark(
-                  pos,
-                  pos + node.nodeSize,
-                  editor.schema.marks.link,
-                );
-                tr.addMark(
-                  pos,
-                  pos + node.nodeSize,
-                  editor.schema.marks.link.create({ href: url }),
-                );
-                editor.view.dispatch(tr);
-                setLink(url);
-              }
-            }}
-          />
-          <Button
-            size="sm"
-            variant="ghost"
-            iconSpacing={0}
-            p={1}
-            title="Delete link"
-            aria-label="Delete link"
-            leftIcon={<FontAwesomeIcon icon={faTrash} />}
-            onClick={() => {
-              const { tr } = editor.state;
-              const pos = editor.view.posAtDOM(linkEl, 0);
-              const node = editor.view.state.doc.nodeAt(pos);
-              tr.removeMark(pos, pos + node.nodeSize, editor.schema.marks.link);
-              editor.view.dispatch(tr);
-              setLinkEl(null);
-              setLink(null);
-            }}
-          />
-        </Box>
+      {editor && <BubbleMenuBar editor={editor} isLinkHover={isHoverBarOpen} />}
+      {isHoverBarOpen && (
+        <HoverMenuBar
+          editor={editor}
+          floatingMiddleware={floatingMiddleware}
+          floatingRefs={floatingRefs}
+          floatingStyles={floatingStyles}
+          getFloatingProps={getFloatingProps}
+          link={link}
+          setLink={setLink}
+          linkEl={linkEl}
+          setLinkEl={setLinkEl}
+        />
       )}
       <div ref={editorRef}>
         <Prose>
-          <EditorContent editor={editor} id="editor" />
+          <EditorContent
+            editor={editor}
+            id="editor"
+            onMouseOver={handleLinkHover}
+          />
         </Prose>
       </div>
       <Box right="50px" bottom="50px" zIndex="1" position="fixed">
