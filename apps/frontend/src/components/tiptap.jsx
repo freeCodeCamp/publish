@@ -432,6 +432,8 @@ const Tiptap = ({ handleContentChange, user, content }) => {
       }),
       Link.configure({
         protocols: ["http", "https", "mailto", "tel"],
+        autolink: false,
+        openOnClick: false,
       }),
       Markdown.configure({
         transformPastedText: true,
@@ -489,8 +491,9 @@ const Tiptap = ({ handleContentChange, user, content }) => {
             whiteSpace="nowrap"
             maxW="25rem"
             px={2}
-            // as="a"
-            // href={link}
+            as="a"
+            href={link}
+            target="_blank"
           >
             {link}
           </Text>
