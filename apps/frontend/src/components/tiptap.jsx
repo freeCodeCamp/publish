@@ -57,6 +57,20 @@ function ToolBar({ editor, user }) {
     }
   };
 
+  const checkAndToggleInlineCode = () => {
+    if (editor.isActive("codeBlock")) {
+      editor.commands.toggleCodeBlock();
+    }
+    editor.commands.toggleCode();
+  };
+
+  const checkAndToggleCodeBlock = () => {
+    if (!editor.isActive("code")) {
+      editor.commands.unsetCode();
+    }
+    editor.commands.toggleCodeBlock();
+  };
+
   const handleImageSubmit = async (event) => {
     event.preventDefault();
 
@@ -135,11 +149,11 @@ function ToolBar({ editor, user }) {
           leftIcon={<FontAwesomeIcon icon={faCode} />}
         />
         <MenuList>
-          <MenuItem onClick={() => editor.commands.toggleCode()}>
+          <MenuItem onClick={() => checkAndToggleInlineCode()}>
             Add inline code
           </MenuItem>
 
-          <MenuItem onClick={() => editor.commands.toggleCodeBlock()}>
+          <MenuItem onClick={() => checkAndToggleCodeBlock()}>
             Add code block
           </MenuItem>
         </MenuList>
