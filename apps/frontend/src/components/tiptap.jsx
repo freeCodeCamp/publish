@@ -150,11 +150,11 @@ function ToolBar({ editor, user }) {
         />
         <MenuList>
           <MenuItem onClick={() => checkAndToggleInlineCode()}>
-            Add inline code
+            Toggle inline code
           </MenuItem>
 
           <MenuItem onClick={() => checkAndToggleCodeBlock()}>
-            Add code block
+            Toggle code block
           </MenuItem>
         </MenuList>
       </Menu>
@@ -330,11 +330,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
         defaultLanguage: "javascript",
         lowlight,
       }),
-      Code.configure({
-        HTMLAttributes: {
-          class: "code",
-        },
-      }),
+      Code.configure({}),
       CharacterCount.configure({}),
     ],
     content: content ? content : "",

@@ -116,15 +116,14 @@
     }
   }
 
-  .code {
+  :not(pre) code {
     background-color: #e2e8f0;
     border: 1px solid #cbd5e0;
-    border-radius: 3px;
     padding: 0 2px;
   }
 
-  .code::before,
-  .code::after {
+  code::before,
+  code::after {
     display: none;
   }
 }
