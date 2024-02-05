@@ -42,14 +42,11 @@ test.describe("feature image", () => {
     const saveNotificationTitle = page.locator("#toast-1-title");
     const saveNotificationDescription = page.locator("#toast-1-description");
     await expect(saveNotificationTitle).toBeVisible();
-    await expect(saveNotificationTitle).toHaveText("Post has been updated.", {
-      useInnerText: true,
-    });
+    await expect(saveNotificationTitle).toHaveText("Post has been updated.");
 
     await expect(saveNotificationDescription).toBeVisible();
     await expect(saveNotificationDescription).toHaveText(
       "The post has been updated.",
-      { useInnerText: true },
     );
   });
 
@@ -101,9 +98,7 @@ test.describe("feature image", () => {
     // Check that the post was saved successfully
     const saveNotificationTitle = page.locator("#toast-1-title");
     await expect(saveNotificationTitle).toBeVisible();
-    await expect(saveNotificationTitle).toHaveText("Post has been updated.", {
-      useInnerText: true,
-    });
+    await expect(saveNotificationTitle).toHaveText("Post has been updated.");
   });
 
   test("the saved image should be visible in the drawer and can be deleted", async ({
@@ -141,9 +136,7 @@ test.describe("feature image", () => {
     // Wait for the save notification to appear
     const saveNotificationTitle = page.locator("#toast-1-title");
     await expect(saveNotificationTitle).toBeVisible();
-    await expect(saveNotificationTitle).toHaveText("Post has been updated.", {
-      useInnerText: true,
-    });
+    await expect(saveNotificationTitle).toHaveText("Post has been updated.");
 
     // Reopen the post
     await page.goto(`/posts/${postId}`);
