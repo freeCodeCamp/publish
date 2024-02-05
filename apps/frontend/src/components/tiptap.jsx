@@ -34,6 +34,7 @@ import { lowlight } from "lowlight";
 
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import CharacterCount from "@tiptap/extension-character-count";
+import Code from "@tiptap/extension-code";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -54,6 +55,20 @@ function ToolBar({ editor, user }) {
     if (url) {
       editor.commands.setLink({ href: url, target: "_blank" });
     }
+  };
+
+  const checkAndToggleInlineCode = () => {
+    if (editor.isActive("codeBlock")) {
+      editor.commands.toggleCodeBlock();
+    }
+    editor.commands.toggleCode();
+  };
+
+  const checkAndToggleCodeBlock = () => {
+    if (!editor.isActive("code")) {
+      editor.commands.unsetCode();
+    }
+    editor.commands.toggleCodeBlock();
   };
 
   const handleImageSubmit = async (event) => {
@@ -123,15 +138,26 @@ function ToolBar({ editor, user }) {
         leftIcon={<FontAwesomeIcon icon={faStrikethrough} />}
         onClick={() => editor.chain().focus().toggleStrike().run()}
       />
-      <Button
-        variant="ghost"
-        iconSpacing={0}
-        p={2}
-        title="Add code"
-        aria-label="Add code"
-        leftIcon={<FontAwesomeIcon icon={faCode} />}
-        onClick={() => editor.commands.toggleCodeBlock()}
-      />
+      <Menu>
+        <MenuButton
+          as={Button}
+          variant="ghost"
+          title="Select code"
+          aria-label="Select code"
+          iconSpacing={0}
+          p={2}
+          leftIcon={<FontAwesomeIcon icon={faCode} />}
+        />
+        <MenuList>
+          <MenuItem onClick={() => checkAndToggleInlineCode()}>
+            Toggle inline code
+          </MenuItem>
+
+          <MenuItem onClick={() => checkAndToggleCodeBlock()}>
+            Toggle code block
+          </MenuItem>
+        </MenuList>
+      </Menu>
       <Button
         variant="ghost"
         iconSpacing={0}
@@ -304,6 +330,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
         defaultLanguage: "javascript",
         lowlight,
       }),
+      Code.configure({}),
       CharacterCount.configure({}),
     ],
     content: content ? content : "",

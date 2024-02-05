@@ -120,7 +120,7 @@ async function createSeedPosts(strapi) {
       title: "Styled Post",
       author: { connect: [userIds[0]] },
       tags: { connect: tagIds.slice(0, 3) },
-      body: '<p><strong>Bold</strong></p>\n\n<p><em>Italic</em></p>\n\n<p><s>Strike</s></p>\n\n<p><code>Code</code></p>\n\n<blockquote>"Quote"</blockquote>\n\n<h1>H1</h1>\n\n<h2>H2</h2>\n\n<h3>H3</h3>\n\n<ul>\n<li>Bullet</li>\n</ul>\n\n<ol>\n<li>Ordered</li>\n\n<li>Ordered</li>\n</ol>',
+      body: '<p><strong>Bold</strong></p>\n\n<p><em>Italic</em></p>\n\n<p><s>Strike</s></p>\n\n<p><code>Inline Code</code></p>\n\n<pre><code>console.log("Code Block");</code></pre>\n\n<blockquote>"Quote"</blockquote>\n\n<h1>H1</h1>\n\n<h2>H2</h2>\n\n<h3>H3</h3>\n\n<ul>\n<li>Bullet</li>\n</ul>\n\n<ol>\n<li>Ordered</li>\n\n<li>Ordered</li>\n</ol>',
       publishedAt: new Date(),
     },
   });
