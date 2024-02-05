@@ -47,6 +47,9 @@ import StarterKit from "@tiptap/starter-kit";
 import { lowlight } from "lowlight";
 import { useEffect, useRef, useState } from "react";
 import { Markdown } from "tiptap-markdown";
+import { EditorContent, useEditor } from "@tiptap/react";
+
+import { extensions } from "@/lib/editor-config";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -463,45 +466,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   const { getFloatingProps } = useInteractions([hover]);
 
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-      }),
-      Placeholder.configure({
-        // Use a placeholder:
-        placeholder: "Write something …",
-      }),
-      Image.configure({
-        inline: true,
-        HTMLAttributes: {
-          class: "add-image-form",
-        },
-      }),
-      Youtube.configure({
-        width: 480,
-        height: 320,
-      }),
-      Link.configure({
-        protocols: ["http", "https", "mailto", "tel"],
-        autolink: false,
-        openOnClick: false,
-      }),
-      Markdown.configure({
-        transformPastedText: true,
-      }),
-      CodeBlockLowlight.configure({
-        defaultLanguage: "javascript",
-        lowlight,
-      }),
-      CharacterCount.configure({}),
-    ],
+    extensions,
     content: content ? content : "",
     autofocus: true,
     editorProps: {
