@@ -18,6 +18,7 @@ export const extensions = [
       keepMarks: true,
       keepAttributes: false,
     },
+    codeBlock: false,
   }),
   Placeholder.configure({
     // Use a placeholder:
