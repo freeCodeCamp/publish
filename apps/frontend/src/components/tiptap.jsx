@@ -101,6 +101,7 @@ function ToolBar({ editor, user }) {
   return (
     <Box
       display="flex"
+      alignItems="center"
       flexDirection="row"
       p="0.2rem"
       marginTop="1rem"
