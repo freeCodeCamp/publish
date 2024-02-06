@@ -35,7 +35,8 @@ export const extensions = [
     height: 320,
   }),
   Link.configure({
-    protocols: ["http", "https", "mailto", "tel"],        autolink: false,
+    protocols: ["http", "https", "mailto", "tel"],
+    autolink: false,
     openOnClick: false,
   }),
   Markdown.configure({
