@@ -173,11 +173,12 @@ export async function getServerSideProps(context) {
 }
 
 const FilterButton = ({ text, ...props }) => {
+  const bgColor = useColorModeValue("white", "gray.600");
+  const activeBgColor = useColorModeValue("gray.100", "whiteAlpha.200");
   return (
     <MenuButton
       as={Button}
       rightIcon={<Icon icon={faChevronDown} fixedWidth />}
-      bgColor="white"
       borderRadius="md"
       fontSize="14px"
       pl="20px"
@@ -188,8 +189,9 @@ const FilterButton = ({ text, ...props }) => {
       _hover={{
         boxShadow: "md",
       }}
+      bgColor={bgColor}
       _active={{
-        bgColor: "white",
+        bgColor: activeBgColor,
       }}
       {...props}
     >
@@ -211,6 +213,9 @@ export default function IndexPage({
 
   const bg = useColorModeValue("gray.200", "gray.700");
   const filterButton = useColorModeValue("white", "gray.600");
+  const menuBg = useColorModeValue("white", "gray.700");
+  const menuShadow = useColorModeValue("sm", "dark-lg");
+  const menuBorder = useColorModeValue("gray.200", "whiteAlpha.300");
   const tableHeader = useColorModeValue("gray.100", "gray.600");
   const tableBody = useColorModeValue("white", "gray.700");
   const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
@@ -391,14 +396,7 @@ export default function IndexPage({
           {isEditor(user) && (
             <>
               <Menu>
-                <FilterButton
-                  text={postButtonText[postType]}
-                  bgColor={filterButton}
-                  _active={{
-                    bgColor: "white",
-                    color: "black",
-                  }}
-                />
+                <FilterButton text={postButtonText[postType]} />
                 <MenuList zIndex={2}>
                   <MenuOptionGroup
                     value={postType}
@@ -436,10 +434,6 @@ export default function IndexPage({
                       onChange={(event) =>
                         handleShallowFilter("author", event.target.value)
                       }
-                      _focus={{
-                        bgColor: "white",
-                        color: "black",
-                      }}
                     />
                     <InputRightElement>
                       <Icon
@@ -449,7 +443,13 @@ export default function IndexPage({
                       />
                     </InputRightElement>
                   </InputGroup>
-                  <AutoCompleteList>
+                  <AutoCompleteList
+                    bgColor={menuBg}
+                    boxShadow={menuShadow}
+                    borderWidth="1px"
+                    borderStyle="solid"
+                    borderColor={menuBorder}
+                  >
                     {(searchedAuthors.length > 0 ? searchedAuthors : usersData)
                       .slice(0, 25)
                       .map((author) => (
@@ -483,10 +483,6 @@ export default function IndexPage({
                   onChange={(event) => {
                     handleShallowFilter("tags", event.target.value);
                   }}
-                  _focus={{
-                    bgColor: "white",
-                    color: "black",
-                  }}
                 />
                 <InputRightElement>
                   <Icon
@@ -496,7 +492,13 @@ export default function IndexPage({
                   />
                 </InputRightElement>
               </InputGroup>
-              <AutoCompleteList>
+              <AutoCompleteList
+                bgColor={menuBg}
+                boxShadow={menuShadow}
+                borderWidth="1px"
+                borderStyle="solid"
+                borderColor={menuBorder}
+              >
                 {(searchedTags.length > 0 ? searchedTags : tagsData.data)
                   .slice(0, 25)
                   .map((tag) => (
@@ -512,14 +514,7 @@ export default function IndexPage({
             </AutoComplete>
           </FormControl>
           <Menu>
-            <FilterButton
-              text={`Sort by: ${sortButtonNames[sortBy]}`}
-              bgColor={filterButton}
-              _active={{
-                bgColor: "white",
-                color: "black",
-              }}
-            />
+            <FilterButton text={`Sort by: ${sortButtonNames[sortBy]}`} />
             <MenuList zIndex={2}>
               <MenuOptionGroup
                 value={sortBy}
@@ -638,11 +633,6 @@ export default function IndexPage({
               <FilterButton
                 text={resultsPerPage}
                 data-testid="results-per-page"
-                bgColor={filterButton}
-                _active={{
-                  bgColor: "white",
-                  color: "black",
-                }}
               />
               <MenuList>
                 <MenuOptionGroup
