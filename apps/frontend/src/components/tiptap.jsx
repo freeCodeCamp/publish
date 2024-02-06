@@ -36,18 +36,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import CharacterCount from "@tiptap/extension-character-count";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
-import Placeholder from "@tiptap/extension-placeholder";
-import Youtube from "@tiptap/extension-youtube";
 import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { lowlight } from "lowlight";
 import { useEffect, useRef, useState } from "react";
-import { Markdown } from "tiptap-markdown";
-import { EditorContent, useEditor } from "@tiptap/react";
 
 import { extensions } from "@/lib/editor-config";
 
