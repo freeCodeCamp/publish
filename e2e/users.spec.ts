@@ -28,12 +28,12 @@ test.describe("inviting a user", () => {
   test("invitations can be created and revoked", async () => {
     await usersPage.inviteUser(NEW_USER_CREDENTIALS.identifier);
     await expect(
-      await usersPage.getInvitedUser(NEW_USER_CREDENTIALS.identifier),
+      usersPage.getInvitedUser(NEW_USER_CREDENTIALS.identifier),
     ).toBeVisible();
 
     await usersPage.revokeUser(NEW_USER_CREDENTIALS.identifier);
     await expect(
-      await usersPage.getInvitedUser(NEW_USER_CREDENTIALS.identifier),
+      usersPage.getInvitedUser(NEW_USER_CREDENTIALS.identifier),
     ).toBeHidden();
   });
 
@@ -51,7 +51,7 @@ test.describe("inviting a user", () => {
     // After signing in, the invited user should be in the active list
     await usersPage.page.reload();
     await expect(
-      await usersPage.getActiveUser(NEW_USER_CREDENTIALS.identifier),
+      usersPage.getActiveUser(NEW_USER_CREDENTIALS.identifier),
     ).toBeVisible();
   });
 });

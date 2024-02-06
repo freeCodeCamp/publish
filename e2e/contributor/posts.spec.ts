@@ -21,8 +21,8 @@ test.describe("contributor", () => {
 
     // check that other user's posts are not in the list
     const ownPostsCount = await page.getByText("By contributor-user").count();
-    const otherPostsCouint = await page.getByText("By editor-user").count();
+    const otherPostsCount = await page.getByText("By editor-user").count();
     expect(ownPostsCount).toBeGreaterThanOrEqual(1);
-    expect(otherPostsCouint).toBe(0);
+    expect(otherPostsCount).toBe(0);
   });
 });

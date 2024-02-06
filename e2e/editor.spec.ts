@@ -18,14 +18,14 @@ test("it should be possible to type in the editor", async ({ page }) => {
 
 test("it should have eleven buttons in the toolbar", async ({ page }) => {
   const buttons = page.locator("#toolbar > button");
-  expect(await buttons.count()).toBe(10);
+  await expect(buttons).toHaveCount(10);
 
   const addImageButton = page.locator("#toolbar > label > button");
-  expect(await addImageButton.count()).toBe(1);
+  await expect(addImageButton).toHaveCount(1);
 });
 
 test("it should be possible to edit the title", async ({ page }) => {
-  page.getByTestId("post-title").click();
+  await page.getByTestId("post-title").click();
 
   const titleField = page.getByTestId("post-title-field");
   await titleField.fill("New Title");
@@ -33,4 +33,20 @@ test("it should be possible to edit the title", async ({ page }) => {
 
   const newTitle = await page.getByTestId("post-title").innerText();
   expect(newTitle).toBe("New Title");
+});
+
+test("it should have bubble menu when text is selected with 3 buttons", async ({
+  page,
+}) => {
+  const bubbleMenu = page.locator("#bubble-menu");
+  await expect(bubbleMenu).not.toBeVisible();
+
+  await page.getByTestId("editor").fill("Hello World");
+  await page.getByTestId("editor").selectText();
+
+  await expect(bubbleMenu).toBeVisible();
+  await expect(bubbleMenu).toHaveCount(1);
+
+  const buttons = page.locator("#bubble-menu > button");
+  await expect(buttons).toHaveCount(3);
 });
