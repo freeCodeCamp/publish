@@ -69,7 +69,17 @@ export async function getServerSideProps(context) {
 export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bg = useColorModeValue("gray.200", "gray.700");
-  const container = useColorModeValue("white", "gray.800");
+  const container = useColorModeValue("white", "rgb(36, 44, 58)");
+  const revokeBtnHoverBg = useColorModeValue(
+    "red.50",
+    "rgba(254, 178, 178, 0.12)",
+  );
+  const revokeBtnHoverColor = useColorModeValue("red.600", "red.200");
+  const rowBorder = useColorModeValue("gray.200", "gray.500");
+  const rowHoverBgColor = useColorModeValue(
+    "rgb(243, 244, 246)",
+    "rgb(60, 70, 88)",
+  );
   const toast = useToast();
   const router = useRouter();
 
@@ -277,7 +287,7 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
                   flexWrap={{ base: "wrap", md: "nowrap" }}
                   rowGap="2"
                   borderBottom="1px solid"
-                  borderColor="gray.200"
+                  borderColor={rowBorder}
                 >
                   <Flex alignItems="center" pr="2">
                     <Avatar size="sm" mr="4" />
@@ -305,8 +315,8 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
                         fontSize="xs"
                         isLoading={revokingInvitation}
                         _hover={{
-                          bgColor: "red.50",
-                          color: "red.500",
+                          bgColor: revokeBtnHoverBg,
+                          color: revokeBtnHoverColor,
                         }}
                         onClick={() => revokeInvitation(invitedUser.id)}
                       >
@@ -356,9 +366,12 @@ export default function UsersIndex({ activeUsers, invitedUsers, roles, user }) {
                   flexWrap={{ base: "wrap", md: "nowrap" }}
                   rowGap="2"
                   borderBottom="1px solid"
-                  borderColor="gray.200"
+                  borderColor={rowBorder}
                   cursor="pointer"
                   onClick={() => router.push(`/users/${activeUser.id}`)}
+                  _hover={{
+                    bgColor: rowHoverBgColor,
+                  }}
                 >
                   <Flex alignItems="center" pr="2">
                     <Avatar size="sm" mr="4" src={profileImage} />
