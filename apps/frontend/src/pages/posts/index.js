@@ -217,8 +217,12 @@ export default function IndexPage({
   const menuShadow = useColorModeValue("sm", "dark-lg");
   const menuBorder = useColorModeValue("gray.200", "whiteAlpha.300");
   const tableHeader = useColorModeValue("gray.100", "gray.600");
-  const tableBody = useColorModeValue("white", "gray.700");
-  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
+  const tableBody = useColorModeValue("white", "rgb(36, 44, 58)");
+  const tableDataBorder = useColorModeValue("gray.200", "gray.500");
+  const hoverBgColor = useColorModeValue(
+    "rgb(243, 244, 246)",
+    "rgb(60, 70, 88)",
+  );
 
   const [searchedTags, setSearchedTags] = useState([]);
   const [hasSearchedTags, setHasSearchedTags] = useState(
@@ -535,8 +539,12 @@ export default function IndexPage({
           <Table boxShadow="md" borderWidth="1px">
             <Thead bgColor={tableHeader}>
               <Tr>
-                <Th>Title</Th>
-                <Th w="140px" display={{ base: "none", sm: "table-cell" }}>
+                <Th borderColor={tableDataBorder}>Title</Th>
+                <Th
+                  w="140px"
+                  display={{ base: "none", sm: "table-cell" }}
+                  borderColor={tableDataBorder}
+                >
                   Status
                 </Th>
               </Tr>
@@ -566,7 +574,7 @@ export default function IndexPage({
                     }}
                     position="relative"
                   >
-                    <Td>
+                    <Td borderColor={tableDataBorder}>
                       <ChakraLink
                         background="transparent"
                         as={NextLink}
@@ -613,7 +621,10 @@ export default function IndexPage({
                         {status}
                       </Box>
                     </Td>
-                    <Td display={{ base: "none", sm: "table-cell" }}>
+                    <Td
+                      display={{ base: "none", sm: "table-cell" }}
+                      borderColor={tableDataBorder}
+                    >
                       {status}
                     </Td>
                   </Tr>
