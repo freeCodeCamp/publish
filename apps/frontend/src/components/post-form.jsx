@@ -22,6 +22,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { isEditor } from "@/lib/current-user";
 import ScheduleMenu from "./schedule-menu";
+import { useDebouncedCallback } from "use-debounce";
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
@@ -43,6 +44,14 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [featureImage, setFeatureImageUrl] = useState();
   const [featureImageId, setFeatureImageId] = useState();
+  const debouncedContentSave = useDebouncedCallback(
+    () => {
+      console.log("auto saving post");
+      handleSubmit({ isAutoSave: true });
+    },
+    3000,
+    { maxWait: 5000 },
+  );
 
   useEffect(() => {
     if (post) {
@@ -97,7 +106,12 @@ const PostForm = ({ tags, user, authors, post }) => {
   };
 
   const handleSubmit = useCallback(
-    async (shouldPublish = null, scheduledDate = "", scheduledTime = "") => {
+    async ({
+      shouldPublish = null,
+      scheduledDate = "",
+      scheduledTime = "",
+      isAutoSave = false,
+    } = {}) => {
       const nonce = uuidv4();
       const token = user.jwt;
 
@@ -158,15 +172,18 @@ const PostForm = ({ tags, user, authors, post }) => {
       }
       try {
         await updatePost(postId, data, token);
-        toast({
-          title: getTitle(),
-          description: `The post ${
-            shouldPublish != null ? "status" : ""
-          } has been updated.`,
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
+        if (!isAutoSave) {
+          toast({
+            title: getTitle(),
+            description: `The post ${
+              shouldPublish != null ? "status" : ""
+            } has been updated.`,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+        debouncedContentSave.cancel();
         setUnsavedChanges(false);
       } catch (error) {
         toast({
@@ -188,6 +205,7 @@ const PostForm = ({ tags, user, authors, post }) => {
       author,
       postId,
       user,
+      debouncedContentSave,
     ],
   );
 
@@ -239,6 +257,7 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   function handleContentChange(content) {
     setContent(content);
+    debouncedContentSave(content);
 
     if (!unsavedChanges) {
       setUnsavedChanges(true);
