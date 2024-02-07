@@ -4,7 +4,7 @@ import { Markdown } from "tiptap-markdown";
 import { lowlight } from "lowlight";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import CharacterCount from "@tiptap/extension-character-count";
-import Image from "@tiptap/extension-image";
+import Image from "../components/tip-tap-extensions/image-extension"
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 
