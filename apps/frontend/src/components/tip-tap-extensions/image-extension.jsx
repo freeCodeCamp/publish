@@ -99,7 +99,7 @@ function ImageNode(props) {
   return (
     <NodeViewWrapper className={className}>
       <figure onClick={onOpen}>
-        <Img src={src} alt={alt} title={title} />
+        <Img src={src} alt={alt} />
         <figcaption>{title}</figcaption>
       </figure>
       <UpdateModalAttributes
