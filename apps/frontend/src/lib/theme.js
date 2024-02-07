@@ -20,6 +20,34 @@ const config = {
   },
 };
 
-const theme = extendTheme(config, withProse());
+const theme = extendTheme(
+  config,
+  withProse({
+    baseStyle: {
+      h1: {
+        mt: 0,
+        mb: "2rem",
+      },
+      h2: {
+        mt: 0,
+        mb: "1.5rem",
+      },
+      h3: {
+        mt: 0,
+        mb: "1rem",
+      },
+      h4: {
+        mt: 0,
+        mb: "0.5rem",
+      },
+      h5: {
+        margin: 0,
+      },
+      h6: {
+        margin: 0,
+      },
+    },
+  }),
+);
 
 export default theme;
