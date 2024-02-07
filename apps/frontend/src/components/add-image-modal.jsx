@@ -29,6 +29,8 @@ export default function ImageModal({
   const [currentCaption, setCurrentCaption] = useState(null);
   const [submitableImage, setSubmitableImage] = useState(null);
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const toast = useToast();
 
   const handleImagePreview = (event) => {
@@ -55,6 +57,8 @@ export default function ImageModal({
 
     formData.append("files", submitableImage[0]);
 
+    setIsUploading(true);
+
     const res = await fetch(new URL("api/upload", apiBase), {
       method: "post",
       headers: {
@@ -63,6 +67,8 @@ export default function ImageModal({
       },
       body: formData,
     });
+
+    setIsUploading(false);
 
     if (res.status === 200) {
       const data = await res.json();
@@ -178,7 +184,7 @@ export default function ImageModal({
                   <Button
                     colorScheme="blue"
                     type="submit"
-                    isDisabled={!submitableImage || !currentAlt}
+                    isDisabled={!submitableImage || !currentAlt || isUploading}
                   >
                     Save
                   </Button>
