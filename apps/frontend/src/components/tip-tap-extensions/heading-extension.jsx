@@ -1,4 +1,5 @@
 import BaseHeading from "@tiptap/extension-heading";
+import slugify from "slugify";
 
 export const Heading = BaseHeading.configure({
   levels: [1, 2, 3, 4, 5, 6],
@@ -32,7 +33,11 @@ export const Heading = BaseHeading.configure({
   renderHTML({ node }) {
     return [
       "h" + node.attrs.level,
-      { id: node.textContent.replace(/\s+/g, "-").toLowerCase() },
+      {
+        id: slugify(node.textContent.split(" ").join("-").toLowerCase(), {
+          lower: true,
+        }),
+      },
       0,
     ];
   },
