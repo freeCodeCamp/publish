@@ -10,7 +10,9 @@ export const Heading = BaseHeading.configure({
       id: {
         default: null,
         parseHTML: (element) => ({
-          id: element.textContent.split(" ").join("-").toLowerCase(),
+          id: slugify(element.textContent, {
+            lower: true,
+          }),
         }),
         renderHTML: (attributes) => ({
           id: attributes.id,
