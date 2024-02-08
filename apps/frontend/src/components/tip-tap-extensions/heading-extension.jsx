@@ -21,11 +21,18 @@ export const Heading = BaseHeading.configure({
 
   onSelectionUpdate({ editor }) {
     const { $from } = editor.state.selection;
+
+    // This line gets the node at the depth of
+    // the start of the selection. If the selection
+    // starts in a heading, this will be the heading node.
+
     const node = $from.node($from.depth);
 
     if (node.type.name === "heading") {
       editor.commands.updateAttributes("heading", {
-        id: node.textContent.split(" ").join("-").toLowerCase(),
+        id: slugify(node.textContent, {
+          lower: true,
+        }),
       });
     }
   },
@@ -34,7 +41,7 @@ export const Heading = BaseHeading.configure({
     return [
       "h" + node.attrs.level,
       {
-        id: slugify(node.textContent.split(" ").join("-").toLowerCase(), {
+        id: slugify(node.textContent, {
           lower: true,
         }),
       },
