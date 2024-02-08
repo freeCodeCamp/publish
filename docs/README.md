@@ -158,7 +158,7 @@ docker run -d --env-file .env-backend --name publish-backend -p 127.0.0.1:1337:1
 docker run -d --env-file .env-frontend --name publish-frontend -p 127.0.0.1:3000:3000 registry.digitalocean.com/fcc-cr/dev/publish-frontend
 ```
 
-To start the cron container, the `.env-cron` file's `STRAPI_ACCESS_TOKEN` must have an api token.  If there isn't one, create an api token in the [admin panel](https://publish-backend-anhgw.ondigitalocean.app/admin/settings/api-tokens/create) with the token type "custom" and one permission: `post.checkAndPublish`. Then run the cron container:
+To start the cron container, the `.env-cron` file's `STRAPI_ACCESS_TOKEN` must have an api token. If there isn't one, create an api token in the [admin panel](https://publish-backend-anhgw.ondigitalocean.app/admin/settings/api-tokens/create) with the token type "custom" and one permission: `post.checkAndPublish`. Then run the cron container:
 
 ```sh
 docker run -d --env-file .env-cron --name publish-cron registry.digitalocean.com/fcc-cr/dev/publish-cron
@@ -188,8 +188,8 @@ docker image prune
 Almost everything is standard, but there are a few things to note:
 
 App types: the `backend` and `frontend` apps need to be deployed as a `Web Service` and
- the `cron` app needs to be deployed as a `Worker`.
-  
+the `cron` app needs to be deployed as a `Worker`.
+
 Environment variables
 
 - `frontend` needs to have `NEXTAUTH_URL=${APP_URL}` otherwise follow the instructions in sample.env

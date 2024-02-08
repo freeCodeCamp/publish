@@ -319,7 +319,11 @@ const PostForm = ({ tags, user, authors, post }) => {
             <Formik
               initialValues={{ title: title }}
               onSubmit={(values, actions) => {
-                setTitle(values.title);
+                const newTitle =
+                  values.title.trim() == ""
+                    ? "(UNTITLED)"
+                    : values.title.trim();
+                setTitle(newTitle);
                 setIsEditingTitle(false);
                 actions.setSubmitting(false);
                 setUnsavedChanges(true);

@@ -1,37 +1,45 @@
 import {
-  faBold,
-  faCode,
-  faFileCode,
-  faHeader,
-  faImage,
-  faItalic,
-  faListOl,
-  faLink,
-  faListUl,
-  faQuoteLeft,
-  faStrikethrough,
-} from "@fortawesome/free-solid-svg-icons";
-import {
   Box,
   Button,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
+  MenuList,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
+import {
+  autoUpdate,
+  flip,
+  hide,
+  offset,
+  safePolygon,
+  shift,
+  useFloating,
+  useHover,
+  useInteractions,
+} from "@floating-ui/react";
+import {
+  faBold,
+  faCode,
+  faEdit,
+  faFileCode,
+  faHeader,
+  faImage,
+  faItalic,
+  faLink,
+  faListOl,
+  faListUl,
+  faQuoteLeft,
+  faStrikethrough,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import Image from "@tiptap/extension-image";
-import Placeholder from "@tiptap/extension-placeholder";
-import Link from "@tiptap/extension-link";
-import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Youtube from "@tiptap/extension-youtube";
-import { Markdown } from "tiptap-markdown";
-import Code from "@tiptap/extension-code";
-import CharacterCount from "@tiptap/extension-character-count";
-import { Heading } from "./tip-tap-extensions/heading-extension";
+import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
+import { useEffect, useRef, useState } from "react";
+
+import { extensions } from "@/lib/editor-config";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -86,6 +94,7 @@ function ToolBar({ editor, user }) {
   return (
     <Box
       display="flex"
+      alignItems="center"
       flexDirection="row"
       p="0.2rem"
       marginTop="1rem"
@@ -128,7 +137,7 @@ function ToolBar({ editor, user }) {
         title="Add code"
         aria-label="Add code"
         leftIcon={<FontAwesomeIcon icon={faCode} />}
-        onClick={() => editor.chain().focus().toggleCode().run()}
+        onClick={() => editor.commands.toggleCodeBlock()}
       />
       <Button
         variant="ghost"
@@ -263,53 +272,199 @@ function ToolBar({ editor, user }) {
   );
 }
 
+function BubbleMenuBar({ editor, isLinkHover }) {
+  const addLink = () => {
+    const url = window.prompt("URL");
+
+    if (url) {
+      editor.commands.setLink({ href: url, target: "_blank" });
+    }
+  };
+
+  return (
+    <BubbleMenu editor={editor}>
+      <Box
+        display={isLinkHover ? "none" : "flex"}
+        flexDirection="row"
+        p="0.2rem"
+        marginTop="1rem"
+        border="1px solid silver"
+        borderRadius="lg"
+        overflowX="auto"
+        id="bubble-menu"
+        background="white"
+      >
+        <Button
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add bold text"
+          aria-label="Add bold text"
+          leftIcon={<FontAwesomeIcon icon={faBold} />}
+          onClick={() => editor.chain().focus().toggleBold().run()}
+        />
+        <Button
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add italic text"
+          aria-label="Add italic text"
+          leftIcon={<FontAwesomeIcon icon={faItalic} />}
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+        />
+        <Button
+          variant="ghost"
+          iconSpacing={0}
+          p={2}
+          title="Add a link"
+          aria-label="Add a link"
+          leftIcon={<FontAwesomeIcon icon={faLink} />}
+          onClick={() => addLink()}
+        />
+      </Box>
+    </BubbleMenu>
+  );
+}
+
+function HoverMenuBar({
+  editor,
+  floatingMiddleware,
+  floatingRefs,
+  floatingStyles,
+  getFloatingProps,
+  link,
+  setLink,
+  linkEl,
+  setLinkEl,
+}) {
+  return (
+    <Box
+      p="0.2rem"
+      border="1px solid silver"
+      borderRadius="lg"
+      overflowX="auto"
+      id="bubble-menu"
+      background="white"
+      width="fit-content"
+      visibility={
+        floatingMiddleware.hide?.referenceHidden ? "hidden" : "visible"
+      }
+      zIndex={99999}
+      display="flex"
+      alignItems="center"
+      ref={floatingRefs.setFloating}
+      style={floatingStyles}
+      {...getFloatingProps()}
+    >
+      <Text
+        fontSize="sm"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+        maxW="25rem"
+        px={2}
+        as="a"
+        href={link}
+        target="_blank"
+      >
+        {link}
+      </Text>
+      <Button
+        size="sm"
+        variant="ghost"
+        iconSpacing={0}
+        p={1}
+        title="Edit link"
+        aria-label="Edit link"
+        leftIcon={<FontAwesomeIcon icon={faEdit} />}
+        onClick={() => {
+          const url = window.prompt("URL", link);
+          if (url) {
+            const { tr } = editor.state;
+            const pos = editor.view.posAtDOM(linkEl, 0);
+            const node = editor.view.state.doc.nodeAt(pos);
+            tr.removeMark(pos, pos + node.nodeSize, editor.schema.marks.link);
+            tr.addMark(
+              pos,
+              pos + node.nodeSize,
+              editor.schema.marks.link.create({ href: url }),
+            );
+            editor.view.dispatch(tr);
+            setLink(url);
+          }
+        }}
+      />
+      <Button
+        size="sm"
+        variant="ghost"
+        iconSpacing={0}
+        p={1}
+        title="Delete link"
+        aria-label="Delete link"
+        leftIcon={<FontAwesomeIcon icon={faTrash} />}
+        onClick={() => {
+          const { tr } = editor.state;
+          const pos = editor.view.posAtDOM(linkEl, 0);
+          const node = editor.view.state.doc.nodeAt(pos);
+          tr.removeMark(pos, pos + node.nodeSize, editor.schema.marks.link);
+          editor.view.dispatch(tr);
+          setLinkEl(null);
+          setLink(null);
+        }}
+      />
+    </Box>
+  );
+}
+
 const Tiptap = ({ handleContentChange, user, content }) => {
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: false,
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
+  const { colorMode } = useColorMode();
+
+  const [link, setLink] = useState(null);
+  const [linkEl, setLinkEl] = useState(null);
+  const [isHoverBarOpen, setIsHoverBarOpen] = useState(false);
+
+  const editorRef = useRef(null);
+
+  // Floating UI configuration
+  const {
+    refs: floatingRefs,
+    floatingStyles,
+    context: floatingCtx,
+    elements: floatingElements,
+    update: floatingUpdate,
+    middlewareData: floatingMiddleware,
+  } = useFloating({
+    placement: "top",
+    middleware: [
+      offset(4),
+      flip({
+        boundary: editorRef.current,
       }),
-      Placeholder.configure({
-        // Use a placeholder:
-        placeholder: "Write something …",
+      shift({ padding: 10 }),
+      hide({
+        boundary: editorRef.current,
       }),
-      Image.configure({
-        inline: true,
-        HTMLAttributes: {
-          class: "add-image-form",
-        },
-      }),
-      Heading,
-      Youtube.configure({
-        width: 480,
-        height: 320,
-      }),
-      Link.configure({
-        protocols: ["http", "https", "mailto", "tel"],
-      }),
-      Markdown.configure({
-        transformPastedText: true,
-      }),
-      Code.configure({
-        HTMLAttributes: {
-          class: "code",
-        },
-      }),
-      CharacterCount.configure({}),
     ],
+    whileElementsMounted: autoUpdate,
+    open: isHoverBarOpen,
+    onOpenChange: setIsHoverBarOpen,
+  });
+
+  const hover = useHover(floatingCtx, {
+    handleClose: safePolygon(),
+  });
+
+  const { getFloatingProps } = useInteractions([hover]);
+
+  const editor = useEditor({
+    extensions,
     content: content ? content : "",
     autofocus: true,
     editorProps: {
       attributes: {
-        class: "prose focus:outline-none",
+        class: `prose focus:outline-none ${
+          colorMode === "dark" ? "dark-border" : ""
+        }`,
         "data-testid": "editor",
       },
     },
@@ -320,12 +475,67 @@ const Tiptap = ({ handleContentChange, user, content }) => {
 
   const words = editor?.storage.characterCount.words();
 
+  const handleLinkHover = (event) => {
+    const target = event.target;
+    const pos = editor.view.posAtDOM(target, 0);
+
+    if (pos === null) return false;
+
+    const node = editor.state.doc.nodeAt(pos);
+    if (!node || !node.isAtom) return false;
+
+    if (
+      target.tagName.toLowerCase() === "a" &&
+      node.marks[0]?.type.name === "link"
+    ) {
+      const href = node.marks[0]?.attrs.href;
+      setLink(href);
+      setLinkEl(target);
+      floatingRefs.setReference(event.target);
+    }
+  };
+
+  useEffect(() => {
+    if (
+      isHoverBarOpen &&
+      floatingElements.reference &&
+      floatingElements.floating
+    ) {
+      const cleanup = autoUpdate(
+        floatingElements.reference,
+        floatingElements.floating,
+        floatingUpdate,
+      );
+      return cleanup;
+    }
+  }, [isHoverBarOpen, floatingElements, floatingUpdate]);
+
   return (
     <>
       <ToolBar editor={editor} user={user} />
-      <Prose>
-        <EditorContent editor={editor} />
-      </Prose>
+      {editor && <BubbleMenuBar editor={editor} isLinkHover={isHoverBarOpen} />}
+      {isHoverBarOpen && (
+        <HoverMenuBar
+          editor={editor}
+          floatingMiddleware={floatingMiddleware}
+          floatingRefs={floatingRefs}
+          floatingStyles={floatingStyles}
+          getFloatingProps={getFloatingProps}
+          link={link}
+          setLink={setLink}
+          linkEl={linkEl}
+          setLinkEl={setLinkEl}
+        />
+      )}
+      <div ref={editorRef}>
+        <Prose>
+          <EditorContent
+            editor={editor}
+            id="editor"
+            onMouseOver={handleLinkHover}
+          />
+        </Prose>
+      </div>
       <Box right="50px" bottom="50px" zIndex="1" position="fixed">
         <Text
           fontSize="xl"

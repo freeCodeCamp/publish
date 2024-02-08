@@ -26,4 +26,3 @@ services:
 
 volumes:
   strapi-data:
-

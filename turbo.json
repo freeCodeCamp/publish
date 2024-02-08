@@ -9,11 +9,21 @@
       "dependsOn": ["build"]
     },
     "test": {},
-    "lint": { "dependsOn": ["prettier-check", "eslint", "type-check"] },
-    "prettier-check": {},
+    "lint": {
+      "dependsOn": [
+        "//#prettier-check",
+        "//#eslint",
+        "eslint",
+        "//#type-check",
+        "type-check"
+      ]
+    },
+    "//#prettier-check": {},
+    "//#type-check": {},
     "type-check": {},
+    "//#eslint": {},
     "eslint": {},
-    "format": {},
+    "//#format": {},
     "develop": {
       "cache": false,
       "persistent": true

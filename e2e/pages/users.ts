@@ -9,11 +9,11 @@ export class UsersPage {
     this.invitedUsers = page.locator('[data-testid="invited-user"]');
   }
 
-  async getInvitedUser(email: string) {
+  getInvitedUser(email: string) {
     return this.invitedUsers.filter({ hasText: email });
   }
 
-  async getActiveUser(email: string) {
+  getActiveUser(email: string) {
     return this.activeUsers.filter({ hasText: email });
   }
 
@@ -25,10 +25,9 @@ export class UsersPage {
   }
 
   async revokeUser(email: string) {
-    const revokeButton = (await this.getInvitedUser(email)).getByRole(
-      "button",
-      { name: "Revoke" }
-    );
+    const revokeButton = this.getInvitedUser(email).getByRole("button", {
+      name: "Revoke",
+    });
     await revokeButton.click();
   }
 
