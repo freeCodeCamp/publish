@@ -49,5 +49,5 @@ export const extensions = [
     lowlight,
   }),
   CharacterCount.configure({}),
-  Heading
+  Heading,
 ];
