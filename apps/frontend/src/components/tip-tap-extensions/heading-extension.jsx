@@ -1,18 +1,38 @@
 import BaseHeading from "@tiptap/extension-heading";
-import { mergeAttributes } from "@tiptap/core";
 
 export const Heading = BaseHeading.configure({
   levels: [1, 2, 3, 4, 5, 6],
 }).extend({
-  renderHTML({ node, HTMLAttributes }) {
-    const hasLevel = this.options.levels.includes(node.attrs.level);
-    const level = hasLevel ? node.attrs.level : this.options.levels[0];
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      id: {
+        default: null,
+        parseHTML: (element) => ({
+          id: element.textContent.split(" ").join("-").toLowerCase(),
+        }),
+        renderHTML: (attributes) => ({
+          id: attributes.id,
+        }),
+      },
+    };
+  },
 
-    return [
-      `h${level}`,
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+  onSelectionUpdate({ editor }) {
+    const { $from } = editor.state.selection;
+    const node = $from.node($from.depth);
+
+    if (node.type.name === "heading") {
+      editor.commands.updateAttributes("heading", {
         id: node.textContent.split(" ").join("-").toLowerCase(),
-      }),
+      });
+    }
+  },
+
+  renderHTML({ node }) {
+    return [
+      "h" + node.attrs.level,
+      { id: node.textContent.replace(/\s+/g, "-").toLowerCase() },
       0,
     ];
   },
