@@ -18,9 +18,7 @@ import {
   IconButton,
   Wrap,
   Tag,
-  FormControl,
   Divider,
-  FormErrorMessage,
   TagLabel,
   TagCloseButton,
   CloseButton,
@@ -32,7 +30,6 @@ import {
   DrawerContent,
   useToast,
 } from "@chakra-ui/react";
-import { Field, Form, Formik } from "formik";
 import slugify from "slugify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -56,7 +53,6 @@ const EditorDrawer = ({
 }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [searchedTags, setSearchedTags] = useState([]);
-  const [isAddingTag, setIsAddingTag] = useState(false);
 
   const [postTagInputText, setPostTagInputText] = useState("");
   const [postTags, setPostTags] = useState([]);
@@ -317,6 +313,14 @@ const EditorDrawer = ({
                   handleTagSearch(event.target.value);
                   setPostTagInputText(event.target.value);
                 }}
+                onKeyUp={(event) => {
+                  const noResults = searchedTags.length === 0;
+                  if (event.key === "Enter" && noResults) {
+                    event.preventDefault();
+                    handleTagSubmit(event.target.value);
+                    setPostTagInputText("");
+                  }
+                }}
               />
               <AutoCompleteList>
                 {(searchedTags.length > 0 ? searchedTags : tagsList)
@@ -325,8 +329,6 @@ const EditorDrawer = ({
                     <AutoCompleteItem
                       key={tag.id}
                       value={tag.attributes.name}
-                      // this gives is the opportunity to add the tag to the post
-                      // by setting the label to the slug
                       label={tag.attributes.slug}
                       textTransform="capitalize"
                       onClick={() => {
@@ -339,73 +341,6 @@ const EditorDrawer = ({
                   ))}
               </AutoCompleteList>
             </AutoComplete>
-            {isEditor(user) && (
-              <>
-                {!isAddingTag ? (
-                  <Button
-                    colorScheme="blue"
-                    variant="link"
-                    onClick={() => setIsAddingTag(true)}
-                  >
-                    Add new Tag
-                  </Button>
-                ) : (
-                  <>
-                    <Spacer h="1rem" />
-                    <Formik
-                      initialValues={{ tagName: "" }}
-                      onSubmit={(values, actions) => {
-                        setIsAddingTag(false);
-                        handleTagSubmit(values.tagName);
-                        actions.setSubmitting(false);
-                        handleUnsavedChanges();
-                      }}
-                    >
-                      {(props) => (
-                        <Form>
-                          <Field name="tagName">
-                            {({ field, form }) => (
-                              <FormControl
-                                isInvalid={
-                                  form.errors.tagName && form.touched.tagName
-                                }
-                              >
-                                <Input
-                                  {...field}
-                                  placeholder="tag name"
-                                  w="100%"
-                                  required
-                                />
-                                <FormErrorMessage>
-                                  {form.errors.tagName}
-                                </FormErrorMessage>
-                              </FormControl>
-                            )}
-                          </Field>
-                          <Button
-                            colorScheme="blue"
-                            isLoading={props.isSubmitting}
-                            type="submit"
-                            w="100%"
-                            margin={{ base: "1rem 0 0 0" }}
-                          >
-                            Submit
-                          </Button>
-                          <Button
-                            colorScheme="red"
-                            width="100%"
-                            margin={{ base: "1rem 0 0 0" }}
-                            onClick={() => setIsAddingTag(false)}
-                          >
-                            Cancel
-                          </Button>
-                        </Form>
-                      )}
-                    </Formik>
-                  </>
-                )}
-              </>
-            )}
             <Spacer h="1rem" />
             {isEditor(user) && (
               <>
