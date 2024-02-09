@@ -315,7 +315,7 @@ const EditorDrawer = ({
                 }}
                 onKeyUp={(event) => {
                   const noResults = searchedTags.length === 0;
-                  if (event.key === "Enter" && noResults) {
+                  if (event.key === "Enter" && noResults && isEditor(user)) {
                     event.preventDefault();
                     handleTagSubmit(event.target.value);
                     setPostTagInputText("");
