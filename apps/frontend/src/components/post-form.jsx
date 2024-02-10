@@ -55,6 +55,7 @@ const PostForm = ({ tags, user, authors, post }) => {
   const [featureImage, setFeatureImageUrl] = useState();
   const [featureImageId, setFeatureImageId] = useState();
   const [saveStatus, setSaveStatus] = useState(null);
+  const [postStatus, setPostStatus] = useState(null);
 
   const debouncedContentSave = useDebouncedCallback(
     () => {
@@ -83,6 +84,14 @@ const PostForm = ({ tags, user, authors, post }) => {
           new URL(feature_image.data.attributes.formats.thumbnail.url, apiBase),
         );
         setFeatureImageId(feature_image.data.id);
+      }
+
+      if (post.attributes.publishedAt != null) {
+        setPostStatus("published");
+      } else if (post.attributes.scheduled_at != null) {
+        setPostStatus("scheduled");
+      } else {
+        setPostStatus("draft");
       }
     }
   }, [post]);
@@ -173,15 +182,18 @@ const PostForm = ({ tags, user, authors, post }) => {
       if (shouldPublish === "unpublished") {
         data.data.publishedAt = null;
         data.data.scheduled_at = null;
+        setPostStatus("draft");
       }
 
       if (shouldPublish === "later") {
         data.data.scheduled_at = handleSchedule();
+        setPostStatus("scheduled");
       }
 
       if (shouldPublish == "now") {
         data.data.publishedAt = new Date().toISOString();
         data.data.scheduled_at = null;
+        setPostStatus("published");
       }
       try {
         await updatePost(postId, data, token);
@@ -272,7 +284,10 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   function handleContentChange(content) {
     setContent(content);
-    debouncedContentSave(content);
+    if (postStatus === "draft") {
+      // Enable auto save only for drafts
+      debouncedContentSave(content);
+    }
 
     if (!unsavedChanges) {
       setUnsavedChanges(true);
