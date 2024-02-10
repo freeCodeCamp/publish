@@ -59,7 +59,6 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const debouncedContentSave = useDebouncedCallback(
     () => {
-      console.log("auto saving post");
       handleSubmit({ isAutoSave: true });
     },
     3000,
