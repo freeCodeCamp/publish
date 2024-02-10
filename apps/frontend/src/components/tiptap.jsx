@@ -7,6 +7,7 @@ import {
   MenuList,
   Text,
   useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import {
   autoUpdate,
@@ -36,17 +37,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
-import CharacterCount from "@tiptap/extension-character-count";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
-import Placeholder from "@tiptap/extension-placeholder";
-import Youtube from "@tiptap/extension-youtube";
 import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { lowlight } from "lowlight";
 import { useEffect, useRef, useState } from "react";
-import { Markdown } from "tiptap-markdown";
+
+import { extensions } from "@/lib/editor-config";
 
 function ToolBar({ editor, user }) {
   const addYoutubeEmbed = () => {
@@ -101,6 +95,7 @@ function ToolBar({ editor, user }) {
   return (
     <Box
       display="flex"
+      alignItems="center"
       flexDirection="row"
       p="0.2rem"
       marginTop="1rem"
@@ -279,6 +274,7 @@ function ToolBar({ editor, user }) {
 }
 
 function BubbleMenuBar({ editor, isLinkHover }) {
+  const menuBgColor = useColorModeValue("white", "gray.700");
   const addLink = () => {
     const url = window.prompt("URL");
 
@@ -298,7 +294,7 @@ function BubbleMenuBar({ editor, isLinkHover }) {
         borderRadius="lg"
         overflowX="auto"
         id="bubble-menu"
-        background="white"
+        background={menuBgColor}
       >
         <Button
           variant="ghost"
@@ -343,6 +339,8 @@ function HoverMenuBar({
   linkEl,
   setLinkEl,
 }) {
+  const menuBgColor = useColorModeValue("white", "gray.700");
+
   return (
     <Box
       p="0.2rem"
@@ -350,7 +348,7 @@ function HoverMenuBar({
       borderRadius="lg"
       overflowX="auto"
       id="bubble-menu"
-      background="white"
+      background={menuBgColor}
       width="fit-content"
       visibility={
         floatingMiddleware.hide?.referenceHidden ? "hidden" : "visible"
@@ -463,45 +461,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
   const { getFloatingProps } = useInteractions([hover]);
 
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-      }),
-      Placeholder.configure({
-        // Use a placeholder:
-        placeholder: "Write something …",
-      }),
-      Image.configure({
-        inline: true,
-        HTMLAttributes: {
-          class: "add-image-form",
-        },
-      }),
-      Youtube.configure({
-        width: 480,
-        height: 320,
-      }),
-      Link.configure({
-        protocols: ["http", "https", "mailto", "tel"],
-        autolink: false,
-        openOnClick: false,
-      }),
-      Markdown.configure({
-        transformPastedText: true,
-      }),
-      CodeBlockLowlight.configure({
-        defaultLanguage: "javascript",
-        lowlight,
-      }),
-      CharacterCount.configure({}),
-    ],
+    extensions,
     content: content ? content : "",
     autofocus: true,
     editorProps: {

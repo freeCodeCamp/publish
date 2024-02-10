@@ -52,8 +52,12 @@ export async function getServerSideProps(context) {
 }
 
 const TagsTableBody = (tags, router) => {
-  const tableBody = useColorModeValue("white", "gray.700");
-  const hoverBgColor = useColorModeValue("rgb(243, 244, 246)", "gray.600");
+  const tableBody = useColorModeValue("white", "rgb(36, 44, 58)");
+  const tableDataBorder = useColorModeValue("gray.200", "gray.500");
+  const hoverBgColor = useColorModeValue(
+    "rgb(243, 244, 246)",
+    "rgb(60, 70, 88)",
+  );
 
   return (
     <Tbody bgColor={tableBody}>
@@ -71,7 +75,7 @@ const TagsTableBody = (tags, router) => {
             }}
             onClick={() => router.push(`/tags/${tag.id}`)}
           >
-            <Td>
+            <Td borderColor={tableDataBorder}>
               <Box fontWeight="600">{name}</Box>
               <Box
                 fontSize="sm"
@@ -82,8 +86,16 @@ const TagsTableBody = (tags, router) => {
                 {slug} • {noOfPosts} post{noOfPosts > 1 ? "s" : ""}
               </Box>
             </Td>
-            <Td display={{ base: "none", sm: "table-cell" }}>{slug}</Td>
-            <Td display={{ base: "none", sm: "table-cell" }}>
+            <Td
+              display={{ base: "none", sm: "table-cell" }}
+              borderColor={tableDataBorder}
+            >
+              {slug}
+            </Td>
+            <Td
+              display={{ base: "none", sm: "table-cell" }}
+              borderColor={tableDataBorder}
+            >
               {noOfPosts} post{noOfPosts > 1 ? "s" : ""}
             </Td>
           </Tr>
@@ -131,6 +143,7 @@ export default function TagsIndex({ tags, isInternal, pagination, user }) {
 
   const bg = useColorModeValue("gray.200", "gray.700");
   const tableHeader = useColorModeValue("gray.100", "gray.600");
+  const tableDataBorder = useColorModeValue("gray.200", "gray.500");
 
   const { getRadioProps, getRootProps } = useRadioGroup({
     defaultValue: isInternal ? "internal" : "public",
@@ -197,11 +210,19 @@ export default function TagsIndex({ tags, isInternal, pagination, user }) {
           <Table boxShadow="md" borderWidth="1px">
             <Thead bgColor={tableHeader}>
               <Tr>
-                <Th>Tag</Th>
-                <Th w="20%" display={{ base: "none", sm: "table-cell" }}>
+                <Th borderColor={tableDataBorder}>Tag</Th>
+                <Th
+                  w="20%"
+                  display={{ base: "none", sm: "table-cell" }}
+                  borderColor={tableDataBorder}
+                >
                   Slug
                 </Th>
-                <Th w="20%" display={{ base: "none", sm: "table-cell" }}>
+                <Th
+                  w="20%"
+                  display={{ base: "none", sm: "table-cell" }}
+                  borderColor={tableDataBorder}
+                >
                   No. of Posts
                 </Th>
               </Tr>

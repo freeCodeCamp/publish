@@ -4,15 +4,9 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getPost } from "@/lib/posts";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { EditorContent, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import Placeholder from "@tiptap/extension-placeholder";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-
-import { Image as TiptapImage } from "@tiptap/extension-image";
-import Youtube from "@tiptap/extension-youtube";
-import Link from "@tiptap/extension-link";
 import { Text, Box, Image, useToast } from "@chakra-ui/react";
-import { lowlight } from "lowlight";
+
+import { extensions } from "@/lib/editor-config";
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
@@ -43,36 +37,7 @@ export default function PreviewArticlePage({ post, baseUrl }) {
   const toastIdRef = useRef();
 
   const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        bulletList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-        orderedList: {
-          keepMarks: true,
-          keepAttributes: false,
-        },
-      }),
-      Placeholder.configure({
-        // Use a placeholder:
-        placeholder: "Write something …",
-      }),
-      TiptapImage.configure({
-        inline: true,
-      }),
-      Youtube.configure({
-        width: 480,
-        height: 320,
-      }),
-      CodeBlockLowlight.configure({
-        defaultLanguage: "javascript",
-        lowlight,
-      }),
-      Link.configure({
-        protocols: ["http", "https", "mailto", "tel"],
-      }),
-    ],
+    extensions,
     content: post?.body,
     editable: false,
     editorProps: {
