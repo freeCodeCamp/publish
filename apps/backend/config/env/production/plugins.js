@@ -19,4 +19,23 @@ module.exports = ({ env }) => ({
       },
     },
   },
+  upload: {
+    config: {
+      provider: "aws-s3",
+      providerOptions: {
+        baseUrl: `https://s3.${env("AWS_REGION")}.amazonaws.com/${env(
+          "AWS_BUCKET",
+        )}`, // configure how assets' urls will be saved inside Strapi
+        s3Options: {
+          accessKeyId: env("AWS_ACCESS_KEY_ID"),
+          secretAccessKey: env("AWS_ACCESS_SECRET"),
+          region: env("AWS_REGION"),
+          params: {
+            ACL: "public-read",
+            Bucket: env("AWS_BUCKET"),
+          },
+        },
+      },
+    },
+  },
 });

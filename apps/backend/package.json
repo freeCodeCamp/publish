@@ -20,6 +20,7 @@
     "@strapi/plugin-i18n": "4.15.5",
     "@strapi/plugin-users-permissions": "4.15.5",
     "@strapi/provider-email-nodemailer": "^4.12.4",
+    "@strapi/provider-upload-aws-s3": "^4.20.0",
     "@strapi/strapi": "4.15.5",
     "nanoid": "^3.3.6",
     "pg": "^8.11.3",
