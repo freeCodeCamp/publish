@@ -7,6 +7,7 @@ import CharacterCount from "@tiptap/extension-character-count";
 import Image from "../components/tip-tap-extensions/image-extension";
 import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
+import { Heading } from "@/components/tip-tap-extensions/heading-extension";
 
 export const extensions = [
   StarterKit.configure({
@@ -18,6 +19,7 @@ export const extensions = [
       keepMarks: true,
       keepAttributes: false,
     },
+    heading: false,
     codeBlock: false,
   }),
   Placeholder.configure({
@@ -47,4 +49,5 @@ export const extensions = [
     lowlight,
   }),
   CharacterCount.configure({}),
+  Heading,
 ];

@@ -7,6 +7,8 @@ import {
   MenuList,
   Text,
   useDisclosure,
+  useColorMode,
+  useColorModeValue
 } from "@chakra-ui/react";
 import {
   autoUpdate,
@@ -244,6 +246,7 @@ function ToolBar({ editor, user }) {
 }
 
 function BubbleMenuBar({ editor, isLinkHover }) {
+  const menuBgColor = useColorModeValue("white", "gray.700");
   const addLink = () => {
     const url = window.prompt("URL");
 
@@ -263,7 +266,7 @@ function BubbleMenuBar({ editor, isLinkHover }) {
         borderRadius="lg"
         overflowX="auto"
         id="bubble-menu"
-        background="white"
+        background={menuBgColor}
       >
         <Button
           variant="ghost"
@@ -308,6 +311,8 @@ function HoverMenuBar({
   linkEl,
   setLinkEl,
 }) {
+  const menuBgColor = useColorModeValue("white", "gray.700");
+
   return (
     <Box
       p="0.2rem"
@@ -315,7 +320,7 @@ function HoverMenuBar({
       borderRadius="lg"
       overflowX="auto"
       id="bubble-menu"
-      background="white"
+      background={menuBgColor}
       width="fit-content"
       visibility={
         floatingMiddleware.hide?.referenceHidden ? "hidden" : "visible"

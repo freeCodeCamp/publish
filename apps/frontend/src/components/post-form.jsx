@@ -2,7 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import Tiptap from "@/components/tiptap";
 import EditorDrawer from "@/components/editor-drawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronLeft, faEdit } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronLeft,
+  faCircleCheck,
+  faCircleXmark,
+  faEdit,
+} from "@fortawesome/free-solid-svg-icons";
 import { v4 as uuidv4 } from "uuid";
 import slugify from "slugify";
 import {
@@ -14,6 +19,9 @@ import {
   Stack,
   FormControl,
   FormErrorMessage,
+  Divider,
+  chakra,
+  Spinner,
 } from "@chakra-ui/react";
 import { Field, Form, Formik } from "formik";
 import { updatePost } from "@/lib/posts";
@@ -22,6 +30,9 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { isEditor } from "@/lib/current-user";
 import ScheduleMenu from "./schedule-menu";
+import { useDebouncedCallback } from "use-debounce";
+
+const Icon = chakra(FontAwesomeIcon);
 
 const PostForm = ({ tags, user, authors, post }) => {
   const toast = useToast();
@@ -43,6 +54,16 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   const [featureImage, setFeatureImageUrl] = useState();
   const [featureImageId, setFeatureImageId] = useState();
+  const [saveStatus, setSaveStatus] = useState(null);
+  const [postStatus, setPostStatus] = useState(null);
+
+  const debouncedContentSave = useDebouncedCallback(
+    () => {
+      handleSubmit({ isAutoSave: true });
+    },
+    3000,
+    { maxWait: 5000 },
+  );
 
   useEffect(() => {
     if (post) {
@@ -62,6 +83,14 @@ const PostForm = ({ tags, user, authors, post }) => {
           new URL(feature_image.data.attributes.formats.thumbnail.url, apiBase),
         );
         setFeatureImageId(feature_image.data.id);
+      }
+
+      if (post.attributes.publishedAt != null) {
+        setPostStatus("published");
+      } else if (post.attributes.scheduled_at != null) {
+        setPostStatus("scheduled");
+      } else {
+        setPostStatus("draft");
       }
     }
   }, [post]);
@@ -97,7 +126,13 @@ const PostForm = ({ tags, user, authors, post }) => {
   };
 
   const handleSubmit = useCallback(
-    async (shouldPublish = null, scheduledDate = "", scheduledTime = "") => {
+    async ({
+      shouldPublish = null,
+      scheduledDate = "",
+      scheduledTime = "",
+      isAutoSave = false,
+    } = {}) => {
+      setSaveStatus("saving");
       const nonce = uuidv4();
       const token = user.jwt;
 
@@ -146,27 +181,34 @@ const PostForm = ({ tags, user, authors, post }) => {
       if (shouldPublish === "unpublished") {
         data.data.publishedAt = null;
         data.data.scheduled_at = null;
+        setPostStatus("draft");
       }
 
       if (shouldPublish === "later") {
         data.data.scheduled_at = handleSchedule();
+        setPostStatus("scheduled");
       }
 
       if (shouldPublish == "now") {
         data.data.publishedAt = new Date().toISOString();
         data.data.scheduled_at = null;
+        setPostStatus("published");
       }
       try {
         await updatePost(postId, data, token);
-        toast({
-          title: getTitle(),
-          description: `The post ${
-            shouldPublish != null ? "status" : ""
-          } has been updated.`,
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
+        if (!isAutoSave) {
+          toast({
+            title: getTitle(),
+            description: `The post ${
+              shouldPublish != null ? "status" : ""
+            } has been updated.`,
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+        debouncedContentSave.cancel();
+        setSaveStatus("saved");
         setUnsavedChanges(false);
       } catch (error) {
         toast({
@@ -176,6 +218,7 @@ const PostForm = ({ tags, user, authors, post }) => {
           duration: 5000,
           isClosable: true,
         });
+        setSaveStatus("error");
       }
     },
     [
@@ -188,6 +231,7 @@ const PostForm = ({ tags, user, authors, post }) => {
       author,
       postId,
       user,
+      debouncedContentSave,
     ],
   );
 
@@ -239,6 +283,10 @@ const PostForm = ({ tags, user, authors, post }) => {
 
   function handleContentChange(content) {
     setContent(content);
+    if (postStatus === "draft") {
+      // Enable auto save only for drafts
+      debouncedContentSave(content);
+    }
 
     if (!unsavedChanges) {
       setUnsavedChanges(true);
@@ -265,7 +313,32 @@ const PostForm = ({ tags, user, authors, post }) => {
               <Text fontSize="2xl">Posts</Text>
             </Button>
           </Box>
-          <Box ml="auto" display={"flex"}>
+          <Box ml="auto" display="flex" alignItems="center">
+            {saveStatus !== null && (
+              <>
+                <Flex alignItems="center">
+                  {saveStatus === "saved" && (
+                    <>
+                      <Icon mr={3} icon={faCircleCheck} />
+                      <Text fontSize="lg">Saved</Text>
+                    </>
+                  )}
+                  {saveStatus === "saving" && (
+                    <>
+                      <Spinner mr={3} size="sm" />
+                      <Text fontSize="lg">Saving...</Text>
+                    </>
+                  )}
+                  {saveStatus === "error" && (
+                    <>
+                      <Icon mr={3} icon={faCircleXmark} />
+                      <Text fontSize="lg">Error</Text>
+                    </>
+                  )}
+                </Flex>
+                <Divider orientation="vertical" mx="1rem" />
+              </>
+            )}
             {isEditor(user) && (
               <ScheduleMenu handleSubmit={handleSubmit} post={post} />
             )}

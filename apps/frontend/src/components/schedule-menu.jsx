@@ -165,7 +165,7 @@ const PublishedMenu = ({
               setScheduleOption("now");
             }
 
-            handleSubmit(scheduleOption);
+            handleSubmit({ shouldPublish: scheduleOption });
             onClose();
           }}
           mr="1rem"
@@ -283,7 +283,11 @@ const NotPublishedMenu = ({
               setScheduleOption("now");
             }
 
-            handleSubmit(scheduleOption, scheduledDate, scheduledTime);
+            handleSubmit({
+              shouldPublish: scheduleOption,
+              scheduledDate,
+              scheduledTime,
+            });
             onClose();
           }}
           isDisabled={
