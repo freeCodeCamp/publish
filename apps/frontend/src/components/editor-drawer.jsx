@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import { isEditor } from "@/lib/current-user";
 import Link from "next/link";
 import {
@@ -124,7 +124,6 @@ const EditorDrawer = ({
       setPostTags(newTags);
       handlePostTagId(newTagsId);
       setPostTagSlug(newTagSlugs);
-
       handleUnsavedChanges();
     }
   }
@@ -147,6 +146,10 @@ const EditorDrawer = ({
       const res = await createTag(token, data);
       setTagsList([...tags, res.data]);
       setSearchedTags([]);
+
+      setPostTags([...postTags, res.data.attributes.name]);
+      setPostTagSlug([...postTagSlug, res.data.attributes.slug]);
+      handlePostTagId([...postTagId, res.data.id]);
 
       toast({
         title: "Tag Created.",
@@ -300,12 +303,31 @@ const EditorDrawer = ({
               openOnFocus
               restoreOnBlurIfEmpty={false}
               onSelectOption={(list) => {
-                addTag(list.item.value, list.item.label);
-                setPostTagInputText("");
+                const item = list.item.value;
+
+                console.log(item.value)
+
+                const inSearchedTags = searchedTags.some((tag) => tag.attributes.name === item);
+                const inDefaultTags = tagsList.some((tag) => tag.attributes.name === item);
+
+                const tagExists = !inSearchedTags && !inDefaultTags;
+
+                if(isEditor(user) && !tagExists && searchedTags.length > 0){
+                  handleTagSubmit(postTagInputText);
+                  addTag(postTagInputText, postTagInputText);
+                  setPostTagInputText("");
+                }
+
+                if(inSearchedTags || inDefaultTags) {
+                  addTag(list.item.value, list.item.label);
+                  setPostTagInputText("");
+                }
+
               }}
               creatable={isEditor(user) && searchedTags.length === 0}
               onCreateOption={() => {
                 handleTagSubmit(postTagInputText);
+                addTag(postTagInputText, postTagInputText);
                 setPostTagInputText("");
               }}
             >
@@ -337,8 +359,19 @@ const EditorDrawer = ({
                       {tag.attributes.name}
                     </AutoCompleteItem>
                   ))}
+                {
+                  searchedTags.length > 0 && !searchedTags.includes(postTagInputText) && (
+                    <AutoCompleteItem
+                      value={postTagInputText}
+                      label={postTagInputText}
+                      textTransform="capitalize"
+                    >
+                      <p>Create a Tag Named <strong>{postTagInputText}</strong></p>
+                    </AutoCompleteItem>
+                  )
+                }
                 <AutoCompleteCreatable>
-                  {({ value }) => <span>Create a tag named <strong>{value}</strong></span>}
+                  {({ value }) => <span>Create a Tag Named <strong>{value}</strong></span>}
                 </AutoCompleteCreatable>
               </AutoCompleteList>
             </AutoComplete>
