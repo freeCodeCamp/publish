@@ -18,6 +18,8 @@ export default function App({
   const pathname = usePathname();
   const isPreview = pathname.includes("/preview/");
 
+  // It is best to disable the ChakraProvider when in preview post mode to avoid interference with the styles.
+
   return (
     <SessionProvider session={session}>
       <ChakraProvider
