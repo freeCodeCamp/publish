@@ -62,8 +62,20 @@ export default function PreviewArticlePage({ post, baseUrl }) {
   });
 
   return (
-    <>
-      <Box m="0rem auto" w="100%" maxW="1060px" pt="5rem" px="4vw">
+    <Box width={"920px"} margin={"0 auto"}>
+      <style jsx global>{`
+        ::selection {
+          background: #002ead;
+          text-shadow: none;
+          color: white;
+        }
+
+        body {
+          background-color: #ffff;
+          color: #0a0a23;
+        }
+      `}</style>
+      <Box m="0rem auto" w="100%" pt="5rem" px="4vw">
         <Text fontSize="xxx-large" fontWeight="bold">
           {post?.title}
         </Text>
@@ -106,6 +118,6 @@ export default function PreviewArticlePage({ post, baseUrl }) {
           <EditorContent editor={editor} />
         </Prose>
       </Box>
-    </>
+    </Box>
   );
 }
