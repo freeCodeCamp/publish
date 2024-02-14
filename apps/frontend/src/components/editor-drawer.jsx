@@ -305,8 +305,6 @@ const EditorDrawer = ({
               onSelectOption={(list) => {
                 const item = list.item.value;
 
-                console.log(item.value)
-
                 const inSearchedTags = searchedTags.some((tag) => tag.attributes.name === item);
                 const inDefaultTags = tagsList.some((tag) => tag.attributes.name === item);
 
@@ -350,7 +348,6 @@ const EditorDrawer = ({
                       key={tag.id}
                       value={tag.attributes.name}
                       label={tag.attributes.slug}
-                      textTransform="capitalize"
                       onClick={() => {
                         addTag(tag.attributes.name, tag.attributes.slug);
                         setPostTagInputText("");
@@ -360,11 +357,10 @@ const EditorDrawer = ({
                     </AutoCompleteItem>
                   ))}
                 {
-                  searchedTags.length > 0 && !searchedTags.includes(postTagInputText) && (
+                  searchedTags.length > 0 && !searchedTags.some((tag) => tag.attributes.name === postTagInputText ) && (
                     <AutoCompleteItem
                       value={postTagInputText}
                       label={postTagInputText}
-                      textTransform="capitalize"
                     >
                       <p>Create a Tag Named <strong>{postTagInputText}</strong></p>
                     </AutoCompleteItem>
