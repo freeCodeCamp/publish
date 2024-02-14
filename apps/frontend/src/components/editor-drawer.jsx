@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { isEditor } from "@/lib/current-user";
 import Link from "next/link";
 import {
@@ -305,22 +305,25 @@ const EditorDrawer = ({
               onSelectOption={(list) => {
                 const item = list.item.value;
 
-                const inSearchedTags = searchedTags.some((tag) => tag.attributes.name === item);
-                const inDefaultTags = tagsList.some((tag) => tag.attributes.name === item);
+                const inSearchedTags = searchedTags.some(
+                  (tag) => tag.attributes.name === item,
+                );
+                const inDefaultTags = tagsList.some(
+                  (tag) => tag.attributes.name === item,
+                );
 
                 const tagExists = !inSearchedTags && !inDefaultTags;
 
-                if(isEditor(user) && !tagExists && searchedTags.length > 0){
+                if (isEditor(user) && !tagExists && searchedTags.length > 0) {
                   handleTagSubmit(postTagInputText);
                   addTag(postTagInputText, postTagInputText);
                   setPostTagInputText("");
                 }
 
-                if(inSearchedTags || inDefaultTags) {
+                if (inSearchedTags || inDefaultTags) {
                   addTag(list.item.value, list.item.label);
                   setPostTagInputText("");
                 }
-
               }}
               creatable={isEditor(user) && searchedTags.length === 0}
               onCreateOption={() => {
@@ -356,18 +359,25 @@ const EditorDrawer = ({
                       {tag.attributes.name}
                     </AutoCompleteItem>
                   ))}
-                {
-                  searchedTags.length > 0 && !searchedTags.some((tag) => tag.attributes.name === postTagInputText ) && (
+                {searchedTags.length > 0 &&
+                  !searchedTags.some(
+                    (tag) => tag.attributes.name === postTagInputText,
+                  ) && (
                     <AutoCompleteItem
                       value={postTagInputText}
                       label={postTagInputText}
                     >
-                      <p>Create a Tag Named <strong>{postTagInputText}</strong></p>
+                      <p>
+                        Create a Tag Named <strong>{postTagInputText}</strong>
+                      </p>
                     </AutoCompleteItem>
-                  )
-                }
+                  )}
                 <AutoCompleteCreatable>
-                  {({ value }) => <span>Create a Tag Named <strong>{value}</strong></span>}
+                  {({ value }) => (
+                    <span>
+                      Create a Tag Named <strong>{value}</strong>
+                    </span>
+                  )}
                 </AutoCompleteCreatable>
               </AutoCompleteList>
             </AutoComplete>
