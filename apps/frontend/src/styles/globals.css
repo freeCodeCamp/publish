@@ -139,7 +139,6 @@
   /* typography */
   font-family: "Lato", sans-serif;
   font-style: normal;
-  font-size: 1.2rem;
   font-weight: 400;
   line-height: 1.6em;
   letter-spacing: 0;
@@ -147,6 +146,26 @@
   -webkit-font-smoothing: antialiased;
 }
 
+.preview p {
+  font-size: 22px;
+}
+
+.preview h1 {
+  font-size: 50px;
+  line-height: 1.15;
+}
+
 .preview h2 {
-  margin: 0.5em 0 0.2em !important;
+  font-size: 36px;
+  line-height: 1.15;
+  margin: 0.5em 0 0.2em;
+}
+
+.preview h3,
+.preview h4,
+.preview h5,
+.preview h6 {
+  font-size: 28px;
+  line-height: 1.15;
+  margin: 0.5em 0 0.2em;
 }
