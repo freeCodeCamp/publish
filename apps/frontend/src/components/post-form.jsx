@@ -68,11 +68,13 @@ const PostForm = ({ tags, user, authors, post }) => {
   useEffect(() => {
     if (post) {
       const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
-      const { title, body, slug, tags, feature_image } = post.attributes;
+      const { title, body, slug, tags, feature_image, author } =
+        post.attributes;
       const tagIds = tags.data.map((tag) => tag.id);
 
       setTitle(title);
       setContent(body);
+      setAuthor(author.data.id);
 
       setPostUrl(slug ?? "");
       setPostId(post.id);
