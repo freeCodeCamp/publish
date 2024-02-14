@@ -1,10 +1,10 @@
-import React, { useRef } from "react";
+import React from "react";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { getPost } from "@/lib/posts";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { Text, Box, Image, useToast } from "@chakra-ui/react";
+import { Text, Box, Image } from "@chakra-ui/react";
 
 import { extensions } from "@/lib/editor-config";
 
@@ -33,9 +33,6 @@ export async function getServerSideProps(context) {
 }
 
 export default function PreviewArticlePage({ post, baseUrl }) {
-  const toast = useToast();
-  const toastIdRef = useRef();
-
   const editor = useEditor({
     extensions,
     content: post?.body,
@@ -44,20 +41,6 @@ export default function PreviewArticlePage({ post, baseUrl }) {
       attributes: {
         class: "preview",
       },
-    },
-    onCreate: () => {
-      // Prevent from creating a new toast every time the editor is created
-      if (toastIdRef.current) {
-        toast.close(toastIdRef.current);
-      }
-      toastIdRef.current = toast({
-        title: `Preview Mode`,
-        description: `This is just a preview of the formatting of the content for readability. The page may look different when published on the publication.`,
-        isClosable: true,
-        status: "info",
-        position: "bottom-right",
-        duration: null,
-      });
     },
   });
 
@@ -71,11 +54,10 @@ export default function PreviewArticlePage({ post, baseUrl }) {
         }
 
         body {
-          background-color: #ffff;
-          color: #0a0a23;
+          background-color: #fff;
         }
       `}</style>
-      <Box m="0rem auto" w="100%" pt="5rem" px="4vw">
+      <Box m="0rem auto" pt="5rem" px="4vw">
         <Text fontSize="xxx-large" fontWeight="bold">
           {post?.title}
         </Text>
