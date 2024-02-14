@@ -3,6 +3,7 @@ import { isEditor } from "@/lib/current-user";
 import Link from "next/link";
 import {
   AutoComplete,
+  AutoCompleteCreatable,
   AutoCompleteInput,
   AutoCompleteItem,
   AutoCompleteList,
@@ -302,6 +303,11 @@ const EditorDrawer = ({
                 addTag(list.item.value, list.item.label);
                 setPostTagInputText("");
               }}
+              creatable={isEditor(user) && searchedTags.length === 0}
+              onCreateOption={() => {
+                handleTagSubmit(postTagInputText);
+                setPostTagInputText("");
+              }}
             >
               <AutoCompleteInput
                 variant="outline"
@@ -312,14 +318,6 @@ const EditorDrawer = ({
                 onChange={(event) => {
                   handleTagSearch(event.target.value);
                   setPostTagInputText(event.target.value);
-                }}
-                onKeyUp={(event) => {
-                  const noResults = searchedTags.length === 0;
-                  if (event.key === "Enter" && noResults && isEditor(user)) {
-                    event.preventDefault();
-                    handleTagSubmit(event.target.value);
-                    setPostTagInputText("");
-                  }
                 }}
               />
               <AutoCompleteList>
@@ -339,6 +337,9 @@ const EditorDrawer = ({
                       {tag.attributes.name}
                     </AutoCompleteItem>
                   ))}
+                <AutoCompleteCreatable>
+                  {({ value }) => <span>Create a tag named <strong>{value}</strong></span>}
+                </AutoCompleteCreatable>
               </AutoCompleteList>
             </AutoComplete>
             <Spacer h="1rem" />
