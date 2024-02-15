@@ -42,7 +42,7 @@ describe("post", () => {
   describe("GET /posts", () => {
     it("should return only the current user's posts for contributors", async () => {
       const response = await request(strapi.server.httpServer)
-        .get(`/api/posts?populate=author`)
+        .get(`/api/posts?populate[0]=author`)
         .set("Content-Type", "application/json")
         .set("Authorization", `Bearer ${contributorJWT}`)
         .send();

@@ -27,6 +27,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^5.3.4",
     "strapi-plugin-config-sync": "^1.1.2",
+    "strapi-plugin-protected-populate": "^1.3.5",
     "styled-components": "5.3.11"
   },
   "author": {
