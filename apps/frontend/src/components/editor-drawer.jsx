@@ -3,6 +3,7 @@ import { isEditor } from "@/lib/current-user";
 import Link from "next/link";
 import {
   AutoComplete,
+  AutoCompleteCreatable,
   AutoCompleteInput,
   AutoCompleteItem,
   AutoCompleteList,
@@ -18,9 +19,7 @@ import {
   IconButton,
   Wrap,
   Tag,
-  FormControl,
   Divider,
-  FormErrorMessage,
   TagLabel,
   TagCloseButton,
   CloseButton,
@@ -32,7 +31,6 @@ import {
   DrawerContent,
   useToast,
 } from "@chakra-ui/react";
-import { Field, Form, Formik } from "formik";
 import slugify from "slugify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear } from "@fortawesome/free-solid-svg-icons";
@@ -56,7 +54,6 @@ const EditorDrawer = ({
 }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [searchedTags, setSearchedTags] = useState([]);
-  const [isAddingTag, setIsAddingTag] = useState(false);
 
   const [postTagInputText, setPostTagInputText] = useState("");
   const [postTags, setPostTags] = useState([]);
@@ -127,7 +124,6 @@ const EditorDrawer = ({
       setPostTags(newTags);
       handlePostTagId(newTagsId);
       setPostTagSlug(newTagSlugs);
-
       handleUnsavedChanges();
     }
   }
@@ -150,6 +146,10 @@ const EditorDrawer = ({
       const res = await createTag(token, data);
       setTagsList([...tags, res.data]);
       setSearchedTags([]);
+
+      setPostTags([...postTags, res.data.attributes.name]);
+      setPostTagSlug([...postTagSlug, res.data.attributes.slug]);
+      handlePostTagId([...postTagId, res.data.id]);
 
       toast({
         title: "Tag Created.",
@@ -303,7 +303,32 @@ const EditorDrawer = ({
               openOnFocus
               restoreOnBlurIfEmpty={false}
               onSelectOption={(list) => {
-                addTag(list.item.value, list.item.label);
+                const item = list.item.value;
+
+                const inSearchedTags = searchedTags.some(
+                  (tag) => tag.attributes.name === item,
+                );
+                const inDefaultTags = tagsList.some(
+                  (tag) => tag.attributes.name === item,
+                );
+
+                const tagExists = !inSearchedTags && !inDefaultTags;
+
+                if (isEditor(user) && !tagExists && searchedTags.length > 0) {
+                  handleTagSubmit(postTagInputText);
+                  addTag(postTagInputText, postTagInputText);
+                  setPostTagInputText("");
+                }
+
+                if (inSearchedTags || inDefaultTags) {
+                  addTag(list.item.value, list.item.label);
+                  setPostTagInputText("");
+                }
+              }}
+              creatable={isEditor(user) && searchedTags.length === 0}
+              onCreateOption={() => {
+                handleTagSubmit(postTagInputText);
+                addTag(postTagInputText, postTagInputText);
                 setPostTagInputText("");
               }}
             >
@@ -325,10 +350,7 @@ const EditorDrawer = ({
                     <AutoCompleteItem
                       key={tag.id}
                       value={tag.attributes.name}
-                      // this gives is the opportunity to add the tag to the post
-                      // by setting the label to the slug
                       label={tag.attributes.slug}
-                      textTransform="capitalize"
                       onClick={() => {
                         addTag(tag.attributes.name, tag.attributes.slug);
                         setPostTagInputText("");
@@ -337,75 +359,28 @@ const EditorDrawer = ({
                       {tag.attributes.name}
                     </AutoCompleteItem>
                   ))}
+                {searchedTags.length > 0 &&
+                  !searchedTags.some(
+                    (tag) => tag.attributes.name === postTagInputText,
+                  ) && (
+                    <AutoCompleteItem
+                      value={postTagInputText}
+                      label={postTagInputText}
+                    >
+                      <p>
+                        Create a Tag Named <strong>{postTagInputText}</strong>
+                      </p>
+                    </AutoCompleteItem>
+                  )}
+                <AutoCompleteCreatable>
+                  {({ value }) => (
+                    <span>
+                      Create a Tag Named <strong>{value}</strong>
+                    </span>
+                  )}
+                </AutoCompleteCreatable>
               </AutoCompleteList>
             </AutoComplete>
-            {isEditor(user) && (
-              <>
-                {!isAddingTag ? (
-                  <Button
-                    colorScheme="blue"
-                    variant="link"
-                    onClick={() => setIsAddingTag(true)}
-                  >
-                    Add new Tag
-                  </Button>
-                ) : (
-                  <>
-                    <Spacer h="1rem" />
-                    <Formik
-                      initialValues={{ tagName: "" }}
-                      onSubmit={(values, actions) => {
-                        setIsAddingTag(false);
-                        handleTagSubmit(values.tagName);
-                        actions.setSubmitting(false);
-                        handleUnsavedChanges();
-                      }}
-                    >
-                      {(props) => (
-                        <Form>
-                          <Field name="tagName">
-                            {({ field, form }) => (
-                              <FormControl
-                                isInvalid={
-                                  form.errors.tagName && form.touched.tagName
-                                }
-                              >
-                                <Input
-                                  {...field}
-                                  placeholder="tag name"
-                                  w="100%"
-                                  required
-                                />
-                                <FormErrorMessage>
-                                  {form.errors.tagName}
-                                </FormErrorMessage>
-                              </FormControl>
-                            )}
-                          </Field>
-                          <Button
-                            colorScheme="blue"
-                            isLoading={props.isSubmitting}
-                            type="submit"
-                            w="100%"
-                            margin={{ base: "1rem 0 0 0" }}
-                          >
-                            Submit
-                          </Button>
-                          <Button
-                            colorScheme="red"
-                            width="100%"
-                            margin={{ base: "1rem 0 0 0" }}
-                            onClick={() => setIsAddingTag(false)}
-                          >
-                            Cancel
-                          </Button>
-                        </Form>
-                      )}
-                    </Formik>
-                  </>
-                )}
-              </>
-            )}
             <Spacer h="1rem" />
             {isEditor(user) && (
               <>
