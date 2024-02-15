@@ -18,10 +18,7 @@ test("it should be possible to type in the editor", async ({ page }) => {
 
 test("it should have eleven buttons in the toolbar", async ({ page }) => {
   const buttons = page.locator("#toolbar > button");
-  await expect(buttons).toHaveCount(10);
-
-  const addImageButton = page.locator("#toolbar > label > button");
-  await expect(addImageButton).toHaveCount(1);
+  expect(await buttons.count()).toBe(11);
 });
 
 test("it should be possible to edit the title", async ({ page }) => {

@@ -6,8 +6,9 @@ import {
   MenuItem,
   MenuList,
   Text,
+  useDisclosure,
   useColorMode,
-  useColorModeValue,
+  useColorModeValue
 } from "@chakra-ui/react";
 import {
   autoUpdate,
@@ -39,10 +40,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Prose } from "@nikolovlazar/chakra-ui-prose";
 import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 import { useEffect, useRef, useState } from "react";
+import ImageModal from "./add-image-modal";
 
 import { extensions } from "@/lib/editor-config";
 
 function ToolBar({ editor, user }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const finalRef = useRef(null);
+
   const addYoutubeEmbed = () => {
     const url = window.prompt("URL");
 
@@ -61,35 +66,6 @@ function ToolBar({ editor, user }) {
     if (url) {
       editor.commands.setLink({ href: url, target: "_blank" });
     }
-  };
-
-  const handleImageSubmit = async (event) => {
-    event.preventDefault();
-
-    const apiBase = process.env.NEXT_PUBLIC_STRAPI_BACKEND_URL;
-
-    const formData = new FormData();
-    const image = document.getElementById("add-image").files;
-
-    // Handle the case where the user opts not to submit an image.
-    if (!image) return;
-    formData.append("files", image[0]);
-
-    const res = await fetch(new URL("api/upload", apiBase), {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${user.jwt}`,
-      },
-      body: formData,
-    });
-
-    const data = await res.json();
-
-    editor.commands.setImage({
-      src: new URL(data[0].url, apiBase),
-      alt: "image",
-    });
   };
 
   return (
@@ -138,7 +114,7 @@ function ToolBar({ editor, user }) {
         title="Add code"
         aria-label="Add code"
         leftIcon={<FontAwesomeIcon icon={faCode} />}
-        onClick={() => editor.commands.toggleCodeBlock()}
+        onClick={() => editor.chain().focus().toggleCode().run()}
       />
       <Button
         variant="ghost"
@@ -227,26 +203,22 @@ function ToolBar({ editor, user }) {
         leftIcon={<FontAwesomeIcon icon={faListOl} />}
       />
       <div className="vl"></div>
-      <label htmlFor="add-image" className="custom-file-upload">
-        <Button
-          type="button"
-          variant="ghost"
-          iconSpacing={0}
-          p={2}
-          title="Add an image"
-          aria-label="Add an image"
-          leftIcon={<FontAwesomeIcon icon={faImage} />}
-          onClick={() => document.getElementById("add-image").click()}
-        />
-      </label>
-      <form id="choose-image-form" onChange={handleImageSubmit}>
-        <input
-          type="file"
-          id="add-image"
-          accept="image/*"
-          style={{ display: "none" }}
-        />{" "}
-      </form>
+      <Button
+        variant="ghost"
+        iconSpacing={0}
+        p={2}
+        title="Add an image"
+        aria-label="Add an image"
+        leftIcon={<FontAwesomeIcon icon={faImage} />}
+        onClick={onOpen}
+      />
+      <ImageModal
+        isOpen={isOpen}
+        onClose={onClose}
+        finalRef={finalRef}
+        editor={editor}
+        user={user}
+      />
       <Menu>
         <MenuButton
           as={Button}
@@ -421,8 +393,6 @@ function HoverMenuBar({
 }
 
 const Tiptap = ({ handleContentChange, user, content }) => {
-  const { colorMode } = useColorMode();
-
   const [link, setLink] = useState(null);
   const [linkEl, setLinkEl] = useState(null);
   const [isHoverBarOpen, setIsHoverBarOpen] = useState(false);
@@ -466,9 +436,7 @@ const Tiptap = ({ handleContentChange, user, content }) => {
     autofocus: true,
     editorProps: {
       attributes: {
-        class: `prose focus:outline-none ${
-          colorMode === "dark" ? "dark-border" : ""
-        }`,
+        class: "prose focus:outline-none",
         "data-testid": "editor",
       },
     },
