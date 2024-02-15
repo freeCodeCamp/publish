@@ -26,14 +26,6 @@
   min-width: 100%;
 }
 
-.preview {
-  min-height: 0;
-  max-height: unset;
-  overflow: unset;
-  padding: 1rem;
-  min-width: 100%;
-}
-
 .ProseMirror:focus {
   outline: none;
 }
@@ -130,4 +122,50 @@
 
 .dark-border pre {
   border: 2px solid #adb5bd;
+}
+
+/* preview */
+
+.preview {
+  /* layout */
+
+  background-color: #ffff;
+  padding: 1rem;
+  min-height: 0;
+  max-height: unset;
+  overflow: unset;
+  overflow-x: hidden;
+
+  /* typography */
+  font-family: "Lato", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.6em;
+  letter-spacing: 0;
+  color: #0a0a23;
+  -webkit-font-smoothing: antialiased;
+}
+
+.preview p {
+  font-size: 22px;
+}
+
+.preview h1 {
+  font-size: 50px;
+  line-height: 1.15;
+}
+
+.preview h2 {
+  font-size: 36px;
+  line-height: 1.15;
+  margin: 0.5em 0 0.2em;
+}
+
+.preview h3,
+.preview h4,
+.preview h5,
+.preview h6 {
+  font-size: 28px;
+  line-height: 1.15;
+  margin: 0.5em 0 0.2em;
 }
