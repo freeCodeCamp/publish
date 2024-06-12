@@ -18,7 +18,7 @@
   "dependencies": {
     "@strapi/plugin-documentation": "^4.11.5",
     "@strapi/plugin-i18n": "4.15.5",
-    "@strapi/plugin-users-permissions": "4.15.5",
+    "@strapi/plugin-users-permissions": "4.24.2",
     "@strapi/provider-email-nodemailer": "^4.12.4",
     "@strapi/strapi": "4.15.5",
     "nanoid": "^3.3.6",
